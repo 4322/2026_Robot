@@ -1,0 +1,39 @@
+package frc.robot.subsystems.Intake.Deployer;
+
+import com.ctre.phoenix6.hardware.TalonFX;
+import org.littletonrobotics.junction.AutoLog;
+
+public interface DeployerIO {
+
+  @AutoLog
+  public static class DeployerIOInputs {
+    public boolean connected = false;
+    public double statorCurrentAmps = 0.0;
+    public double busCurrentAmps = 0.0;
+    public double motorTempCelcius = 0.0;
+    public double speedRotationsPerSec = 0.0;
+    public double appliedVolts = 0.0;
+    public double angleDeg = 0.0;
+    public double encoderRotations = 0.0;
+    public double kGeffort;
+    public double kPeffort;
+    public double totalEffort;
+    public double controllerTempCelcius = 0.0;
+
+    public double requestedPosDeg = 0.0;
+  }
+
+  public default void updateInputs(DeployerIOInputs inputs) {}
+
+  public default void setPosition(double rotations) {}
+
+  public default void setVoltage(double voltage) {}
+
+  public default void enableBrakeMode(boolean mode) {}
+
+  public default void stop() {}
+
+  public default TalonFX getTalonFX() {
+    return null;
+  }
+}
