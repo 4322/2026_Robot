@@ -1,14 +1,20 @@
-// Copyright (c) 2021-2026 Littleton Robotics
-// http://github.com/Mechanical-Advantage
-//
-// Use of this source code is governed by a BSD
-// license that can be found in the LICENSE file
-// at the root directory of this project.
-
 package frc.robot;
 
+import com.pathplanner.lib.commands.FollowPathCommand;
+import com.pathplanner.lib.path.PathPlannerPath;
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.Threads;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.Arrays;
+import java.util.Optional;
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
@@ -25,58 +31,228 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 public class Robot extends LoggedRobot {
   private Command autonomousCommand;
   private RobotContainer robotContainer;
+  private Timer allianceUpdateTimer = new Timer();
+  private DigitalInput coastButton = new DigitalInput(Constants.dioCoastButton);
+  private Timer coastButtonTimer = new Timer();
+
+  public static Alliance alliance = DriverStation.Alliance.Blue;
+
+  // Mirrored paths
+  public static PathPlannerPath ThreeCoralStartToJuliet;
+  public static PathPlannerPath JulietToFeed1;
+  public static PathPlannerPath JulietToFeed2;
+  public static PathPlannerPath KilotoFeed;
+  public static PathPlannerPath DeltatoFeed;
+
+  // Mirrors of the above
+  public static PathPlannerPath ThreeCoralStartToEcho;
+  public static PathPlannerPath EchoToFeed1;
+  public static PathPlannerPath EchoToFeed2;
+
+  // Non-mirrored paths
+  public static PathPlannerPath Leave;
+  public static PathPlannerPath TestLeave;
+  public static PathPlannerPath CenterStartToGulf;
+  public static PathPlannerPath CenterAlgaeScoreToLeave;
+  public static PathPlannerPath RightAlgaeScoreToIJ;
+  public static PathPlannerPath GH_ToRightAlgaeScore;
+  public static PathPlannerPath IJ_ToCenterAlgaeScore;
 
   public Robot() {
-    // Record metadata
-    Logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME);
+    Logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME); // Set a metadata value
     Logger.recordMetadata("BuildDate", BuildConstants.BUILD_DATE);
     Logger.recordMetadata("GitSHA", BuildConstants.GIT_SHA);
     Logger.recordMetadata("GitDate", BuildConstants.GIT_DATE);
     Logger.recordMetadata("GitBranch", BuildConstants.GIT_BRANCH);
-    Logger.recordMetadata(
-        "GitDirty",
-        switch (BuildConstants.DIRTY) {
-          case 0 -> "All changes committed";
-          case 1 -> "Uncommitted changes";
-          default -> "Unknown";
-        });
+    switch (BuildConstants.DIRTY) {
+      case 0:
+        Logger.recordMetadata("GitDirty", "All changes committed");
+        break;
+      case 1:
+        Logger.recordMetadata("GitDirty", "Uncomitted changes");
+        break;
+      default:
+        Logger.recordMetadata("GitDirty", "Unknown");
+        break;
+    }
 
-    // Set up data receivers & replay source
     switch (Constants.currentMode) {
       case REAL:
-        // Running on a real robot, log to a USB stick ("/U/logs")
-        Logger.addDataReceiver(new WPILOGWriter());
-        Logger.addDataReceiver(new NT4Publisher());
-        break;
+        var directory = new File(Constants.logPath);
+        if (!directory.exists()) {
+          directory.mkdir();
+        }
+        var files = directory.listFiles();
 
+        // delete all garbage hoot files and wpilogs not connected to ds before good wpilogs
+        if (files != null) {
+          for (File file : files) {
+            if (file.getName().endsWith(".hoot")
+                || (!file.getName().contains("-") && file.getName().endsWith(".wpilog"))) {
+              file.delete();
+              DriverStation.reportWarning("Deleted " + file.getName() + " to free up space", false);
+            }
+          }
+        }
+
+        // ensure that there is enough space on the roboRIO to log data
+        // delete Redux logs first
+        if (directory.getFreeSpace() < Constants.minFreeSpace) {
+          files = directory.listFiles();
+          if (files != null) {
+            // Sorting the files by name will ensure that the oldest files are deleted first
+            files = Arrays.stream(files).sorted().toArray(File[]::new);
+            long bytesToDelete = Constants.minFreeSpace - directory.getFreeSpace();
+
+            for (File file : files) {
+              if (file.getName().endsWith(".rdxlog")) {
+                try {
+                  bytesToDelete -= Files.size(file.toPath());
+                } catch (IOException e) {
+                  DriverStation.reportError("Failed to get size of file " + file.getName(), false);
+                  continue;
+                }
+                if (file.delete()) {
+                  DriverStation.reportWarning(
+                      "Deleted " + file.getName() + " to free up space", false);
+                } else {
+                  DriverStation.reportError("Failed to delete " + file.getName(), false);
+                }
+                if (bytesToDelete <= 0) {
+                  break;
+                }
+              }
+            }
+          }
+        }
+
+        // delete akit logs if we still don't have enough space
+        if (directory.getFreeSpace() < Constants.minFreeSpace) {
+          files = directory.listFiles();
+          if (files != null) {
+            // Sorting the files by name will ensure that the oldest files are deleted first
+            files = Arrays.stream(files).sorted().toArray(File[]::new);
+            long bytesToDelete = Constants.minFreeSpace - directory.getFreeSpace();
+
+            for (File file : files) {
+              if (file.getName().endsWith(".wpilog")) {
+                try {
+                  bytesToDelete -= Files.size(file.toPath());
+                } catch (IOException e) {
+                  DriverStation.reportError("Failed to get size of file " + file.getName(), false);
+                  continue;
+                }
+                if (file.delete()) {
+                  DriverStation.reportWarning(
+                      "Deleted " + file.getName() + " to free up space", false);
+                } else {
+                  DriverStation.reportError("Failed to delete " + file.getName(), false);
+                }
+                if (bytesToDelete <= 0) {
+                  break;
+                }
+              }
+            }
+          }
+        }
+
+        Logger.addDataReceiver(
+            new WPILOGWriter(Constants.logPath)); // Log to a USB stick is ("/U/logs")
+        Logger.addDataReceiver(new NT4Publisher()); // Publish data to NetworkTables
+
+        RobotController.setBrownoutVoltage(Constants.brownoutVoltage);
+
+        break;
       case SIM:
         // Running a physics simulator, log to NT
         Logger.addDataReceiver(new NT4Publisher());
         break;
-
       case REPLAY:
-        // Replaying a log, set up replay source
         setUseTiming(false); // Run as fast as possible
-        String logPath = LogFileUtil.findReplayLog();
-        Logger.setReplaySource(new WPILOGReader(logPath));
-        Logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim")));
+        String logPath =
+            LogFileUtil
+                .findReplayLog(); // Pull the replay log from AdvantageScope (or prompt the user)
+        Logger.setReplaySource(new WPILOGReader(logPath)); // Read replay log
+        Logger.addDataReceiver(
+            new WPILOGWriter(
+                LogFileUtil.addPathSuffix(logPath, "_sim"))); // Save outputs to a new log
         break;
     }
 
-    // Start AdvantageKit logger
     Logger.start();
+    Logger.disableConsoleCapture();
+
+    try {
+      Leave = PathPlannerPath.fromPathFile("Leave");
+      TestLeave = PathPlannerPath.fromPathFile("Test Leave");
+
+      CenterStartToGulf = PathPlannerPath.fromPathFile("Center Start to Gulf");
+      CenterAlgaeScoreToLeave = PathPlannerPath.fromPathFile("Center Algae Score to Leave");
+
+      ThreeCoralStartToJuliet = PathPlannerPath.fromPathFile("Three Coral Start to Juliet");
+      JulietToFeed1 = PathPlannerPath.fromPathFile("Juliet to Feed 1");
+      JulietToFeed2 = PathPlannerPath.fromPathFile("Juliet to Feed 2");
+      KilotoFeed = PathPlannerPath.fromPathFile("Kilo to Feed");
+
+      ThreeCoralStartToEcho =
+          PathPlannerPath.fromPathFile("Three Coral Start to Juliet").mirrorPath();
+      EchoToFeed1 = PathPlannerPath.fromPathFile("Juliet to Feed 1").mirrorPath();
+      EchoToFeed2 = PathPlannerPath.fromPathFile("Juliet to Feed 2 Right").mirrorPath();
+      DeltatoFeed = PathPlannerPath.fromPathFile("Kilo to Feed").mirrorPath();
+
+      RightAlgaeScoreToIJ = PathPlannerPath.fromPathFile("Right Algae Score to IJ");
+      GH_ToRightAlgaeScore = PathPlannerPath.fromPathFile("GH to Right Algae Score");
+      IJ_ToCenterAlgaeScore = PathPlannerPath.fromPathFile("IJ to Center Algae Score");
+
+    } catch (Exception e) {
+      DriverStation.reportError("Failed to load PathPlanner path - " + e.getMessage(), true);
+      System.exit(1);
+    }
 
     // Instantiate our RobotContainer. This will perform all our button bindings,
     // and put our autonomous chooser on the dashboard.
     robotContainer = new RobotContainer();
+
+    CommandScheduler.getInstance().schedule(FollowPathCommand.warmupCommand());
+
+    allianceUpdateTimer.start();
+
+    if (Constants.currentMode == Constants.Mode.SIM
+        || Constants.currentMode == Constants.Mode.REPLAY) {
+      // enable subsystems in sim mode
+    }
   }
 
   /** This function is called periodically during all modes. */
   @Override
   public void robotPeriodic() {
+
+    /* roboRIO settings to optimize Java memory use:
+      echo "vm.overcommit_memory=1" >> /etc/sysctl.conf
+      echo "vm.vfs_cache_pressure=1000" >> /etc/sysctl.conf
+      echo "vm.swappiness=100" >> /etc/sysctl.conf
+      sync
+      power cycle the RIO
+
+      To restiore default settings, edit /etc/sysctl.conf to set the
+      following values:
+        vm.overcommit_memory=2
+        vm.vfs_cache_pressure=100
+        vm.swappiness=60
+        power cycle the RIO
+
+      To stop the web server to save memory:
+      /etc/init.d/systemWebServer stop; update-rc.d -f systemWebServer remove; sync
+      chmod a-x /usr/local/natinst/etc/init.d/systemWebServer; sync
+
+      To restart the web server in order to image the RIO:
+      chmod a+x /usr/local/natinst/etc/init.d/systemWebServer; sync
+      power cycle the RIO
+    */
+
     // Optionally switch the thread to high priority to improve loop
     // timing (see the template project documentation for details)
-    // Threads.setCurrentThreadPriority(true, 99);
+    Threads.setCurrentThreadPriority(true, 99);
 
     // Runs the Scheduler. This is responsible for polling buttons, adding
     // newly-scheduled commands, running already-scheduled commands, removing
@@ -87,6 +263,14 @@ public class Robot extends LoggedRobot {
 
     // Return to non-RT thread priority (do not modify the first argument)
     // Threads.setCurrentThreadPriority(false, 10);
+
+    if (allianceUpdateTimer.hasElapsed(1)) {
+      Optional<Alliance> allianceOptional = DriverStation.getAlliance();
+      if (allianceOptional.isPresent()) {
+        alliance = allianceOptional.get();
+      }
+      allianceUpdateTimer.restart();
+    }
   }
 
   /** This function is called once when the robot is disabled. */
@@ -95,17 +279,38 @@ public class Robot extends LoggedRobot {
 
   /** This function is called periodically when disabled. */
   @Override
-  public void disabledPeriodic() {}
+  public void disabledPeriodic() {
+
+    if (Constants.currentMode != Constants.Mode.SIM) {}
+
+    if (!coastButton.get() && Constants.currentMode != Constants.Mode.SIM) {
+      // RobotContainer.getSuperstructure().CoastMotors();
+      DriverStation.reportWarning("Coast Mode Trying To Activate", false);
+      coastButtonTimer.start();
+      // button is pressed in
+    }
+
+    if (coastButtonTimer.hasElapsed(0.1)) {
+      // TODO: RobotContainer.getSuperstructure().CoastMotors();
+    }
+
+    if (coastButtonTimer.hasElapsed(10)) {
+      // TODO: DriverStation.reportWarning("Break Mode Trying To Activate", false);
+      // RobotContainer.getSuperstructure().BreakMotors();
+      // coastButtonTimer.stop();
+      // coastButtonTimer.reset();
+    }
+  }
 
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    autonomousCommand = robotContainer.getAutonomousCommand();
+    // autonomousCommand = robotContainer.getAutonomousCommand();
 
-    // schedule the autonomous command (example)
-    if (autonomousCommand != null) {
-      CommandScheduler.getInstance().schedule(autonomousCommand);
-    }
+    // // schedule the autonomous command (example)
+    // if (autonomousCommand != null) {
+    //   Logger.recordOutput("AutoName", autonomousCommand.getName());
+    // }
   }
 
   /** This function is called periodically during autonomous. */
