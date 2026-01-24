@@ -1,3 +1,3 @@
-package frc.robot.subsystems.drive.Shooting.Flywheel;
+package frc.robot.subsystems.Drive.Shooting.Flywheel;
 
 public class FlywheelIOSim {}

@@ -1,3 +1,3 @@
-package frc.robot.subsystems.drive.Shooting.Spindexer;
+package frc.robot.subsystems.Drive.Shooting.Spindexer;
 
 public class Spindexer {}

@@ -1,3 +1,3 @@
-package frc.robot.subsystems.drive.Shooting.Hood;
+package frc.robot.subsystems.Drive.Shooting.Hood;
 
 public class Hood {}
