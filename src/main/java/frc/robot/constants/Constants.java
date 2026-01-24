@@ -5,8 +5,10 @@
 // license that can be found in the LICENSE file
 // at the root directory of this project.
 
-package frc.robot;
+package frc.robot.constants;
 
+import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.wpilibj.RobotBase;
 
 /**
@@ -39,4 +41,20 @@ public final class Constants {
     /** Replaying from a log file. */
     REPLAY
   }
+
+  public static class Spindexer {
+    public static final int spindexerMotorId = 1;
+    public static final double supplyCurrentLimit = 0;
+    public static final double statorCurrentLimit = 0;
+    public static final InvertedValue motorInvert = null;
+    public static final NeutralModeValue neutralMode = null;
+    public static final double kS = 0;
+    public static final double kV = 0;
+    public static final double kP = 0;
+    public static final double kI = 0;
+    public static final double kD = 0;
+    public static final double indexingVelocityRotationsPerSec = 0;
+  }
+
+  public static class Tunnel {}
 }
