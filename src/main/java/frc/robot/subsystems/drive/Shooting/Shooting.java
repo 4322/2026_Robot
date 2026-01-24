@@ -1,5 +1,5 @@
 package frc.robot.subsystems.drive.Shooting;
 
-public class Shooting expand Subsystembase{
+public class Shooting extends SubsystemBase {
     
 }
