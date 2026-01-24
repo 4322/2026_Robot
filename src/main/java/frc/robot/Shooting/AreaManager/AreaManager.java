@@ -59,10 +59,8 @@ public class AreaManager {
 
     // Red Alliance Zones
     redAllianceZone = new Rectangle2d(new Translation2d(0, 0), new Translation2d(0, 0));
-    leftBlueOppositionZone =
-        new Rectangle2d(new Translation2d(0, 0), new Translation2d(0, 0));
-    rightBlueOppositionZone =
-        new Rectangle2d(new Translation2d(0, 0), new Translation2d(0, 0));
+    leftBlueOppositionZone = new Rectangle2d(new Translation2d(0, 0), new Translation2d(0, 0));
+    rightBlueOppositionZone = new Rectangle2d(new Translation2d(0, 0), new Translation2d(0, 0));
     // Neutral Zones
     leftNeutralZone =
         new Rectangle2d(
