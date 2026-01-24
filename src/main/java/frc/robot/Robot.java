@@ -183,26 +183,6 @@ public class Robot extends LoggedRobot {
     Logger.disableConsoleCapture();
 
     try {
-      Leave = PathPlannerPath.fromPathFile("Leave");
-      TestLeave = PathPlannerPath.fromPathFile("Test Leave");
-
-      CenterStartToGulf = PathPlannerPath.fromPathFile("Center Start to Gulf");
-      CenterAlgaeScoreToLeave = PathPlannerPath.fromPathFile("Center Algae Score to Leave");
-
-      ThreeCoralStartToJuliet = PathPlannerPath.fromPathFile("Three Coral Start to Juliet");
-      JulietToFeed1 = PathPlannerPath.fromPathFile("Juliet to Feed 1");
-      JulietToFeed2 = PathPlannerPath.fromPathFile("Juliet to Feed 2");
-      KilotoFeed = PathPlannerPath.fromPathFile("Kilo to Feed");
-
-      ThreeCoralStartToEcho =
-          PathPlannerPath.fromPathFile("Three Coral Start to Juliet").mirrorPath();
-      EchoToFeed1 = PathPlannerPath.fromPathFile("Juliet to Feed 1").mirrorPath();
-      EchoToFeed2 = PathPlannerPath.fromPathFile("Juliet to Feed 2 Right").mirrorPath();
-      DeltatoFeed = PathPlannerPath.fromPathFile("Kilo to Feed").mirrorPath();
-
-      RightAlgaeScoreToIJ = PathPlannerPath.fromPathFile("Right Algae Score to IJ");
-      GH_ToRightAlgaeScore = PathPlannerPath.fromPathFile("GH to Right Algae Score");
-      IJ_ToCenterAlgaeScore = PathPlannerPath.fromPathFile("IJ to Center Algae Score");
 
     } catch (Exception e) {
       DriverStation.reportError("Failed to load PathPlanner path - " + e.getMessage(), true);
@@ -305,7 +285,6 @@ public class Robot extends LoggedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-
     // autonomousCommand = robotContainer.getAutonomousCommand();
 
     // // schedule the autonomous command (example)
