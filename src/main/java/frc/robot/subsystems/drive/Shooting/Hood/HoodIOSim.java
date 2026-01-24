@@ -1,5 +1,3 @@
 package frc.robot.subsystems.drive.Shooting.Hood;
 
-public class HoodIOSim {
-    
-}
+public class HoodIOSim {}

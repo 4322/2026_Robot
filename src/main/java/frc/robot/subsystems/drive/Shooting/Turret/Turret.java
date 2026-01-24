@@ -1,5 +1,3 @@
 package frc.robot.subsystems.drive.Shooting.Turret;
 
-public class Turret {
-    
-}
+public class Turret {}

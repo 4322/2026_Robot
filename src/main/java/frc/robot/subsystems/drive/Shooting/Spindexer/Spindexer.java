@@ -1,5 +1,3 @@
 package frc.robot.subsystems.drive.Shooting.Spindexer;
 
-public class Spindexer {
-    
-}
+public class Spindexer {}
