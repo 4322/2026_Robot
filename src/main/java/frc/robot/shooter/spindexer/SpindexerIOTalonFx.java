@@ -65,9 +65,9 @@ public class SpindexerIOTalonFx implements SpindexerIO {
   @Override
   public void setTargetVelocity(double velocity) {
     if (velocity != lastRequestedVelocity) {
-        motor.setControl(velocityRequest.withVelocity(velocity));
+      motor.setControl(velocityRequest.withVelocity(velocity));
     }
-    
+
     lastRequestedVelocity = velocity;
   }
 

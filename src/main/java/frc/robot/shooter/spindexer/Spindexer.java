@@ -1,10 +1,8 @@
 package frc.robot.shooter.spindexer;
 
-import org.littletonrobotics.junction.Logger;
-
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
-import frc.robot.shooter.spindexer.SpindexerIO.SpindexerIOInputs;
+import org.littletonrobotics.junction.Logger;
 
 public class Spindexer extends SubsystemBase {
   private SpindexerIO io;
@@ -32,26 +30,26 @@ public class Spindexer extends SubsystemBase {
     Logger.recordOutput("Spindexer/State", state.toString());
 
     switch (state) {
-        case DISABLED -> {
-            if (requestIdle) {
-                state = SpindexerStates.IDLE;
-                unsetAllRequests();
-            }
+      case DISABLED -> {
+        if (requestIdle) {
+          state = SpindexerStates.IDLE;
+          unsetAllRequests();
         }
-        case IDLE -> {
-          io.stop();
-          if (requestIndex) {
-              state = SpindexerStates.INDEXING;
-              unsetAllRequests();
-          }
+      }
+      case IDLE -> {
+        io.stop();
+        if (requestIndex) {
+          state = SpindexerStates.INDEXING;
+          unsetAllRequests();
         }
-        case INDEXING -> {
-          io.setTargetVelocity(Constants.Spindexer.indexingVelocityRotationsPerSec);
-          if (requestIdle) {
-              state = SpindexerStates.IDLE;
-              unsetAllRequests();
-          }
+      }
+      case INDEXING -> {
+        io.setTargetVelocity(Constants.Spindexer.indexingVelocityRotationsPerSec);
+        if (requestIdle) {
+          state = SpindexerStates.IDLE;
+          unsetAllRequests();
         }
+      }
     }
   }
 
