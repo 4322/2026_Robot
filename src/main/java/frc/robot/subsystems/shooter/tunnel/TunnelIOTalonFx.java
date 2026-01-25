@@ -81,13 +81,4 @@ public class TunnelIOTalonFx implements TunnelIO {
     motor.setNeutralMode(enable ? NeutralModeValue.Brake : NeutralModeValue.Coast);
   }
 
-  @Override
-  public boolean isStopped(double threshold) {
-    return motor.getVelocity().getValueAsDouble() < threshold;
-  }
-
-  @Override
-  public boolean isAtSpeed(double threshold) {
-    return motor.getVelocity().getValueAsDouble() > threshold;
-  }
 }

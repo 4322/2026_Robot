@@ -22,12 +22,4 @@ public interface SpindexerIO {
 
   public default void enableBrakeMode(boolean enable) {}
 
-  public default boolean isStopped(double threshold) {
-    return false;
-  }
-
-  // Unused for Spindexer
-  public default boolean isAtSpeed(double threshold) {
-    return false;
-  }
 }

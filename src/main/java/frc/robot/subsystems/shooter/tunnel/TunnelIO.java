@@ -22,11 +22,4 @@ public interface TunnelIO {
 
   public default void enableBrakeMode(boolean enable) {}
 
-  public default boolean isStopped(double threshold) {
-    return false;
-  }
-
-  public default boolean isAtSpeed(double threshold) {
-    return false;
-  }
 }
