@@ -42,6 +42,24 @@ public final class Constants {
     REPLAY
   }
 
+  public enum SubsystemMode {
+    DISABLED,
+    NORMAL
+  }
+
+  public static final SubsystemMode driveMode = SubsystemMode.NORMAL;
+  public static final SubsystemMode shooterMode = SubsystemMode.NORMAL;
+  public static final SubsystemMode flywheelMode = SubsystemMode.NORMAL;
+  public static final SubsystemMode hoodMode = SubsystemMode.NORMAL;
+  public static final SubsystemMode spindexerMode = SubsystemMode.NORMAL;
+  public static final SubsystemMode tunnelMode = SubsystemMode.NORMAL;
+  public static final SubsystemMode turretMode = SubsystemMode.NORMAL;
+  public static final SubsystemMode deployerMode = SubsystemMode.NORMAL;
+  public static final SubsystemMode rollerMode = SubsystemMode.NORMAL;
+  public static final SubsystemMode climberMode = SubsystemMode.DISABLED;
+  public static final SubsystemMode visionGlobalPose = SubsystemMode.NORMAL;
+  public static final SubsystemMode visionObjectDetection = SubsystemMode.NORMAL;
+
   public static class Spindexer {
     public static final int spindexerMotorId = 1;
     public static final double supplyCurrentLimit = 0;
