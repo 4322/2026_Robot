@@ -2,7 +2,7 @@ package frc.robot.subsystems.Shooter.java;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class Shooting extends SubsystemBase {
+public class Shooter extends SubsystemBase {
     private enum ShooterState {
         DISABLED,
         UNWINDING,
