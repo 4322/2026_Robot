@@ -99,31 +99,7 @@ public class AreaManager {
 
   public void periodic() {
     Translation2d drivePosition = drive.getPose().getTranslation();
-    if (Robot.alliance == Alliance.Red) {
-      if (redAllianceZone.contains(drivePosition)) {
-        zone = Zone.ALLIANCE_ZONE;
-      } else if (leftBlueOppositionZone.contains(drivePosition)) {
-        zone = Zone.LEFT_OPPOSITION;
-      } else if (rightBlueOppositionZone.contains(drivePosition)) {
-        zone = Zone.RIGHT_OPPOSITION;
-      } else if (leftNeutralZone.contains(drivePosition)) {
-        zone = Zone.LEFT_NEUTRAL;
-      } else if (rightNeutralZone.contains(drivePosition)) {
-        zone = Zone.RIGHT_NEUTRAL;
-      }
-    } else {
-      if (blueAllianceZone.contains(drivePosition)) {
-        zone = Zone.ALLIANCE_ZONE;
-      } else if (leftRedOppositionZone.contains(drivePosition)) {
-        zone = Zone.LEFT_OPPOSITION;
-      } else if (rightRedOppositionZone.contains(drivePosition)) {
-        zone = Zone.RIGHT_OPPOSITION;
-      } else if (leftNeutralZone.contains(drivePosition)) {
-        zone = Zone.RIGHT_NEUTRAL;
-      } else if (rightNeutralZone.contains(drivePosition)) {
-        zone = Zone.LEFT_NEUTRAL;
-      }
-    }
+    getZoneOfObject(drivePosition);
   }
 
   public boolean isShootingArea() {
@@ -147,29 +123,29 @@ public class AreaManager {
     return zone;
   }
 
-  public Zone getZoneOfObject(Translation2d objectPosition) {
+  public Zone getZoneOfObject(Translation2d position) {
     if (Robot.alliance == Alliance.Red) {
-      if (redAllianceZone.contains(objectPosition)) {
+      if (redAllianceZone.contains(position)) {
         objectZone = Zone.ALLIANCE_ZONE;
-      } else if (leftBlueOppositionZone.contains(objectPosition)) {
+      } else if (leftBlueOppositionZone.contains(position)) {
         objectZone = Zone.LEFT_OPPOSITION;
-      } else if (rightBlueOppositionZone.contains(objectPosition)) {
+      } else if (rightBlueOppositionZone.contains(position)) {
         objectZone = Zone.RIGHT_OPPOSITION;
-      } else if (leftNeutralZone.contains(objectPosition)) {
+      } else if (leftNeutralZone.contains(position)) {
         objectZone = Zone.LEFT_NEUTRAL;
-      } else if (rightNeutralZone.contains(objectPosition)) {
+      } else if (rightNeutralZone.contains(position)) {
         objectZone = Zone.RIGHT_NEUTRAL;
       }
     } else {
-      if (blueAllianceZone.contains(objectPosition)) {
+      if (blueAllianceZone.contains(position)) {
         objectZone = Zone.ALLIANCE_ZONE;
-      } else if (leftRedOppositionZone.contains(objectPosition)) {
+      } else if (leftRedOppositionZone.contains(position)) {
         objectZone = Zone.LEFT_OPPOSITION;
-      } else if (rightRedOppositionZone.contains(objectPosition)) {
+      } else if (rightRedOppositionZone.contains(position)) {
         objectZone = Zone.RIGHT_OPPOSITION;
-      } else if (leftNeutralZone.contains(objectPosition)) {
+      } else if (leftNeutralZone.contains(position)) {
         objectZone = Zone.RIGHT_NEUTRAL;
-      } else if (rightNeutralZone.contains(objectPosition)) {
+      } else if (rightNeutralZone.contains(position)) {
         objectZone = Zone.LEFT_NEUTRAL;
       }
     }
