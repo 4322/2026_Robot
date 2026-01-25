@@ -1,5 +1,12 @@
 package frc.robot.subsystems.vision.visionGlobalPose;
 
-public interface VisionGlobalPoseIO {
+import org.littletonrobotics.junction.AutoLog;
 
+public class VisionGlobalPoseIO {
+  protected VisionGlobalPoseIO() {}
+
+  protected void updateInputs(VisionGlobalPoseIOInputs inputs) {}
+
+  @AutoLog
+  public static class VisionGlobalPoseIOInputs {}
 }

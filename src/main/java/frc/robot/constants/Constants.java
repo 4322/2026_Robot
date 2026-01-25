@@ -7,6 +7,9 @@
 
 package frc.robot.constants;
 
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotBase;
 import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetection.ObjectDetectionType;
 
@@ -59,11 +62,14 @@ public final class Constants {
   public static final SubsystemMode visionGlobalPose = SubsystemMode.NORMAL;
   public static final SubsystemMode visionObjectDetection = SubsystemMode.NORMAL;
 
-  public static final class VisionGlobalPose {
-
-  }
+  public static final class VisionGlobalPose {}
 
   public static final class VisionObjectDetection {
-    public static final ObjectDetectionType detectionType = ObjectDetectionType.COLOR; 
+    public static final ObjectDetectionType detectionType = ObjectDetectionType.OBJECT;
+    public static final Transform3d robotCenterToCamera = new Transform3d(
+            -0.2208,
+            -0.23495,
+            0.98315,
+            new Rotation3d(0, Units.degreesToRadians(40), Units.degreesToRadians(180)));; // TODO set this
   }
 }

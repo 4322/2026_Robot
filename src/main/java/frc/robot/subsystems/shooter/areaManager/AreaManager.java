@@ -1,4 +1,4 @@
-package frc.robot.util.areaManager;
+package frc.robot.subsystems.shooter.areaManager;
 
 import edu.wpi.first.math.geometry.Rectangle2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -36,7 +36,6 @@ public class AreaManager {
     LEFT_NEUTRAL,
     RIGHT_NEUTRAL
   }
-
 
   private Zone zone = Zone.ALLIANCE_ZONE;
   private Zone objectZone = Zone.ALLIANCE_ZONE;

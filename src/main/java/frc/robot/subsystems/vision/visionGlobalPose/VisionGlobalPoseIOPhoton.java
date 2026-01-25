@@ -1,5 +1,3 @@
 package frc.robot.subsystems.vision.visionGlobalPose;
 
-public class VisionGlobalPoseIOPhoton {
-
-}
+public class VisionGlobalPoseIOPhoton {}
