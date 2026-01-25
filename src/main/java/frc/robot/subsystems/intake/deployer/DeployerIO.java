@@ -29,7 +29,7 @@ public interface DeployerIO {
 
   public default void setVoltage(double voltage) {}
 
-  public default void enableBrakeMode(boolean mode) {}
+  public default void enableBrakeMode(Boolean mode) {}
 
   public default void stop() {}
 

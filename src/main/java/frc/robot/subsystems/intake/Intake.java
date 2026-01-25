@@ -2,7 +2,9 @@ package frc.robot.subsystems.intake;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.intake.deployer.Deployer;
+import frc.robot.subsystems.intake.deployer.Deployer.deployerGoal;
 import frc.robot.subsystems.intake.rollers.Rollers;
+import frc.robot.subsystems.intake.rollers.Rollers.rollerSGoal;
 
 public class Intake extends SubsystemBase {
   private final Deployer deployer;
@@ -12,32 +14,65 @@ public class Intake extends SubsystemBase {
     this.deployer = deployer;
     this.rollers = rollers;
   }
-//TODO remove this < comment so i can commit it  >remove this
+  // TODO remove this < comment so i can commit it  >remove this
   public enum Goal {
-    Disabled,
-    Extend,
-    Retract,
-    Eject,
-    Idle,
-    Intaking,
-    UnjamIG
+    DISABLED,
+    EXTEND,
+    RETRACT,
+    EJECT,
+    IDLE,
+    INTAKING,
+    UNJAM // still blue and not a priority in docs as of current so TODO
   }
 
-  public Goal desiredGoal = Goal.Disabled;
+  public Goal goal = Goal.DISABLED;
+  public Goal prevGoal;
 
   @Override
   public void periodic() {
-
-    switch (desiredGoal) {
-      case Disabled:
-        break;
-
-      default:
-        break;
+    prevGoal = goal;
+    switch (goal) {
+      case EXTEND -> {
+        deployer.setGoal(deployerGoal.EXTEND);
+      }
+      case RETRACT -> {
+        deployer.setGoal(deployerGoal.RETRACT);
+        rollers.setGoal(rollerSGoal.IDLE);
+      }
+      case EJECT -> {
+        deployer.setGoal(deployerGoal.EXTEND);
+        rollers.setGoal(rollerSGoal.EJECT);
+      }
+      case IDLE -> {
+        // TODO logic to check hopper and switch between rollers goal
+        deployer.setGoal(deployerGoal.EXTEND);
+        rollers.setGoal(rollerSGoal.IDLE);
+      }
+      case INTAKING -> {
+        deployer.setGoal(deployerGoal.EXTEND);
+        rollers.setGoal(rollerSGoal.INTAKE);
+      }
+      case UNJAM -> { // TODO
+      }
+    }
+    deployer.periodic();
+    rollers.periodic();
+    if (goal == Goal.EXTEND && !deployer.isExtended()) {
+      setUNJAM();
+    } else if (goal == Goal.EXTEND && deployer.isExtended()) {
+      goal = Goal.IDLE;
     }
   }
 
   public void setGoal(Goal desiredGoal) {
-    this.desiredGoal = desiredGoal;
+    this.goal = desiredGoal;
+  }
+
+  public Goal getGoal() {
+    return prevGoal;
+  }
+
+  public Goal setUNJAM() {
+    return goal = (!deployer.isExtended()) ? Goal.UNJAM : goal;
   }
 }
