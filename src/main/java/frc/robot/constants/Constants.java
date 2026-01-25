@@ -47,14 +47,28 @@ public final class Constants {
     public static final double supplyCurrentLimit = 0;
     public static final double statorCurrentLimit = 0;
     public static final InvertedValue motorInvert = null;
-    public static final NeutralModeValue neutralMode = null;
+    public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
     public static final double kS = 0;
     public static final double kV = 0;
     public static final double kP = 0;
     public static final double kI = 0;
     public static final double kD = 0;
     public static final double indexingVelocityRotationsPerSec = 0;
+    public static final double stoppedThreshold = 0;
   }
 
-  public static class Tunnel {}
+  public static class Tunnel {
+
+    public static final double indexingVelocityRotationsPerSec = 0;
+    public static final int tunnelMotorId = 0;
+    public static final double statorCurrentLimit = 0;
+    public static final double supplyCurrentLimit = 0;
+    public static final InvertedValue motorInvert = null;
+    public static final NeutralModeValue neutralMode = null;
+    public static final double kS = 0;
+    public static final double kV = 0;
+    public static final double kP = 0;
+    public static final double kI = 0;
+    public static final double kD = 0;
+  }
 }

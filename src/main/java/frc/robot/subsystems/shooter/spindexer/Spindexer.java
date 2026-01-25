@@ -28,7 +28,6 @@ public class Spindexer extends SubsystemBase {
   public void periodic() {
     io.updateInputs(inputs);
     Logger.processInputs("Spindexer", inputs);
-    
 
     switch (state) {
       case DISABLED -> {
@@ -57,5 +56,9 @@ public class Spindexer extends SubsystemBase {
 
   public void enableBrakeMode(boolean enable) {
     io.enableBrakeMode(enable);
+  }
+
+  public boolean isStopped() {
+    return io.isStopped(Constants.Spindexer.stoppedThreshold);
   }
 }

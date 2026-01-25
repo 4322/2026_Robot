@@ -73,12 +73,17 @@ public class SpindexerIOTalonFx implements SpindexerIO {
 
   @Override
   public void stop() {
-    lastRequestedVelocity = -1;
+    lastRequestedVelocity = 0;
     motor.stopMotor();
   }
 
   @Override
   public void enableBrakeMode(boolean enable) {
     motor.setNeutralMode(enable ? NeutralModeValue.Brake : NeutralModeValue.Coast);
+  }
+
+  @Override
+  public boolean isStopped(double threshold) {
+    return motor.getVelocity().getValueAsDouble() < threshold;
   }
 }

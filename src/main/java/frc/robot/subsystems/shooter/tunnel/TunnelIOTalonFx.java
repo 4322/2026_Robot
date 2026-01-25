@@ -1,3 +1,93 @@
 package frc.robot.subsystems.shooter.tunnel;
 
-public class TunnelIOTalonFx {}
+import com.ctre.phoenix6.StatusCode;
+import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.VelocityVoltage;
+import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.NeutralModeValue;
+import edu.wpi.first.wpilibj.DriverStation;
+import frc.robot.constants.Constants;
+
+public class TunnelIOTalonFx implements TunnelIO {
+  private TalonFX motor;
+  private double lastRequestedVelocity = -1;
+
+  private TalonFXConfiguration config = new TalonFXConfiguration();
+  private Slot0Configs pidConfig = new Slot0Configs();
+  private VelocityVoltage velocityRequest = new VelocityVoltage(0).withSlot(0);
+
+  public TunnelIOTalonFx() {
+    motor = new TalonFX(Constants.Tunnel.tunnelMotorId);
+
+    config.CurrentLimits.StatorCurrentLimit = Constants.Tunnel.statorCurrentLimit;
+    config.CurrentLimits.SupplyCurrentLimit = Constants.Tunnel.supplyCurrentLimit;
+    config.MotorOutput.Inverted = Constants.Tunnel.motorInvert;
+    config.MotorOutput.NeutralMode = Constants.Tunnel.neutralMode;
+
+    pidConfig.kS = Constants.Tunnel.kS;
+    pidConfig.kV = Constants.Tunnel.kV;
+    pidConfig.kP = Constants.Tunnel.kP;
+    pidConfig.kI = Constants.Tunnel.kI;
+    pidConfig.kD = Constants.Tunnel.kD;
+
+    StatusCode configStatus = motor.getConfigurator().apply(config);
+
+    StatusCode pidConfigStatus = motor.getConfigurator().apply(pidConfig);
+
+    if (configStatus != StatusCode.OK) {
+      DriverStation.reportError(
+          "Talon " + motor.getDeviceID() + " error (Tunnel): " + configStatus.getDescription(),
+          false);
+    }
+
+    if (pidConfigStatus != StatusCode.OK) {
+      DriverStation.reportError(
+          "Talon "
+              + motor.getDeviceID()
+              + " PID error (Tunnel): "
+              + pidConfigStatus.getDescription(),
+          false);
+    }
+  }
+
+  @Override
+  public void updateInputs(TunnelIOInputs inputs) {
+    inputs.motorConnected = motor.isConnected();
+    inputs.voltage = motor.getMotorVoltage().getValueAsDouble();
+    inputs.velocityRotationsPerSec = motor.getVelocity().getValueAsDouble();
+    inputs.supplyCurrentAmps = motor.getSupplyCurrent().getValueAsDouble();
+    inputs.statorCurrentAmps = motor.getStatorCurrent().getValueAsDouble();
+    inputs.motorTempC = motor.getDeviceTemp().getValueAsDouble();
+  }
+
+  @Override
+  public void setTargetVelocity(double velocity) {
+    if (velocity != lastRequestedVelocity) {
+      motor.setControl(velocityRequest.withVelocity(velocity));
+    }
+
+    lastRequestedVelocity = velocity;
+  }
+
+  @Override
+  public void stop() {
+    lastRequestedVelocity = 0;
+    motor.stopMotor();
+  }
+
+  @Override
+  public void enableBrakeMode(boolean enable) {
+    motor.setNeutralMode(enable ? NeutralModeValue.Brake : NeutralModeValue.Coast);
+  }
+
+  @Override
+  public boolean isStopped(double threshold) {
+    return motor.getVelocity().getValueAsDouble() < threshold;
+  }
+
+  @Override
+  public boolean isAtSpeed(double threshold) {
+    return motor.getVelocity().getValueAsDouble() > threshold;
+  }
+}
