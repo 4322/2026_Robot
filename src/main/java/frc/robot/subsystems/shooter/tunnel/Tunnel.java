@@ -9,9 +9,6 @@ public class Tunnel extends SubsystemBase {
   private TunnelIO io;
   private TunnelIOInputsAutoLogged inputs = new TunnelIOInputsAutoLogged();
 
-  private boolean requestIdle;
-  private boolean requestIndex;
-
   public enum TunnelStates {
     DISABLED,
     IDLE,
@@ -59,6 +56,10 @@ public class Tunnel extends SubsystemBase {
   }
 
   public boolean isStopped() {
-    return io.isStopped(Constants.Spindexer.stoppedThreshold);
+    return inputs.velocityRotationsPerSec < Constants.Tunnel.stoppedThreshold;
+  }
+
+  public boolean isAtSpeed() {
+    return inputs.velocityRotationsPerSec > Constants.Tunnel.atSpeedThreshold;
   }
 }

@@ -9,9 +9,6 @@ public class Spindexer extends SubsystemBase {
   private SpindexerIO io;
   private SpindexerIOInputsAutoLogged inputs = new SpindexerIOInputsAutoLogged();
 
-  private boolean requestIdle;
-  private boolean requestIndex;
-
   public enum SpindexerStates {
     DISABLED,
     IDLE,
@@ -59,6 +56,6 @@ public class Spindexer extends SubsystemBase {
   }
 
   public boolean isStopped() {
-    return io.isStopped(Constants.Spindexer.stoppedThreshold);
+    return inputs.velocityRotationsPerSec < Constants.Spindexer.stoppedThreshold;
   }
 }
