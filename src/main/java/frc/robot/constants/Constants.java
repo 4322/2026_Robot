@@ -8,6 +8,7 @@
 package frc.robot.constants;
 
 import edu.wpi.first.wpilibj.RobotBase;
+import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetection.ObjectDetectionType;
 
 /**
  * This class defines the runtime mode used by AdvantageKit. The mode is always "real" when running
@@ -38,5 +39,13 @@ public final class Constants {
 
     /** Replaying from a log file. */
     REPLAY
+  }
+
+  public static final class VisionGlobalPose {
+
+  }
+
+  public static final class VisionObjectDetection {
+    public static final ObjectDetectionType detectionType = ObjectDetectionType.COLOR; 
   }
 }
