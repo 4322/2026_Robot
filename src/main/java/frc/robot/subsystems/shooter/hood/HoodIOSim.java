@@ -1,3 +1,3 @@
-package frc.robot.subsystems.shooter.java.hood;
+package frc.robot.subsystems.shooter.hood;
 
 public class HoodIOSim {}

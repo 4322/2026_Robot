@@ -1,3 +1,3 @@
-package frc.robot.subsystems.shooter.java.spindexer;
+package frc.robot.subsystems.shooter.spindexer;
 
 public class SpindexerIOSim {}

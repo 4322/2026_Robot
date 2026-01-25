@@ -1,3 +1,3 @@
-package frc.robot.subsystems.shooter.java.tunnel;
+package frc.robot.subsystems.shooter.tunnel;
 
 public class TunnelIOSim {}

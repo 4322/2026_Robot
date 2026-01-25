@@ -1,3 +1,3 @@
-package frc.robot.subsystems.shooter.java.turret;
+package frc.robot.subsystems.shooter.turret;
 
 public class TurretIO {}
