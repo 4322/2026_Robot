@@ -70,6 +70,7 @@ public final class Constants {
             -0.2208,
             -0.23495,
             0.98315,
-            new Rotation3d(0, Units.degreesToRadians(40), Units.degreesToRadians(180)));; // TODO set this
+            new Rotation3d(0, Units.degreesToRadians(40), Units.degreesToRadians(180)));
+    public static final boolean enableObjectDetectionDebug = false;; // TODO set this
   }
 }
