@@ -1,3 +1,3 @@
-package frc.robot.subsystems.Intake.Rollers;
+package frc.robot.subsystems.intake.rollers;
 
 public interface RollersIO {}

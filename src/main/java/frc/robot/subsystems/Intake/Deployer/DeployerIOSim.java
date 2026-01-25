@@ -1,3 +1,3 @@
-package frc.robot.subsystems.Intake.Deployer;
+package frc.robot.subsystems.intake.deployer;
 
 public class DeployerIOSim implements DeployerIO {}

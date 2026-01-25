@@ -1,4 +1,4 @@
-package frc.robot.subsystems.Intake.Deployer;
+package frc.robot.subsystems.intake.deployer;
 
 import com.ctre.phoenix6.hardware.TalonFX;
 import org.littletonrobotics.junction.AutoLog;

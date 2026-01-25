@@ -1,4 +1,4 @@
-package frc.robot.subsystems.Intake.Deployer;
+package frc.robot.subsystems.intake.deployer;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import java.util.function.*;
