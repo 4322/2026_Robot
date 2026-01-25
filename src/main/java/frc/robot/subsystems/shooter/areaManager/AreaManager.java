@@ -1,4 +1,4 @@
-package frc.robot.util.areaManager;
+package frc.robot.subsystems.shooter.areaManager;
 
 import edu.wpi.first.math.geometry.Rectangle2d;
 import edu.wpi.first.math.geometry.Translation2d;
