@@ -57,4 +57,8 @@ public final class Constants {
   public static final SubsystemMode climberMode = SubsystemMode.DISABLED;
   public static final SubsystemMode visionGlobalPose = SubsystemMode.NORMAL;
   public static final SubsystemMode visionObjectDetection = SubsystemMode.NORMAL;
+
+  public static final class LED {
+    public static final int CANdleID = 99;
+  }
 }
