@@ -73,6 +73,7 @@ public final class Constants {
     public static final double kD = 0;
     public static final double indexingVelocityRotationsPerSec = 0;
     public static final double stoppedThreshold = 0;
+    public static final double torqueCurrentPower = 1;
   }
 
   public static class Tunnel {
@@ -91,5 +92,6 @@ public final class Constants {
 
     public static final double stoppedThreshold = 0;
     public static final double atSpeedThreshold = 0;
+    public static final double torqueCurrentPower = 1;
   }
 }

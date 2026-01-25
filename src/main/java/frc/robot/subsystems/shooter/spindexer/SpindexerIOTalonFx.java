@@ -3,6 +3,7 @@ package frc.robot.subsystems.shooter.spindexer;
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.TorqueCurrentFOC;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -31,6 +32,8 @@ public class SpindexerIOTalonFx implements SpindexerIO {
     pidConfig.kP = Constants.Spindexer.kP;
     pidConfig.kI = Constants.Spindexer.kI;
     pidConfig.kD = Constants.Spindexer.kD;
+
+    motor.setControl(new TorqueCurrentFOC(Constants.Spindexer.torqueCurrentPower));
 
     StatusCode configStatus = motor.getConfigurator().apply(config);
 
