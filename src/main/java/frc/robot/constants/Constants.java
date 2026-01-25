@@ -5,7 +5,7 @@
 // license that can be found in the LICENSE file
 // at the root directory of this project.
 
-package frc.robot;
+package frc.robot.constants;
 
 import edu.wpi.first.wpilibj.RobotBase;
 
@@ -39,4 +39,22 @@ public final class Constants {
     /** Replaying from a log file. */
     REPLAY
   }
+
+  public enum SubsystemMode {
+    DISABLED,
+    NORMAL
+  }
+
+  public static final SubsystemMode driveMode = SubsystemMode.NORMAL;
+  public static final SubsystemMode shooterMode = SubsystemMode.NORMAL;
+  public static final SubsystemMode flywheelMode = SubsystemMode.NORMAL;
+  public static final SubsystemMode hoodMode = SubsystemMode.NORMAL;
+  public static final SubsystemMode spindexerMode = SubsystemMode.NORMAL;
+  public static final SubsystemMode tunnelMode = SubsystemMode.NORMAL;
+  public static final SubsystemMode turretMode = SubsystemMode.NORMAL;
+  public static final SubsystemMode deployerMode = SubsystemMode.NORMAL;
+  public static final SubsystemMode rollerMode = SubsystemMode.NORMAL;
+  public static final SubsystemMode climberMode = SubsystemMode.DISABLED;
+  public static final SubsystemMode visionGlobalPose = SubsystemMode.NORMAL;
+  public static final SubsystemMode visionObjectDetection = SubsystemMode.NORMAL;
 }
