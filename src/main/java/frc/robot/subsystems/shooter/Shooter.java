@@ -1,34 +1,39 @@
-package frc.robot.subsystems.Shooter.java;
+package frc.robot.subsystems.shooter;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Shooter extends SubsystemBase {
+
+    private boolean requestUnwinding;
+    private boolean request
+;
     private enum ShooterState {
         DISABLED,
-        UNWINDING,
-        SCORING,
-        PASSING,
-        INHIBIT
+        UNWIND,
+        AUTO_SHOOTING,
+        INHIBIT_AUTO_SHOOTING,
+        AREA_INHIBIT_AUTO_SHOOTING
 
     }
 
     ShooterState currentState = ShooterState.DISABLED;
 
-    private void periodic() {
+    @Override
+    public void periodic() {
        switch (currentState) {
             case DISABLED ->{
 
             }
-            case UNWINDING -> {
+            case UNWIND ->{
 
             }
-            case SCORING ->  {
+            case AUTO_SHOOTING ->{
 
             }
-            case PASSING -> {
+            case INHIBIT_AUTO_SHOOTING ->{
 
             }
-            case INHIBIT -> {
+            case AREA_INHIBIT_AUTO_SHOOTING ->{
 
             }
         }
