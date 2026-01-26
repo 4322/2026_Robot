@@ -40,7 +40,9 @@ public class Rollers {
     }
   }
 
-  public void setBrakeMode(boolean mode) {}
+  public void setBrakeMode(boolean mode) {
+    rollersIO.enableBreakMode(mode);
+  }
 
   public void intake() {
     rollersIO.setVoltage(Constants.Rollers.voltageIntake);
