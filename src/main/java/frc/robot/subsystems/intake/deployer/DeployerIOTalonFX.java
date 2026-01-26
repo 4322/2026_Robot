@@ -2,9 +2,12 @@ package frc.robot.subsystems.intake.deployer;
 
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
+import frc.robot.constants.Constants;
 
 public class DeployerIOTalonFX implements DeployerIO {
   private TalonFX deployerMotor;
@@ -12,7 +15,7 @@ public class DeployerIOTalonFX implements DeployerIO {
   public double requestedPosDegosDeg;
 
   public DeployerIOTalonFX() {
-    deployerMotor = new TalonFX(1);
+    deployerMotor = new TalonFX(Constants.Deployer.motorId);
     // Setup config objects
 
     motorConfigs.MotorOutput.NeutralMode = NeutralModeValue.Brake;
@@ -21,7 +24,6 @@ public class DeployerIOTalonFX implements DeployerIO {
     motorConfigs.HardwareLimitSwitch.ReverseLimitEnable = false;
 
     StatusCode deployerConfigStatus = deployerMotor.getConfigurator().apply(motorConfigs);
-
 
     if (deployerConfigStatus != StatusCode.OK) {
       DriverStation.reportError(
@@ -53,11 +55,16 @@ public class DeployerIOTalonFX implements DeployerIO {
     inputs.motorTempCelcius = deployerMotor.getDeviceTemp().getValueAsDouble();
 
     inputs.appliedVolts = deployerMotor.getMotorVoltage().getValueAsDouble();
-    inputs.encoderRotations = deployerMotor.getPosition().getValueAsDouble();
   }
 
   @Override
-  public void setPosition(double DeployerPositionMeters) {}
+  public void setPosition(double requestedPosDeg) {
+    int slot = (Deployer.prevGoal == Deployer.deployerGoal.EXTEND) ? 0 : 1;
+    deployerMotor.setControl(
+        new MotionMagicVoltage(Units.degreesToRotations(requestedPosDeg))
+            .withSlot(slot)
+            .withEnableFOC(true));
+  }
 
   @Override
   public void setVoltage(double voltage) {

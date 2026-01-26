@@ -53,8 +53,21 @@ public final class Constants {
   public static final SubsystemMode tunnelMode = SubsystemMode.NORMAL;
   public static final SubsystemMode turretMode = SubsystemMode.NORMAL;
   public static final SubsystemMode deployerMode = SubsystemMode.NORMAL;
-  public static final SubsystemMode rollerMode = SubsystemMode.NORMAL;
+  public static final SubsystemMode rollersMode = SubsystemMode.NORMAL;
   public static final SubsystemMode climberMode = SubsystemMode.DISABLED;
   public static final SubsystemMode visionGlobalPose = SubsystemMode.NORMAL;
   public static final SubsystemMode visionObjectDetection = SubsystemMode.NORMAL;
+
+  public class Deployer {
+    public static final double retractDeg = 1; // TODO
+    public static final double extendDeg = 1; // TODO
+    public static final int motorId = 1; // TODO
+  }
+
+  public class Rollers {
+    public static final double voltageIntake = 1; // TODO
+    public static final double voltageEject = -1; // TODO
+    public static final int motorId = 1;// TODO
+
+  }
 }

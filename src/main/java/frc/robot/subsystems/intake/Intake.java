@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.intake.deployer.Deployer;
 import frc.robot.subsystems.intake.deployer.Deployer.deployerGoal;
 import frc.robot.subsystems.intake.rollers.Rollers;
-import frc.robot.subsystems.intake.rollers.Rollers.rollerSGoal;
+import frc.robot.subsystems.intake.rollers.Rollers.rollersGoal;
 
 public class Intake extends SubsystemBase {
   private final Deployer deployer;
@@ -14,7 +14,7 @@ public class Intake extends SubsystemBase {
     this.deployer = deployer;
     this.rollers = rollers;
   }
-  // TODO remove this < comment so i can commit it  >remove this
+
   public enum Goal {
     DISABLED,
     EXTEND,
@@ -37,20 +37,20 @@ public class Intake extends SubsystemBase {
       }
       case RETRACT -> {
         deployer.setGoal(deployerGoal.RETRACT);
-        rollers.setGoal(rollerSGoal.IDLE);
+        rollers.setGoal(rollersGoal.IDLE);
       }
       case EJECT -> {
         deployer.setGoal(deployerGoal.EXTEND);
-        rollers.setGoal(rollerSGoal.EJECT);
+        rollers.setGoal(rollersGoal.EJECT);
       }
       case IDLE -> {
         // TODO logic to check hopper and switch between rollers goal
         deployer.setGoal(deployerGoal.EXTEND);
-        rollers.setGoal(rollerSGoal.IDLE);
+        rollers.setGoal(rollersGoal.IDLE);
       }
       case INTAKING -> {
         deployer.setGoal(deployerGoal.EXTEND);
-        rollers.setGoal(rollerSGoal.INTAKE);
+        rollers.setGoal(rollersGoal.INTAKE);
       }
       case UNJAM -> { // TODO
       }

@@ -25,7 +25,7 @@ public interface DeployerIO {
 
   public default void updateInputs(DeployerIOInputs inputs) {}
 
-  public default void setPosition(double rotations) {}
+  public default void setPosition(double requestedPosDeg) {}
 
   public default void setVoltage(double voltage) {}
 

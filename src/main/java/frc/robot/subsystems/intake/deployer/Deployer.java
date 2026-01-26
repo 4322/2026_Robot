@@ -1,11 +1,13 @@
 package frc.robot.subsystems.intake.deployer;
 
-import java.util.function.*;
+import frc.robot.constants.Constants;
+import org.littletonrobotics.junction.Logger;
 
 public class Deployer {
   private DeployerIO deployerIO;
   public double currentPosition;
   public double desiredPosition;
+  private DeployerIOInputsAutoLogged inputs = new DeployerIOInputsAutoLogged();
 
   public enum deployerGoal {
     DISABLED,
@@ -15,39 +17,49 @@ public class Deployer {
   }
 
   public deployerGoal goal = deployerGoal.DISABLED;
-  public deployerGoal prevGoal;
+  public static deployerGoal prevGoal;
 
   public Deployer(DeployerIO deployerIO) {
     this.deployerIO = deployerIO;
   }
 
   public void periodic() {
+    deployerIO.updateInputs(inputs);
+    Logger.processInputs("Deployer", inputs);
+
     prevGoal = goal;
-    switch (goal) {
-      case DISABLED -> {}
-      case EXTEND -> {
-        extend();
-      }
-      case RETRACT -> {
-        retract();
-      }
+    switch (Constants.deployerMode) {
+      case DISABLED:
+        break;
+      case NORMAL:
+        switch (goal) {
+          case DISABLED -> {
+            break;
+          }
+          case EXTEND -> {
+            extend();
+          }
+          case RETRACT -> {
+            retract();
+          }
+        }
     }
   }
 
   public void retract() {
-    // deployerIO.set(Constants.retract)
+    deployerIO.setPosition(Constants.Deployer.retractDeg);
   }
 
   public void extend() {
-    // deployerIO.setPos(constants.Extend)
+    deployerIO.setPosition(Constants.Deployer.extendDeg);
   }
 
   public void unjam() {
-    // deployerIO.setPos() TODO
+    // TODO
   }
 
   public void setBrakeMode(boolean mode) {
-    // deployerIO.setBrakeMode(mode);
+    deployerIO.enableBrakeMode(mode);
   }
 
   public Boolean isExtended() {
