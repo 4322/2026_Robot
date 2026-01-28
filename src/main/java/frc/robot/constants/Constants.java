@@ -7,6 +7,8 @@
 
 package frc.robot.constants;
 
+import com.ctre.phoenix6.signals.StripTypeValue;
+
 import edu.wpi.first.wpilibj.RobotBase;
 
 /**
@@ -60,5 +62,9 @@ public final class Constants {
 
   public static final class LED {
     public static final int CANdleID = 99;
+    public static final StripTypeValue stripType = StripTypeValue.RGBW; // TODO set these
+    public static final double brightnessScalar = 0.5;
+    public static final int ledStart = 0;
+    public static final int ledEnd = 0;
   }
 }
