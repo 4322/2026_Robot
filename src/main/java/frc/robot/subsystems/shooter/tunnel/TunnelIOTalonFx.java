@@ -34,8 +34,6 @@ public class TunnelIOTalonFx implements TunnelIO {
     pidConfig.kI = Constants.Tunnel.kI;
     pidConfig.kD = Constants.Tunnel.kD;
 
-    motor.setControl(new TorqueCurrentFOC(Constants.Tunnel.torqueCurrentPower));
-
     StatusCode configStatus = motor.getConfigurator().apply(config);
 
     StatusCode pidConfigStatus = motor.getConfigurator().apply(pidConfig);
@@ -69,7 +67,7 @@ public class TunnelIOTalonFx implements TunnelIO {
   @Override
   public void setTargetVelocity(double velocity) {
     if (velocity != lastRequestedVelocity) {
-      motor.setControl(velocityRequest.withVelocity(velocity));
+      motor.setControl(velocityRequest.withVelocity(velocity).withEnableFOC(true));
     }
 
     lastRequestedVelocity = velocity;

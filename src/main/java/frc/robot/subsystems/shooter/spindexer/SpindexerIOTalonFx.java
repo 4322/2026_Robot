@@ -33,8 +33,6 @@ public class SpindexerIOTalonFx implements SpindexerIO {
     pidConfig.kI = Constants.Spindexer.kI;
     pidConfig.kD = Constants.Spindexer.kD;
 
-    motor.setControl(new TorqueCurrentFOC(Constants.Spindexer.torqueCurrentPower));
-
     StatusCode configStatus = motor.getConfigurator().apply(config);
 
     StatusCode pidConfigStatus = motor.getConfigurator().apply(pidConfig);
@@ -68,7 +66,7 @@ public class SpindexerIOTalonFx implements SpindexerIO {
   @Override
   public void setTargetVelocity(double velocity) {
     if (velocity != lastRequestedVelocity) {
-      motor.setControl(velocityRequest.withVelocity(velocity));
+      motor.setControl(velocityRequest.withVelocity(velocity).withEnableFOC(true));
     }
 
     lastRequestedVelocity = velocity;
