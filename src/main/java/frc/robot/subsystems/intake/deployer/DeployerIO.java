@@ -18,7 +18,6 @@ public interface DeployerIO {
     public double kGeffort;
     public double kPeffort;
     public double totalEffort;
-    public double controllerTempCelcius = 0.0;
 
     public double requestedPosDeg = 0.0;
   }

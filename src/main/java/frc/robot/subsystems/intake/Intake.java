@@ -44,7 +44,9 @@ public class Intake extends SubsystemBase {
         rollers.setGoal(rollersGoal.EJECT);
       }
       case IDLE -> {
-        // TODO logic to check hopper and switch between rollers goal
+        if(prevGoal == Goal.DISABLED && !deployer.isExtended()){
+          goal = Goal.UNJAM;
+        }
         deployer.setGoal(deployerGoal.EXTEND);
         rollers.setGoal(rollersGoal.IDLE);
       }
@@ -57,11 +59,6 @@ public class Intake extends SubsystemBase {
     }
     deployer.periodic();
     rollers.periodic();
-    if (goal == Goal.EXTEND && !deployer.isExtended()) {
-      setUNJAM();
-    } else if (goal == Goal.EXTEND && deployer.isExtended()) {
-      goal = Goal.IDLE;
-    }
   }
 
   public void setGoal(Goal desiredGoal) {
@@ -70,9 +67,5 @@ public class Intake extends SubsystemBase {
 
   public Goal getGoal() {
     return prevGoal;
-  }
-
-  public Goal setUNJAM() {
-    return goal = (!deployer.isExtended()) ? Goal.UNJAM : goal;
   }
 }

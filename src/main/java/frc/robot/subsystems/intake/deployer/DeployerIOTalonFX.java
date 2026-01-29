@@ -1,6 +1,7 @@
 package frc.robot.subsystems.intake.deployer;
 
 import com.ctre.phoenix6.StatusCode;
+import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -8,23 +9,24 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.constants.Constants;
-
+import com.ctre.phoenix6.hardware.CANcoder;
 public class DeployerIOTalonFX implements DeployerIO {
   private TalonFX deployerMotor;
+  private CANcoder canCoder;
   private TalonFXConfiguration motorConfigs = new TalonFXConfiguration();
+  private CANcoderConfiguration canCoderConfigs = new CANcoderConfiguration();
   public double requestedPosDegosDeg;
 
   public DeployerIOTalonFX() {
     deployerMotor = new TalonFX(Constants.Deployer.motorId);
-    // Setup config objects
-
+    canCoder = new CANcoder(0);
     motorConfigs.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 
     motorConfigs.HardwareLimitSwitch.ForwardLimitEnable = false;
     motorConfigs.HardwareLimitSwitch.ReverseLimitEnable = false;
 
     StatusCode deployerConfigStatus = deployerMotor.getConfigurator().apply(motorConfigs);
-
+    canCoder.getConfigurator().apply(canCoderConfigs);
     if (deployerConfigStatus != StatusCode.OK) {
       DriverStation.reportError(
           "Talon "
@@ -41,9 +43,9 @@ public class DeployerIOTalonFX implements DeployerIO {
 
     inputs.connected = deployerMotor.isConnected();
 
-    inputs.requestedPosDeg = deployerMotor.getPosition().getValueAsDouble();
+    inputs.angleDeg = rotationsToDegrees(deployerMotor.getPosition().getValueAsDouble());
 
-    inputs.requestedPosDeg = degreesToRotations(deployerMotor.getPosition().getValueAsDouble());
+    inputs.requestedPosDeg = rotationsToDegrees(deployerMotor.getPosition().getValueAsDouble());
 
     inputs.speedRotationsPerSec =
         degreesToRotations(deployerMotor.getVelocity().getValueAsDouble());
@@ -55,6 +57,8 @@ public class DeployerIOTalonFX implements DeployerIO {
     inputs.motorTempCelcius = deployerMotor.getDeviceTemp().getValueAsDouble();
 
     inputs.appliedVolts = deployerMotor.getMotorVoltage().getValueAsDouble();
+    
+    inputs.encoderRotations = canCoder.getAbsolutePosition().getValueAsDouble();
   }
 
   @Override
@@ -89,5 +93,8 @@ public class DeployerIOTalonFX implements DeployerIO {
   public double degreesToRotations(double value) {
     // TODO
     return value;
+  }
+  public double rotationsToDegrees(double value){
+    return value;//TODO
   }
 }
