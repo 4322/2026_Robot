@@ -64,7 +64,8 @@ public final class Constants {
     public static final int spindexerMotorId = 1;
     public static final double supplyCurrentLimit = 40; // TODO
     public static final double statorCurrentLimit = 60;
-    public static final InvertedValue motorInvert = InvertedValue.Clockwise_Positive; // TODO set these
+    public static final InvertedValue motorInvert =
+        InvertedValue.Clockwise_Positive; // TODO set these
     public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
     public static final double kS = 0;
     public static final double kV = 0;
@@ -83,13 +84,37 @@ public final class Constants {
     public static final int tunnelMotorId = 0;
     public static final double statorCurrentLimit = 60; // TODO
     public static final double supplyCurrentLimit = 40; // TODO
-    public static final InvertedValue motorInvert = InvertedValue.Clockwise_Positive; // TODO set these
+    public static final InvertedValue motorInvert =
+        InvertedValue.Clockwise_Positive; // TODO set these
     public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
     public static final double kS = 0;
     public static final double kV = 0;
     public static final double kP = 0;
     public static final double kI = 0;
     public static final double kD = 0;
+
+    public static final double stoppedThreshold = 0.1; // TODO (Mechanism rotations)
+    public static final double atSpeedThreshold = 5; // TODO (Mechanism rotations)
+    public static final double motorToMechanismRatio = 1.0; // TODO
+  }
+
+  public static class Flywheel {
+
+    public static final double idleShootSpeedRPS = 0; // TODO
+    public static final int FlywheelMotorId = 0; // TODO
+    public static final int FlywheelSensorId = 0; // TODO
+    public static final double fuelDetectedOutputting = 60; // TODO
+    public static final double busCurrentLimit = 60; // TODO
+    public static final double statorCurrentLimit = 60; // TODO
+    public static final double supplyCurrentLimit = 40; // TODO
+    public static final InvertedValue motorInvert =
+        InvertedValue.Clockwise_Positive; // TODO set these
+    public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
+    public static final double kS = 0; // TODO
+    public static final double kV = 0; // TODO
+    public static final double kP = 0; // TODO
+    public static final double kI = 0; // TODO
+    public static final double kD = 0; // TODO
 
     public static final double stoppedThreshold = 0.1; // TODO (Mechanism rotations)
     public static final double atSpeedThreshold = 5; // TODO (Mechanism rotations)
