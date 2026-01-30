@@ -14,7 +14,6 @@ public class SpindexerIOTalonFx implements SpindexerIO {
   private double lastRequestedVelocity = -1;
 
   private TalonFXConfiguration config = new TalonFXConfiguration();
-  private Slot0Configs pidConfig = new Slot0Configs();
   private VelocityVoltage velocityRequest = new VelocityVoltage(0).withSlot(0);
 
   public SpindexerIOTalonFx() {
@@ -26,15 +25,16 @@ public class SpindexerIOTalonFx implements SpindexerIO {
     config.MotorOutput.Inverted = Constants.Spindexer.motorInvert;
     config.MotorOutput.NeutralMode = Constants.Spindexer.neutralMode;
 
-    pidConfig.kS = Constants.Spindexer.kS;
-    pidConfig.kV = Constants.Spindexer.kV;
-    pidConfig.kP = Constants.Spindexer.kP;
-    pidConfig.kI = Constants.Spindexer.kI;
-    pidConfig.kD = Constants.Spindexer.kD;
+    config.Slot0.kS = Constants.Spindexer.kS;
+    config.Slot0.kV = Constants.Spindexer.kV;
+    config.Slot0.kP = Constants.Spindexer.kP;
+    config.Slot0.kI = Constants.Spindexer.kI;
+    config.Slot0.kD = Constants.Spindexer.kD;
+
+    config.HardwareLimitSwitch.ForwardLimitEnable = false;
+    config.HardwareLimitSwitch.ReverseLimitEnable = false;
 
     StatusCode configStatus = motor.getConfigurator().apply(config);
-
-    StatusCode pidConfigStatus = motor.getConfigurator().apply(pidConfig);
 
     if (configStatus != StatusCode.OK) {
       DriverStation.reportError(
@@ -65,7 +65,7 @@ public class SpindexerIOTalonFx implements SpindexerIO {
   @Override
   public void setTargetVelocity(double velocity) {
     if (velocity != lastRequestedVelocity) {
-      motor.setControl(velocityRequest.withVelocity(velocity).withEnableFOC(true));
+      motor.setControl(velocityRequest.withVelocity(velocity / Constants.Spindexer.motorToMechanismRatio).withEnableFOC(true));
     }
 
     lastRequestedVelocity = velocity;

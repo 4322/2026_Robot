@@ -14,7 +14,6 @@ public class TunnelIOTalonFx implements TunnelIO {
   private double lastRequestedVelocity = -1;
 
   private TalonFXConfiguration config = new TalonFXConfiguration();
-  private Slot0Configs pidConfig = new Slot0Configs();
   private VelocityVoltage velocityRequest = new VelocityVoltage(0).withSlot(0);
 
   public TunnelIOTalonFx() {
@@ -25,15 +24,16 @@ public class TunnelIOTalonFx implements TunnelIO {
     config.MotorOutput.Inverted = Constants.Tunnel.motorInvert;
     config.MotorOutput.NeutralMode = Constants.Tunnel.neutralMode;
 
-    pidConfig.kS = Constants.Tunnel.kS;
-    pidConfig.kV = Constants.Tunnel.kV;
-    pidConfig.kP = Constants.Tunnel.kP;
-    pidConfig.kI = Constants.Tunnel.kI;
-    pidConfig.kD = Constants.Tunnel.kD;
+    config.Slot0.kS = Constants.Tunnel.kS;
+    config.Slot0.kV = Constants.Tunnel.kV;
+    config.Slot0.kP = Constants.Tunnel.kP;
+    config.Slot0.kI = Constants.Tunnel.kI;
+    config.Slot0.kD = Constants.Tunnel.kD;
+
+    config.HardwareLimitSwitch.ForwardLimitEnable = false;
+    config.HardwareLimitSwitch.ReverseLimitEnable = false;
 
     StatusCode configStatus = motor.getConfigurator().apply(config);
-
-    StatusCode pidConfigStatus = motor.getConfigurator().apply(pidConfig);
 
     if (configStatus != StatusCode.OK) {
       DriverStation.reportError(
@@ -64,7 +64,7 @@ public class TunnelIOTalonFx implements TunnelIO {
   @Override
   public void setTargetVelocity(double velocity) {
     if (velocity != lastRequestedVelocity) {
-      motor.setControl(velocityRequest.withVelocity(velocity).withEnableFOC(true));
+      motor.setControl(velocityRequest.withVelocity(velocity / Constants.Tunnel.motorToMechanismRatio).withEnableFOC(true));
     }
 
     lastRequestedVelocity = velocity;

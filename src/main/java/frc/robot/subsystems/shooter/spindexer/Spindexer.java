@@ -54,6 +54,6 @@ public class Spindexer {
   }
 
   public boolean isStopped() {
-    return inputs.velocityRotationsPerSec < Constants.Spindexer.stoppedThreshold;
+    return inputs.velocityRotationsPerSec < Constants.Spindexer.stoppedThreshold * Constants.Spindexer.motorToMechanismRatio;
   }
 }
