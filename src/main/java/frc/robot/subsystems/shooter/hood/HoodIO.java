@@ -1,3 +1,7 @@
 package frc.robot.subsystems.shooter.hood;
 
-public class HoodIO {}
+
+public class HoodIO {
+
+
+}
