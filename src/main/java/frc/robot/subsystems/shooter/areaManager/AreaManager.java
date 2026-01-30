@@ -37,7 +37,6 @@ public class AreaManager {
     RIGHT_NEUTRAL
   }
 
-
   private Zone zone = Zone.ALLIANCE_ZONE;
   private Zone objectZone = Zone.ALLIANCE_ZONE;
 
