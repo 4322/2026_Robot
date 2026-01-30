@@ -40,15 +40,6 @@ public class TunnelIOTalonFx implements TunnelIO {
           "Talon " + motor.getDeviceID() + " error (Tunnel): " + configStatus.getDescription(),
           false);
     }
-
-    if (pidConfigStatus != StatusCode.OK) {
-      DriverStation.reportError(
-          "Talon "
-              + motor.getDeviceID()
-              + " PID error (Tunnel): "
-              + pidConfigStatus.getDescription(),
-          false);
-    }
   }
 
   @Override

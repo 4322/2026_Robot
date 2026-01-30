@@ -42,14 +42,6 @@ public class SpindexerIOTalonFx implements SpindexerIO {
           false);
     }
 
-    if (pidConfigStatus != StatusCode.OK) {
-      DriverStation.reportError(
-          "Talon "
-              + motor.getDeviceID()
-              + " PID error (Spindexer): "
-              + pidConfigStatus.getDescription(),
-          false);
-    }
   }
 
   @Override
