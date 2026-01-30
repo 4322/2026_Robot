@@ -1,7 +1,6 @@
 package frc.robot.subsystems.shooter.spindexer;
 
 import com.ctre.phoenix6.StatusCode;
-import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -41,7 +40,6 @@ public class SpindexerIOTalonFx implements SpindexerIO {
           "Talon " + motor.getDeviceID() + " error (Spindexer): " + configStatus.getDescription(),
           false);
     }
-
   }
 
   @Override
@@ -57,7 +55,10 @@ public class SpindexerIOTalonFx implements SpindexerIO {
   @Override
   public void setTargetVelocity(double velocity) {
     if (velocity != lastRequestedVelocity) {
-      motor.setControl(velocityRequest.withVelocity(velocity / Constants.Spindexer.motorToMechanismRatio).withEnableFOC(true));
+      motor.setControl(
+          velocityRequest
+              .withVelocity(velocity / Constants.Spindexer.motorToMechanismRatio)
+              .withEnableFOC(true));
     }
 
     lastRequestedVelocity = velocity;

@@ -54,10 +54,12 @@ public class Tunnel {
   }
 
   public boolean isStopped() {
-    return inputs.velocityRotationsPerSec < Constants.Tunnel.stoppedThreshold * Constants.Tunnel.motorToMechanismRatio;
+    return inputs.velocityRotationsPerSec
+        < Constants.Tunnel.stoppedThreshold * Constants.Tunnel.motorToMechanismRatio;
   }
 
   public boolean isAtSpeed() {
-    return inputs.velocityRotationsPerSec > Constants.Tunnel.atSpeedThreshold * Constants.Tunnel.motorToMechanismRatio;
+    return inputs.velocityRotationsPerSec
+        > Constants.Tunnel.atSpeedThreshold * Constants.Tunnel.motorToMechanismRatio;
   }
 }

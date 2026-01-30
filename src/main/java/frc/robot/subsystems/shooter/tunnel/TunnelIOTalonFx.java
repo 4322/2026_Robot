@@ -1,7 +1,6 @@
 package frc.robot.subsystems.shooter.tunnel;
 
 import com.ctre.phoenix6.StatusCode;
-import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -55,7 +54,10 @@ public class TunnelIOTalonFx implements TunnelIO {
   @Override
   public void setTargetVelocity(double velocity) {
     if (velocity != lastRequestedVelocity) {
-      motor.setControl(velocityRequest.withVelocity(velocity / Constants.Tunnel.motorToMechanismRatio).withEnableFOC(true));
+      motor.setControl(
+          velocityRequest
+              .withVelocity(velocity / Constants.Tunnel.motorToMechanismRatio)
+              .withEnableFOC(true));
     }
 
     lastRequestedVelocity = velocity;
