@@ -5,6 +5,7 @@ import frc.robot.subsystems.intake.deployer.Deployer;
 import frc.robot.subsystems.intake.deployer.Deployer.deployerGoal;
 import frc.robot.subsystems.intake.rollers.Rollers;
 import frc.robot.subsystems.intake.rollers.Rollers.rollersGoal;
+import org.littletonrobotics.junction.Logger;
 
 public class Intake extends SubsystemBase {
   private final Deployer deployer;
@@ -30,6 +31,7 @@ public class Intake extends SubsystemBase {
 
   @Override
   public void periodic() {
+    Logger.recordOutput("Inttake/State", goal);
     prevGoal = goal;
     switch (goal) {
       case EXTEND -> {
@@ -44,17 +46,12 @@ public class Intake extends SubsystemBase {
         rollers.setGoal(rollersGoal.EJECT);
       }
       case IDLE -> {
-        if(prevGoal == Goal.DISABLED && !deployer.isExtended()){
-          goal = Goal.UNJAM;
-        }
         deployer.setGoal(deployerGoal.EXTEND);
         rollers.setGoal(rollersGoal.IDLE);
       }
       case INTAKING -> {
         deployer.setGoal(deployerGoal.EXTEND);
         rollers.setGoal(rollersGoal.INTAKE);
-      }
-      case UNJAM -> { // TODO
       }
     }
     deployer.periodic();
@@ -67,5 +64,10 @@ public class Intake extends SubsystemBase {
 
   public Goal getGoal() {
     return prevGoal;
+  }
+
+  public void enableBreakMode() {
+    deployer.setBrakeMode(true);
+    rollers.setBrakeMode(true);
   }
 }

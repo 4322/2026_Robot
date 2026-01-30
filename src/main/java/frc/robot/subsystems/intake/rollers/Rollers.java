@@ -1,6 +1,8 @@
 package frc.robot.subsystems.intake.rollers;
 
 import frc.robot.constants.Constants;
+import org.littletonrobotics.junction.Logger;
+
 public class Rollers {
   private RollersIO rollersIO;
   private RollersIOInputsAutoLogged inputs = new RollersIOInputsAutoLogged();
@@ -13,15 +15,15 @@ public class Rollers {
   }
 
   public rollersGoal goal = rollersGoal.DISABLED;
-  public rollersGoal prevGoal;
 
   public Rollers(RollersIO rollersIO) {
     this.rollersIO = rollersIO;
   }
 
   public void periodic() {
-    prevGoal = goal;
     rollersIO.updateInputs(inputs);
+    Logger.processInputs("Rollers", inputs);
+    Logger.recordOutput("Rollers/Goal", goal);
     switch (Constants.rollersMode) {
       case DISABLED:
         break;

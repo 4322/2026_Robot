@@ -7,6 +7,8 @@
 
 package frc.robot.constants;
 
+import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.wpilibj.RobotBase;
 
 /**
@@ -62,11 +64,27 @@ public final class Constants {
     public static final double retractDeg = 1; // TODO
     public static final double extendDeg = 1; // TODO
     public static final int motorId = 1; // TODO
+    public static final double statorCurrentLimit = 1;
+    public static final double supplyCurrentLimit = 1;
+    public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
+    public static final InvertedValue motorInvert = InvertedValue.Clockwise_Positive;
+    public static final double kS = 0;
+    public static final double kV = 0;
+    public static final double kP = 0;
+    public static final double kI = 0;
+    public static final double kD = 0;
+    public static final int canID = 2;
+    public static final double ratioRS = 2;
+    public static final double ratioSM = 1;
   }
 
   public class Rollers {
     public static final double voltageIntake = 1; // TODO
     public static final double voltageEject = -1; // TODO
     public static final int motorId = 1; // TODO
+    public static final double statorCurrentLimit = 1;
+    public static final double supplyCurrentLimit = 1;
+    public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
+    public static final InvertedValue motorInvert = InvertedValue.Clockwise_Positive;
   }
 }

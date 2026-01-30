@@ -22,7 +22,11 @@ public class RollersIOTalonFX implements RollersIO {
 
     motorConfigs.HardwareLimitSwitch.ForwardLimitEnable = false;
     motorConfigs.HardwareLimitSwitch.ReverseLimitEnable = false;
+    motorConfigs.CurrentLimits.StatorCurrentLimit = Constants.Rollers.statorCurrentLimit;
+    motorConfigs.CurrentLimits.SupplyCurrentLimit = Constants.Rollers.supplyCurrentLimit;
 
+    motorConfigs.MotorOutput.Inverted = Constants.Rollers.motorInvert;
+    motorConfigs.MotorOutput.NeutralMode = Constants.Rollers.neutralMode;
     StatusCode feederConfigStatus = rollersMotor.getConfigurator().apply(motorConfigs);
 
     if (feederConfigStatus != StatusCode.OK) {
@@ -62,8 +66,9 @@ public class RollersIOTalonFX implements RollersIO {
   public TalonFX getTalonFX() {
     return rollersMotor;
   }
+
   @Override
-  public void enableBreakMode(boolean mode){
-     rollersMotor.setNeutralMode(mode ? NeutralModeValue.Brake : NeutralModeValue.Coast);
+  public void enableBreakMode(boolean mode) {
+    rollersMotor.setNeutralMode(mode ? NeutralModeValue.Brake : NeutralModeValue.Coast);
   }
 }

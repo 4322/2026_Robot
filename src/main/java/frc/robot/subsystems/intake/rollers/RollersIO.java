@@ -24,5 +24,6 @@ public interface RollersIO {
   public default TalonFX getTalonFX() {
     return null;
   }
-  public default void enableBreakMode(boolean mode){}
+
+  public default void enableBreakMode(boolean mode) {}
 }
