@@ -1,11 +1,10 @@
 package frc.robot.subsystems.shooter.spindexer;
 
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
 import org.littletonrobotics.junction.Logger;
 
-public class Spindexer extends SubsystemBase {
+public class Spindexer {
   private SpindexerIO io;
   private SpindexerIOInputsAutoLogged inputs = new SpindexerIOInputsAutoLogged();
 
@@ -21,7 +20,6 @@ public class Spindexer extends SubsystemBase {
     this.io = io;
   }
 
-  @Override
   public void periodic() {
     io.updateInputs(inputs);
     Logger.processInputs("Spindexer", inputs);

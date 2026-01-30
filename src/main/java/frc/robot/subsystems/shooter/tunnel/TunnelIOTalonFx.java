@@ -3,10 +3,7 @@ package frc.robot.subsystems.shooter.tunnel;
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.controls.DutyCycleOut;
-import com.ctre.phoenix6.controls.TorqueCurrentFOC;
 import com.ctre.phoenix6.controls.VelocityVoltage;
-import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -76,12 +73,11 @@ public class TunnelIOTalonFx implements TunnelIO {
   @Override
   public void stop() {
     lastRequestedVelocity = 0;
-    motor.stopMotor();
+    motor.setControl(velocityRequest.withVelocity(0).withEnableFOC(true));
   }
 
   @Override
   public void enableBrakeMode(boolean enable) {
     motor.setNeutralMode(enable ? NeutralModeValue.Brake : NeutralModeValue.Coast);
   }
-
 }

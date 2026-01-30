@@ -1,11 +1,10 @@
 package frc.robot.subsystems.shooter.tunnel;
 
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
 import org.littletonrobotics.junction.Logger;
 
-public class Tunnel extends SubsystemBase {
+public class Tunnel {
   private TunnelIO io;
   private TunnelIOInputsAutoLogged inputs = new TunnelIOInputsAutoLogged();
 
@@ -21,7 +20,6 @@ public class Tunnel extends SubsystemBase {
     this.io = io;
   }
 
-  @Override
   public void periodic() {
     io.updateInputs(inputs);
     Logger.processInputs("Tunnel", inputs);
