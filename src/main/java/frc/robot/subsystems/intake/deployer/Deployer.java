@@ -13,7 +13,7 @@ public class Deployer {
     DISABLED,
     EXTEND,
     RETRACT,
-    UNJAM // TODO
+    //UNJAM TODO
   }
 
   public deployerGoal goal = deployerGoal.DISABLED;

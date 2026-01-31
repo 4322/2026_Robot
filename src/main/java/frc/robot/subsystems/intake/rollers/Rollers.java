@@ -8,13 +8,12 @@ public class Rollers {
   private RollersIOInputsAutoLogged inputs = new RollersIOInputsAutoLogged();
 
   public enum rollersGoal {
-    DISABLED,
     IDLE,
     INTAKE,
     EJECT
   }
 
-  public rollersGoal goal = rollersGoal.DISABLED;
+  public rollersGoal goal = rollersGoal.IDLE;
 
   public Rollers(RollersIO rollersIO) {
     this.rollersIO = rollersIO;

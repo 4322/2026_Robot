@@ -23,7 +23,7 @@ public class Intake extends SubsystemBase {
     EJECT,
     IDLE,
     INTAKING,
-    UNJAM // still blue and not a priority in docs as of current so TODO
+    // aadd unjamstill blue and not a priority in docs as of current so TODO
   }
 
   public Goal goal = Goal.DISABLED;
@@ -34,6 +34,7 @@ public class Intake extends SubsystemBase {
     Logger.recordOutput("Inttake/State", goal);
     prevGoal = goal;
     switch (goal) {
+      case DISABLED -> {break;}
       case EXTEND -> {
         deployer.setGoal(deployerGoal.EXTEND);
       }
