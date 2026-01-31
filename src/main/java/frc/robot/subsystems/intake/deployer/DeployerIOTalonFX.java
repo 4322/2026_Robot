@@ -20,7 +20,6 @@ public class DeployerIOTalonFX implements DeployerIO {
   private CANcoder canCoder;
   private TalonFXConfiguration motorConfigs = new TalonFXConfiguration();
   private CANcoderConfiguration canCoderConfigs = new CANcoderConfiguration();
-  private Slot0Configs pidConfig = new Slot0Configs();
   public double requestedPosDeg;
   private double posRotError;
 
@@ -37,13 +36,14 @@ public class DeployerIOTalonFX implements DeployerIO {
     motorConfigs.CurrentLimits.SupplyCurrentLimit = Constants.Deployer.supplyCurrentLimit;
     motorConfigs.MotorOutput.Inverted = Constants.Deployer.motorInvert;
     motorConfigs.MotorOutput.NeutralMode = Constants.Deployer.neutralMode;
-    pidConfig.kS = Constants.Deployer.kS;
-    pidConfig.kV = Constants.Deployer.kV;
-    pidConfig.kP = Constants.Deployer.kP;
-    pidConfig.kI = Constants.Deployer.kI;
-    pidConfig.kD = Constants.Deployer.kD;
+    motorConfigs.Slot0.kS = Constants.Deployer.kS;
+    motorConfigs.Slot0.kV = Constants.Deployer.kV;
+    motorConfigs.Slot0.kP = Constants.Deployer.kP;
+    motorConfigs.Slot0.kI = Constants.Deployer.kI;
+    motorConfigs.Slot0.kD = Constants.Deployer.kD;
+    motorConfigs.HardwareLimitSwitch.ForwardLimitEnable = false;
+    motorConfigs.HardwareLimitSwitch.ReverseLimitEnable = false;
     StatusCode deployerConfigStatus = deployerMotor.getConfigurator().apply(motorConfigs);
-    StatusCode pidConfigStatus = deployerMotor.getConfigurator().apply(pidConfig);
     canCoder.getConfigurator().apply(canCoderConfigs);
     if (deployerConfigStatus != StatusCode.OK) {
       DriverStation.reportError(
@@ -51,14 +51,6 @@ public class DeployerIOTalonFX implements DeployerIO {
               + deployerMotor.getDeviceID()
               + " error (Deployer): "
               + deployerConfigStatus.getDescription(),
-          false);
-    }
-    if (pidConfigStatus != StatusCode.OK) {
-      DriverStation.reportError(
-          "Talon "
-              + deployerMotor.getDeviceID()
-              + " PID error (Spindexer): "
-              + pidConfigStatus.getDescription(),
           false);
     }
     posRotError = subtract(deployerMotor.getPosition().getValueAsDouble(), canCoder.getPosition().getValueAsDouble());
