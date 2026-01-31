@@ -46,7 +46,7 @@ public class RollersIOTalonFX implements RollersIO {
     inputs.busCurrentAmps = rollersMotor.getSupplyCurrent().getValueAsDouble();
     inputs.statorCurrentAmps = rollersMotor.getStatorCurrent().getValueAsDouble();
     inputs.motorTempCelcius = rollersMotor.getDeviceTemp().getValueAsDouble();
-    inputs.speedRotationsPerSec = rollersMotor.getVelocity().getValueAsDouble();
+    inputs.motorRotationsPerSec = rollersMotor.getVelocity().getValueAsDouble();
   }
 
   @Override

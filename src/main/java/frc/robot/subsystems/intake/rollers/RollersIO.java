@@ -10,7 +10,7 @@ public interface RollersIO {
     public double statorCurrentAmps = 0.0;
     public double busCurrentAmps = 0.0;
     public double motorTempCelcius = 0.0;
-    public double speedRotationsPerSec = 0.0;
+    public double motorRotationsPerSec = 0.0;
     public double appliedVoltage = 0.0;
     public double controllerTempCelcius = 0.0;
   }
