@@ -9,11 +9,9 @@ import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-import com.revrobotics.AbsoluteEncoder;
-import com.revrobotics.spark.config.AbsoluteEncoderConfig;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.units.Unit;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.constants.Constants;
 
@@ -24,6 +22,7 @@ public class DeployerIOTalonFX implements DeployerIO {
   private CANcoderConfiguration canCoderConfigs = new CANcoderConfiguration();
   private Slot0Configs pidConfig = new Slot0Configs();
   public double requestedPosDeg;
+  private double posRotError;
 
   public DeployerIOTalonFX() {
     deployerMotor = new TalonFX(Constants.Deployer.motorId);
@@ -36,16 +35,13 @@ public class DeployerIOTalonFX implements DeployerIO {
     motorConfigs.Feedback.RotorToSensorRatio = Constants.Deployer.ratioRS;
     motorConfigs.CurrentLimits.StatorCurrentLimit = Constants.Deployer.statorCurrentLimit;
     motorConfigs.CurrentLimits.SupplyCurrentLimit = Constants.Deployer.supplyCurrentLimit;
-
     motorConfigs.MotorOutput.Inverted = Constants.Deployer.motorInvert;
     motorConfigs.MotorOutput.NeutralMode = Constants.Deployer.neutralMode;
-
     pidConfig.kS = Constants.Deployer.kS;
     pidConfig.kV = Constants.Deployer.kV;
     pidConfig.kP = Constants.Deployer.kP;
     pidConfig.kI = Constants.Deployer.kI;
     pidConfig.kD = Constants.Deployer.kD;
-
     StatusCode deployerConfigStatus = deployerMotor.getConfigurator().apply(motorConfigs);
     StatusCode pidConfigStatus = deployerMotor.getConfigurator().apply(pidConfig);
     canCoder.getConfigurator().apply(canCoderConfigs);
@@ -65,6 +61,8 @@ public class DeployerIOTalonFX implements DeployerIO {
               + pidConfigStatus.getDescription(),
           false);
     }
+    posRotError = subtract(deployerMotor.getPosition().getValueAsDouble(), canCoder.getPosition().getValueAsDouble());
+    deployerMotor.setPosition(deployerMotor.getPosition().getValueAsDouble() + posRotError);
   }
 
   @Override
@@ -73,12 +71,12 @@ public class DeployerIOTalonFX implements DeployerIO {
 
     inputs.connected = deployerMotor.isConnected();
 
-    inputs.angleDeg = rotationsToDegrees(deployerMotor.getPosition().getValueAsDouble());
+    inputs.angleDeg = toCodeCoords(Units.rotationsToDegrees(deployerMotor.getPosition().getValueAsDouble()));
 
-    inputs.requestedPosDeg = rotationsToDegrees(deployerMotor.getPosition().getValueAsDouble());
+    inputs.requestedPosDeg = requestedPosDeg;
 
     inputs.speedRotationsPerSec =
-        degreesToRotations(deployerMotor.getVelocity().getValueAsDouble());
+        Units.degreesToRotations(deployerMotor.getVelocity().getValueAsDouble());
 
     inputs.busCurrentAmps = deployerMotor.getSupplyCurrent().getValueAsDouble();
 
@@ -89,12 +87,15 @@ public class DeployerIOTalonFX implements DeployerIO {
     inputs.appliedVolts = deployerMotor.getMotorVoltage().getValueAsDouble();
 
     inputs.encoderRotations = canCoder.getAbsolutePosition().getValueAsDouble();
+
+    inputs.motorRotations = deployerMotor.getPosition().getValueAsDouble();
   }
 
   @Override
   public void setPosition(double requestedPosDeg) {
+    this.requestedPosDeg = requestedPosDeg;
     deployerMotor.setControl(
-        new MotionMagicVoltage(Units.degreesToRotations(requestedPosDeg))
+        new MotionMagicVoltage(Units.degreesToRotations(toMotorCoords(requestedPosDeg)))
             .withSlot(0)
             .withEnableFOC(true));
   }
@@ -113,14 +114,14 @@ public class DeployerIOTalonFX implements DeployerIO {
   public void enableBrakeMode(Boolean mode) {
     deployerMotor.setNeutralMode(mode ? NeutralModeValue.Brake : NeutralModeValue.Coast);
   }
-
-  public double degreesToRotations(double value) {
-    value = Units.degreesToRotations(value);
-    return value;
+  public double subtract(Double pos, Double canPos){
+    return pos - canPos;
+  }
+    private double toCodeCoords(double position) {
+    return position + Constants.Deployer.maxGravityDegrees;
   }
 
-  public double rotationsToDegrees(double value) {
-    value = Units.rotationsToDegrees(value);
-    return value;
+  private double toMotorCoords(double position) {
+    return position - Constants.Deployer.maxGravityDegrees;
   }
 }

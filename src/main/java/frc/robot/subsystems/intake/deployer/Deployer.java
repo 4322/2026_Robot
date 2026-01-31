@@ -26,7 +26,9 @@ public class Deployer {
   public void periodic() {
     deployerIO.updateInputs(inputs);
     Logger.processInputs("Deployer", inputs);
-
+    if(desiredPosition == inputs.angleDeg){
+      currentPosition = desiredPosition;
+    }
     prevGoal = goal;
     switch (Constants.deployerMode) {
       case DISABLED:
@@ -47,11 +49,13 @@ public class Deployer {
   }
 
   public void retract() {
+    desiredPosition = Constants.Deployer.retractDeg;
     deployerIO.setPosition(Constants.Deployer.retractDeg);
   }
 
   public void extend() {
     deployerIO.setPosition(Constants.Deployer.extendDeg);
+    currentPosition = Constants.Deployer.extendDeg; 
   }
 
   public void unjam() {
@@ -63,11 +67,18 @@ public class Deployer {
   }
 
   public Boolean isExtended() {
-    // return (//TODO check votlage) ? true: false;
-    return true;
+    if (currentPosition == desiredPosition) {
+      return true;      
+    } else{return false;}
   }
 
   public void setGoal(deployerGoal goal) {
     this.goal = goal;
+  }
+  public boolean isStowed(){
+    if(currentPosition == Constants.Deployer.retractDeg){ 
+      return true;}
+    else
+    {return false;}
   }
 }

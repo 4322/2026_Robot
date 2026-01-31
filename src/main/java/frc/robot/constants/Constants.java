@@ -63,6 +63,7 @@ public final class Constants {
   public class Deployer {
     public static final double retractDeg = 1; // TODO
     public static final double extendDeg = 1; // TODO
+    public static final double maxGravityDegrees = 5;
     public static final int motorId = 1; // TODO
     public static final double statorCurrentLimit = 1;
     public static final double supplyCurrentLimit = 1;
@@ -76,6 +77,7 @@ public final class Constants {
     public static final int canID = 2;
     public static final double ratioRS = 2;
     public static final double ratioSM = 1;
+
   }
 
   public class Rollers {
@@ -86,5 +88,7 @@ public final class Constants {
     public static final double supplyCurrentLimit = 1;
     public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
     public static final InvertedValue motorInvert = InvertedValue.Clockwise_Positive;
+    public static final double maxGravityPosDeg = 145;
+    public static final double extendPosDeg = 5;
   }
 }

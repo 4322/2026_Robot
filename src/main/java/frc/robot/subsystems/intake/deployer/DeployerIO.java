@@ -18,7 +18,7 @@ public interface DeployerIO {
     public double kGeffort;
     public double kPeffort;
     public double totalEffort;
-
+    public double motorRotations;
     public double requestedPosDeg = 0.0;
   }
 
