@@ -44,7 +44,9 @@ public final class Constants {
 
   public enum SubsystemMode {
     DISABLED,
-    NORMAL
+    NORMAL,
+    TUNING, 
+    DRIVETUNING
   }
 
   public static final SubsystemMode driveMode = SubsystemMode.NORMAL;
