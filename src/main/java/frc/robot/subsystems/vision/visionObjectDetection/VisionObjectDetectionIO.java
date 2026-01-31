@@ -5,8 +5,6 @@ import org.littletonrobotics.junction.AutoLog;
 
 public interface VisionObjectDetectionIO {
 
-  public void updateInputs(VisionObjectDetectionIOInputsAutoLogged inputs);
-
   @AutoLog
   public static class VisionObjectDetectionIOInputs {
     public boolean hasTarget;
@@ -14,4 +12,6 @@ public interface VisionObjectDetectionIO {
 
     public double latestResultTimestamp;
   }
+
+  public default void updateInputs(VisionObjectDetectionIOInputsAutoLogged inputs) {}
 }
