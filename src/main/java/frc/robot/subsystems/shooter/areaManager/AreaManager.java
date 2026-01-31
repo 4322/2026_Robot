@@ -67,9 +67,9 @@ public class AreaManager {
     RIGHT_NEUTRAL
   }
 
-  private Zone zone = Zone.ALLIANCE_ZONE;
+  private static Zone zone = Zone.ALLIANCE_ZONE;
 
-  public boolean isShootingArea(Translation2d position) {
+  public static boolean isShootingArea(Translation2d position) {
     return !((trenchLeftRed.contains(position)
             || trenchRightRed.contains(position)
             || bumpLeftRed.contains(position)
@@ -85,7 +85,7 @@ public class AreaManager {
             : (frontOfHubBlue.contains(position))));
   }
 
-  public Zone getZoneOfPosition(Translation2d position) {
+  public static Zone getZoneOfPosition(Translation2d position) {
     if (Robot.alliance == Alliance.Red) {
       if (redAllianceZone.contains(position)) {
         zone = Zone.ALLIANCE_ZONE;
