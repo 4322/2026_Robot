@@ -10,7 +10,8 @@ public class Rollers {
   public enum rollersGoal {
     IDLE,
     INTAKE,
-    EJECT
+    EJECT,
+    DISABLED
   }
 
   public rollersGoal goal = rollersGoal.IDLE;
@@ -32,6 +33,7 @@ public class Rollers {
         break;
       case NORMAL:
         switch (goal) {
+          case DISABLED ->{break;}
           case IDLE -> {
             idle();
           }
