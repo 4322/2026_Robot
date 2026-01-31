@@ -12,8 +12,9 @@ public interface FlywheelIO {
     public double actualSpeed = 0.0;
     public double appliedVolts = 0.0;
     public double motorTempCelsius = 0.0;
-    public double sensorColorYellow = 0.0;
+    public double sensorProximity = 0.0;
 
+    public boolean sensorConnected = false;
     public boolean fuelDetectedOutputting = false;
     public double busCurrentAmps = 0.0;
   }

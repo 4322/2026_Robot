@@ -61,9 +61,10 @@ public class FlywheelIOTalonFx implements FlywheelIO {
     inputs.appliedVolts = motor.getMotorVoltage().getValueAsDouble();
     inputs.motorTempCelsius = motor.getDeviceTemp().getValueAsDouble();
 
-    inputs.sensorColorYellow = 0.0;
+    inputs.sensorProximity = cancoder.getProximity();
+    inputs.sensorConnected = cancoder.isConnected();
 
-    inputs.fuelDetectedOutputting = false;
+    inputs.fuelDetectedOutputting = cancoder.getProximity() < Constants.Flywheel.fuelDetectedOutputtingProximity;
     inputs.busCurrentAmps = motor.getSupplyCurrent().getValueAsDouble();
   }
 
