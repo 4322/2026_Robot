@@ -23,6 +23,7 @@ public class Flywheel {
   }
 
   public void setTargetVelocity(double velocityRPS) {
+    inputs.requestedSpeed = velocityRPS;
     io.setTargetVelocity(velocityRPS);
   }
 
@@ -31,6 +32,12 @@ public class Flywheel {
   }
 
   public void setIdleVelocity(double velocity) {
+    inputs.requestedSpeed = velocity;
     io.setTargetVelocity(Constants.Flywheel.idleShootSpeedRPS);
+  }
+
+  public boolean atTargetVelocity() {
+    return Math.abs(inputs.actualSpeed - inputs.requestedSpeed)
+        < Constants.Flywheel.allowedVelocityErrorRPS;
   }
 }

@@ -2,25 +2,26 @@ package frc.robot.subsystems.shooter.flywheel;
 
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-// import com.reduxrobotics.sensors.canandcolor.Canandcolor;
-// import com.reduxrobotics.sensors.canandcolor.CanandcolorSettings;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.reduxrobotics.sensors.canandcolor.Canandcolor;
+import com.reduxrobotics.sensors.canandcolor.CanandcolorSettings;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.constants.Constants;
 
 public class FlywheelIOTalonFx implements FlywheelIO {
 
   private TalonFX motor;
-  //   private Canandcolor cancoder = new Canandcolor(Constants.Flywheel.canandcolorId);
+  private Canandcolor cancoder;
+  private CanandcolorSettings cancoderConfig = new CanandcolorSettings();
   private double lastRequestedVelocity = -1;
 
   private TalonFXConfiguration config = new TalonFXConfiguration();
   private VelocityVoltage velocityRequest = new VelocityVoltage(0).withSlot(0);
 
   public FlywheelIOTalonFx() {
-    motor = new TalonFX(Constants.Flywheel.FlywheelMotorId);
+    motor = new TalonFX(Constants.Flywheel.motorId);
 
     config.CurrentLimits.StatorCurrentLimit = Constants.Flywheel.statorCurrentLimit;
     config.CurrentLimits.SupplyCurrentLimit = Constants.Flywheel.supplyCurrentLimit;
@@ -35,10 +36,19 @@ public class FlywheelIOTalonFx implements FlywheelIO {
     config.Slot0.kD = Constants.Flywheel.kD;
 
     StatusCode configStatus = motor.getConfigurator().apply(config);
+    cancoderConfig.setColorFramePeriod(10); // Set color frame period to 10ms
+
+    CanandcolorSettings cancoderConfigStatus = cancoder.setSettings(cancoderConfig, 1.0, 5);
+
+    if (!cancoderConfigStatus.isEmpty()) {
+      DriverStation.reportError(
+          "CANCoder " + cancoder.getAddress() + " error (Flywheel Sensor): " + cancoderConfigStatus,
+          false);
+    }
 
     if (configStatus != StatusCode.OK) {
       DriverStation.reportError(
-          "Talon " + motor.getDeviceID() + " error (Spindexer): " + configStatus.getDescription(),
+          "Talon " + motor.getDeviceID() + " error (Flywheel): " + configStatus.getDescription(),
           false);
     }
   }

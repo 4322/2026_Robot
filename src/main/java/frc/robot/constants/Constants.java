@@ -101,8 +101,8 @@ public final class Constants {
   public static class Flywheel {
 
     public static final double idleShootSpeedRPS = 0; // TODO
-    public static final int FlywheelMotorId = 0; // TODO
-    public static final int FlywheelSensorId = 0; // TODO
+    public static final int motorId = 0; // TODO
+    public static final int sensorId = 0; // TODO
     public static final double fuelDetectedOutputting = 60; // TODO
     public static final double busCurrentLimit = 60; // TODO
     public static final double statorCurrentLimit = 60; // TODO
@@ -115,6 +115,8 @@ public final class Constants {
     public static final double kP = 0; // TODO
     public static final double kI = 0; // TODO
     public static final double kD = 0; // TODO
+
+    public static final double allowedVelocityErrorRPS = 5.0; // TODO
 
     public static final double stoppedThreshold = 0.1; // TODO (Mechanism rotations)
     public static final double atSpeedThreshold = 5; // TODO (Mechanism rotations)
