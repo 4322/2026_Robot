@@ -103,7 +103,7 @@ public final class Constants {
     public static final double idleShootSpeedRPS = 0; // TODO
     public static final int motorId = 0; // TODO
     public static final int sensorId = 0; // TODO
-    public static final double fuelDetectedOutputtingProximity = 0.5; // TODO
+    public static final double fuelDetectedOutputtingProximityThreshold = 0.5; // TODO
     public static final double busCurrentLimit = 60; // TODO
     public static final double statorCurrentLimit = 60; // TODO
     public static final double supplyCurrentLimit = 40; // TODO

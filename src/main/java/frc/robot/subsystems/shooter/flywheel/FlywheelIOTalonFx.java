@@ -64,7 +64,8 @@ public class FlywheelIOTalonFx implements FlywheelIO {
     inputs.sensorProximity = cancoder.getProximity();
     inputs.sensorConnected = cancoder.isConnected();
 
-    inputs.fuelDetectedOutputting = cancoder.getProximity() < Constants.Flywheel.fuelDetectedOutputtingProximity;
+    inputs.fuelDetectedOutputting =
+        (cancoder.getProximity() < Constants.Flywheel.fuelDetectedOutputtingProximityThreshold);
     inputs.busCurrentAmps = motor.getSupplyCurrent().getValueAsDouble();
   }
 
