@@ -17,7 +17,6 @@ public class Deployer {
   }
 
   public deployerGoal goal = deployerGoal.DISABLED;
-  public static deployerGoal prevGoal;
 
   public Deployer(DeployerIO deployerIO) {
     this.deployerIO = deployerIO;
@@ -26,10 +25,10 @@ public class Deployer {
   public void periodic() {
     deployerIO.updateInputs(inputs);
     Logger.processInputs("Deployer", inputs);
+    Logger.recordOutput("Deployer/Goal", goal);
     if(desiredPosition == inputs.angleDeg){
       currentPosition = desiredPosition;
     }
-    prevGoal = goal;
     switch (Constants.deployerMode) {
       case DISABLED:
         break;
