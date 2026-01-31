@@ -94,26 +94,21 @@ public class AreaManager {
         new Rectangle2d(new Translation2d(16.4592, 0), new Translation2d(24.6888, 4.1148));
   }
 
-  public void periodic() {
-    Translation2d drivePosition = drive.getPose().getTranslation();
-    getZoneOfPosition(drivePosition);
-  }
 
-  public boolean isShootingArea() {
-    Translation2d drivePosition = drive.getPose().getTranslation();
-    return !((trenchLeftRed.contains(drivePosition)
-            || trenchRightRed.contains(drivePosition)
-            || bumpLeftRed.contains(drivePosition)
-            || bumpRightRed.contains(drivePosition)
-            || trenchLeftBlue.contains(drivePosition)
-            || trenchRightBlue.contains(drivePosition)
-            || bumpLeftBlue.contains(drivePosition)
-            || bumpRightBlue.contains(drivePosition)
-            || backOfHubRed.contains(drivePosition)
-            || backOfHubBlue.contains(drivePosition))
+  public boolean isShootingArea(Translation2d position) {
+    return !((trenchLeftRed.contains(position)
+            || trenchRightRed.contains(position)
+            || bumpLeftRed.contains(position)
+            || bumpRightRed.contains(position)
+            || trenchLeftBlue.contains(position)
+            || trenchRightBlue.contains(position)
+            || bumpLeftBlue.contains(position)
+            || bumpRightBlue.contains(position)
+            || backOfHubRed.contains(position)
+            || backOfHubBlue.contains(position))
         || (Robot.alliance == Alliance.Red
-            ? (frontOfHubRed.contains(drivePosition))
-            : (frontOfHubBlue.contains(drivePosition))));
+            ? (frontOfHubRed.contains(position))
+            : (frontOfHubBlue.contains(position))));
   }
 
   public Zone getZoneOfPosition(Translation2d position) {
