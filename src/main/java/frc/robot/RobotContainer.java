@@ -21,6 +21,7 @@ import frc.robot.constants.Constants;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
+import frc.robot.subsystems.drive.GyroIOBoron;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
@@ -66,14 +67,14 @@ public class RobotContainer {
         // a CANcoder
         drive = Constants.driveMode == Constants.SubsystemMode.DISABLED ?
               new Drive(
-                  new GyroIOPigeon2(),
+                  new GyroIO() {},
                   new ModuleIO() {},
                   new ModuleIO() {},
                   new ModuleIO() {},
                   new ModuleIO() {})
           :
             new Drive(
-                new GyroIOPigeon2(),
+                new GyroIOBoron(),
                 new ModuleIOTalonFX(TunerConstants.FrontLeft),
                 new ModuleIOTalonFX(TunerConstants.FrontRight),
                 new ModuleIOTalonFX(TunerConstants.BackLeft),
@@ -86,9 +87,9 @@ public class RobotContainer {
 
         
         visionObjectDetection = Constants.visionObjectDetection == Constants.SubsystemMode.DISABLED ?
-          new VisionObjectDetection("name", drive, new VisionObjectDetectionIOPhoton("name")) //TODO add fake io
+          new VisionObjectDetection(drive, new VisionObjectDetectionIO() {})
         :
-            new VisionObjectDetection("name", drive, new VisionObjectDetectionIOPhoton("name")); //TODO fix hostname
+            new VisionObjectDetection(drive, new VisionObjectDetectionIOPhoton());
         
         shooter = Constants.shooterMode == Constants.SubsystemMode.DISABLED ?
           new Shooter() //TODO add argument for sim/real in constructor (will be added in shooter branch)
@@ -129,9 +130,9 @@ public class RobotContainer {
             new VisionGlobalPose(); //TODO add IO for this
         
         visionObjectDetection = Constants.visionObjectDetection == Constants.SubsystemMode.DISABLED ?
-          new VisionObjectDetection("name", drive, new VisionObjectDetectionIOPhoton("name")) //TODO fix hostname
+          new VisionObjectDetection(drive, new VisionObjectDetectionIO() {})
         :
-            new VisionObjectDetection("name", drive, new VisionObjectDetectionIOPhoton("name")); //TODO fix hostname; add sim io
+            new VisionObjectDetection(drive, new VisionObjectDetectionIOPhoton()); //TODO add sim io
 
         shooter = Constants.shooterMode == Constants.SubsystemMode.DISABLED ?
           new Shooter() //TODO add actual io
@@ -158,7 +159,7 @@ public class RobotContainer {
                 new ModuleIO() {},
                 new ModuleIO() {});
         visionGlobalPose = new VisionGlobalPose(); //TODO add IO for this
-        visionObjectDetection = new VisionObjectDetection("name", drive, new VisionObjectDetectionIOPhoton("name")); //TODO add emppty io
+        visionObjectDetection = new VisionObjectDetection(drive, new VisionObjectDetectionIOPhoton()); //TODO add emppty io
         shooter = new Shooter(); //TODO empty io
         //TODO intake = new Intake();
         led = new LED();

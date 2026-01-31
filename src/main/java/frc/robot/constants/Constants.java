@@ -77,7 +77,7 @@ public final class Constants {
     public static final double kP = 1;
     public static final double kI = 0;
     public static final double kD = 0;
-    public static final double indexingMechanismRotationsPerSec = 0; // TODO 
+    public static final double indexingMechanismRotationsPerSec = 3; // TODO 
     public static final double stoppedMechanismRotationsPerSec = 0.1; // TODO
 
     public static final double motorToMechanismRatio = 10.0; // TODO
@@ -85,7 +85,7 @@ public final class Constants {
 
   public static class Tunnel {
 
-    public static final double indexingMotorRotationsPerSec = 0;
+    public static final double indexingMotorRotationsPerSec = 10;
     public static final int tunnelMotorId = 0;
     public static final double statorCurrentLimit = 60; // TODO
     public static final double supplyCurrentLimit = 40; // TODO
@@ -99,12 +99,13 @@ public final class Constants {
     public static final double kD = 0;
 
     public static final double stoppedMechanismRotationsPerSec = 0.1; // TODO
-    public static final double atSpeedMechanismRotationsPerSec = 30; // TODO
+    public static final double atSpeedMechanismRotationsPerSec = 0.95 * indexingMotorRotationsPerSec; // TODO
     public static final double motorToMechanismRatio = 1.0; // TODO
   }
 
   public static class VisionObjectDetection {
 
     public static final Transform3d robotCenterToCamera = new Transform3d(); // TODO add
+    public static final String hostname = null;
   }
 }
