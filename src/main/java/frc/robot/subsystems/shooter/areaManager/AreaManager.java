@@ -41,7 +41,6 @@ public class AreaManager {
 
   public AreaManager(Drive drive) {
     this.drive = drive;
-
   }
 
   public void initializeZones() {
@@ -93,7 +92,6 @@ public class AreaManager {
     frontOfHubBlue =
         new Rectangle2d(new Translation2d(16.4592, 0), new Translation2d(24.6888, 4.1148));
   }
-
 
   public boolean isShootingArea(Translation2d position) {
     return !((trenchLeftRed.contains(position)
