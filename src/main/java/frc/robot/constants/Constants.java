@@ -45,7 +45,9 @@ public final class Constants {
 
   public enum SubsystemMode {
     DISABLED,
-    NORMAL
+    NORMAL,
+    TUNING,
+    DRIVE_TUNING
   }
 
   public static final SubsystemMode driveMode = SubsystemMode.NORMAL;
@@ -57,7 +59,9 @@ public final class Constants {
   public static final SubsystemMode turretMode = SubsystemMode.NORMAL;
   public static final SubsystemMode deployerMode = SubsystemMode.NORMAL;
   public static final SubsystemMode rollerMode = SubsystemMode.NORMAL;
+  public static final SubsystemMode intakeMode = SubsystemMode.NORMAL;
   public static final SubsystemMode climberMode = SubsystemMode.DISABLED;
+  public static final SubsystemMode ledMode = SubsystemMode.NORMAL;
   public static final SubsystemMode visionGlobalPose = SubsystemMode.NORMAL;
   public static final SubsystemMode visionObjectDetection = SubsystemMode.NORMAL;
 
@@ -70,18 +74,18 @@ public final class Constants {
     public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
     public static final double kS = 0;
     public static final double kV = 0;
-    public static final double kP = 0;
+    public static final double kP = 1;
     public static final double kI = 0;
     public static final double kD = 0;
-    public static final double indexingVelocityRotationsPerSec = 0;
-    public static final double stoppedThreshold = 0.1; // TODO (Mechanism rotations)
+    public static final double indexingMechanismRotationsPerSec = 0; // TODO 
+    public static final double stoppedMechanismRotationsPerSec = 0.1; // TODO
 
-    public static final double motorToMechanismRatio = 1.0; // TODO
+    public static final double motorToMechanismRatio = 10.0; // TODO
   }
 
   public static class Tunnel {
 
-    public static final double indexingVelocityRotationsPerSec = 0;
+    public static final double indexingMotorRotationsPerSec = 0;
     public static final int tunnelMotorId = 0;
     public static final double statorCurrentLimit = 60; // TODO
     public static final double supplyCurrentLimit = 40; // TODO
@@ -90,12 +94,12 @@ public final class Constants {
     public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
     public static final double kS = 0;
     public static final double kV = 0;
-    public static final double kP = 0;
+    public static final double kP = 1;
     public static final double kI = 0;
     public static final double kD = 0;
 
-    public static final double stoppedThreshold = 0.1; // TODO (Mechanism rotations)
-    public static final double atSpeedThreshold = 5; // TODO (Mechanism rotations)
+    public static final double stoppedMechanismRotationsPerSec = 0.1; // TODO
+    public static final double atSpeedMechanismRotationsPerSec = 30; // TODO
     public static final double motorToMechanismRatio = 1.0; // TODO
   }
 

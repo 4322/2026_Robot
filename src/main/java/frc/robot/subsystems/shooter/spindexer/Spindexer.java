@@ -34,7 +34,7 @@ public class Spindexer {
         io.stop();
       }
       case INDEXING -> {
-        io.setTargetVelocity(Constants.Spindexer.indexingVelocityRotationsPerSec);
+        io.setTargetMechanismRotations(Constants.Spindexer.indexingMechanismRotationsPerSec);
       }
     }
 
@@ -54,7 +54,7 @@ public class Spindexer {
   }
 
   public boolean isStopped() {
-    return inputs.velocityRotationsPerSec
-        < Constants.Spindexer.stoppedThreshold * Constants.Spindexer.motorToMechanismRatio;
+    return inputs.mechanismRotationsPerSec
+        < Constants.Spindexer.stoppedMechanismRotationsPerSec;
   }
 }
