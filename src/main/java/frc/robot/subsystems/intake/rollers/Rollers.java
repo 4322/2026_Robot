@@ -24,6 +24,10 @@ public class Rollers {
     Logger.processInputs("Rollers", inputs);
     Logger.recordOutput("Rollers/Goal", goal);
     switch (Constants.rollersMode) {
+      case TUNING:
+        break;
+      case DRIVETUNING:
+        break;
       case DISABLED:
         break;
       case NORMAL:
