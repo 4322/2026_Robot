@@ -38,7 +38,6 @@ public class AreaManager {
   }
 
   private Zone zone = Zone.ALLIANCE_ZONE;
-  private Zone objectZone = Zone.ALLIANCE_ZONE;
 
   public AreaManager(Drive drive) {
     this.drive = drive;
@@ -98,7 +97,7 @@ public class AreaManager {
 
   public void periodic() {
     Translation2d drivePosition = drive.getPose().getTranslation();
-    getZoneOfObject(drivePosition);
+    getZoneOfPosition(drivePosition);
   }
 
   public boolean isShootingArea() {
@@ -118,36 +117,32 @@ public class AreaManager {
             : (frontOfHubBlue.contains(drivePosition))));
   }
 
-  public Zone getZone() {
-    return zone;
-  }
-
-  public Zone getZoneOfObject(Translation2d position) {
+  public Zone getZoneOfPosition(Translation2d position) {
     if (Robot.alliance == Alliance.Red) {
       if (redAllianceZone.contains(position)) {
-        objectZone = Zone.ALLIANCE_ZONE;
+        zone = zone.ALLIANCE_ZONE;
       } else if (leftBlueOppositionZone.contains(position)) {
-        objectZone = Zone.LEFT_OPPOSITION;
+        zone = zone.LEFT_OPPOSITION;
       } else if (rightBlueOppositionZone.contains(position)) {
-        objectZone = Zone.RIGHT_OPPOSITION;
+        zone = zone.RIGHT_OPPOSITION;
       } else if (leftNeutralZone.contains(position)) {
-        objectZone = Zone.LEFT_NEUTRAL;
+        zone = zone.LEFT_NEUTRAL;
       } else if (rightNeutralZone.contains(position)) {
-        objectZone = Zone.RIGHT_NEUTRAL;
+        zone = zone.RIGHT_NEUTRAL;
       }
     } else {
       if (blueAllianceZone.contains(position)) {
-        objectZone = Zone.ALLIANCE_ZONE;
+        zone = zone.ALLIANCE_ZONE;
       } else if (leftRedOppositionZone.contains(position)) {
-        objectZone = Zone.LEFT_OPPOSITION;
+        zone = zone.LEFT_OPPOSITION;
       } else if (rightRedOppositionZone.contains(position)) {
-        objectZone = Zone.RIGHT_OPPOSITION;
+        zone = zone.RIGHT_OPPOSITION;
       } else if (leftNeutralZone.contains(position)) {
-        objectZone = Zone.RIGHT_NEUTRAL;
+        zone = zone.RIGHT_NEUTRAL;
       } else if (rightNeutralZone.contains(position)) {
-        objectZone = Zone.LEFT_NEUTRAL;
+        zone = zone.LEFT_NEUTRAL;
       }
     }
-    return objectZone;
+    return zone;
   }
 }
