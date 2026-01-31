@@ -41,7 +41,6 @@ public class AreaManager {
 
   public AreaManager(Drive drive) {
     this.drive = drive;
-    // Red trenches
 
   }
 
@@ -120,27 +119,27 @@ public class AreaManager {
   public Zone getZoneOfPosition(Translation2d position) {
     if (Robot.alliance == Alliance.Red) {
       if (redAllianceZone.contains(position)) {
-        zone = zone.ALLIANCE_ZONE;
+        zone = Zone.ALLIANCE_ZONE;
       } else if (leftBlueOppositionZone.contains(position)) {
-        zone = zone.LEFT_OPPOSITION;
+        zone = Zone.LEFT_OPPOSITION;
       } else if (rightBlueOppositionZone.contains(position)) {
-        zone = zone.RIGHT_OPPOSITION;
+        zone = Zone.RIGHT_OPPOSITION;
       } else if (leftNeutralZone.contains(position)) {
-        zone = zone.LEFT_NEUTRAL;
+        zone = Zone.LEFT_NEUTRAL;
       } else if (rightNeutralZone.contains(position)) {
-        zone = zone.RIGHT_NEUTRAL;
+        zone = Zone.RIGHT_NEUTRAL;
       }
     } else {
       if (blueAllianceZone.contains(position)) {
-        zone = zone.ALLIANCE_ZONE;
+        zone = Zone.ALLIANCE_ZONE;
       } else if (leftRedOppositionZone.contains(position)) {
-        zone = zone.LEFT_OPPOSITION;
+        zone = Zone.LEFT_OPPOSITION;
       } else if (rightRedOppositionZone.contains(position)) {
-        zone = zone.RIGHT_OPPOSITION;
+        zone = Zone.RIGHT_OPPOSITION;
       } else if (leftNeutralZone.contains(position)) {
-        zone = zone.RIGHT_NEUTRAL;
+        zone = Zone.RIGHT_NEUTRAL;
       } else if (rightNeutralZone.contains(position)) {
-        zone = zone.LEFT_NEUTRAL;
+        zone = Zone.LEFT_NEUTRAL;
       }
     }
     return zone;
