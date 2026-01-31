@@ -8,17 +8,15 @@ import frc.robot.constants.Constants;
 import frc.robot.subsystems.drive.Drive;
 
 public class VisionObjectDetection extends SubsystemBase {
-  private final VisionObjectDetectionIOInputsAutoLogged inputs = new VisionObjectDetectionIOInputsAutoLogged();
+  private final VisionObjectDetectionIOInputsAutoLogged inputs =
+      new VisionObjectDetectionIOInputsAutoLogged();
   private final VisionObjectDetectionIO io;
   private final String hostname;
   private final Transform3d robotCenterToCamera;
   private final Drive drive;
   private Translation2d optimalFuelPosition;
 
-  public VisionObjectDetection(
-    String hostname,
-    Drive drive,
-    VisionObjectDetectionIO io) {
+  public VisionObjectDetection(String hostname, Drive drive, VisionObjectDetectionIO io) {
     this.hostname = hostname;
     this.drive = drive;
     this.io = io;
