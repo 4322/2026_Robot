@@ -71,12 +71,7 @@ public class Deployer {
   }
 
   public Boolean isExtended() {
-    if ((inputs.angleDeg <= Constants.Deployer.extendDeg)
-        || (Constants.Deployer.extendDeg >= Math.abs(inputs.angleDeg - 0.01))) {
-      return true;
-    } else {
-      return false;
-    }
+    return (inputs.angleDeg >= Constants.Deployer.extendDeg - 0.01) ? true : false;
   }
 
   public void setGoal(deployerGoal goal) {
@@ -84,11 +79,6 @@ public class Deployer {
   }
 
   public boolean isStowed() {
-    if ((inputs.angleDeg - 0.01 <= Constants.Deployer.retractDeg)
-        || (Constants.Deployer.retractDeg >= Math.abs(inputs.angleDeg))) {
-      return true;
-    } else {
-      return false;
-    }
+    return (inputs.angleDeg <= Constants.Deployer.retractDeg - 0.01) ? true : false;
   }
 }
