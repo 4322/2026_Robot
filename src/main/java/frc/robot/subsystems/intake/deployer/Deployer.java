@@ -31,19 +31,15 @@ public class Deployer {
       currentPosition = desiredPosition;
     }
     switch (Constants.deployerMode) {
-      case DISABLED:
-        break;
-      case TUNING:
-        break;
-      case DRIVETUNING:
-        break;
-      case NORMAL:
+      case DISABLED -> {}
+      case TUNING ->{}
+      case DRIVETUNING ->{}
+      case NORMAL->{
         switch (goal) {
           case DISABLED -> {
             if (DriverStation.isEnabled()) {
               goal = deployerGoal.EXTEND;
             }
-            break;
           }
           case EXTEND -> {
             extend();
@@ -53,6 +49,7 @@ public class Deployer {
           }
         }
     }
+  }
   }
 
   public void retract() {
