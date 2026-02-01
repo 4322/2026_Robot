@@ -9,6 +9,8 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.reduxrobotics.sensors.canandcolor.Canandcolor;
 import edu.wpi.first.wpilibj.util.Color;
+import com.reduxrobotics.sensors.canandcolor.Canandcolor;
+import com.reduxrobotics.sensors.canandcolor.CanandcolorSettings;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.constants.Constants;
 
@@ -16,13 +18,14 @@ public class FlywheelIOTalonFx implements FlywheelIO {
 
   private TalonFX motor;
   private Canandcolor canandcolor = new Canandcolor(Constants.Flywheel.canandcolorId);
+  private CanandcolorSettings canandcolorConfig = new CanandcolorSettings();
   private double lastRequestedVelocity = -1;
 
   private TalonFXConfiguration config = new TalonFXConfiguration();
   private VelocityVoltage velocityRequest = new VelocityVoltage(0).withSlot(0);
 
   public FlywheelIOTalonFx() {
-    motor = new TalonFX(Constants.Flywheel.FlywheelMotorId);
+    motor = new TalonFX(Constants.Flywheel.motorId);
 
     config.CurrentLimits.StatorCurrentLimit = Constants.Flywheel.statorCurrentLimit;
     config.CurrentLimits.SupplyCurrentLimit = Constants.Flywheel.supplyCurrentLimit;
@@ -37,10 +40,19 @@ public class FlywheelIOTalonFx implements FlywheelIO {
     config.Slot0.kD = Constants.Flywheel.kD;
 
     StatusCode configStatus = motor.getConfigurator().apply(config);
+    canandcolorConfig.setColorFramePeriod(10); // Set color frame period to 10ms
+
+    CanandcolorSettings canandcolorConfigStatus = canandcolor.setSettings(canandcolorConfig, 1.0, 5);
+
+    if (!canandcolorConfigStatus.isEmpty()) {
+      DriverStation.reportError(
+          "Canandcolor " + canandcolor.getAddress() + " error (Flywheel Sensor): " + canandcolorConfigStatus,
+          false);
+    }
 
     if (configStatus != StatusCode.OK) {
       DriverStation.reportError(
-          "Talon " + motor.getDeviceID() + " error (Spindexer): " + configStatus.getDescription(),
+          "Talon " + motor.getDeviceID() + " error (Flywheel): " + configStatus.getDescription(),
           false);
     }
   }
@@ -56,6 +68,9 @@ public class FlywheelIOTalonFx implements FlywheelIO {
     inputs.motorTempCelsius = motor.getDeviceTemp().getValueAsDouble();
     inputs.color = new Color(canandcolor.getRed(), canandcolor.getGreen(), canandcolor.getBlue());
     inputs.distance = canandcolor.getProximity();
+
+    inputs.sensorProximity = cancoder.getProximity();
+    inputs.sensorConnected = cancoder.isConnected();
 
     inputs.fuelDetected = inputs.distance < Constants.Flywheel.minFuelDetectionProximity;
     inputs.busCurrentAmps = motor.getSupplyCurrent().getValueAsDouble();

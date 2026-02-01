@@ -8,6 +8,8 @@ public class Flywheel {
   private FlywheelIO io;
   private FlywheelIOInputsAutoLogged inputs = new FlywheelIOInputsAutoLogged();
   private double requestedMechanismRPS = 0.0;
+  private double ballsShot = 0;
+  private boolean fuelDetected = false;
 
   public enum FlywheelStates {
     DISABLED,
@@ -24,6 +26,13 @@ public class Flywheel {
   public void periodic() {
     io.updateInputs(inputs);
     Logger.processInputs("Flywheel", inputs);
+
+    if (inputs.fuelDetected && !fuelDetected) {
+      ballsShot++;
+      fuelDetected = true;
+    } else if (!inputs.fuelDetected) {
+      fuelDetected = false;
+    }
 
     switch (state) {
       case DISABLED -> {
@@ -57,5 +66,10 @@ public class Flywheel {
 
   public boolean isFuelDetected() {
     return inputs.fuelDetected;
+  }
+
+  public boolean atTargetVelocity() {
+    return Math.abs(inputs.actualMechanismRotations - inputs.requestedMechanismRotations)
+        < Constants.Flywheel.allowedVelocityErrorMechanismRPS;
   }
 }

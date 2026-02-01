@@ -15,7 +15,7 @@ public interface FlywheelIO {
     public double appliedVolts = 0.0;
     public double motorTempCelsius = 0.0;
     public Color color = new Color(0,0,0);
-    public double distance = 0.0;
+    public double proximity = 0.0;
 
     public boolean fuelDetected = false;
     public double busCurrentAmps = 0.0;

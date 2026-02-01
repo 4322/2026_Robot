@@ -1,9 +1,4 @@
-// Copyright (c) 2021-2026 Littleton Robotics
-// http://github.com/Mechanical-Advantage
-//
-// Use of this source code is governed by a BSD
-// license that can be found in the LICENSE file
-// at the root directory of this project.
+
 
 package frc.robot.constants;
 
@@ -115,6 +110,8 @@ public final class Constants {
     public static final double kP = 1;
     public static final double kI = 0;
     public static final double kD = 0;
+    public static final double allowedVelocityErrorRPS = 5.0; // TODO
+
     public static final double motorToMechanismRatio = 1;
     public static final double idleMechanismRPS = 5;
     public static final double shootingMechanismRPS = 10;
@@ -127,4 +124,9 @@ public final class Constants {
     public static final Transform3d robotCenterToCamera = new Transform3d(); // TODO add
     public static final String hostname = null;
   }
+
+
+
+
+  
 }
