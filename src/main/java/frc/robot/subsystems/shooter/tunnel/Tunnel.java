@@ -34,7 +34,7 @@ public class Tunnel {
         io.stop();
       }
       case INDEXING -> {
-        io.setTargetVelocity(Constants.Tunnel.indexingVelocityRotationsPerSec);
+        io.setTargetMechanismRotations(Constants.Tunnel.indexingMotorRotationsPerSec);
       }
     }
 
@@ -54,12 +54,12 @@ public class Tunnel {
   }
 
   public boolean isStopped() {
-    return inputs.velocityRotationsPerSec
-        < Constants.Tunnel.stoppedThreshold * Constants.Tunnel.motorToMechanismRatio;
+    return inputs.mechanismRotationsPerSec
+        < Constants.Tunnel.stoppedMechanismRotationsPerSec;
   }
 
   public boolean isAtSpeed() {
-    return inputs.velocityRotationsPerSec
-        > Constants.Tunnel.atSpeedThreshold * Constants.Tunnel.motorToMechanismRatio;
+    return inputs.mechanismRotationsPerSec
+        > Constants.Tunnel.atSpeedMechanismRotationsPerSec;
   }
 }
