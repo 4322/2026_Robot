@@ -4,6 +4,7 @@ import frc.robot.constants.Constants;
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 
 public class Deployer {
@@ -76,7 +77,7 @@ public class Deployer {
   }
 
   public Boolean isExtended() {
-    if ((Constants.Deployer.retractDeg - 0.01 <= inputs.angleDeg) || (inputs.angleDeg <= Constants.Deployer.retractDeg + 0.01)) {
+    if ((inputs.angleDeg <= Constants.Deployer.extendDeg) || (Constants.Deployer.extendDeg >= Math.abs(inputs.angleDeg - 0.01))) {
       return true;
     } else {
       return false;
@@ -88,7 +89,7 @@ public class Deployer {
   }
 
   public boolean isStowed() {
-    if (currentPosition == Constants.Deployer.retractDeg) {
+    if ((inputs.angleDeg - 0.01 <= Constants.Deployer.retractDeg) || (Constants.Deployer.retractDeg >= Math.abs(inputs.angleDeg))) {
       return true;
     } else {
       return false;

@@ -11,7 +11,8 @@ import frc.robot.constants.Constants;
 public class RollersIOTalonFX implements RollersIO {
   private TalonFX rollersMotor;
 
-  private double previousRequestedVoltage = -999;
+  private double previousRequestedVoltage;
+  private double nullVoltage;
 
   private TalonFXConfiguration motorConfigs = new TalonFXConfiguration();
 
@@ -60,6 +61,7 @@ public class RollersIOTalonFX implements RollersIO {
   @Override
   public void stopMotor() {
     rollersMotor.stopMotor();
+    previousRequestedVoltage = nullVoltage;
   }
 
   @Override
