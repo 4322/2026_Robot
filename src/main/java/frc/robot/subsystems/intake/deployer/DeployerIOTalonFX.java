@@ -28,8 +28,8 @@ public class DeployerIOTalonFX implements DeployerIO {
     motorConfigs.Feedback.FeedbackRemoteSensorID = canCoder.getDeviceID();
     
     motorConfigs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
-    motorConfigs.Feedback.SensorToMechanismRatio = Constants.Deployer.ratioSM;
-    motorConfigs.Feedback.RotorToSensorRatio = Constants.Deployer.ratioRS;
+    motorConfigs.Feedback.SensorToMechanismRatio = Constants.Deployer.sensorToMechanismRatio;
+    motorConfigs.Feedback.RotorToSensorRatio = Constants.Deployer.RotorToSensorRatio;
     motorConfigs.CurrentLimits.StatorCurrentLimit = Constants.Deployer.statorCurrentLimit;
     motorConfigs.CurrentLimits.SupplyCurrentLimit = Constants.Deployer.supplyCurrentLimit;
     motorConfigs.MotorOutput.Inverted = Constants.Deployer.motorInvert;
