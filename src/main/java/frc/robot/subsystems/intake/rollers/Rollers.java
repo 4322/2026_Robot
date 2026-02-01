@@ -26,10 +26,10 @@ public class Rollers {
     Logger.processInputs("Rollers", inputs);
     Logger.recordOutput("Rollers/Goal", goal);
     switch (Constants.rollersMode) {
-      case TUNING ->{}
-      case DRIVETUNING ->{}
-      case DISABLED ->{}
-      case NORMAL->{
+      case TUNING -> {}
+      case DRIVETUNING -> {}
+      case DISABLED -> {}
+      case NORMAL -> {
         switch (goal) {
           case DISABLED -> {
             if (DriverStation.isEnabled()) {
@@ -46,8 +46,8 @@ public class Rollers {
             eject();
           }
         }
+      }
     }
-  }
   }
 
   public void setBrakeMode(boolean mode) {

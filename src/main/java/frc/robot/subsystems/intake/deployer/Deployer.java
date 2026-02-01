@@ -32,9 +32,9 @@ public class Deployer {
     }
     switch (Constants.deployerMode) {
       case DISABLED -> {}
-      case TUNING ->{}
-      case DRIVETUNING ->{}
-      case NORMAL->{
+      case TUNING -> {}
+      case DRIVETUNING -> {}
+      case NORMAL -> {
         switch (goal) {
           case DISABLED -> {
             if (DriverStation.isEnabled()) {
@@ -48,8 +48,8 @@ public class Deployer {
             retract();
           }
         }
+      }
     }
-  }
   }
 
   public void retract() {
