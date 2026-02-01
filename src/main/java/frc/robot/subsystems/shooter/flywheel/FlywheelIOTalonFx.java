@@ -2,16 +2,13 @@ package frc.robot.subsystems.shooter.flywheel;
 
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.reduxrobotics.sensors.canandcolor.Canandcolor;
-import com.reduxrobotics.sensors.canandcolor.CanandcolorSettings;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.reduxrobotics.sensors.canandcolor.Canandcolor;
-import edu.wpi.first.wpilibj.util.Color;
-import com.reduxrobotics.sensors.canandcolor.Canandcolor;
 import com.reduxrobotics.sensors.canandcolor.CanandcolorSettings;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.util.Color;
 import frc.robot.constants.Constants;
 
 public class FlywheelIOTalonFx implements FlywheelIO {
@@ -42,11 +39,15 @@ public class FlywheelIOTalonFx implements FlywheelIO {
     StatusCode configStatus = motor.getConfigurator().apply(config);
     canandcolorConfig.setColorFramePeriod(10); // Set color frame period to 10ms
 
-    CanandcolorSettings canandcolorConfigStatus = canandcolor.setSettings(canandcolorConfig, 1.0, 5);
+    CanandcolorSettings canandcolorConfigStatus =
+        canandcolor.setSettings(canandcolorConfig, 1.0, 5);
 
     if (!canandcolorConfigStatus.isEmpty()) {
       DriverStation.reportError(
-          "Canandcolor " + canandcolor.getAddress() + " error (Flywheel Sensor): " + canandcolorConfigStatus,
+          "Canandcolor "
+              + canandcolor.getAddress()
+              + " error (Flywheel Sensor): "
+              + canandcolorConfigStatus,
           false);
     }
 

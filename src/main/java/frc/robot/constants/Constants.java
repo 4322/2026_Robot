@@ -1,5 +1,3 @@
-
-
 package frc.robot.constants;
 
 import com.ctre.phoenix6.signals.InvertedValue;
@@ -117,7 +115,6 @@ public final class Constants {
     public static final int canandcolorId = 0;
     public static final double minFuelDetectionProximity = 0.2;
     public static final double allowedVelocityErrorMechanismRPS = 0.2;
-    
   }
 
   public static class VisionObjectDetection {
@@ -125,9 +122,4 @@ public final class Constants {
     public static final Transform3d robotCenterToCamera = new Transform3d(); // TODO add
     public static final String hostname = null;
   }
-
-
-
-
-  
 }
