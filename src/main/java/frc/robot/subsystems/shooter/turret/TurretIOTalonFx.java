@@ -1,3 +1,3 @@
 package frc.robot.subsystems.shooter.turret;
 
-public class TurretIOTalonFx {}
+public class TurretIOTalonFx implements TurretIO {}

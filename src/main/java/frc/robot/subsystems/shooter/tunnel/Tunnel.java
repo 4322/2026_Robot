@@ -54,12 +54,10 @@ public class Tunnel {
   }
 
   public boolean isStopped() {
-    return inputs.mechanismRotationsPerSec
-        < Constants.Tunnel.stoppedMechanismRotationsPerSec;
+    return inputs.mechanismRotationsPerSec < Constants.Tunnel.stoppedMechanismRotationsPerSec;
   }
 
   public boolean isAtSpeed() {
-    return inputs.mechanismRotationsPerSec
-        > Constants.Tunnel.atSpeedMechanismRotationsPerSec;
+    return inputs.mechanismRotationsPerSec > Constants.Tunnel.atSpeedMechanismRotationsPerSec;
   }
 }

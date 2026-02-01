@@ -47,22 +47,23 @@ public class SpindexerIOTalonFx implements SpindexerIO {
     inputs.motorConnected = motor.isConnected();
     inputs.voltage = motor.getMotorVoltage().getValueAsDouble();
     inputs.motorRotationsPerSec = motor.getVelocity().getValueAsDouble();
-    inputs.mechanismRotationsPerSec = inputs.motorRotationsPerSec / Constants.Spindexer.motorToMechanismRatio;
+    inputs.mechanismRotationsPerSec =
+        inputs.motorRotationsPerSec * Constants.Spindexer.motorToMechanismRatio;
     inputs.supplyCurrentAmps = motor.getSupplyCurrent().getValueAsDouble();
     inputs.statorCurrentAmps = motor.getStatorCurrent().getValueAsDouble();
     inputs.motorTempC = motor.getDeviceTemp().getValueAsDouble();
   }
 
   @Override
-  public void setTargetMechanismRotations(double velocity) {
-    if (velocity != lastRequestedVelocity) {
+  public void setTargetMechanismRotations(double speedMechanismRotations) {
+    if (speedMechanismRotations != lastRequestedVelocity) {
       motor.setControl(
           velocityRequest
-              .withVelocity(velocity * Constants.Spindexer.motorToMechanismRatio)
+              .withVelocity(speedMechanismRotations * Constants.Spindexer.motorToMechanismRatio)
               .withEnableFOC(true));
     }
 
-    lastRequestedVelocity = velocity;
+    lastRequestedVelocity = speedMechanismRotations;
   }
 
   @Override

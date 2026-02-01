@@ -51,7 +51,6 @@ public final class Constants {
   }
 
   public static final SubsystemMode driveMode = SubsystemMode.NORMAL;
-  public static final SubsystemMode shooterMode = SubsystemMode.NORMAL;
   public static final SubsystemMode flywheelMode = SubsystemMode.NORMAL;
   public static final SubsystemMode hoodMode = SubsystemMode.NORMAL;
   public static final SubsystemMode spindexerMode = SubsystemMode.NORMAL;
@@ -77,7 +76,7 @@ public final class Constants {
     public static final double kP = 1;
     public static final double kI = 0;
     public static final double kD = 0;
-    public static final double indexingMechanismRotationsPerSec = 3; // TODO 
+    public static final double indexingMechanismRotationsPerSec = 3; // TODO
     public static final double stoppedMechanismRotationsPerSec = 0.1; // TODO
 
     public static final double motorToMechanismRatio = 10.0; // TODO
@@ -99,8 +98,26 @@ public final class Constants {
     public static final double kD = 0;
 
     public static final double stoppedMechanismRotationsPerSec = 0.1; // TODO
-    public static final double atSpeedMechanismRotationsPerSec = 0.95 * indexingMotorRotationsPerSec; // TODO
+    public static final double atSpeedMechanismRotationsPerSec =
+        0.95 * indexingMotorRotationsPerSec; // TODO
     public static final double motorToMechanismRatio = 1.0; // TODO
+  }
+
+  public static class Flywheel {
+
+    public static final int FlywheelMotorId = 23; // TODO
+    public static final double statorCurrentLimit = 60; // TODO
+    public static final double supplyCurrentLimit = 40;
+    public static final InvertedValue motorInvert = InvertedValue.Clockwise_Positive;
+    public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
+    public static final double kS = 0;
+    public static final double kV = 0;
+    public static final double kP = 1;
+    public static final double kI = 0;
+    public static final double kD = 0;
+    public static final double motorToMechanismRatio = 1;
+    public static final double idleMechanismRPS = 5;
+    public static final double shootingMechanismRPS = 10;
   }
 
   public static class VisionObjectDetection {

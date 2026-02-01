@@ -8,11 +8,13 @@ public interface FlywheelIO {
   @AutoLog
   public static class FlywheelIOInputs {
     public boolean motorConnected = false;
-    public double requestedSpeed = 0.0;
-    public double actualSpeed = 0.0;
+    public double requestedMechanismRotations = 0.0;
+    public double actualMechanismRotations = 0.0;
+    public double speedMotorRotations = 0.0;
     public double appliedVolts = 0.0;
     public double motorTempCelsius = 0.0;
-    public double sensorColorYellow = 0.0;
+    public double colorYellow = 0.0;
+    public double distance = 0.0;
 
     public boolean fuelDetectedOutputting = false;
     public double busCurrentAmps = 0.0;
@@ -20,7 +22,7 @@ public interface FlywheelIO {
 
   public default void updateInputs(FlywheelIOInputs inputs) {}
 
-  public default void setVoltage(double speedRPS) {}
+  public default void setVoltage(double speedMechanismRotations) {}
 
   public default void stop() {}
 
@@ -30,5 +32,5 @@ public interface FlywheelIO {
 
   public default void enableBrakeMode(boolean enable) {}
 
-  public default void setTargetVelocity(double velocity) {}
+  public default void setTargetMechanismRotations(double velocity) {}
 }

@@ -46,26 +46,29 @@ public class FlywheelIOTalonFx implements FlywheelIO {
   @Override
   public void updateInputs(FlywheelIOInputs inputs) {
     inputs.motorConnected = motor.isConnected();
-    inputs.requestedSpeed = lastRequestedVelocity;
-    inputs.actualSpeed = motor.getVelocity().getValueAsDouble();
+    inputs.requestedMechanismRotations = lastRequestedVelocity;
+    inputs.actualMechanismRotations =
+        motor.getVelocity().getValueAsDouble() / Constants.Flywheel.motorToMechanismRatio;
+    inputs.speedMotorRotations = motor.getVelocity().getValueAsDouble();
     inputs.appliedVolts = motor.getMotorVoltage().getValueAsDouble();
     inputs.motorTempCelsius = motor.getDeviceTemp().getValueAsDouble();
-    inputs.sensorColorYellow = 0.0;
+    inputs.colorYellow = 0.0;
+    inputs.distance = 0.0; // TODO canandcolor code
 
     inputs.fuelDetectedOutputting = false;
     inputs.busCurrentAmps = motor.getSupplyCurrent().getValueAsDouble();
   }
 
   @Override
-  public void setTargetVelocity(double velocity) {
-    if (velocity != lastRequestedVelocity) {
+  public void setTargetMechanismRotations(double speedMechanismRotations) {
+    if (speedMechanismRotations != lastRequestedVelocity) {
       motor.setControl(
           velocityRequest
-              .withVelocity(velocity / Constants.Flywheel.motorToMechanismRatio)
+              .withVelocity(speedMechanismRotations * Constants.Flywheel.motorToMechanismRatio)
               .withEnableFOC(true));
     }
 
-    lastRequestedVelocity = velocity;
+    lastRequestedVelocity = speedMechanismRotations;
   }
 
   @Override
