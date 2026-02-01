@@ -1,9 +1,8 @@
 package frc.robot.subsystems.intake.rollers;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.constants.Constants;
 import org.littletonrobotics.junction.Logger;
-
-import edu.wpi.first.wpilibj.DriverStation;
 
 public class Rollers {
   private RollersIO rollersIO;
@@ -27,19 +26,15 @@ public class Rollers {
     Logger.processInputs("Rollers", inputs);
     Logger.recordOutput("Rollers/Goal", goal);
     switch (Constants.rollersMode) {
-      case TUNING:
-        break;
-      case DRIVETUNING:
-        break;
-      case DISABLED:
-        break;
-      case NORMAL:
+      case TUNING ->{}
+      case DRIVETUNING ->{}
+      case DISABLED ->{}
+      case NORMAL->{
         switch (goal) {
           case DISABLED -> {
-            if(DriverStation.isEnabled()){
+            if (DriverStation.isEnabled()) {
               goal = rollersGoal.IDLE;
             }
-            break;
           }
           case IDLE -> {
             idle();
@@ -52,6 +47,7 @@ public class Rollers {
           }
         }
     }
+  }
   }
 
   public void setBrakeMode(boolean mode) {

@@ -78,8 +78,8 @@ public final class Constants {
     public static final double kI = 0;
     public static final double kD = 0;
     public static final int canCoderID = 1; // TODO
-    public static final double sensorToMechanismRatio = 2; //TODO
-    public static final double RotorToSensorRatio = 1; //TODO
+    public static final double sensorToMechanismRatio = 2; // TODO
+    public static final double RotorToSensorRatio = 1; // TODO
   }
 
   public class Rollers {

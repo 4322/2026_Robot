@@ -26,7 +26,7 @@ public class DeployerIOTalonFX implements DeployerIO {
     canCoder.getConfigurator().apply(canCoderConfigs);
 
     motorConfigs.Feedback.FeedbackRemoteSensorID = canCoder.getDeviceID();
-    
+
     motorConfigs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
     motorConfigs.Feedback.SensorToMechanismRatio = Constants.Deployer.sensorToMechanismRatio;
     motorConfigs.Feedback.RotorToSensorRatio = Constants.Deployer.RotorToSensorRatio;
@@ -39,7 +39,7 @@ public class DeployerIOTalonFX implements DeployerIO {
     motorConfigs.Slot0.kI = Constants.Deployer.kI;
     motorConfigs.Slot0.kD = Constants.Deployer.kD;
     motorConfigs.Slot0.kG = Constants.Deployer.kG;
-    
+
     motorConfigs.HardwareLimitSwitch.ForwardLimitEnable = false;
     motorConfigs.HardwareLimitSwitch.ReverseLimitEnable = false;
     StatusCode deployerConfigStatus = deployerMotor.getConfigurator().apply(motorConfigs);
