@@ -17,13 +17,11 @@ public interface FlywheelIO {
     public Color color = new Color(0,0,0);
     public double distance = 0.0;
 
-    public boolean fuelDetectedOutputting = false;
+    public boolean fuelDetected = false;
     public double busCurrentAmps = 0.0;
   }
 
   public default void updateInputs(FlywheelIOInputs inputs) {}
-
-  public default void setVoltage(double speedMechanismRotations) {}
 
   public default void stop() {}
 
@@ -33,5 +31,5 @@ public interface FlywheelIO {
 
   public default void enableBrakeMode(boolean enable) {}
 
-  public default void setTargetMechanismRotations(double velocity) {}
+  public default void setTargetMechanismRotations(double speedMechanismRotations) {}
 }

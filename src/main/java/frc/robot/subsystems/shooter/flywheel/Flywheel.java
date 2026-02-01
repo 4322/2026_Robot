@@ -56,6 +56,6 @@ public class Flywheel {
   }
 
   public boolean isFuelDetected() {
-    return inputs.distance < Constants.Flywheel.minFuelDetectionProximity;
+    return inputs.fuelDetected;
   }
 }
