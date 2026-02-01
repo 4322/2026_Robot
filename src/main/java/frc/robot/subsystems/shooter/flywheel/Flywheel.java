@@ -54,4 +54,8 @@ public class Flywheel {
   public void enableBrakeMode(boolean enable) {
     io.enableBrakeMode(enable);
   }
+
+  public boolean isFuelDetected() {
+    return inputs.distance < Constants.Flywheel.minFuelDetectionProximity;
+  }
 }

@@ -118,6 +118,8 @@ public final class Constants {
     public static final double motorToMechanismRatio = 1;
     public static final double idleMechanismRPS = 5;
     public static final double shootingMechanismRPS = 10;
+    public static final int canandcolorId = 0;
+    public static final double minFuelDetectionProximity = 0.2;
   }
 
   public static class VisionObjectDetection {
