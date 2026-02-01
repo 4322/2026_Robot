@@ -34,7 +34,9 @@ public class Intake extends SubsystemBase {
     Logger.recordOutput("Inttake/State", goal);
     prevGoal = goal;
     switch (goal) {
-      case DISABLED -> {break;}
+      case DISABLED -> {
+        break;
+      }
       case EXTEND -> {
         deployer.setGoal(deployerGoal.EXTEND);
       }

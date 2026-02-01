@@ -2,15 +2,12 @@ package frc.robot.subsystems.intake.deployer;
 
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
-import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.constants.Constants;
@@ -25,10 +22,11 @@ public class DeployerIOTalonFX implements DeployerIO {
 
   public DeployerIOTalonFX() {
     deployerMotor = new TalonFX(Constants.Deployer.motorId);
-    canCoder = new CANcoder(Constants.Deployer.canID);
+    canCoder = new CANcoder(Constants.Deployer.canCoderID);
     canCoder.getConfigurator().apply(canCoderConfigs);
 
     motorConfigs.Feedback.FeedbackRemoteSensorID = canCoder.getDeviceID();
+    
     motorConfigs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
     motorConfigs.Feedback.SensorToMechanismRatio = Constants.Deployer.ratioSM;
     motorConfigs.Feedback.RotorToSensorRatio = Constants.Deployer.ratioRS;
@@ -36,11 +34,12 @@ public class DeployerIOTalonFX implements DeployerIO {
     motorConfigs.CurrentLimits.SupplyCurrentLimit = Constants.Deployer.supplyCurrentLimit;
     motorConfigs.MotorOutput.Inverted = Constants.Deployer.motorInvert;
     motorConfigs.MotorOutput.NeutralMode = Constants.Deployer.neutralMode;
-    motorConfigs.Slot0.kS = Constants.Deployer.kS;
-    motorConfigs.Slot0.kV = Constants.Deployer.kV;
+
     motorConfigs.Slot0.kP = Constants.Deployer.kP;
     motorConfigs.Slot0.kI = Constants.Deployer.kI;
     motorConfigs.Slot0.kD = Constants.Deployer.kD;
+    motorConfigs.Slot0.kG = Constants.Deployer.kG;
+    
     motorConfigs.HardwareLimitSwitch.ForwardLimitEnable = false;
     motorConfigs.HardwareLimitSwitch.ReverseLimitEnable = false;
     StatusCode deployerConfigStatus = deployerMotor.getConfigurator().apply(motorConfigs);
@@ -53,7 +52,10 @@ public class DeployerIOTalonFX implements DeployerIO {
               + deployerConfigStatus.getDescription(),
           false);
     }
-    posRotError = subtract(deployerMotor.getPosition().getValueAsDouble(), canCoder.getPosition().getValueAsDouble());
+    posRotError =
+        subtract(
+            deployerMotor.getPosition().getValueAsDouble(),
+            canCoder.getPosition().getValueAsDouble());
     deployerMotor.setPosition(deployerMotor.getPosition().getValueAsDouble() + posRotError);
   }
 
@@ -63,11 +65,12 @@ public class DeployerIOTalonFX implements DeployerIO {
 
     inputs.connected = deployerMotor.isConnected();
 
-    inputs.angleDeg = toCodeCoords(Units.rotationsToDegrees(deployerMotor.getPosition().getValueAsDouble()));
+    inputs.angleDeg =
+        toCodeCoords(Units.rotationsToDegrees(deployerMotor.getPosition().getValueAsDouble()));
 
     inputs.requestedPosDeg = requestedPosDeg;
 
-    inputs.speedRotationsPerSec =
+    inputs.motorRotationsPerSec =
         Units.degreesToRotations(deployerMotor.getVelocity().getValueAsDouble());
 
     inputs.busCurrentAmps = deployerMotor.getSupplyCurrent().getValueAsDouble();
@@ -106,10 +109,12 @@ public class DeployerIOTalonFX implements DeployerIO {
   public void enableBrakeMode(Boolean mode) {
     deployerMotor.setNeutralMode(mode ? NeutralModeValue.Brake : NeutralModeValue.Coast);
   }
-  public double subtract(Double pos, Double canPos){
+
+  public double subtract(Double pos, Double canPos) {
     return pos - canPos;
   }
-    private double toCodeCoords(double position) {
+
+  private double toCodeCoords(double position) {
     return position + Constants.Deployer.maxGravityDegrees;
   }
 

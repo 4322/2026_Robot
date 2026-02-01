@@ -3,6 +3,8 @@ package frc.robot.subsystems.intake.rollers;
 import frc.robot.constants.Constants;
 import org.littletonrobotics.junction.Logger;
 
+import edu.wpi.first.wpilibj.DriverStation;
+
 public class Rollers {
   private RollersIO rollersIO;
   private RollersIOInputsAutoLogged inputs = new RollersIOInputsAutoLogged();
@@ -33,7 +35,12 @@ public class Rollers {
         break;
       case NORMAL:
         switch (goal) {
-          case DISABLED ->{break;}
+          case DISABLED -> {
+            if(DriverStation.isEnabled()){
+              goal = rollersGoal.IDLE;
+            }
+            break;
+          }
           case IDLE -> {
             idle();
           }

@@ -3,6 +3,9 @@ package frc.robot.subsystems.intake.deployer;
 import frc.robot.constants.Constants;
 import org.littletonrobotics.junction.Logger;
 
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.DriverStation;
+
 public class Deployer {
   private DeployerIO deployerIO;
   public double currentPosition;
@@ -13,7 +16,7 @@ public class Deployer {
     DISABLED,
     EXTEND,
     RETRACT,
-    //UNJAM TODO
+    // UNJAM TODO
   }
 
   public deployerGoal goal = deployerGoal.DISABLED;
@@ -26,7 +29,7 @@ public class Deployer {
     deployerIO.updateInputs(inputs);
     Logger.processInputs("Deployer", inputs);
     Logger.recordOutput("Deployer/Goal", goal);
-    if(desiredPosition == inputs.angleDeg){
+    if (desiredPosition == inputs.angleDeg) {
       currentPosition = desiredPosition;
     }
     switch (Constants.deployerMode) {
@@ -39,6 +42,9 @@ public class Deployer {
       case NORMAL:
         switch (goal) {
           case DISABLED -> {
+            if(DriverStation.isEnabled()){
+              goal = deployerGoal.EXTEND;
+            }
             break;
           }
           case EXTEND -> {
@@ -58,7 +64,7 @@ public class Deployer {
 
   public void extend() {
     deployerIO.setPosition(Constants.Deployer.extendDeg);
-    currentPosition = Constants.Deployer.extendDeg; 
+    currentPosition = Constants.Deployer.extendDeg;
   }
 
   public void unjam() {
@@ -70,18 +76,22 @@ public class Deployer {
   }
 
   public Boolean isExtended() {
-    if (currentPosition == desiredPosition) {
-      return true;      
-    } else{return false;}
+    if ((Constants.Deployer.retractDeg - 0.01 <= inputs.angleDeg) || (inputs.angleDeg <= Constants.Deployer.retractDeg + 0.01)) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   public void setGoal(deployerGoal goal) {
     this.goal = goal;
   }
-  public boolean isStowed(){
-    if(currentPosition == Constants.Deployer.retractDeg){ 
-      return true;}
-    else
-    {return false;}
+
+  public boolean isStowed() {
+    if (currentPosition == Constants.Deployer.retractDeg) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }

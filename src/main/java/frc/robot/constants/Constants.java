@@ -45,7 +45,7 @@ public final class Constants {
   public enum SubsystemMode {
     DISABLED,
     NORMAL,
-    TUNING, 
+    TUNING,
     DRIVETUNING
   }
 
@@ -63,34 +63,32 @@ public final class Constants {
   public static final SubsystemMode visionObjectDetection = SubsystemMode.NORMAL;
 
   public class Deployer {
-    public static final double retractDeg = 1; // TODO
-    public static final double extendDeg = 1; // TODO
-    public static final double maxGravityDegrees = 5;
+    // 0 degrees is stowed postion
+    // postive degrees when extending
+    public static final double retractDeg = 0; // TODO
+    public static final double extendDeg = 95; // TODO
+    public static final double maxGravityDegrees = 65; // TODO
     public static final int motorId = 1; // TODO
-    public static final double statorCurrentLimit = 1;
-    public static final double supplyCurrentLimit = 1;
+    public static final double statorCurrentLimit = 60;
+    public static final double supplyCurrentLimit = 40;
     public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
     public static final InvertedValue motorInvert = InvertedValue.Clockwise_Positive;
-    public static final double kS = 0;
-    public static final double kV = 0;
-    public static final double kP = 0;
+    public static final double kP = 1; // TODO
+    public static final double kG = 2; // TODO
     public static final double kI = 0;
     public static final double kD = 0;
-    public static final int canID = 2;
-    public static final double ratioRS = 2;
-    public static final double ratioSM = 1;
-
+    public static final int canCoderID = 1; // TODO
+    public static final double ratioRS = 2; //TODO
+    public static final double ratioSM = 1; //TODO
   }
 
   public class Rollers {
-    public static final double voltageIntake = 1; // TODO
-    public static final double voltageEject = -1; // TODO
+    public static final double voltageIntake = 50; // TODO
+    public static final double voltageEject = -50; // TODO
     public static final int motorId = 1; // TODO
-    public static final double statorCurrentLimit = 1;
-    public static final double supplyCurrentLimit = 1;
+    public static final double statorCurrentLimit = 60; // TODO
+    public static final double supplyCurrentLimit = 40; // TODO
     public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
     public static final InvertedValue motorInvert = InvertedValue.Clockwise_Positive;
-    public static final double maxGravityPosDeg = 145;
-    public static final double extendPosDeg = 5;
   }
 }
