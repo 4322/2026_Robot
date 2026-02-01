@@ -14,11 +14,14 @@ public interface FlywheelIO {
     public double speedMotorRotations = 0.0;
     public double appliedVolts = 0.0;
     public double motorTempCelsius = 0.0;
+    public double busCurrentAmps = 0.0;
+
+    public boolean sensorConnected = false;
     public Color color = new Color(0,0,0);
     public double proximity = 0.0;
 
     public boolean fuelDetected = false;
-    public double busCurrentAmps = 0.0;
+    
   }
 
   public default void updateInputs(FlywheelIOInputs inputs) {}
