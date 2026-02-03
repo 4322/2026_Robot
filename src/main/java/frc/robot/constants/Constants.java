@@ -80,7 +80,7 @@ public final class Constants {
     public static final double indexingMechanismRotationsPerSec = 3; // TODO 
     public static final double stoppedMechanismRotationsPerSec = 0.1; // TODO
 
-    public static final double motorToMechanismRatio = 10.0; // TODO
+    public static final double motorToMechanismRatio = 12.0;
   }
 
   public static class Tunnel {
@@ -100,7 +100,7 @@ public final class Constants {
 
     public static final double stoppedMechanismRotationsPerSec = 0.1; // TODO
     public static final double atSpeedMechanismRotationsPerSec = 0.95 * indexingMotorRotationsPerSec; // TODO
-    public static final double motorToMechanismRatio = 1.0; // TODO
+    public static final double motorToMechanismRatio = 1.5;
   }
 
   public static class VisionObjectDetection {
