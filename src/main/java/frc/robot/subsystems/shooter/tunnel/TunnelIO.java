@@ -8,7 +8,6 @@ public interface TunnelIO {
   public static class TunnelIOInputs {
     public boolean motorConnected = false;
     public double voltage = 0.0;
-    public double motorRotationsPerSec = 0.0;
     public double mechanismRotationsPerSec = 0.0;
     public double supplyCurrentAmps = 0.0;
     public double statorCurrentAmps = 0.0;
