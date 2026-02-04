@@ -16,7 +16,8 @@ public class Shooter extends SubsystemBase {
     DISABLED,
     IDLE,
     UNWIND,
-    SHOOTING,
+    PRESHOOT,
+    SHOOT,
   }
 
   private ShooterState state = ShooterState.DISABLED;
@@ -52,18 +53,20 @@ public class Shooter extends SubsystemBase {
         flywheel.requestIdle();
       }
       case UNWIND -> {
-        if (true /*turret.isUnwound()*/) {
-          state = previousState;
-          previousState = ShooterState.UNWIND;
-        }
+        spindexer.requestIdle();
+        tunnel.requestIdle();
+        flywheel.requestIdle();
+        turret.preemptiveUnwind();
       }
-      case SHOOTING -> {
+      case PRESHOOT -> {
+        flywheel.requestShoot(Constants.Flywheel.shootingMechanismRPS);
+      }
+      case SHOOT -> {
         flywheel.requestShoot(Constants.Flywheel.shootingMechanismRPS);
         tunnel.requestIndex(Constants.Tunnel.dynamicVelocity ? Constants.Tunnel.dynamicVelocityPercent * flywheel.getVelocity() 
             : Constants.Tunnel.indexingMechanismRotationsPerSec);
         spindexer.requestIndex(Constants.Spindexer.dynamicVelocity ? Constants.Spindexer.dynamicVelocityPercent * tunnel.getVelocity() 
             : Constants.Spindexer.indexingMechanismRotationsPerSec);
-        
         
       }
     }
@@ -83,6 +86,10 @@ public class Shooter extends SubsystemBase {
 
   public boolean isMechanismsAtSpeed() {
     return flywheel.atTargetVelocity() && tunnel.isAtSpeed();
+  }
+
+  public boolean isFlywheelAtSpeed() {
+    return flywheel.atTargetVelocity();
   }
 
   public boolean isHoodAtAngle() {

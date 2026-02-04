@@ -72,4 +72,8 @@ public class Flywheel {
     return Math.abs(inputs.actualMechanismRotations - inputs.requestedMechanismRotations)
         < Constants.Flywheel.allowedVelocityErrorMechanismRPS;
   }
+
+  public double getVelocity() {
+    return inputs.actualMechanismRotations;
+  }
 }

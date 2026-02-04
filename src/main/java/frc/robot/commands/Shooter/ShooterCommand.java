@@ -13,15 +13,43 @@ public class ShooterCommand {
 
 
     public static Command turretUnwind(Shooter shooter) {
-        BooleanSupplier rewindNotComplete = () -> !shooter.isRewindComplete();
+        BooleanSupplier rewindComplete = () -> shooter.isRewindComplete();
         return Commands.run(() -> shooter.setState(ShooterState.UNWIND), shooter)
-        .onlyWhile(rewindNotComplete);
+        .until(rewindComplete);
     }
 
     public static Command shoot(Shooter shooter) {
         BooleanSupplier mechanismsAtSpeed = () -> shooter.isMechanismsAtSpeed();
         BooleanSupplier hoodAtAngle = () -> shooter.isHoodAtAngle();
+        BooleanSupplier flywheelAtSpeed = () -> shooter.isFlywheelAtSpeed();
 
-        return Commands.run(() -> shooter.setState(ShooterState.SHOOTING), shooter);
+        return Commands.run(() -> {
+            shooter.setState(ShooterState.PRESHOOT);
+            if (flywheelAtSpeed.getAsBoolean()) {
+                shooter.setState(ShooterState.SHOOT);
+            }
+        }, shooter);
+    }
+
+    public static Command idle(Shooter shooter) {
+        return new InstantCommand(() -> shooter.setState(ShooterState.IDLE), shooter);
+    }
+
+
+    // Main commands
+
+    public static Command inhibitAutoShoot(Shooter shooter) {
+        return Commands.run(() -> {
+            shooter.setState(ShooterState.IDLE);
+        }, shooter);
+    }
+
+    public static Command areaInhibitAutoShoot(Shooter shooter) {
+        AreaManager areaManager = 
+        BooleanSupplier needsToUnwind = shooter.needsToUnwind();
+        BooleanSupplier inNonShootingArea = 
+        return Commands.run(() -> {
+            shooter.setState(ShooterState.IDLE);
+        }).until(needsToUnwind.getAsBoolean() || !inNonShootingArea.getAsBoolean());
     }
 }
