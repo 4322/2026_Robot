@@ -2,6 +2,7 @@ package frc.robot.subsystems.shooter;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.constants.Constants;
 import frc.robot.subsystems.shooter.flywheel.Flywheel;
 import frc.robot.subsystems.shooter.hood.Hood;
 import frc.robot.subsystems.shooter.spindexer.Spindexer;
@@ -11,12 +12,11 @@ import org.littletonrobotics.junction.Logger;
 
 public class Shooter extends SubsystemBase {
 
-  private enum ShooterState {
+  public enum ShooterState {
     DISABLED,
+    IDLE,
     UNWIND,
-    AUTO_SHOOTING,
-    INHIBIT_AUTO_SHOOTING,
-    AREA_INHIBIT_AUTO_SHOOTING
+    SHOOTING,
   }
 
   private ShooterState state = ShooterState.DISABLED;
@@ -46,28 +46,23 @@ public class Shooter extends SubsystemBase {
           // TODO hood.home();
         }
       }
+      case IDLE -> {
+        spindexer.requestIdle();
+        tunnel.requestIdle();
+        flywheel.requestIdle();
+      }
       case UNWIND -> {
         if (true /*turret.isUnwound()*/) {
           state = previousState;
           previousState = ShooterState.UNWIND;
         }
       }
-      case AUTO_SHOOTING -> {
-        if (true /*turrent.needsToUnwind()*/) {
-          previousState = state;
-          state = ShooterState.UNWIND;
-        }
-        if (true /*in non-shooting area */) {
-          previousState = state;
-          state = ShooterState.AREA_INHIBIT_AUTO_SHOOTING;
-        }
-        /*
-        Auto shooting logic/code
-
-        */
+      case SHOOTING -> {
+        spindexer.requestIndex(Constants.Spindexer.indexingMechanismRotationsPerSec);
+        tunnel.requestIndex(Constants.Tunnel.dynamicVelocity ? Constants.Tunnel.dynamicVelocityPercent * 
+            : Constants.Tunnel.indexingMechanismRotationsPerSec);
+        flywheel.requestShoot(Constants.);
       }
-      case INHIBIT_AUTO_SHOOTING -> {}
-      case AREA_INHIBIT_AUTO_SHOOTING -> {}
     }
     /* TODO once these are all set up
     flywheel.periodic();
@@ -77,5 +72,24 @@ public class Shooter extends SubsystemBase {
     turret.periodic();
     */
     Logger.recordOutput("Shooter/State", state.toString());
+  }
+
+  public boolean isRewindComplete() {
+    return false; // TODO turret.isUnwound();
+  }
+
+  public boolean isMechanismsAtSpeed() {
+    return flywheel.atTargetVelocity() && tunnel.isAtSpeed();
+  }
+
+  public boolean isHoodAtAngle() {
+    return false; // TODO
+  }
+
+  public void setState(ShooterState newState) {
+    if (newState != state) {
+      previousState = state;
+      state = newState;
+    }
   }
 }
