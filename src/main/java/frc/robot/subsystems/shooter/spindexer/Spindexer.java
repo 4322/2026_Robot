@@ -8,6 +8,8 @@ public class Spindexer {
   private SpindexerIO io;
   private SpindexerIOInputsAutoLogged inputs = new SpindexerIOInputsAutoLogged();
 
+  private double requestedSpeed = -1;
+
   public enum SpindexerStates {
     DISABLED,
     IDLE,
@@ -34,19 +36,22 @@ public class Spindexer {
         io.stop();
       }
       case INDEXING -> {
-        io.setTargetMechanismRotations(Constants.Spindexer.indexingMechanismRotationsPerSec);
+        io.setTargetMechanismRotations(requestedSpeed);
       }
     }
 
     Logger.recordOutput("Spindexer/State", state.toString());
+    Logger.recordOutput("Spindexer/RequestedSpeed", requestedSpeed);
   }
 
   public void requestIdle() {
     state = SpindexerStates.IDLE;
+    requestedSpeed = 0;
   }
 
-  public void requestIndex() {
+  public void requestIndex(double speed) {
     state = SpindexerStates.INDEXING;
+    requestedSpeed = speed;
   }
 
   public void enableBrakeMode(boolean enable) {
