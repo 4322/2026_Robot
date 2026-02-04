@@ -58,6 +58,9 @@ public final class Constants {
   public static final SubsystemMode visionObjectDetection = SubsystemMode.NORMAL;
 
   public static class Spindexer {
+    public static final boolean dynamicVelocity = true;
+    public static final double dynamicVelocityPercent = 0.9; // TODO tune
+
     public static final int spindexerMotorId = 1;
     public static final double supplyCurrentLimit = 40; // TODO
     public static final double statorCurrentLimit = 60;
@@ -72,10 +75,12 @@ public final class Constants {
     public static final double indexingMechanismRotationsPerSec = 3; // TODO
     public static final double stoppedMechanismRotationsPerSec = 0.1; // TODO
 
-    public static final double motorToMechanismRatio = 10.0; // TODO
+    public static final double motorToMechanismRatio = 12.0;
   }
 
   public static class Tunnel {
+    public static final boolean dynamicVelocity = true;
+    public static final double dynamicVelocityPercent = 0.9; // TODO tune
 
     public static final double indexingMotorRotationsPerSec = 10;
     public static final int tunnelMotorId = 0;
@@ -93,7 +98,7 @@ public final class Constants {
     public static final double stoppedMechanismRotationsPerSec = 0.1; // TODO
     public static final double atSpeedMechanismRotationsPerSec =
         0.95 * indexingMotorRotationsPerSec; // TODO
-    public static final double motorToMechanismRatio = 1.0; // TODO
+    public static final double motorToMechanismRatio = 1.5;
   }
 
   public static class Flywheel {

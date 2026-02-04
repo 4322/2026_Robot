@@ -33,6 +33,8 @@ public class SpindexerIOTalonFx implements SpindexerIO {
     config.HardwareLimitSwitch.ForwardLimitEnable = false;
     config.HardwareLimitSwitch.ReverseLimitEnable = false;
 
+    config.Feedback.SensorToMechanismRatio = Constants.Spindexer.motorToMechanismRatio;
+
     StatusCode configStatus = motor.getConfigurator().apply(config);
 
     if (configStatus != StatusCode.OK) {
@@ -46,9 +48,7 @@ public class SpindexerIOTalonFx implements SpindexerIO {
   public void updateInputs(SpindexerIOInputs inputs) {
     inputs.motorConnected = motor.isConnected();
     inputs.voltage = motor.getMotorVoltage().getValueAsDouble();
-    inputs.motorRotationsPerSec = motor.getVelocity().getValueAsDouble();
-    inputs.mechanismRotationsPerSec =
-        inputs.motorRotationsPerSec * Constants.Spindexer.motorToMechanismRatio;
+    inputs.mechanismRotationsPerSec = motor.getVelocity().getValueAsDouble();
     inputs.supplyCurrentAmps = motor.getSupplyCurrent().getValueAsDouble();
     inputs.statorCurrentAmps = motor.getStatorCurrent().getValueAsDouble();
     inputs.motorTempC = motor.getDeviceTemp().getValueAsDouble();
@@ -59,7 +59,7 @@ public class SpindexerIOTalonFx implements SpindexerIO {
     if (speedMechanismRotations != lastRequestedVelocity) {
       motor.setControl(
           velocityRequest
-              .withVelocity(speedMechanismRotations * Constants.Spindexer.motorToMechanismRatio)
+              .withVelocity(velocity)
               .withEnableFOC(true));
     }
 
