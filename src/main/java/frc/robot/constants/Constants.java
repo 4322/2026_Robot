@@ -96,8 +96,6 @@ public final class Constants {
     public static final double kD = 0;
 
     public static final double stoppedMechanismRotationsPerSec = 0.1; // TODO
-    public static final double atSpeedMechanismRotationsPerSec =
-        0.95 * indexingMotorRotationsPerSec; // TODO
     public static final double atSpeedMechanismRotationsPerSec = 0.95 * indexingMechanismRotationsPerSec; // TODO
     public static final double motorToMechanismRatio = 1.5;
   }
