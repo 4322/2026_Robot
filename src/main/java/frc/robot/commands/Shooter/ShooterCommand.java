@@ -22,6 +22,6 @@ public class ShooterCommand {
         BooleanSupplier mechanismsAtSpeed = () -> shooter.isMechanismsAtSpeed();
         BooleanSupplier hoodAtAngle = () -> shooter.isHoodAtAngle();
 
-        return Commands.run(() -> shooter.setState(ShooterState.SHOOTING))
+        return Commands.run(() -> shooter.setState(ShooterState.SHOOTING), shooter);
     }
 }

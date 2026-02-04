@@ -58,10 +58,13 @@ public class Shooter extends SubsystemBase {
         }
       }
       case SHOOTING -> {
-        spindexer.requestIndex(Constants.Spindexer.indexingMechanismRotationsPerSec);
-        tunnel.requestIndex(Constants.Tunnel.dynamicVelocity ? Constants.Tunnel.dynamicVelocityPercent * 
+        flywheel.requestShoot(Constants.Flywheel.shootingMechanismRPS);
+        tunnel.requestIndex(Constants.Tunnel.dynamicVelocity ? Constants.Tunnel.dynamicVelocityPercent * flywheel.getVelocity() 
             : Constants.Tunnel.indexingMechanismRotationsPerSec);
-        flywheel.requestShoot(Constants.);
+        spindexer.requestIndex(Constants.Spindexer.dynamicVelocity ? Constants.Spindexer.dynamicVelocityPercent * tunnel.getVelocity() 
+            : Constants.Spindexer.indexingMechanismRotationsPerSec);
+        
+        
       }
     }
     /* TODO once these are all set up
