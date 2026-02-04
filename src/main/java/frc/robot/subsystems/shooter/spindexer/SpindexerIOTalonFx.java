@@ -59,7 +59,7 @@ public class SpindexerIOTalonFx implements SpindexerIO {
     if (velocity != lastRequestedVelocity) {
       motor.setControl(
           velocityRequest
-              .withVelocity(velocity * Constants.Spindexer.motorToMechanismRatio)
+              .withVelocity(velocity)
               .withEnableFOC(true));
     }
 
