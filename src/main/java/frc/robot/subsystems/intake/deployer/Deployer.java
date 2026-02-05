@@ -33,7 +33,7 @@ public class Deployer {
     switch (Constants.deployerMode) {
       case DISABLED -> {}
       case TUNING -> {}
-      case DRIVETUNING -> {}
+      case DRIVE_TUNING -> {}
       case NORMAL -> {
         switch (goal) {
           case DISABLED -> {

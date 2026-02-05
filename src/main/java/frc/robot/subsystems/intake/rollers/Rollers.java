@@ -25,9 +25,9 @@ public class Rollers {
     rollersIO.updateInputs(inputs);
     Logger.processInputs("Rollers", inputs);
     Logger.recordOutput("Rollers/Goal", goal);
-    switch (Constants.rollersMode) {
+    switch (Constants.rollerMode) {
       case TUNING -> {}
-      case DRIVETUNING -> {}
+      case DRIVE_TUNING -> {}
       case DISABLED -> {}
       case NORMAL -> {
         switch (goal) {
