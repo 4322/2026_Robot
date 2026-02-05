@@ -9,6 +9,7 @@ package frc.robot.constants;
 
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.wpilibj.RobotBase;
 
 /**
@@ -46,7 +47,7 @@ public final class Constants {
     DISABLED,
     NORMAL,
     TUNING,
-    DRIVETUNING
+    DRIVE_TUNING
   }
 
   public static final SubsystemMode driveMode = SubsystemMode.NORMAL;
@@ -57,38 +58,59 @@ public final class Constants {
   public static final SubsystemMode tunnelMode = SubsystemMode.NORMAL;
   public static final SubsystemMode turretMode = SubsystemMode.NORMAL;
   public static final SubsystemMode deployerMode = SubsystemMode.NORMAL;
-  public static final SubsystemMode rollersMode = SubsystemMode.NORMAL;
+  public static final SubsystemMode rollerMode = SubsystemMode.NORMAL;
+  public static final SubsystemMode intakeMode = SubsystemMode.NORMAL;
   public static final SubsystemMode climberMode = SubsystemMode.DISABLED;
+  public static final SubsystemMode ledMode = SubsystemMode.NORMAL;
   public static final SubsystemMode visionGlobalPose = SubsystemMode.NORMAL;
   public static final SubsystemMode visionObjectDetection = SubsystemMode.NORMAL;
 
-  public class Deployer {
-    // 0 degrees is stowed postion
-    // postive degrees when extending
-    public static final double retractDeg = 0; // TODO
-    public static final double extendDeg = 95; // TODO
-    public static final double maxGravityDegrees = 65; // TODO
-    public static final int motorId = 1; // TODO
+  public static class Spindexer {
+    public static final boolean dynamicVelocity = true;
+    public static final double dynamicVelocityPercent = 0.9; // TODO tune
+
+    public static final int spindexerMotorId = 1;
+    public static final double supplyCurrentLimit = 40; // TODO
     public static final double statorCurrentLimit = 60;
-    public static final double supplyCurrentLimit = 40;
+    public static final InvertedValue motorInvert =
+        InvertedValue.Clockwise_Positive; // TODO set these
     public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
-    public static final InvertedValue motorInvert = InvertedValue.Clockwise_Positive;
-    public static final double kP = 1; // TODO
-    public static final double kG = 2; // TODO
+    public static final double kS = 0;
+    public static final double kV = 0;
+    public static final double kP = 1;
     public static final double kI = 0;
     public static final double kD = 0;
-    public static final int canCoderID = 1; // TODO
-    public static final double sensorToMechanismRatio = 2; // TODO
-    public static final double RotorToSensorRatio = 1; // TODO
+    public static final double indexingMechanismRotationsPerSec = 3; // TODO 
+    public static final double stoppedMechanismRotationsPerSec = 0.1; // TODO
+
+    public static final double motorToMechanismRatio = 12.0;
   }
 
-  public class Rollers {
-    public static final double voltageIntake = 50; // TODO
-    public static final double voltageEject = -50; // TODO
-    public static final int motorId = 1; // TODO
+  public static class Tunnel {
+    public static final boolean dynamicVelocity = true;
+    public static final double dynamicVelocityPercent = 0.9; // TODO tune
+
+    public static final double indexingMechanismRotationsPerSec = 10;
+    public static final int tunnelMotorId = 0;
     public static final double statorCurrentLimit = 60; // TODO
     public static final double supplyCurrentLimit = 40; // TODO
+    public static final InvertedValue motorInvert =
+        InvertedValue.Clockwise_Positive; // TODO set these
     public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
-    public static final InvertedValue motorInvert = InvertedValue.Clockwise_Positive;
+    public static final double kS = 0;
+    public static final double kV = 0;
+    public static final double kP = 1;
+    public static final double kI = 0;
+    public static final double kD = 0;
+
+    public static final double stoppedMechanismRotationsPerSec = 0.1; // TODO
+    public static final double atSpeedMechanismRotationsPerSec = 0.95 * indexingMechanismRotationsPerSec; // TODO
+    public static final double motorToMechanismRatio = 1.5;
+  }
+
+  public static class VisionObjectDetection {
+
+    public static final Transform3d robotCenterToCamera = new Transform3d(); // TODO add
+    public static final String hostname = null;
   }
 }
