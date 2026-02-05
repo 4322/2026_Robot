@@ -5,6 +5,7 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.reduxrobotics.sensors.canandcolor.Canandcolor;
 import com.reduxrobotics.sensors.canandcolor.CanandcolorSettings;
@@ -47,7 +48,7 @@ public class FlywheelIOTalonFx implements FlywheelIO {
     // Replace with a proper follower call if/when the correct Fo, nullllower constructor or API is
     // available.
     StatusCode followerMotorSetStatus =
-        followerMotor.setControl(new Follower(motor.getDeviceID(), null));
+        followerMotor.setControl(new Follower(motor.getDeviceID(), MotorAlignmentValue.Aligned));
 
     canandcolorConfig.setColorFramePeriod(10); // Set color frame period to 10ms
 
@@ -75,6 +76,15 @@ public class FlywheelIOTalonFx implements FlywheelIO {
               + followerMotor.getDeviceID()
               + " error (Flywheel Follower): "
               + followerConfigStatus.getDescription(),
+          false);
+    }
+
+    if (followerMotorSetStatus != StatusCode.OK) {
+      DriverStation.reportError(
+          "Talon "
+              + followerMotor.getDeviceID()
+              + " set error (Flywheel Follower): "
+              + followerMotorSetStatus.getDescription(),
           false);
     }
   }
