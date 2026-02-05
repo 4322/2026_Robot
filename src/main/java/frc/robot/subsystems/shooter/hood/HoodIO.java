@@ -12,7 +12,13 @@ public interface HoodIO {
     public double motorTempCelsius = 0.0;
     public double busCurrentAmps = 0.0;
     public boolean encoderConnected = false;
+    public double encoderRotations = 0.0;
+    public double encoderRotationsPerInfo = 0.0;
   }
 
   public default void updateInputs(HoodIOInputs inputs) {}
+
+  public default void setTargetAngle(double angle) {}
+
+  public default void setHomedAngle(double angle) {}
 }
