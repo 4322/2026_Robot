@@ -1,5 +1,6 @@
 package frc.robot.commands.Shooter;
 
+import java.util.concurrent.BlockingDeque;
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
@@ -47,11 +48,38 @@ public class ShooterCommand {
     }
 
     public static Command areaInhibitAutoShoot(Shooter shooter, Drive drive) {
-        AreaManager areaManager = new AreaManager();
-        BooleanSupplier needsToUnwind = shooter.needsToUnwind();
-        BooleanSupplier inNonShootingArea = !areaManager.isShootingArea(drive.getPose());
+        BooleanSupplier needsToUnwind = () -> shooter.needsToUnwind();
+        BooleanSupplier inShootingArea = () -> AreaManager.isShootingArea(drive.getPose().getTranslation());
+        BooleanSupplier end = () -> needsToUnwind.getAsBoolean() || inShootingArea.getAsBoolean();
         return Commands.run(() -> {
             shooter.setState(ShooterState.IDLE);
-        }).until(needsToUnwind.getAsBoolean() || !inNonShootingArea.getAsBoolean());
+        }).until(end);
     }
+
+    public static Command autoShoot(Shooter shooter, Drive drive, BooleanSupplier toggleOn) {
+        BooleanSupplier needsToUnwind = () -> shooter.needsToUnwind();
+        BooleanSupplier inShootingArea = () -> AreaManager.isShootingArea(drive.getPose().getTranslation());
+        BooleanSupplier end = () -> !AreaManager.isShootingArea(drive.getPose().getTranslation()) || toggleOn.getAsBoolean() || needsToUnwind.getAsBoolean();
+
+        return Commands.run(() -> {
+            switch(AreaManager.getZoneOfPosition(drive.getPose().getTranslation())) {
+                case ALLIANCE_ZONE -> {
+
+                }
+                case LEFT_OPPOSITION -> {
+
+                }
+                case RIGHT_OPPOSITION -> {
+
+                }
+                case LEFT_NEUTRAL -> {
+
+                }
+                case RIGHT_NEUTRAL -> {
+
+                }
+            }
+        }, shooter).until(end);
+    }
+
 }

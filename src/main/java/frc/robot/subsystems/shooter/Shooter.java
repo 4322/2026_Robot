@@ -84,6 +84,10 @@ public class Shooter extends SubsystemBase {
     return false; // TODO turret.isUnwound();
   }
 
+  public boolean needsToUnwind() {
+    return false; // TODO
+  }
+
   public boolean isMechanismsAtSpeed() {
     return flywheel.atTargetVelocity() && tunnel.isAtSpeed();
   }
