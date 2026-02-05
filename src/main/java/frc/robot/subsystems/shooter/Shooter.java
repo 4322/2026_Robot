@@ -44,6 +44,7 @@ public class Shooter extends SubsystemBase {
       case DISABLED -> {
         if (DriverStation.isEnabled()) {
           // TODO hood.home();
+          state = ShooterState.IDLE;
         }
       }
       case IDLE -> {
@@ -57,8 +58,10 @@ public class Shooter extends SubsystemBase {
         spindexer.requestIdle();
         if (spindexer.isStopped()) {
           tunnel.requestIdle();
-          flywheel.requestIdle();
-          turret.preemptiveUnwind();
+          if (tunnel.isStopped()) {
+            turret.preemptiveUnwind();
+          }
+          
         }
       }
       case PRESHOOT -> {
