@@ -14,7 +14,10 @@ public interface TurretIO {
   }
 
   public default void updateInputs(TurretIOInputs inputs) {}
-  public default void setAngle (double angle){}
-  public default void setBreakMode (boolean mode){}
-  public default void rewind(){}
+
+  public default void setAngle(double angle) {}
+
+  public default void setBreakMode(boolean mode) {}
+
+  public default void rewind() {}
 }

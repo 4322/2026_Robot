@@ -127,7 +127,8 @@ public final class Constants {
     public static final Transform3d robotCenterToCamera = new Transform3d(); // TODO add
     public static final String hostname = null;
   }
-  public static class Turret{
+
+  public static class Turret {
     public static final int motorId = 13;
     public static final double kS = 0;
     public static final double kV = 0;
@@ -138,6 +139,5 @@ public final class Constants {
     public static final double supplyCurrentLimit = 40;
     public static final InvertedValue motorInvert = InvertedValue.Clockwise_Positive;
     public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
-
   }
 }

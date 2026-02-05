@@ -16,12 +16,11 @@ public class Shooter extends SubsystemBase {
     DISABLED,
     IDLE,
     UNWIND,
-    PRESHOOT,
-    SHOOT,
+    PRESHOOT, // Flywheel gets up to speed; Turret aims
+    SHOOT, // Spindexer and tunnel get up to speed
   }
 
   private ShooterState state = ShooterState.DISABLED;
-  private ShooterState previousState = ShooterState.DISABLED;
 
   private Flywheel flywheel;
   private Hood hood;
@@ -49,32 +48,42 @@ public class Shooter extends SubsystemBase {
       }
       case IDLE -> {
         spindexer.requestIdle();
-        tunnel.requestIdle();
-        flywheel.requestIdle();
+        if (spindexer.isStopped()) {
+          tunnel.requestIdle();
+          flywheel.requestIdle();
+        }
       }
       case UNWIND -> {
         spindexer.requestIdle();
-        tunnel.requestIdle();
-        flywheel.requestIdle();
-        turret.preemptiveUnwind();
+        if (spindexer.isStopped()) {
+          tunnel.requestIdle();
+          flywheel.requestIdle();
+          turret.preemptiveUnwind();
+        }
       }
       case PRESHOOT -> {
         flywheel.requestShoot(Constants.Flywheel.shootingMechanismRPS);
+        // TODO Turret request position here
       }
       case SHOOT -> {
         flywheel.requestShoot(Constants.Flywheel.shootingMechanismRPS);
-        tunnel.requestIndex(Constants.Tunnel.dynamicVelocity ? Constants.Tunnel.dynamicVelocityPercent * flywheel.getVelocity() 
-            : Constants.Tunnel.indexingMechanismRotationsPerSec);
-        spindexer.requestIndex(Constants.Spindexer.dynamicVelocity ? Constants.Spindexer.dynamicVelocityPercent * tunnel.getVelocity() 
-            : Constants.Spindexer.indexingMechanismRotationsPerSec);
-        
+        tunnel.requestIndex(
+            Constants.Tunnel.dynamicVelocity
+                ? Constants.Tunnel.dynamicVelocityPercent * flywheel.getVelocity()
+                : Constants.Tunnel.indexingMechanismRotationsPerSec);
+        spindexer.requestIndex(
+            Constants.Spindexer.dynamicVelocity
+                ? Constants.Spindexer.dynamicVelocityPercent * tunnel.getVelocity()
+                : Constants.Spindexer.indexingMechanismRotationsPerSec);
       }
     }
-    /* TODO once these are all set up
+
     flywheel.periodic();
-    hood.periodic();
     spindexer.periodic();
     tunnel.periodic();
+
+    /* TODO once these are all set up
+    hood.periodic();
     turret.periodic();
     */
     Logger.recordOutput("Shooter/State", state.toString());
@@ -100,10 +109,11 @@ public class Shooter extends SubsystemBase {
     return false; // TODO
   }
 
+  public boolean isTurretInPosition() {
+    return false; // TODO
+  }
+
   public void setState(ShooterState newState) {
-    if (newState != state) {
-      previousState = state;
-      state = newState;
-    }
+    state = newState;
   }
 }
