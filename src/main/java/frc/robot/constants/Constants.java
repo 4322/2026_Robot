@@ -114,7 +114,8 @@ public final class Constants {
     public static final Transform3d robotCenterToCamera = new Transform3d(); // TODO add
     public static final String hostname = null;
   }
-    public class Rollers {
+
+  public class Rollers {
     public static final double voltageIntake = 50; // TODO
     public static final double voltageEject = -50; // TODO
     public static final int motorId = 1; // TODO
@@ -123,7 +124,8 @@ public final class Constants {
     public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
     public static final InvertedValue motorInvert = InvertedValue.Clockwise_Positive;
   }
-    public class Deployer {
+
+  public class Deployer {
     // 0 degrees is stowed postion
     // postive degrees when extending
     public static final double retractDeg = 0; // TODO
@@ -141,6 +143,6 @@ public final class Constants {
     public static final int canCoderID = 1; // TODO
     public static final double sensorToMechanismRatio = 2; // TODO
     public static final double RotorToSensorRatio = 1; // TODO
+    public static final double tolerance = 0.1;
   }
-
 }

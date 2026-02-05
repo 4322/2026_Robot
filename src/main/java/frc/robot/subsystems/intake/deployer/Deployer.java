@@ -6,8 +6,6 @@ import org.littletonrobotics.junction.Logger;
 
 public class Deployer {
   private DeployerIO deployerIO;
-  public double currentPosition;
-  public double desiredPosition;
   private DeployerIOInputsAutoLogged inputs = new DeployerIOInputsAutoLogged();
 
   public enum deployerGoal {
@@ -27,9 +25,6 @@ public class Deployer {
     deployerIO.updateInputs(inputs);
     Logger.processInputs("Deployer", inputs);
     Logger.recordOutput("Deployer/Goal", goal);
-    if (desiredPosition == inputs.angleDeg) {
-      currentPosition = desiredPosition;
-    }
     switch (Constants.deployerMode) {
       case DISABLED -> {}
       case TUNING -> {}
@@ -53,13 +48,11 @@ public class Deployer {
   }
 
   public void retract() {
-    desiredPosition = Constants.Deployer.retractDeg;
     deployerIO.setPosition(Constants.Deployer.retractDeg);
   }
 
   public void extend() {
     deployerIO.setPosition(Constants.Deployer.extendDeg);
-    currentPosition = Constants.Deployer.extendDeg;
   }
 
   public void unjam() {
@@ -71,7 +64,7 @@ public class Deployer {
   }
 
   public Boolean isExtended() {
-    return (inputs.angleDeg >= Constants.Deployer.extendDeg + 0.01) ? true : false;
+    return (inputs.angleDeg >= Constants.Deployer.extendDeg - Constants.Deployer.tolerance) ? true : false;
   }
 
   public void setGoal(deployerGoal goal) {
@@ -79,6 +72,6 @@ public class Deployer {
   }
 
   public boolean isStowed() {
-    return (inputs.angleDeg <= Constants.Deployer.retractDeg + 0.01) ? true : false;
+    return (inputs.angleDeg <= Constants.Deployer.retractDeg + Constants.Deployer.tolerance) ? true : false;
   }
 }
