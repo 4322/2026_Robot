@@ -274,22 +274,25 @@ public class RobotContainer {
     shooter.setDefaultCommand(ShooterCommands.autoShoot(shooter, drive));
     new JoystickButton(operatorBoard.getLeftController(), Constants.Control.toggle1ButtonNumber)
         .whileTrue(ShooterCommands.inhibitAutoShoot(shooter, toggle1))
-        .onTrue(new InstantCommand(() -> currentShootingCommand = ShootingCommands.INHIBIT_AUTO_SHOOT))
-        .onFalse(new InstantCommand(() -> lastShootingCommand = ShootingCommands.INHIBIT_AUTO_SHOOT));
+        .onTrue(
+            new InstantCommand(() -> currentShootingCommand = ShootingCommands.INHIBIT_AUTO_SHOOT))
+        .onFalse(
+            new InstantCommand(() -> lastShootingCommand = ShootingCommands.INHIBIT_AUTO_SHOOT));
 
     inNonShootingArea
-        .whileTrue(ShooterCommands.areaInhibitAutoShoot(shooter, drive)
-            .onlyIf(() ->
-                currentShootingCommand != ShootingCommands.INHIBIT_AUTO_SHOOT
-                    && shooter.getState() != ShooterState.UNWIND
-                    && !toggle1.getAsBoolean()))
-        .onTrue(new InstantCommand(() -> currentShootingCommand = ShootingCommands.AREA_INHIBIT_AUTO_SHOOT))
-        .onFalse(new InstantCommand(() -> lastShootingCommand = ShootingCommands.AREA_INHIBIT_AUTO_SHOOT));
-    
-    
-
-    
-            
+        .whileTrue(
+            ShooterCommands.areaInhibitAutoShoot(shooter, drive)
+                .onlyIf(
+                    () ->
+                        currentShootingCommand != ShootingCommands.INHIBIT_AUTO_SHOOT
+                            && shooter.getState() != ShooterState.UNWIND
+                            && !toggle1.getAsBoolean()))
+        .onTrue(
+            new InstantCommand(
+                () -> currentShootingCommand = ShootingCommands.AREA_INHIBIT_AUTO_SHOOT))
+        .onFalse(
+            new InstantCommand(
+                () -> lastShootingCommand = ShootingCommands.AREA_INHIBIT_AUTO_SHOOT));
   }
 
   /**

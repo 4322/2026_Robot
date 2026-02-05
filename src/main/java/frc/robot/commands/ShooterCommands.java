@@ -11,12 +11,6 @@ import java.util.function.BooleanSupplier;
 
 public class ShooterCommands {
 
-  // Probably going to handle unwind in subsystem
-  public static Command turretUnwind(Shooter shooter) {
-    BooleanSupplier unwindComplete = () -> shooter.isUnwindComplete();
-    return Commands.run(() -> shooter.setState(ShooterState.UNWIND), shooter).until(unwindComplete);
-  }
-
   public static Command shoot(Shooter shooter, BooleanSupplier end) {
     BooleanSupplier mechanismsAtSpeed = () -> shooter.isMechanismsAtSpeed();
     BooleanSupplier hoodAtAngle = () -> shooter.isHoodAtAngle();
@@ -24,17 +18,17 @@ public class ShooterCommands {
 
     return Commands.run(() -> shooter.setState(ShooterState.PRESHOOT), shooter)
         .until(flywheelAtSpeed)
-        .andThen(Commands.run(() -> {
-          if (shooter.needsToUnwind()) {
-            shooter.setState(ShooterState.UNWIND);
-          } else {
-            shooter.setState(ShooterState.SHOOT);
-          }
-        }, shooter)).until(end);
-  }
-
-  public static Command idle(Shooter shooter) {
-    return new InstantCommand(() -> shooter.setState(ShooterState.IDLE), shooter);
+        .andThen(
+            Commands.run(
+                () -> {
+                  if (shooter.needsToUnwind()) {
+                    shooter.setState(ShooterState.UNWIND);
+                  } else {
+                    shooter.setState(ShooterState.SHOOT);
+                  }
+                },
+                shooter))
+        .until(end);
   }
 
   // Main commands
