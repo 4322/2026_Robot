@@ -31,13 +31,14 @@ public class AreaManager {
 
   // Opposition Zones
    private static Rectangle2d leftBlueOppositionZone =
-      new Rectangle2d(new Translation2d(0, 0), new Translation2d(0, 0));
+      new Rectangle2d(new Translation2d(4.03,8.07), new Translation2d(0, 4.035));
   private static Rectangle2d rightBlueOppositionZone =
-      new Rectangle2d(new Translation2d(0, 0), new Translation2d(0, 0));
+      new Rectangle2d(new Translation2d(4.03, 4.035), new Translation2d(0, 0));
+
   private static Rectangle2d leftRedOppositionZone =
-      new Rectangle2d(new Translation2d(8.2296, 0), new Translation2d(16.4592, 8.2296));
+      new Rectangle2d(new Translation2d(16.54, 8.07), new Translation2d(12.51, 4.035));
   private static Rectangle2d rightRedOppositionZone =
-      new Rectangle2d(new Translation2d(8.2296, 8.2296), new Translation2d(16.4592, 16.4592));
+      new Rectangle2d(new Translation2d(16.54, 4.035), new Translation2d(12.51, 0));
   
   // Non-Shooting Areas
   private static Rectangle2d trenchLeftRed =
