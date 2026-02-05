@@ -39,7 +39,7 @@ public class Hood {
         io.setTargetAngle(-10.0); // Move to hard stop
         homingTimer.reset();
         homingTimer.start();
-        if (homingTimer.hasElapsed(0.4) || inputs.encoderRotationsPerInfo <= -0.1) {
+        if (homingTimer.hasElapsed(0.4)) {
           io.setHomedAngle(0.0); // Reset to home position
           homingTimer.stop();
           state = HoodStates.IDLE;
