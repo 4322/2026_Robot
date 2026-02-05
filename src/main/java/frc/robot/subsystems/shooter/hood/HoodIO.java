@@ -21,7 +21,7 @@ public interface HoodIO {
   public default void setServoPosition(int angle) {}
 
    public default void setEncoderPosition(int angle) {
-==
+
   }
 
 }
