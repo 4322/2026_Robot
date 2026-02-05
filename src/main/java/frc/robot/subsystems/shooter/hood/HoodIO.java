@@ -20,5 +20,8 @@ public interface HoodIO {
 
   public default void setTargetAngle(double angle) {}
 
+  public default void setVoltage(double voltage) {}
+
+
   public default void setHomedAngle(double angle) {}
 }

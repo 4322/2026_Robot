@@ -36,11 +36,12 @@ public class Hood {
         }
       }
       case HOMING -> {
-        io.setTargetAngle(-10.0); // Move to hard stop
-        homingTimer.reset();
+        io.setVoltage(-10.0); // Move to hard stop
+       
         homingTimer.start();
         if (homingTimer.hasElapsed(0.4)) {
           io.setHomedAngle(0.0); // Reset to home position
+          homingTimer.reset();
           homingTimer.stop();
           state = HoodStates.IDLE;
         }
