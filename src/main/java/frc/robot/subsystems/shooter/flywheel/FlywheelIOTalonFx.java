@@ -2,6 +2,7 @@ package frc.robot.subsystems.shooter.flywheel;
 
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.StrictFollower;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -14,6 +15,7 @@ import frc.robot.constants.Constants;
 public class FlywheelIOTalonFx implements FlywheelIO {
 
   private TalonFX motor;
+    private TalonFX followerMotor;
   private Canandcolor canandcolor = new Canandcolor(Constants.Flywheel.canandcolorId);
   private CanandcolorSettings canandcolorConfig = new CanandcolorSettings();
   private double lastRequestedVelocity = -1;
@@ -23,9 +25,11 @@ public class FlywheelIOTalonFx implements FlywheelIO {
 
   public FlywheelIOTalonFx() {
     motor = new TalonFX(Constants.Flywheel.motorId);
+    followerMotor = new TalonFX(Constants.Flywheel.followerMotorId);
 
     config.CurrentLimits.StatorCurrentLimit = Constants.Flywheel.statorCurrentLimit;
     config.CurrentLimits.SupplyCurrentLimit = Constants.Flywheel.supplyCurrentLimit;
+    
 
     config.MotorOutput.Inverted = Constants.Flywheel.motorInvert;
     config.MotorOutput.NeutralMode = Constants.Flywheel.neutralMode;
@@ -36,7 +40,13 @@ public class FlywheelIOTalonFx implements FlywheelIO {
     config.Slot0.kI = Constants.Flywheel.kI;
     config.Slot0.kD = Constants.Flywheel.kD;
 
+    StrictFollower followerRequest =
+        new StrictFollower(Constants.Flywheel.motorId)
+            .withInvertOutput(false)
+            .withEnableFOC(true);
+
     StatusCode configStatus = motor.getConfigurator().apply(config);
+    followerMotor.setControl(followerRequest);
     canandcolorConfig.setColorFramePeriod(10); // Set color frame period to 10ms
 
     CanandcolorSettings canandcolorConfigStatus =
