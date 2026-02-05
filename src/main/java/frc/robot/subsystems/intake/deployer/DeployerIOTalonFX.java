@@ -22,7 +22,7 @@ public class DeployerIOTalonFX implements DeployerIO {
 
   public DeployerIOTalonFX() {
     deployerMotor = new TalonFX(Constants.Deployer.motorId);
-    canCoder = new CANcoder(Constants.Deployer.canCoderID);
+    canCoder = new CANcoder(Constants.Deployer.CANCoderID);
     canCoder.getConfigurator().apply(canCoderConfigs);
 
     motorConfigs.Feedback.FeedbackRemoteSensorID = canCoder.getDeviceID();
@@ -53,10 +53,8 @@ public class DeployerIOTalonFX implements DeployerIO {
           false);
     }
     posRotError =
-        subtract(
-            deployerMotor.getPosition().getValueAsDouble(),
-            canCoder.getPosition().getValueAsDouble());
-    deployerMotor.setPosition(deployerMotor.getPosition().getValueAsDouble() + posRotError);
+        Constants.Deployer.CANCoderHomed - canCoder.getAbsolutePosition().getValueAsDouble();
+    deployerMotor.setPosition(Constants.Deployer.maxGravityDegrees - posRotError);
   }
 
   @Override

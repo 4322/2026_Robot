@@ -64,7 +64,9 @@ public class Deployer {
   }
 
   public Boolean isExtended() {
-    return (inputs.angleDeg >= Constants.Deployer.extendDeg - Constants.Deployer.tolerance) ? true : false;
+    return (inputs.angleDeg >= Constants.Deployer.extendDeg - Constants.Deployer.tolerance)
+        ? true
+        : false;
   }
 
   public void setGoal(deployerGoal goal) {
@@ -72,6 +74,8 @@ public class Deployer {
   }
 
   public boolean isStowed() {
-    return (inputs.angleDeg <= Constants.Deployer.retractDeg + Constants.Deployer.tolerance) ? true : false;
+    return (inputs.angleDeg <= Constants.Deployer.retractDeg + Constants.Deployer.tolerance)
+        ? true
+        : false;
   }
 }
