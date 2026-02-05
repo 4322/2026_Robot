@@ -2,7 +2,7 @@ package frc.robot.subsystems.shooter.flywheel;
 
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.controls.StrictFollower;
+import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -39,10 +39,16 @@ public class FlywheelIOTalonFx implements FlywheelIO {
     config.Slot0.kI = Constants.Flywheel.kI;
     config.Slot0.kD = Constants.Flywheel.kD;
 
-    StrictFollower followerRequest = new StrictFollower(followerMotor.getDeviceID());
-
     StatusCode configStatus = motor.getConfigurator().apply(config);
-    followerMotor.setControl(followerRequest);
+    config.MotorOutput.Inverted =
+        Constants.Flywheel.motorInvert; // Invert follower motor opposite of main motor
+    StatusCode followerConfigStatus = followerMotor.getConfigurator().apply(config);
+    // Use a valid control to initialize the follower motor (set to zero velocity for now).
+    // Replace with a proper follower call if/when the correct Fo, nullllower constructor or API is
+    // available.
+    StatusCode followerMotorSetStatus =
+        followerMotor.setControl(new Follower(motor.getDeviceID(), null));
+
     canandcolorConfig.setColorFramePeriod(10); // Set color frame period to 10ms
 
     CanandcolorSettings canandcolorConfigStatus =
@@ -62,11 +68,21 @@ public class FlywheelIOTalonFx implements FlywheelIO {
           "Talon " + motor.getDeviceID() + " error (Flywheel): " + configStatus.getDescription(),
           false);
     }
+
+    if (followerConfigStatus != StatusCode.OK) {
+      DriverStation.reportError(
+          "Talon "
+              + followerMotor.getDeviceID()
+              + " error (Flywheel Follower): "
+              + followerConfigStatus.getDescription(),
+          false);
+    }
   }
 
   @Override
   public void updateInputs(FlywheelIOInputs inputs) {
     inputs.motorConnected = motor.isConnected();
+    inputs.followerMotorConnected = followerMotor.isConnected();
     inputs.requestedMechanismRotations = lastRequestedVelocity;
     inputs.actualMechanismRotations =
         motor.getVelocity().getValueAsDouble() / Constants.Flywheel.motorToMechanismRatio;
