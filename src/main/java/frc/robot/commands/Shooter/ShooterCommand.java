@@ -6,8 +6,10 @@ import java.util.function.Supplier;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.shooter.Shooter.ShooterState;
+import frc.robot.subsystems.shooter.areaManager.AreaManager;
 
 public class ShooterCommand {
 
@@ -44,10 +46,10 @@ public class ShooterCommand {
         }, shooter);
     }
 
-    public static Command areaInhibitAutoShoot(Shooter shooter) {
-        AreaManager areaManager = 
+    public static Command areaInhibitAutoShoot(Shooter shooter, Drive drive) {
+        AreaManager areaManager = new AreaManager();
         BooleanSupplier needsToUnwind = shooter.needsToUnwind();
-        BooleanSupplier inNonShootingArea = 
+        BooleanSupplier inNonShootingArea = !areaManager.isShootingArea(drive.getPose());
         return Commands.run(() -> {
             shooter.setState(ShooterState.IDLE);
         }).until(needsToUnwind.getAsBoolean() || !inNonShootingArea.getAsBoolean());
