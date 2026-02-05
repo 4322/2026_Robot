@@ -8,13 +8,14 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.reduxrobotics.sensors.canandcolor.Canandcolor;
 import com.reduxrobotics.sensors.canandcolor.CanandcolorSettings;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.util.Color;
 import frc.robot.constants.Constants;
 
 public class FlywheelIOTalonFx implements FlywheelIO {
 
   private TalonFX motor;
-  private Canandcolor cancoder;
-  private CanandcolorSettings cancoderConfig = new CanandcolorSettings();
+  private Canandcolor canandcolor = new Canandcolor(Constants.Flywheel.canandcolorId);
+  private CanandcolorSettings canandcolorConfig = new CanandcolorSettings();
   private double lastRequestedVelocity = -1;
 
   private TalonFXConfiguration config = new TalonFXConfiguration();
@@ -36,13 +37,17 @@ public class FlywheelIOTalonFx implements FlywheelIO {
     config.Slot0.kD = Constants.Flywheel.kD;
 
     StatusCode configStatus = motor.getConfigurator().apply(config);
-    cancoderConfig.setColorFramePeriod(10); // Set color frame period to 10ms
+    canandcolorConfig.setColorFramePeriod(10); // Set color frame period to 10ms
 
-    CanandcolorSettings cancoderConfigStatus = cancoder.setSettings(cancoderConfig, 1.0, 5);
+    CanandcolorSettings canandcolorConfigStatus =
+        canandcolor.setSettings(canandcolorConfig, 1.0, 5);
 
-    if (!cancoderConfigStatus.isEmpty()) {
+    if (!canandcolorConfigStatus.isEmpty()) {
       DriverStation.reportError(
-          "CANCoder " + cancoder.getAddress() + " error (Flywheel Sensor): " + cancoderConfigStatus,
+          "Canandcolor "
+              + canandcolor.getAddress()
+              + " error (Flywheel Sensor): "
+              + canandcolorConfigStatus,
           false);
     }
 
@@ -56,29 +61,32 @@ public class FlywheelIOTalonFx implements FlywheelIO {
   @Override
   public void updateInputs(FlywheelIOInputs inputs) {
     inputs.motorConnected = motor.isConnected();
-    inputs.requestedSpeed = lastRequestedVelocity;
-    inputs.actualSpeed = motor.getVelocity().getValueAsDouble();
+    inputs.requestedMechanismRotations = lastRequestedVelocity;
+    inputs.actualMechanismRotations =
+        motor.getVelocity().getValueAsDouble() / Constants.Flywheel.motorToMechanismRatio;
+    inputs.speedMotorRotations = motor.getVelocity().getValueAsDouble();
     inputs.appliedVolts = motor.getMotorVoltage().getValueAsDouble();
     inputs.motorTempCelsius = motor.getDeviceTemp().getValueAsDouble();
+    inputs.color = new Color(canandcolor.getRed(), canandcolor.getGreen(), canandcolor.getBlue());
+    inputs.proximity = canandcolor.getProximity();
 
-    inputs.sensorProximity = cancoder.getProximity();
-    inputs.sensorConnected = cancoder.isConnected();
+    inputs.proximity = canandcolor.getProximity();
+    inputs.sensorConnected = canandcolor.isConnected();
 
-    inputs.fuelDetectedOutputting =
-        (cancoder.getProximity() < Constants.Flywheel.fuelDetectedOutputtingProximityThreshold);
+    inputs.fuelDetected = inputs.proximity < Constants.Flywheel.minFuelDetectionProximity;
     inputs.busCurrentAmps = motor.getSupplyCurrent().getValueAsDouble();
   }
 
   @Override
-  public void setTargetVelocity(double velocity) {
-    if (velocity != lastRequestedVelocity) {
+  public void setTargetMechanismRotations(double speedMechanismRotations) {
+    if (speedMechanismRotations != lastRequestedVelocity) {
       motor.setControl(
           velocityRequest
-              .withVelocity(velocity / Constants.Flywheel.motorToMechanismRatio)
+              .withVelocity(speedMechanismRotations * Constants.Flywheel.motorToMechanismRatio)
               .withEnableFOC(true));
     }
 
-    lastRequestedVelocity = velocity;
+    lastRequestedVelocity = speedMechanismRotations;
   }
 
   @Override

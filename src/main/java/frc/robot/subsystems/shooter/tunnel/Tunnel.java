@@ -7,6 +7,7 @@ import org.littletonrobotics.junction.Logger;
 public class Tunnel {
   private TunnelIO io;
   private TunnelIOInputsAutoLogged inputs = new TunnelIOInputsAutoLogged();
+  private double requestedSpeed = -1;
 
   public enum TunnelStates {
     DISABLED,
@@ -34,19 +35,22 @@ public class Tunnel {
         io.stop();
       }
       case INDEXING -> {
-        io.setTargetMechanismRotations(Constants.Tunnel.indexingMotorRotationsPerSec);
+        io.setTargetMechanismRotations(requestedSpeed);
       }
     }
 
     Logger.recordOutput("Tunnel/State", state.toString());
+    Logger.recordOutput("Tunnel/RequestedSpeed", requestedSpeed);
   }
 
   public void requestIdle() {
     state = TunnelStates.IDLE;
+    requestedSpeed = 0;
   }
 
-  public void requestIndex() {
+  public void requestIndex(double speed) {
     state = TunnelStates.INDEXING;
+    requestedSpeed = speed;
   }
 
   public void enableBrakeMode(boolean enable) {
@@ -54,12 +58,14 @@ public class Tunnel {
   }
 
   public boolean isStopped() {
-    return inputs.mechanismRotationsPerSec
-        < Constants.Tunnel.stoppedMechanismRotationsPerSec;
+    return inputs.mechanismRotationsPerSec < Constants.Tunnel.stoppedMechanismRotationsPerSec;
   }
 
   public boolean isAtSpeed() {
-    return inputs.mechanismRotationsPerSec
-        > Constants.Tunnel.atSpeedMechanismRotationsPerSec;
+    return inputs.mechanismRotationsPerSec > Constants.Tunnel.atSpeedMechanismRotationsPerSec;
+  }
+
+  public double getVelocity() {
+    return inputs.mechanismRotationsPerSec;
   }
 }

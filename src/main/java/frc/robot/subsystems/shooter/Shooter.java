@@ -2,6 +2,7 @@ package frc.robot.subsystems.shooter;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.constants.Constants;
 import frc.robot.subsystems.shooter.flywheel.Flywheel;
 import frc.robot.subsystems.shooter.hood.Hood;
 import frc.robot.subsystems.shooter.spindexer.Spindexer;
@@ -11,16 +12,15 @@ import org.littletonrobotics.junction.Logger;
 
 public class Shooter extends SubsystemBase {
 
-  private enum ShooterState {
+  public enum ShooterState {
     DISABLED,
+    IDLE,
     UNWIND,
-    AUTO_SHOOTING,
-    INHIBIT_AUTO_SHOOTING,
-    AREA_INHIBIT_AUTO_SHOOTING
+    PRESHOOT, // Flywheel gets up to speed; Turret aims
+    SHOOT, // Spindexer and tunnel get up to speed
   }
 
   private ShooterState state = ShooterState.DISABLED;
-  private ShooterState previousState = ShooterState.DISABLED;
 
   private Flywheel flywheel;
   private Hood hood;
@@ -44,38 +44,79 @@ public class Shooter extends SubsystemBase {
       case DISABLED -> {
         if (DriverStation.isEnabled()) {
           // TODO hood.home();
+          state = ShooterState.IDLE;
+        }
+      }
+      case IDLE -> {
+        spindexer.requestIdle();
+        if (spindexer.isStopped()) {
+          tunnel.requestIdle();
+          flywheel.requestIdle();
         }
       }
       case UNWIND -> {
-        if (true /*turret.isUnwound()*/) {
-          state = previousState;
-          previousState = ShooterState.UNWIND;
+        spindexer.requestIdle();
+        if (spindexer.isStopped()) {
+          tunnel.requestIdle();
+          if (tunnel.isStopped()) {
+            turret.preemptiveUnwind();
+          }
+          
         }
       }
-      case AUTO_SHOOTING -> {
-        if (true /*turrent.needsToUnwind()*/) {
-          previousState = state;
-          state = ShooterState.UNWIND;
-        }
-        if (true /*in non-shooting area */) {
-          previousState = state;
-          state = ShooterState.AREA_INHIBIT_AUTO_SHOOTING;
-        }
-        /*
-        Auto shooting logic/code
-
-        */
+      case PRESHOOT -> {
+        flywheel.requestShoot(Constants.Flywheel.shootingMechanismRPS);
+        // TODO Turret request position here
       }
-      case INHIBIT_AUTO_SHOOTING -> {}
-      case AREA_INHIBIT_AUTO_SHOOTING -> {}
+      case SHOOT -> {
+        flywheel.requestShoot(Constants.Flywheel.shootingMechanismRPS);
+        tunnel.requestIndex(
+            Constants.Tunnel.dynamicVelocity
+                ? Constants.Tunnel.dynamicVelocityPercent * flywheel.getVelocity()
+                : Constants.Tunnel.indexingMechanismRotationsPerSec);
+        spindexer.requestIndex(
+            Constants.Spindexer.dynamicVelocity
+                ? Constants.Spindexer.dynamicVelocityPercent * tunnel.getVelocity()
+                : Constants.Spindexer.indexingMechanismRotationsPerSec);
+      }
     }
-    /* TODO once these are all set up
+
     flywheel.periodic();
-    hood.periodic();
     spindexer.periodic();
     tunnel.periodic();
+
+    /* TODO once these are all set up
+    hood.periodic();
     turret.periodic();
     */
     Logger.recordOutput("Shooter/State", state.toString());
+  }
+
+  public boolean isRewindComplete() {
+    return false; // TODO turret.isUnwound();
+  }
+
+  public boolean needsToUnwind() {
+    return false; // TODO
+  }
+
+  public boolean isMechanismsAtSpeed() {
+    return flywheel.atTargetVelocity() && tunnel.isAtSpeed();
+  }
+
+  public boolean isFlywheelAtSpeed() {
+    return flywheel.atTargetVelocity();
+  }
+
+  public boolean isHoodAtAngle() {
+    return false; // TODO
+  }
+
+  public boolean isTurretInPosition() {
+    return false; // TODO
+  }
+
+  public void setState(ShooterState newState) {
+    state = newState;
   }
 }

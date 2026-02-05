@@ -1,13 +1,23 @@
 package frc.robot.subsystems.shooter.flywheel;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.constants.Constants;
-import frc.robot.subsystems.shooter.flywheel.FlywheelIO.FlywheelIOInputs;
 import org.littletonrobotics.junction.Logger;
 
 public class Flywheel {
   private FlywheelIO io;
-  private FlywheelIOInputs inputs = new FlywheelIOInputs();
+  private FlywheelIOInputsAutoLogged inputs = new FlywheelIOInputsAutoLogged();
+  private double requestedMechanismRPS = 0.0;
   private double ballsShot = 0;
+  private boolean fuelDetected = false;
+
+  public enum FlywheelStates {
+    DISABLED,
+    IDLE,
+    SHOOTING
+  }
+
+  private FlywheelStates state = FlywheelStates.DISABLED;
 
   public Flywheel(FlywheelIO io) {
     this.io = io;
@@ -15,29 +25,55 @@ public class Flywheel {
 
   public void periodic() {
     io.updateInputs(inputs);
-    // Logger.recordOutput("Flywheel/Inputs", inputs);
-    if (inputs.fuelDetectedOutputting) {
-      ballsShot += 1;
+    Logger.processInputs("Flywheel", inputs);
+
+    if (inputs.fuelDetected && !fuelDetected) {
+      ballsShot++;
+      fuelDetected = true;
+    } else if (!inputs.fuelDetected) {
+      fuelDetected = false;
     }
-    Logger.recordOutput("Flywheel/BallsDetectedShot", ballsShot);
+
+    switch (state) {
+      case DISABLED -> {
+        if (DriverStation.isEnabled()) {
+          state = FlywheelStates.IDLE;
+        }
+      }
+      case IDLE -> {
+        io.setTargetMechanismRotations(Constants.Flywheel.idleMechanismRPS);
+      }
+      case SHOOTING -> {
+        io.setTargetMechanismRotations(requestedMechanismRPS);
+      }
+    }
+
+    Logger.recordOutput("Flywheel/State", state.toString());
   }
 
-  public void setTargetVelocity(double velocityRPS) {
-    inputs.requestedSpeed = velocityRPS;
-    io.setTargetVelocity(velocityRPS);
+  public void requestIdle() {
+    state = FlywheelStates.IDLE;
   }
 
-  public void stop() {
-    io.stop();
+  public void requestShoot(double velocity) {
+    state = FlywheelStates.SHOOTING;
+    requestedMechanismRPS = velocity;
   }
 
-  public void setIdleVelocity(double velocity) {
-    inputs.requestedSpeed = velocity;
-    io.setTargetVelocity(Constants.Flywheel.idleShootSpeedRPS);
+  public void enableBrakeMode(boolean enable) {
+    io.enableBrakeMode(enable);
+  }
+
+  public boolean isFuelDetected() {
+    return inputs.fuelDetected;
   }
 
   public boolean atTargetVelocity() {
-    return Math.abs(inputs.actualSpeed - inputs.requestedSpeed)
-        < Constants.Flywheel.allowedVelocityErrorRPS;
+    return Math.abs(inputs.actualMechanismRotations - inputs.requestedMechanismRotations)
+        < Constants.Flywheel.allowedVelocityErrorMechanismRPS;
+  }
+
+  public double getVelocity() {
+    return inputs.actualMechanismRotations;
   }
 }

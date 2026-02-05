@@ -22,17 +22,29 @@ import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOBoron;
-import frc.robot.subsystems.drive.GyroIOPigeon2;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
-import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.led.LED;
+import frc.robot.subsystems.shooter.Shooter;
+import frc.robot.subsystems.shooter.flywheel.Flywheel;
+import frc.robot.subsystems.shooter.flywheel.FlywheelIO;
+import frc.robot.subsystems.shooter.flywheel.FlywheelIOTalonFx;
+import frc.robot.subsystems.shooter.hood.Hood;
+import frc.robot.subsystems.shooter.hood.HoodIO;
+import frc.robot.subsystems.shooter.spindexer.Spindexer;
+import frc.robot.subsystems.shooter.spindexer.SpindexerIO;
+import frc.robot.subsystems.shooter.spindexer.SpindexerIOTalonFx;
+import frc.robot.subsystems.shooter.tunnel.Tunnel;
+import frc.robot.subsystems.shooter.tunnel.TunnelIO;
+import frc.robot.subsystems.shooter.tunnel.TunnelIOTalonFx;
+import frc.robot.subsystems.shooter.turret.Turret;
+import frc.robot.subsystems.shooter.turret.TurretIO;
+import frc.robot.subsystems.shooter.turret.TurretIOTalonFx;
 import frc.robot.subsystems.vision.visionGlobalPose.VisionGlobalPose;
 import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetection;
 import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetectionIO;
 import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetectionIOPhoton;
-
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -43,11 +55,17 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
  */
 public class RobotContainer {
   // Subsystems
-  
+
   private static VisionGlobalPose visionGlobalPose;
   private static VisionObjectDetection visionObjectDetection;
   private static Shooter shooter;
-  //TODO private static Intake intake;
+  private static Flywheel flywheel;
+  private static Hood hood;
+  private static Spindexer spindexer;
+  private static Tunnel tunnel;
+  private static Turret turret;
+
+  // TODO private static Intake intake;
   private static LED led;
 
   private static Drive drive;
@@ -65,37 +83,58 @@ public class RobotContainer {
         // Real robot, instantiate hardware IO implementations
         // ModuleIOTalonFX is intended for modules with TalonFX drive, TalonFX turn, and
         // a CANcoder
-        drive = Constants.driveMode == Constants.SubsystemMode.DISABLED ?
-              new Drive(
-                  new GyroIO() {},
-                  new ModuleIO() {},
-                  new ModuleIO() {},
-                  new ModuleIO() {},
-                  new ModuleIO() {})
-          :
-            new Drive(
-                new GyroIOBoron(),
-                new ModuleIOTalonFX(TunerConstants.FrontLeft),
-                new ModuleIOTalonFX(TunerConstants.FrontRight),
-                new ModuleIOTalonFX(TunerConstants.BackLeft),
-                new ModuleIOTalonFX(TunerConstants.BackRight));
-        
-        visionGlobalPose = Constants.visionGlobalPose == Constants.SubsystemMode.DISABLED ?
-          new VisionGlobalPose() //TODO add IO for this
-        :
-            new VisionGlobalPose(); //TODO add IO for this
+        drive =
+            Constants.driveMode == Constants.SubsystemMode.DISABLED
+                ? new Drive(
+                    new GyroIO() {},
+                    new ModuleIO() {},
+                    new ModuleIO() {},
+                    new ModuleIO() {},
+                    new ModuleIO() {})
+                : new Drive(
+                    new GyroIOBoron(),
+                    new ModuleIOTalonFX(TunerConstants.FrontLeft),
+                    new ModuleIOTalonFX(TunerConstants.FrontRight),
+                    new ModuleIOTalonFX(TunerConstants.BackLeft),
+                    new ModuleIOTalonFX(TunerConstants.BackRight));
 
-        
-        visionObjectDetection = Constants.visionObjectDetection == Constants.SubsystemMode.DISABLED ?
-          new VisionObjectDetection(drive, new VisionObjectDetectionIO() {})
-        :
-            new VisionObjectDetection(drive, new VisionObjectDetectionIOPhoton());
-        
-        shooter = Constants.shooterMode == Constants.SubsystemMode.DISABLED ?
-          new Shooter() //TODO add argument for sim/real in constructor (will be added in shooter branch)
-        :
-          new Shooter(); //TODO add argument for sim/real in constructor (will be added in shooter branch)
-        
+        visionGlobalPose =
+            Constants.visionGlobalPose == Constants.SubsystemMode.DISABLED
+                ? new VisionGlobalPose() // TODO add IO for this
+                : new VisionGlobalPose(); // TODO add IO for this
+
+        visionObjectDetection =
+            Constants.visionObjectDetection == Constants.SubsystemMode.DISABLED
+                ? new VisionObjectDetection(drive, new VisionObjectDetectionIO() {})
+                : new VisionObjectDetection(drive, new VisionObjectDetectionIOPhoton());
+
+        flywheel =
+            Constants.flywheelMode == Constants.SubsystemMode.DISABLED
+                ? new Flywheel(new FlywheelIO() {})
+                : new Flywheel(new FlywheelIOTalonFx());
+
+        hood =
+            Constants.hoodMode == Constants.SubsystemMode.DISABLED
+                ? new Hood(new HoodIO() {})
+                : new Hood(new HoodIO() {}); // TODO this will have real io
+
+        spindexer =
+            Constants.spindexerMode == Constants.SubsystemMode.DISABLED
+                ? new Spindexer(new SpindexerIO() {})
+                : new Spindexer(new SpindexerIOTalonFx());
+
+        tunnel =
+            Constants.tunnelMode == Constants.SubsystemMode.DISABLED
+                ? new Tunnel(new TunnelIO() {})
+                : new Tunnel(new TunnelIOTalonFx());
+
+        turret =
+            Constants.turretMode == Constants.SubsystemMode.DISABLED
+                ? new Turret(new TurretIO() {})
+                : new Turret(new TurretIOTalonFx());
+
+        shooter = new Shooter(flywheel, hood, spindexer, tunnel, turret);
+
         /*
         intake = Constants.intakeMode == Constants.SubsystemMode.DISABLED ?
             new Intake() do intake
@@ -104,40 +143,37 @@ public class RobotContainer {
         */
 
         led = new LED();
-
       }
 
       case SIM -> {
         // Sim robot, instantiate physics sim IO implementations
-        drive = Constants.driveMode == Constants.SubsystemMode.DISABLED ?
-              new Drive(
-                  new GyroIO() {},
-                  new ModuleIO() {},
-                  new ModuleIO() {},
-                  new ModuleIO() {},
-                  new ModuleIO() {})
-            :
-            new Drive(
-                new GyroIO() {},
-                new ModuleIOSim(TunerConstants.FrontLeft),
-                new ModuleIOSim(TunerConstants.FrontRight),
-                new ModuleIOSim(TunerConstants.BackLeft),
-                new ModuleIOSim(TunerConstants.BackRight));
-        
-        visionGlobalPose = Constants.visionGlobalPose == Constants.SubsystemMode.DISABLED ?
-          new VisionGlobalPose() //TODO add IO for this
-        :
-            new VisionGlobalPose(); //TODO add IO for this
-        
-        visionObjectDetection = Constants.visionObjectDetection == Constants.SubsystemMode.DISABLED ?
-          new VisionObjectDetection(drive, new VisionObjectDetectionIO() {})
-        :
-            new VisionObjectDetection(drive, new VisionObjectDetectionIOPhoton()); //TODO add sim io
+        drive =
+            Constants.driveMode == Constants.SubsystemMode.DISABLED
+                ? new Drive(
+                    new GyroIO() {},
+                    new ModuleIO() {},
+                    new ModuleIO() {},
+                    new ModuleIO() {},
+                    new ModuleIO() {})
+                : new Drive(
+                    new GyroIO() {},
+                    new ModuleIOSim(TunerConstants.FrontLeft),
+                    new ModuleIOSim(TunerConstants.FrontRight),
+                    new ModuleIOSim(TunerConstants.BackLeft),
+                    new ModuleIOSim(TunerConstants.BackRight));
 
-        shooter = Constants.shooterMode == Constants.SubsystemMode.DISABLED ?
-          new Shooter() //TODO add actual io
-        :
-          new Shooter(); //TODO add actual io
+        visionGlobalPose =
+            Constants.visionGlobalPose == Constants.SubsystemMode.DISABLED
+                ? new VisionGlobalPose() // TODO add IO for this
+                : new VisionGlobalPose(); // TODO add IO for this
+
+        visionObjectDetection =
+            Constants.visionObjectDetection == Constants.SubsystemMode.DISABLED
+                ? new VisionObjectDetection(drive, new VisionObjectDetectionIO() {})
+                : new VisionObjectDetection(
+                    drive, new VisionObjectDetectionIOPhoton()); // TODO add sim io
+
+        shooter = new Shooter(flywheel, hood, spindexer, tunnel, turret);
 
         /*
         intake = Constants.intakeMode == Constants.SubsystemMode.DISABLED ?
@@ -145,7 +181,6 @@ public class RobotContainer {
         :
             new Intake(); //TODO add actual io
         */
-    
 
       }
 
@@ -158,10 +193,17 @@ public class RobotContainer {
                 new ModuleIO() {},
                 new ModuleIO() {},
                 new ModuleIO() {});
-        visionGlobalPose = new VisionGlobalPose(); //TODO add IO for this
-        visionObjectDetection = new VisionObjectDetection(drive, new VisionObjectDetectionIOPhoton()); //TODO add emppty io
-        shooter = new Shooter(); //TODO empty io
-        //TODO intake = new Intake();
+        visionGlobalPose = new VisionGlobalPose(); // TODO add IO for this
+        visionObjectDetection =
+            new VisionObjectDetection(
+                drive, new VisionObjectDetectionIOPhoton()); // TODO add emppty io
+        flywheel = new Flywheel(new FlywheelIO() {});
+        hood = new Hood(new HoodIO() {});
+        spindexer = new Spindexer(new SpindexerIO() {});
+        tunnel = new Tunnel(new TunnelIO() {});
+        turret = new Turret(new TurretIO() {});
+        shooter = new Shooter(flywheel, hood, spindexer, tunnel, turret);
+        // TODO intake = new Intake();
         led = new LED();
       }
     }

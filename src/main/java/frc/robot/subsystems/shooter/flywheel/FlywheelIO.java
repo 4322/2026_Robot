@@ -1,6 +1,7 @@
 package frc.robot.subsystems.shooter.flywheel;
 
 import com.ctre.phoenix6.hardware.TalonFX;
+import edu.wpi.first.wpilibj.util.Color;
 import org.littletonrobotics.junction.AutoLog;
 
 public interface FlywheelIO {
@@ -8,20 +9,21 @@ public interface FlywheelIO {
   @AutoLog
   public static class FlywheelIOInputs {
     public boolean motorConnected = false;
-    public double requestedSpeed = 0.0;
-    public double actualSpeed = 0.0;
+    public double requestedMechanismRotations = 0.0;
+    public double actualMechanismRotations = 0.0;
+    public double speedMotorRotations = 0.0;
     public double appliedVolts = 0.0;
     public double motorTempCelsius = 0.0;
-    public double sensorProximity = 0.0;
+    public double busCurrentAmps = 0.0;
 
     public boolean sensorConnected = false;
-    public boolean fuelDetectedOutputting = false;
-    public double busCurrentAmps = 0.0;
+    public Color color = new Color(0, 0, 0);
+    public double proximity = 0.0;
+
+    public boolean fuelDetected = false;
   }
 
   public default void updateInputs(FlywheelIOInputs inputs) {}
-
-  public default void setVoltage(double speedRPS) {}
 
   public default void stop() {}
 
@@ -31,5 +33,5 @@ public interface FlywheelIO {
 
   public default void enableBrakeMode(boolean enable) {}
 
-  public default void setTargetVelocity(double velocity) {}
+  public default void setTargetMechanismRotations(double speedMechanismRotations) {}
 }
