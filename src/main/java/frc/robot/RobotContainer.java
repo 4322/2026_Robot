@@ -8,15 +8,13 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.ShooterCommands;
@@ -30,6 +28,7 @@ import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import frc.robot.subsystems.led.LED;
 import frc.robot.subsystems.shooter.Shooter;
+import frc.robot.subsystems.shooter.Shooter.ShooterState;
 import frc.robot.subsystems.shooter.areaManager.AreaManager;
 import frc.robot.subsystems.shooter.flywheel.Flywheel;
 import frc.robot.subsystems.shooter.flywheel.FlywheelIO;
@@ -49,10 +48,7 @@ import frc.robot.subsystems.vision.visionGlobalPose.VisionGlobalPose;
 import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetection;
 import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetectionIO;
 import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetectionIOPhoton;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
-
 import java.util.function.BooleanSupplier;
-
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -91,11 +87,14 @@ public class RobotContainer {
   private ShootingCommands lastShootingCommand = ShootingCommands.AUTO_SHOOT;
   private ShootingCommands currentShootingCommand = ShootingCommands.AUTO_SHOOT;
 
+  private final Trigger inNonShootingArea;
+
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
 
   // Boolean suppliers
-    private final BooleanSupplier toggle1 = () -> operatorBoard.getLeftController().getRawButton(Constants.Control.toggle1ButtonNumber);
+  private final BooleanSupplier toggle1 =
+      () -> operatorBoard.getLeftController().getRawButton(Constants.Control.toggle1ButtonNumber);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -248,11 +247,13 @@ public class RobotContainer {
     autoChooser.addOption(
         "Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
 
+    // Triggers
+    inNonShootingArea =
+        new Trigger(() -> !AreaManager.isShootingArea(drive.getPose().getTranslation()));
+
     // Configure the button bindings
     configureButtonBindings();
   }
-  // Triggers
-  public final Trigger inNonShootingArea = new Trigger(() -> !AreaManager.isShootingArea(drive.getPose().getTranslation()));
 
   /**
    * Use this method to define your button->command mappings. Buttons can be created by
@@ -269,20 +270,27 @@ public class RobotContainer {
             () -> -controller.getLeftX(),
             () -> -controller.getRightX()));
 
+    // Shooter command bindings
+    shooter.setDefaultCommand(ShooterCommands.autoShoot(shooter, drive));
+    new JoystickButton(operatorBoard.getLeftController(), Constants.Control.toggle1ButtonNumber)
+        .whileTrue(ShooterCommands.inhibitAutoShoot(shooter, toggle1))
+        .onTrue(new InstantCommand(() -> currentShootingCommand = ShootingCommands.INHIBIT_AUTO_SHOOT))
+        .onFalse(new InstantCommand(() -> lastShootingCommand = ShootingCommands.INHIBIT_AUTO_SHOOT));
+
+    inNonShootingArea
+        .whileTrue(ShooterCommands.areaInhibitAutoShoot(shooter, drive)
+            .onlyIf(() ->
+                currentShootingCommand != ShootingCommands.INHIBIT_AUTO_SHOOT
+                    && shooter.getState() != ShooterState.UNWIND
+                    && !toggle1.getAsBoolean()))
+        .onTrue(new InstantCommand(() -> currentShootingCommand = ShootingCommands.AREA_INHIBIT_AUTO_SHOOT))
+        .onFalse(new InstantCommand(() -> lastShootingCommand = ShootingCommands.AREA_INHIBIT_AUTO_SHOOT));
+    
     
 
-    // Shooter command bindings
-shooter.setDefaultCommand(ShooterCommands.autoShoot(shooter, drive));
-new JoystickButton(operatorBoard.getLeftController(), Constants.Control.toggle1ButtonNumber).onTrue(
-    ShooterCommands.inhibitAutoShoot(shooter, toggle1)
-    .andThen(new InstantCommand(() -> lastShootingCommand = ShootingCommands.INHIBIT_AUTO_SHOOT))
-);
-
+    
+            
   }
-
-  inNonShootingArea.whileTrue(
-    ShooterCommands.areaInhibitAutoShoot(shooter, drive)
-  ).onlyIf(currentShootingCommand != ShootingCommands.INHIBIT_AUTO_SHOOT && !shooter.getState() != ShooterState.UNWIND && !toggle1.getAsBoolean());
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.

@@ -64,7 +64,6 @@ public class Shooter extends SubsystemBase {
           if (tunnel.isStopped()) {
             turret.preemptiveUnwind();
           }
-          
         } // TODO hub enable check
         // TODO unwindComplete = turret.isUnwound();
       }
@@ -139,12 +138,9 @@ public class Shooter extends SubsystemBase {
       state = newState;
       unwindComplete = false;
     }
-     
   }
 
   public ShooterState getState() {
     return state;
   }
-
-
 }

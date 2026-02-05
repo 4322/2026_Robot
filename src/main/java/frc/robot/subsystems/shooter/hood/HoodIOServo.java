@@ -1,33 +1,30 @@
 package frc.robot.subsystems.shooter.hood;
 
-import com.ctre.phoenix6.StatusCode;
 import com.revrobotics.REVLibError;
 import com.revrobotics.servohub.ServoChannel;
+import com.revrobotics.servohub.ServoChannel.ChannelId;
 import com.revrobotics.servohub.ServoHub;
 import com.revrobotics.servohub.ServoHub.Bank;
 import com.revrobotics.servohub.ServoHub.ResetMode;
-import com.revrobotics.servohub.ServoChannel.ChannelId;
 import com.revrobotics.servohub.config.ServoChannelConfig;
 import com.revrobotics.servohub.config.ServoChannelConfig.BehaviorWhenDisabled;
 import com.revrobotics.servohub.config.ServoHubConfig;
-
 import frc.robot.constants.Constants;
 
 public class HoodIOServo {
-    private ServoHub servoHub;
-    private ServoChannel servo;
+  private ServoHub servoHub;
+  private ServoChannel servo;
 
-    private ServoHubConfig config = new ServoHubConfig();
+  private ServoHubConfig config = new ServoHubConfig();
 
-    public HoodIOServo() {
-        servoHub = new ServoHub(Constants.Hood.servoHubId);
-        servo = servoHub.getServoChannel(ChannelId.fromInt(Constants.Hood.servoChannelId));
+  public HoodIOServo() {
+    servoHub = new ServoHub(Constants.Hood.servoHubId);
+    servo = servoHub.getServoChannel(ChannelId.fromInt(Constants.Hood.servoChannelId));
 
-        REVLibError configStatus = configServo();
+    REVLibError configStatus = configServo();
+  }
 
-    }
-
-    private REVLibError configServo() {
+  private REVLibError configServo() {
     for (int i = 0; i < 6; i++) {
       ServoChannelConfig channelConfig = new ServoChannelConfig(ChannelId.fromInt(i));
       channelConfig.disableBehavior(
@@ -36,7 +33,7 @@ public class HoodIOServo {
       config.apply(ChannelId.fromInt(i), channelConfig);
     }
 
-    servoHub.setBankPulsePeriod(Bank.kBank0_2, 20000); //TODO set this
+    servoHub.setBankPulsePeriod(Bank.kBank0_2, 20000); // TODO set this
 
     servo.setPowered(true);
 
@@ -49,7 +46,8 @@ public class HoodIOServo {
     return servoHub.configure(config, ResetMode.kResetSafeParameters);
   }
 
-  public void setServoPosition(boolean pull) {/* TODO figure out what to do for this
+  public void setServoPosition(boolean pull) {
+    /* TODO figure out what to do for this
     servo.setPulseWidth(
         pull ? Constants.Hood.servoDefaultPWM : Constants.Hood.servoDefaultPWM); */
   }
