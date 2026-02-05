@@ -1,32 +1,41 @@
 package frc.robot.subsystems.intake.rollers;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.constants.Constants;
+import org.littletonrobotics.junction.Logger;
+
 public class Rollers {
   private RollersIO rollersIO;
   private RollersIOInputsAutoLogged inputs = new RollersIOInputsAutoLogged();
 
   public enum rollersGoal {
-    DISABLED,
     IDLE,
     INTAKE,
-    EJECT
+    EJECT,
+    DISABLED
   }
 
-  public rollersGoal goal = rollersGoal.DISABLED;
-  public rollersGoal prevGoal;
+  public rollersGoal goal = rollersGoal.IDLE;
 
   public Rollers(RollersIO rollersIO) {
     this.rollersIO = rollersIO;
   }
 
   public void periodic() {
-    prevGoal = goal;
     rollersIO.updateInputs(inputs);
-    switch (Constants.rollersMode) {
-      case DISABLED:
-        break;
-      case NORMAL:
+    Logger.processInputs("Rollers", inputs);
+    Logger.recordOutput("Rollers/Goal", goal);
+    switch (Constants.rollerMode) {
+      case TUNING -> {}
+      case DRIVE_TUNING -> {}
+      case DISABLED -> {}
+      case NORMAL -> {
         switch (goal) {
+          case DISABLED -> {
+            if (DriverStation.isEnabled()) {
+              goal = rollersGoal.IDLE;
+            }
+          }
           case IDLE -> {
             idle();
           }
@@ -37,6 +46,7 @@ public class Rollers {
             eject();
           }
         }
+      }
     }
   }
 

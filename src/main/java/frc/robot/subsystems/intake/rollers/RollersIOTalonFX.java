@@ -11,7 +11,7 @@ import frc.robot.constants.Constants;
 public class RollersIOTalonFX implements RollersIO {
   private TalonFX rollersMotor;
 
-  private double previousRequestedVoltage = -999;
+  private Double previousRequestedVoltage;
 
   private TalonFXConfiguration motorConfigs = new TalonFXConfiguration();
 
@@ -22,7 +22,11 @@ public class RollersIOTalonFX implements RollersIO {
 
     motorConfigs.HardwareLimitSwitch.ForwardLimitEnable = false;
     motorConfigs.HardwareLimitSwitch.ReverseLimitEnable = false;
+    motorConfigs.CurrentLimits.StatorCurrentLimit = Constants.Rollers.statorCurrentLimit;
+    motorConfigs.CurrentLimits.SupplyCurrentLimit = Constants.Rollers.supplyCurrentLimit;
 
+    motorConfigs.MotorOutput.Inverted = Constants.Rollers.motorInvert;
+    motorConfigs.MotorOutput.NeutralMode = Constants.Rollers.neutralMode;
     StatusCode feederConfigStatus = rollersMotor.getConfigurator().apply(motorConfigs);
 
     if (feederConfigStatus != StatusCode.OK) {
@@ -42,12 +46,12 @@ public class RollersIOTalonFX implements RollersIO {
     inputs.busCurrentAmps = rollersMotor.getSupplyCurrent().getValueAsDouble();
     inputs.statorCurrentAmps = rollersMotor.getStatorCurrent().getValueAsDouble();
     inputs.motorTempCelcius = rollersMotor.getDeviceTemp().getValueAsDouble();
-    inputs.speedRotationsPerSec = rollersMotor.getVelocity().getValueAsDouble();
+    inputs.motorRotationsPerSec = rollersMotor.getVelocity().getValueAsDouble();
   }
 
   @Override
   public void setVoltage(double voltage) {
-    if (voltage != previousRequestedVoltage) {
+    if ((previousRequestedVoltage == null) || (previousRequestedVoltage != voltage)) {
       previousRequestedVoltage = voltage;
       rollersMotor.setControl(new VoltageOut(voltage).withEnableFOC(true));
     }
@@ -56,14 +60,16 @@ public class RollersIOTalonFX implements RollersIO {
   @Override
   public void stopMotor() {
     rollersMotor.stopMotor();
+    previousRequestedVoltage = null;
   }
 
   @Override
   public TalonFX getTalonFX() {
     return rollersMotor;
   }
+
   @Override
-  public void enableBreakMode(boolean mode){
-     rollersMotor.setNeutralMode(mode ? NeutralModeValue.Brake : NeutralModeValue.Coast);
+  public void enableBreakMode(boolean mode) {
+    rollersMotor.setNeutralMode(mode ? NeutralModeValue.Brake : NeutralModeValue.Coast);
   }
 }

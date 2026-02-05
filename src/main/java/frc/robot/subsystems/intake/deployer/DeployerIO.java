@@ -11,23 +11,17 @@ public interface DeployerIO {
     public double statorCurrentAmps = 0.0;
     public double busCurrentAmps = 0.0;
     public double motorTempCelcius = 0.0;
-    public double speedRotationsPerSec = 0.0;
+    public double motorRotationsPerSec = 0.0;
     public double appliedVolts = 0.0;
     public double angleDeg = 0.0;
     public double encoderRotations = 0.0;
-    public double kGeffort;
-    public double kPeffort;
-    public double totalEffort;
-    public double controllerTempCelcius = 0.0;
-
+    public double motorRotations;
     public double requestedPosDeg = 0.0;
   }
 
   public default void updateInputs(DeployerIOInputs inputs) {}
 
   public default void setPosition(double requestedPosDeg) {}
-
-  public default void setVoltage(double voltage) {}
 
   public default void enableBrakeMode(Boolean mode) {}
 

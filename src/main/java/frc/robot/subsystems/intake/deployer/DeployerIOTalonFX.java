@@ -1,9 +1,12 @@
 package frc.robot.subsystems.intake.deployer;
 
 import com.ctre.phoenix6.StatusCode;
+import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
+import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -11,28 +14,47 @@ import frc.robot.constants.Constants;
 
 public class DeployerIOTalonFX implements DeployerIO {
   private TalonFX deployerMotor;
+  private CANcoder canCoder;
   private TalonFXConfiguration motorConfigs = new TalonFXConfiguration();
-  public double requestedPosDegosDeg;
+  private CANcoderConfiguration canCoderConfigs = new CANcoderConfiguration();
+  public double requestedPosDeg;
+  private double posRotError;
 
   public DeployerIOTalonFX() {
     deployerMotor = new TalonFX(Constants.Deployer.motorId);
-    // Setup config objects
+    canCoder = new CANcoder(Constants.Deployer.CANCoderID);
+    canCoder.getConfigurator().apply(canCoderConfigs);
 
-    motorConfigs.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+    motorConfigs.Feedback.FeedbackRemoteSensorID = canCoder.getDeviceID();
+
+    motorConfigs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
+    motorConfigs.Feedback.SensorToMechanismRatio = Constants.Deployer.sensorToMechanismRatio;
+    motorConfigs.Feedback.RotorToSensorRatio = Constants.Deployer.RotorToSensorRatio;
+    motorConfigs.CurrentLimits.StatorCurrentLimit = Constants.Deployer.statorCurrentLimit;
+    motorConfigs.CurrentLimits.SupplyCurrentLimit = Constants.Deployer.supplyCurrentLimit;
+    motorConfigs.MotorOutput.Inverted = Constants.Deployer.motorInvert;
+    motorConfigs.MotorOutput.NeutralMode = Constants.Deployer.neutralMode;
+
+    motorConfigs.Slot0.kP = Constants.Deployer.kP;
+    motorConfigs.Slot0.kI = Constants.Deployer.kI;
+    motorConfigs.Slot0.kD = Constants.Deployer.kD;
+    motorConfigs.Slot0.kG = Constants.Deployer.kG;
 
     motorConfigs.HardwareLimitSwitch.ForwardLimitEnable = false;
     motorConfigs.HardwareLimitSwitch.ReverseLimitEnable = false;
-
     StatusCode deployerConfigStatus = deployerMotor.getConfigurator().apply(motorConfigs);
-
+    canCoder.getConfigurator().apply(canCoderConfigs);
     if (deployerConfigStatus != StatusCode.OK) {
       DriverStation.reportError(
           "Talon "
               + deployerMotor.getDeviceID()
-              + " error (Right Deployer): "
+              + " error (Deployer): "
               + deployerConfigStatus.getDescription(),
           false);
     }
+    posRotError =
+        Constants.Deployer.CANCoderHomed - canCoder.getAbsolutePosition().getValueAsDouble();
+    deployerMotor.setPosition(Constants.Deployer.maxGravityDegrees - posRotError);
   }
 
   @Override
@@ -41,12 +63,13 @@ public class DeployerIOTalonFX implements DeployerIO {
 
     inputs.connected = deployerMotor.isConnected();
 
-    inputs.requestedPosDeg = deployerMotor.getPosition().getValueAsDouble();
+    inputs.angleDeg =
+        toCodeCoords(Units.rotationsToDegrees(deployerMotor.getPosition().getValueAsDouble()));
 
-    inputs.requestedPosDeg = degreesToRotations(deployerMotor.getPosition().getValueAsDouble());
+    inputs.requestedPosDeg = requestedPosDeg;
 
-    inputs.speedRotationsPerSec =
-        degreesToRotations(deployerMotor.getVelocity().getValueAsDouble());
+    inputs.motorRotationsPerSec =
+        Units.degreesToRotations(deployerMotor.getVelocity().getValueAsDouble());
 
     inputs.busCurrentAmps = deployerMotor.getSupplyCurrent().getValueAsDouble();
 
@@ -55,20 +78,19 @@ public class DeployerIOTalonFX implements DeployerIO {
     inputs.motorTempCelcius = deployerMotor.getDeviceTemp().getValueAsDouble();
 
     inputs.appliedVolts = deployerMotor.getMotorVoltage().getValueAsDouble();
+
+    inputs.encoderRotations = canCoder.getAbsolutePosition().getValueAsDouble();
+
+    inputs.motorRotations = deployerMotor.getPosition().getValueAsDouble();
   }
 
   @Override
   public void setPosition(double requestedPosDeg) {
-    int slot = (Deployer.prevGoal == Deployer.deployerGoal.EXTEND) ? 0 : 1;
+    this.requestedPosDeg = requestedPosDeg;
     deployerMotor.setControl(
-        new MotionMagicVoltage(Units.degreesToRotations(requestedPosDeg))
-            .withSlot(slot)
+        new MotionMagicVoltage(Units.degreesToRotations(toMotorCoords(requestedPosDeg)))
+            .withSlot(0)
             .withEnableFOC(true));
-  }
-
-  @Override
-  public void setVoltage(double voltage) {
-    deployerMotor.setVoltage(voltage);
   }
 
   @Override
@@ -86,8 +108,15 @@ public class DeployerIOTalonFX implements DeployerIO {
     deployerMotor.setNeutralMode(mode ? NeutralModeValue.Brake : NeutralModeValue.Coast);
   }
 
-  public double degreesToRotations(double value) {
-    // TODO
-    return value;
+  public double subtract(Double pos, Double canPos) {
+    return pos - canPos;
+  }
+
+  private double toCodeCoords(double position) {
+    return position + Constants.Deployer.maxGravityDegrees;
+  }
+
+  private double toMotorCoords(double position) {
+    return position - Constants.Deployer.maxGravityDegrees;
   }
 }

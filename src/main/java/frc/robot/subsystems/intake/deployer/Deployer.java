@@ -1,23 +1,21 @@
 package frc.robot.subsystems.intake.deployer;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.constants.Constants;
 import org.littletonrobotics.junction.Logger;
 
 public class Deployer {
   private DeployerIO deployerIO;
-  public double currentPosition;
-  public double desiredPosition;
   private DeployerIOInputsAutoLogged inputs = new DeployerIOInputsAutoLogged();
 
   public enum deployerGoal {
     DISABLED,
     EXTEND,
     RETRACT,
-    UNJAM // TODO
+    // UNJAM TODO
   }
 
   public deployerGoal goal = deployerGoal.DISABLED;
-  public static deployerGoal prevGoal;
 
   public Deployer(DeployerIO deployerIO) {
     this.deployerIO = deployerIO;
@@ -26,15 +24,17 @@ public class Deployer {
   public void periodic() {
     deployerIO.updateInputs(inputs);
     Logger.processInputs("Deployer", inputs);
-
-    prevGoal = goal;
+    Logger.recordOutput("Deployer/Goal", goal);
     switch (Constants.deployerMode) {
-      case DISABLED:
-        break;
-      case NORMAL:
+      case DISABLED -> {}
+      case TUNING -> {}
+      case DRIVE_TUNING -> {}
+      case NORMAL -> {
         switch (goal) {
           case DISABLED -> {
-            break;
+            if (DriverStation.isEnabled()) {
+              goal = deployerGoal.EXTEND;
+            }
           }
           case EXTEND -> {
             extend();
@@ -43,6 +43,7 @@ public class Deployer {
             retract();
           }
         }
+      }
     }
   }
 
@@ -63,11 +64,18 @@ public class Deployer {
   }
 
   public Boolean isExtended() {
-    // return (//TODO check votlage) ? true: false;
-    return true;
+    return (inputs.angleDeg >= Constants.Deployer.extendDeg - Constants.Deployer.tolerance)
+        ? true
+        : false;
   }
 
   public void setGoal(deployerGoal goal) {
     this.goal = goal;
+  }
+
+  public boolean isStowed() {
+    return (inputs.angleDeg <= Constants.Deployer.retractDeg + Constants.Deployer.tolerance)
+        ? true
+        : false;
   }
 }
