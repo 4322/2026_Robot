@@ -16,7 +16,7 @@ public class Shooter extends SubsystemBase {
     DISABLED,
     IDLE,
     UNWIND,
-    PRESHOOT, // Flywheel gets up to speed; Turret aims
+    PRESHOOT, // Flywheel gets up to speed; Turret/hood aim
     SHOOT, // Spindexer and tunnel get up to speed
   }
 
@@ -61,14 +61,15 @@ public class Shooter extends SubsystemBase {
           if (tunnel.isStopped()) {
             turret.preemptiveUnwind();
           }
-        }
+          
+        } // TODO hub enable check
       }
       case PRESHOOT -> {
-        flywheel.requestShoot(Constants.Flywheel.shootingMechanismRPS);
-        // TODO Turret request position here
+        flywheel.requestShoot(Constants.Flywheel.shootingMechanismRPS); //TODO change to variable
+        // TODO Turret request position here and hood
       }
       case SHOOT -> {
-        flywheel.requestShoot(Constants.Flywheel.shootingMechanismRPS);
+        flywheel.requestShoot(Constants.Flywheel.shootingMechanismRPS); // TODO change to variable
         tunnel.requestIndex(
             Constants.Tunnel.dynamicVelocity
                 ? Constants.Tunnel.dynamicVelocityPercent * flywheel.getVelocity()

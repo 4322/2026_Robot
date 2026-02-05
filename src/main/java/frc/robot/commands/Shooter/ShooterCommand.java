@@ -24,8 +24,8 @@ public class ShooterCommand {
     return Commands.run(
             () -> {
               shooter.setState(ShooterState.PRESHOOT);
-              if (flywheelAtSpeed.getAsBoolean()) {
-                shooter.setState(ShooterState.SHOOT);
+              if (flywheelAtSpeed.getAsBoolean()) { // TODO checks flywheel speed twice; check hood/turret
+                shooter.setState(ShooterState.SHOOT); // TODO only do this once; don't set again to preshoot
               }
             },
             shooter)
@@ -47,7 +47,7 @@ public class ShooterCommand {
         .until(end); // BooleanSupplier will be somehow tied to operator toggle 1 being turned off
   }
 
-  public static Command areaInhibitAutoShoot(Shooter shooter, Drive drive) {
+  public static Command areaInhibitAutoShoot(Shooter shooter, Drive drive) { // TODO unwind
     BooleanSupplier needsToUnwind = () -> shooter.needsToUnwind();
     BooleanSupplier inShootingArea =
         () -> AreaManager.isShootingArea(drive.getPose().getTranslation());
@@ -59,7 +59,8 @@ public class ShooterCommand {
         .until(end);
   }
 
-  public static Command autoShoot(Shooter shooter, Drive drive, BooleanSupplier toggleOn) {
+  // Default command?
+  public static Command autoShoot(Shooter shooter, Drive drive, BooleanSupplier toggleOn) { //TODO unwind
     BooleanSupplier needsToUnwind = () -> shooter.needsToUnwind();
     BooleanSupplier end =
         () ->
