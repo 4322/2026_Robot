@@ -8,29 +8,37 @@ import frc.robot.Robot;
 public class AreaManager {
   // TODO: Put IN field dimensions
 
-  // Red Alliance Zones
+  // Alliance Zones
   private static Rectangle2d redAllianceZone =
-      new Rectangle2d(new Translation2d(0, 0), new Translation2d(0, 0));
-  private static Rectangle2d leftBlueOppositionZone =
-      new Rectangle2d(new Translation2d(0, 0), new Translation2d(0, 0));
-  private static Rectangle2d rightBlueOppositionZone =
-      new Rectangle2d(new Translation2d(0, 0), new Translation2d(0, 0));
+      new Rectangle2d(new Translation2d(16.54, 8.07),
+      new Translation2d(12.51, 0));
+
+   private static Rectangle2d blueAllianceZone =
+      new Rectangle2d(new Translation2d(4.03, 8.07), new Translation2d(0, 0));
+ 
   // Neutral Zones
   private static Rectangle2d leftNeutralZone =
       new Rectangle2d(
-          new Translation2d(0, 0),
-          new Translation2d(0, 8.2296)); // When looking from Red Alliance side
+          new Translation2d(12.51, 8.07),
+          new Translation2d(4.03, 4.035)); // When looking from Blue Alliance side
   private static Rectangle2d rightNeutralZone =
       new Rectangle2d(
-          new Translation2d(0, 8.2296),
-          new Translation2d(0, 16.4592)); // When looking from Red Alliance side
-  // Blue Alliance Zones
-  private static Rectangle2d blueAllianceZone =
-      new Rectangle2d(new Translation2d(16.4592, 0), new Translation2d(24.6888, 16.4592));
+          new Translation2d(12.51, 4.035),
+          new Translation2d(4.03, 0)); // When looking from Blue Alliance side
+
+
+
+
+  // Opposition Zones
+   private static Rectangle2d leftBlueOppositionZone =
+      new Rectangle2d(new Translation2d(0, 0), new Translation2d(0, 0));
+  private static Rectangle2d rightBlueOppositionZone =
+      new Rectangle2d(new Translation2d(0, 0), new Translation2d(0, 0));
   private static Rectangle2d leftRedOppositionZone =
       new Rectangle2d(new Translation2d(8.2296, 0), new Translation2d(16.4592, 8.2296));
   private static Rectangle2d rightRedOppositionZone =
       new Rectangle2d(new Translation2d(8.2296, 8.2296), new Translation2d(16.4592, 16.4592));
+  
   // Non-Shooting Areas
   private static Rectangle2d trenchLeftRed =
       new Rectangle2d(new Translation2d(0, 4.1148), new Translation2d(8.2296, 8.2296));
@@ -94,9 +102,9 @@ public class AreaManager {
       } else if (rightBlueOppositionZone.contains(position)) {
         zone = Zone.RIGHT_OPPOSITION;
       } else if (leftNeutralZone.contains(position)) {
-        zone = Zone.LEFT_NEUTRAL;
-      } else if (rightNeutralZone.contains(position)) {
         zone = Zone.RIGHT_NEUTRAL;
+      } else if (rightNeutralZone.contains(position)) {
+        zone = Zone.LEFT_NEUTRAL;
       }
     } else {
       if (blueAllianceZone.contains(position)) {
@@ -105,11 +113,12 @@ public class AreaManager {
         zone = Zone.LEFT_OPPOSITION;
       } else if (rightRedOppositionZone.contains(position)) {
         zone = Zone.RIGHT_OPPOSITION;
-      } else if (leftNeutralZone.contains(position)) {
-        zone = Zone.RIGHT_NEUTRAL;
-      } else if (rightNeutralZone.contains(position)) {
+      }  else if (leftNeutralZone.contains(position)) {
         zone = Zone.LEFT_NEUTRAL;
+      } else if (rightNeutralZone.contains(position)) {
+        zone = Zone.RIGHT_NEUTRAL;
       }
+      
     }
     return zone;
   }
