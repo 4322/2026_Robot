@@ -103,7 +103,7 @@ public final class Constants {
 
   public static class Flywheel {
     public static final int motorId = 23;
-        public static final int  followerMotorId = 24;
+    public static final int followerMotorId = 24;
     public static final double statorCurrentLimit = 60; // TODO
     public static final double supplyCurrentLimit = 40;
     public static final InvertedValue motorInvert = InvertedValue.Clockwise_Positive;
@@ -121,7 +121,6 @@ public final class Constants {
     public static final int canandcolorId = 0;
     public static final double minFuelDetectionProximity = 0.2;
     public static final double allowedVelocityErrorMechanismRPS = 0.2;
-
   }
 
   public static class VisionObjectDetection {

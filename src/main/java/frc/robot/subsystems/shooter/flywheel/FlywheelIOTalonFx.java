@@ -15,7 +15,7 @@ import frc.robot.constants.Constants;
 public class FlywheelIOTalonFx implements FlywheelIO {
 
   private TalonFX motor;
-    private TalonFX followerMotor;
+  private TalonFX followerMotor;
   private Canandcolor canandcolor = new Canandcolor(Constants.Flywheel.canandcolorId);
   private CanandcolorSettings canandcolorConfig = new CanandcolorSettings();
   private double lastRequestedVelocity = -1;
@@ -29,7 +29,6 @@ public class FlywheelIOTalonFx implements FlywheelIO {
 
     config.CurrentLimits.StatorCurrentLimit = Constants.Flywheel.statorCurrentLimit;
     config.CurrentLimits.SupplyCurrentLimit = Constants.Flywheel.supplyCurrentLimit;
-    
 
     config.MotorOutput.Inverted = Constants.Flywheel.motorInvert;
     config.MotorOutput.NeutralMode = Constants.Flywheel.neutralMode;
@@ -40,10 +39,7 @@ public class FlywheelIOTalonFx implements FlywheelIO {
     config.Slot0.kI = Constants.Flywheel.kI;
     config.Slot0.kD = Constants.Flywheel.kD;
 
-    StrictFollower followerRequest =
-        new StrictFollower(Constants.Flywheel.motorId)
-            .withInvertOutput(false)
-            .withEnableFOC(true);
+    StrictFollower followerRequest = new StrictFollower(followerMotor.getDeviceID());
 
     StatusCode configStatus = motor.getConfigurator().apply(config);
     followerMotor.setControl(followerRequest);

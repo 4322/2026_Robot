@@ -61,7 +61,6 @@ public class Shooter extends SubsystemBase {
           if (tunnel.isStopped()) {
             turret.preemptiveUnwind();
           }
-          
         }
       }
       case PRESHOOT -> {
