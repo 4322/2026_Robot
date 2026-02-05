@@ -21,10 +21,18 @@ import frc.robot.constants.Constants;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
+import frc.robot.subsystems.drive.GyroIOBoron;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
+import frc.robot.subsystems.shooter.Shooter;
+import frc.robot.subsystems.led.LED;
+import frc.robot.subsystems.vision.visionGlobalPose.VisionGlobalPose;
+import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetection;
+import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetectionIO;
+import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetectionIOPhoton;
+
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -35,7 +43,14 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
  */
 public class RobotContainer {
   // Subsystems
-  private final Drive drive;
+  
+  private static VisionGlobalPose visionGlobalPose;
+  private static VisionObjectDetection visionObjectDetection;
+  private static Shooter shooter;
+  //TODO private static Intake intake;
+  private static LED led;
+
+  private static Drive drive;
 
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
@@ -46,49 +61,95 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     switch (Constants.currentMode) {
-      case REAL:
+      case REAL -> {
         // Real robot, instantiate hardware IO implementations
         // ModuleIOTalonFX is intended for modules with TalonFX drive, TalonFX turn, and
         // a CANcoder
-        drive =
+        drive = Constants.driveMode == Constants.SubsystemMode.DISABLED ?
+              new Drive(
+                  new GyroIO() {},
+                  new ModuleIO() {},
+                  new ModuleIO() {},
+                  new ModuleIO() {},
+                  new ModuleIO() {})
+          :
             new Drive(
-                new GyroIOPigeon2(),
+                new GyroIOBoron(),
                 new ModuleIOTalonFX(TunerConstants.FrontLeft),
                 new ModuleIOTalonFX(TunerConstants.FrontRight),
                 new ModuleIOTalonFX(TunerConstants.BackLeft),
                 new ModuleIOTalonFX(TunerConstants.BackRight));
+        
+        visionGlobalPose = Constants.visionGlobalPose == Constants.SubsystemMode.DISABLED ?
+          new VisionGlobalPose() //TODO add IO for this
+        :
+            new VisionGlobalPose(); //TODO add IO for this
 
-        // The ModuleIOTalonFXS implementation provides an example implementation for
-        // TalonFXS controller connected to a CANdi with a PWM encoder. The
-        // implementations
-        // of ModuleIOTalonFX, ModuleIOTalonFXS, and ModuleIOSpark (from the Spark
-        // swerve
-        // template) can be freely intermixed to support alternative hardware
-        // arrangements.
-        // Please see the AdvantageKit template documentation for more information:
-        // https://docs.advantagekit.org/getting-started/template-projects/talonfx-swerve-template#custom-module-implementations
-        //
-        // drive =
-        // new Drive(
-        // new GyroIOPigeon2(),
-        // new ModuleIOTalonFXS(TunerConstants.FrontLeft),
-        // new ModuleIOTalonFXS(TunerConstants.FrontRight),
-        // new ModuleIOTalonFXS(TunerConstants.BackLeft),
-        // new ModuleIOTalonFXS(TunerConstants.BackRight));
-        break;
+        
+        visionObjectDetection = Constants.visionObjectDetection == Constants.SubsystemMode.DISABLED ?
+          new VisionObjectDetection(drive, new VisionObjectDetectionIO() {})
+        :
+            new VisionObjectDetection(drive, new VisionObjectDetectionIOPhoton());
+        
+        shooter = Constants.shooterMode == Constants.SubsystemMode.DISABLED ?
+          new Shooter() //TODO add argument for sim/real in constructor (will be added in shooter branch)
+        :
+          new Shooter(); //TODO add argument for sim/real in constructor (will be added in shooter branch)
+        
+        /*
+        intake = Constants.intakeMode == Constants.SubsystemMode.DISABLED ?
+            new Intake() do intake
+        :
+            new Intake(); do intake
+        */
 
-      case SIM:
+        led = new LED();
+
+      }
+
+      case SIM -> {
         // Sim robot, instantiate physics sim IO implementations
-        drive =
+        drive = Constants.driveMode == Constants.SubsystemMode.DISABLED ?
+              new Drive(
+                  new GyroIO() {},
+                  new ModuleIO() {},
+                  new ModuleIO() {},
+                  new ModuleIO() {},
+                  new ModuleIO() {})
+            :
             new Drive(
                 new GyroIO() {},
                 new ModuleIOSim(TunerConstants.FrontLeft),
                 new ModuleIOSim(TunerConstants.FrontRight),
                 new ModuleIOSim(TunerConstants.BackLeft),
                 new ModuleIOSim(TunerConstants.BackRight));
-        break;
+        
+        visionGlobalPose = Constants.visionGlobalPose == Constants.SubsystemMode.DISABLED ?
+          new VisionGlobalPose() //TODO add IO for this
+        :
+            new VisionGlobalPose(); //TODO add IO for this
+        
+        visionObjectDetection = Constants.visionObjectDetection == Constants.SubsystemMode.DISABLED ?
+          new VisionObjectDetection(drive, new VisionObjectDetectionIO() {})
+        :
+            new VisionObjectDetection(drive, new VisionObjectDetectionIOPhoton()); //TODO add sim io
 
-      default:
+        shooter = Constants.shooterMode == Constants.SubsystemMode.DISABLED ?
+          new Shooter() //TODO add actual io
+        :
+          new Shooter(); //TODO add actual io
+
+        /*
+        intake = Constants.intakeMode == Constants.SubsystemMode.DISABLED ?
+            new Intake() //TODO add actual io
+        :
+            new Intake(); //TODO add actual io
+        */
+    
+
+      }
+
+      default -> {
         // Replayed robot, disable IO implementations
         drive =
             new Drive(
@@ -97,7 +158,12 @@ public class RobotContainer {
                 new ModuleIO() {},
                 new ModuleIO() {},
                 new ModuleIO() {});
-        break;
+        visionGlobalPose = new VisionGlobalPose(); //TODO add IO for this
+        visionObjectDetection = new VisionObjectDetection(drive, new VisionObjectDetectionIOPhoton()); //TODO add emppty io
+        shooter = new Shooter(); //TODO empty io
+        //TODO intake = new Intake();
+        led = new LED();
+      }
     }
 
     // Set up auto routines

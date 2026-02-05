@@ -1,3 +1,24 @@
 package frc.robot.subsystems.shooter.spindexer;
 
-public class SpindexerIO {}
+import org.littletonrobotics.junction.AutoLog;
+
+public interface SpindexerIO {
+
+  @AutoLog
+  public static class SpindexerIOInputs {
+    public boolean motorConnected = false;
+    public double voltage = 0.0;
+    public double mechanismRotationsPerSec = 0.0;
+    public double supplyCurrentAmps = 0.0;
+    public double statorCurrentAmps = 0.0;
+    public double motorTempC = 0.0;
+  }
+
+  public default void updateInputs(SpindexerIOInputs inputs) {}
+
+  public default void setTargetMechanismRotations(double velocity) {}
+
+  public default void stop() {}
+
+  public default void enableBrakeMode(boolean enable) {}
+}
