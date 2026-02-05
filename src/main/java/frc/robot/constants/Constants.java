@@ -1,12 +1,8 @@
-// Copyright (c) 2021-2026 Littleton Robotics
-// http://github.com/Mechanical-Advantage
-//
-// Use of this source code is governed by a BSD
-// license that can be found in the LICENSE file
-// at the root directory of this project.
-
 package frc.robot.constants;
 
+import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.wpilibj.RobotBase;
 
 /**
@@ -38,5 +34,110 @@ public final class Constants {
 
     /** Replaying from a log file. */
     REPLAY
+  }
+
+  public enum SubsystemMode {
+    DISABLED,
+    NORMAL,
+    TUNING,
+    DRIVE_TUNING
+  }
+
+  public static final SubsystemMode driveMode = SubsystemMode.NORMAL;
+  public static final SubsystemMode flywheelMode = SubsystemMode.NORMAL;
+  public static final SubsystemMode hoodMode = SubsystemMode.NORMAL;
+  public static final SubsystemMode spindexerMode = SubsystemMode.NORMAL;
+  public static final SubsystemMode tunnelMode = SubsystemMode.NORMAL;
+  public static final SubsystemMode turretMode = SubsystemMode.NORMAL;
+  public static final SubsystemMode deployerMode = SubsystemMode.NORMAL;
+  public static final SubsystemMode rollerMode = SubsystemMode.NORMAL;
+  public static final SubsystemMode intakeMode = SubsystemMode.NORMAL;
+  public static final SubsystemMode climberMode = SubsystemMode.DISABLED;
+  public static final SubsystemMode ledMode = SubsystemMode.NORMAL;
+  public static final SubsystemMode visionGlobalPose = SubsystemMode.NORMAL;
+  public static final SubsystemMode visionObjectDetection = SubsystemMode.NORMAL;
+
+  public static class Spindexer {
+    public static final boolean dynamicVelocity = true;
+    public static final double dynamicVelocityPercent = 0.9; // TODO tune
+
+    public static final int spindexerMotorId = 1;
+    public static final double supplyCurrentLimit = 40; // TODO
+    public static final double statorCurrentLimit = 60;
+    public static final InvertedValue motorInvert =
+        InvertedValue.Clockwise_Positive; // TODO set these
+    public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
+    public static final double kS = 0;
+    public static final double kV = 0;
+    public static final double kP = 1;
+    public static final double kI = 0;
+    public static final double kD = 0;
+    public static final double indexingMechanismRotationsPerSec = 3; // TODO
+    public static final double stoppedMechanismRotationsPerSec = 0.1; // TODO
+
+    public static final double motorToMechanismRatio = 12.0;
+  }
+
+  public static class Tunnel {
+    public static final boolean dynamicVelocity = true;
+    public static final double dynamicVelocityPercent = 0.9; // TODO tune
+
+    public static final double indexingMechanismRotationsPerSec = 10;
+    public static final int tunnelMotorId = 0;
+    public static final double statorCurrentLimit = 60; // TODO
+    public static final double supplyCurrentLimit = 40; // TODO
+    public static final InvertedValue motorInvert =
+        InvertedValue.Clockwise_Positive; // TODO set these
+    public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
+    public static final double kS = 0;
+    public static final double kV = 0;
+    public static final double kP = 1;
+    public static final double kI = 0;
+    public static final double kD = 0;
+
+    public static final double stoppedMechanismRotationsPerSec = 0.1; // TODO
+    public static final double atSpeedMechanismRotationsPerSec =
+        0.95 * indexingMechanismRotationsPerSec; // TODO
+    public static final double motorToMechanismRatio = 1.5;
+  }
+
+  public static class Flywheel {
+    public static final int motorId = 23;
+    public static final double statorCurrentLimit = 60; // TODO
+    public static final double supplyCurrentLimit = 40;
+    public static final InvertedValue motorInvert = InvertedValue.Clockwise_Positive;
+    public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
+    public static final double kS = 0;
+    public static final double kV = 0;
+    public static final double kP = 1;
+    public static final double kI = 0;
+    public static final double kD = 0;
+    public static final double allowedVelocityErrorRPS = 5.0; // TODO
+
+    public static final double motorToMechanismRatio = 1;
+    public static final double idleMechanismRPS = 5;
+    public static final double shootingMechanismRPS = 10;
+    public static final int canandcolorId = 0;
+    public static final double minFuelDetectionProximity = 0.2;
+    public static final double allowedVelocityErrorMechanismRPS = 0.2;
+  }
+
+  public static class VisionObjectDetection {
+
+    public static final Transform3d robotCenterToCamera = new Transform3d(); // TODO add
+    public static final String hostname = null;
+  }
+
+  public static class Turret {
+    public static final int motorId = 13;
+    public static final double kS = 0;
+    public static final double kV = 0;
+    public static final double kP = 1;
+    public static final double kI = 0;
+    public static final double kD = 0;
+    public static final double statorCurrentLimit = 60; // TODO
+    public static final double supplyCurrentLimit = 40;
+    public static final InvertedValue motorInvert = InvertedValue.Clockwise_Positive;
+    public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
   }
 }
