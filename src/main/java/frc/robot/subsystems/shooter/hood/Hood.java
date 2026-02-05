@@ -32,7 +32,11 @@ public class Hood {
         }
       }
       case HOMING -> {
-        // TODO homing logic
+        io.setTargetAngle(-10.0); // Move to hard stop
+        if (inputs.isAtHome) {
+          io.resetAngleToHome();
+          state = HoodStates.IDLE;
+        }
       }
       case IDLE -> {}
       case SHOOTING -> {}
