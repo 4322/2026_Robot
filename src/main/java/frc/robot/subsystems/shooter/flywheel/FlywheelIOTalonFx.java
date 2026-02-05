@@ -48,7 +48,7 @@ public class FlywheelIOTalonFx implements FlywheelIO {
     // Replace with a proper follower call if/when the correct Fo, nullllower constructor or API is
     // available.
     StatusCode followerMotorSetStatus =
-        followerMotor.setControl(new Follower(motor.getDeviceID(), MotorAlignmentValue.Aligned));
+        followerMotor.setControl(new Follower(motor.getDeviceID(), MotorAlignmentValue.Opposed));
 
     canandcolorConfig.setColorFramePeriod(10); // Set color frame period to 10ms
 
