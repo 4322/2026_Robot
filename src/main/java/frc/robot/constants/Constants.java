@@ -146,4 +146,8 @@ public final class Constants {
     public static final int servoChannelId = 1;
     public static final int servoDefaultPWM = 0;
   }
+
+  public static class Control {
+    public static final int toggle1ButtonNumber = 1; // TODO set these
+  }
 }
