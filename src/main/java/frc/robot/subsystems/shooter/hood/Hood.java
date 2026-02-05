@@ -8,9 +8,8 @@ import org.littletonrobotics.junction.Logger;
 public class Hood {
   private HoodIO io;
   private HoodIOInputsAutoLogged inputs = new HoodIOInputsAutoLogged();
-  private double requestedAngle = 0.0;
+  private int requestedAngle = 0;
   private Timer homingTimer = new Timer();
-  private double requestedHoodAngle = 0.0;
 
   public enum HoodStates {
     DISABLED,
@@ -36,11 +35,11 @@ public class Hood {
         }
       }
       case HOMING -> {
-        io.setVoltage(-10.0); // Move to hard stop
+        io.setServoPosition(-10); // Move to hard stop
        
         homingTimer.start();
         if (homingTimer.hasElapsed(0.4)) {
-          io.setHomedAngle(0.0); // Reset to home position
+          io.setEncoderPosition(0);
           homingTimer.reset();
           homingTimer.stop();
           state = HoodStates.IDLE;
@@ -50,7 +49,7 @@ public class Hood {
         requestIdle();
       }
       case SHOOTING -> {
-        io.setTargetAngle(requestedAngle);
+        io.setServoPosition(requestedAngle);
       }
     }
 
@@ -59,11 +58,11 @@ public class Hood {
 
   public void requestIdle() {
     state = HoodStates.IDLE;
-    io.setTargetAngle(Constants.Hood.idleDegrees);
+    io.setServoPosition(Constants.Hood.idleDegrees);
     requestedAngle = Constants.Hood.idleDegrees;
   }
 
-  public void requestShoot(double angle) {
+  public void requestShoot(int angle) {
     state = HoodStates.SHOOTING;
     requestedAngle = angle;
   }

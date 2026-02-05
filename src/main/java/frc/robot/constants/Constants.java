@@ -153,6 +153,6 @@ public final class Constants {
     public static final double supplyCurrentLimit = 40;
     public static final InvertedValue motorInvert = InvertedValue.Clockwise_Positive;
     public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
-    public static final double idleDegrees = 0.0;
+    public static final int idleDegrees = 0;
   }
 }

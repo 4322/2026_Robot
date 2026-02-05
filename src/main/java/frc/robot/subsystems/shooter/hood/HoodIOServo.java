@@ -1,6 +1,7 @@
 package frc.robot.subsystems.shooter.hood;
 
 import com.ctre.phoenix6.StatusCode;
+import com.ctre.phoenix6.hardware.CANcoder;
 import com.revrobotics.REVLibError;
 import com.revrobotics.servohub.ServoChannel;
 import com.revrobotics.servohub.ServoHub;
@@ -11,17 +12,22 @@ import com.revrobotics.servohub.config.ServoChannelConfig;
 import com.revrobotics.servohub.config.ServoChannelConfig.BehaviorWhenDisabled;
 import com.revrobotics.servohub.config.ServoHubConfig;
 
+import edu.wpi.first.wpilibj.util.Color;
 import frc.robot.constants.Constants;
+import frc.robot.subsystems.shooter.flywheel.FlywheelIO.FlywheelIOInputs;
 
-public class HoodIOServo {
+public class HoodIOServo implements HoodIO {
     private ServoHub servoHub;
     private ServoChannel servo;
+    private CANcoder encoder;
 
     private ServoHubConfig config = new ServoHubConfig();
 
     public HoodIOServo() {
-        servoHub = new ServoHub(Constants.Hood.servoHubId);
-        servo = servoHub.getServoChannel(ChannelId.fromInt(Constants.Hood.servoChannelId));
+        servoHub = new ServoHub(Constants.Hood.motorId);
+        servo = servoHub.getServoChannel(ChannelId.fromInt(Constants.Hood.motorId));
+        encoder = new CANcoder(Constants.Hood.encoderId);
+        
 
         REVLibError configStatus = configServo();
 
@@ -43,14 +49,25 @@ public class HoodIOServo {
     // Enables "brake" mode on servos
     servo.setEnabled(true);
 
-    // Set default position
-    servo.setPulseWidth(Constants.Hood.servoDefaultPWM);
 
     return servoHub.configure(config, ResetMode.kResetSafeParameters);
   }
-
-  public void setServoPosition(boolean pull) {/* TODO figure out what to do for this
-    servo.setPulseWidth(
-        pull ? Constants.Hood.servoDefaultPWM : Constants.Hood.servoDefaultPWM); */
+  
+  @Override
+  public void setServoPosition(int angle) { 
+    servo.setPulseWidth(angle);
+      }
+  @Override
+  public void setEncoderPosition(int angle) {
+    encoder.setPosition(angle);
   }
+    
+@Override
+  public void updateInputs(HoodIOInputs inputs) {
+    inputs.encoderConnected = encoder.isConnected();
+    inputs.currentPulseWidth = servo.getPulseWidth();
+    inputs.angleDeg = encoder.getAbsolutePosition().getValueAsDouble();
+  }
+    
+    
 }
