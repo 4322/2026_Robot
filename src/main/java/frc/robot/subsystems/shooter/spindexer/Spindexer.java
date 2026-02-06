@@ -59,7 +59,6 @@ public class Spindexer {
   }
 
   public boolean isStopped() {
-    return inputs.mechanismRotationsPerSec
-        < Constants.Spindexer.stoppedMechanismRotationsPerSec;
+    return inputs.mechanismRotationsPerSec < Constants.Spindexer.stoppedMechanismRotationsPerSec;
   }
 }

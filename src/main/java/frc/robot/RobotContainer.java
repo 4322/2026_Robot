@@ -14,25 +14,32 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
+import frc.robot.commands.IntakeCommands;
 import frc.robot.constants.Constants;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOBoron;
-import frc.robot.subsystems.drive.GyroIOPigeon2;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
-import frc.robot.subsystems.shooter.Shooter;
+import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.intake.deployer.Deployer;
+import frc.robot.subsystems.intake.deployer.DeployerIO;
+import frc.robot.subsystems.intake.deployer.DeployerIOTalonFX;
+import frc.robot.subsystems.intake.rollers.Rollers;
+import frc.robot.subsystems.intake.rollers.RollersIO;
+import frc.robot.subsystems.intake.rollers.RollersIOTalonFX;
 import frc.robot.subsystems.led.LED;
+import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.vision.visionGlobalPose.VisionGlobalPose;
 import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetection;
 import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetectionIO;
 import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetectionIOPhoton;
-
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -43,12 +50,14 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
  */
 public class RobotContainer {
   // Subsystems
-  
+
   private static VisionGlobalPose visionGlobalPose;
   private static VisionObjectDetection visionObjectDetection;
   private static Shooter shooter;
-  //TODO private static Intake intake;
+  private static Intake intake;
   private static LED led;
+  private static Rollers rollers;
+  private static Deployer deployer;
 
   private static Drive drive;
 
@@ -58,6 +67,18 @@ public class RobotContainer {
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
 
+  // Command variables
+  private enum IntakeCommandTypes {
+    EXTEND,
+    RETRACT,
+    EJECT,
+    IDLE,
+    INTAKING
+  }
+
+  private IntakeCommandTypes currentIntakeCommand = IntakeCommandTypes.EXTEND;
+  private IntakeCommandTypes previousIntakeCommand = IntakeCommandTypes.EXTEND;
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     switch (Constants.currentMode) {
@@ -65,88 +86,97 @@ public class RobotContainer {
         // Real robot, instantiate hardware IO implementations
         // ModuleIOTalonFX is intended for modules with TalonFX drive, TalonFX turn, and
         // a CANcoder
-        drive = Constants.driveMode == Constants.SubsystemMode.DISABLED ?
-              new Drive(
-                  new GyroIO() {},
-                  new ModuleIO() {},
-                  new ModuleIO() {},
-                  new ModuleIO() {},
-                  new ModuleIO() {})
-          :
-            new Drive(
-                new GyroIOBoron(),
-                new ModuleIOTalonFX(TunerConstants.FrontLeft),
-                new ModuleIOTalonFX(TunerConstants.FrontRight),
-                new ModuleIOTalonFX(TunerConstants.BackLeft),
-                new ModuleIOTalonFX(TunerConstants.BackRight));
-        
-        visionGlobalPose = Constants.visionGlobalPose == Constants.SubsystemMode.DISABLED ?
-          new VisionGlobalPose() //TODO add IO for this
-        :
-            new VisionGlobalPose(); //TODO add IO for this
+        drive =
+            Constants.driveMode == Constants.SubsystemMode.DISABLED
+                ? new Drive(
+                    new GyroIO() {},
+                    new ModuleIO() {},
+                    new ModuleIO() {},
+                    new ModuleIO() {},
+                    new ModuleIO() {})
+                : new Drive(
+                    new GyroIOBoron(),
+                    new ModuleIOTalonFX(TunerConstants.FrontLeft),
+                    new ModuleIOTalonFX(TunerConstants.FrontRight),
+                    new ModuleIOTalonFX(TunerConstants.BackLeft),
+                    new ModuleIOTalonFX(TunerConstants.BackRight));
 
-        
-        visionObjectDetection = Constants.visionObjectDetection == Constants.SubsystemMode.DISABLED ?
-          new VisionObjectDetection(drive, new VisionObjectDetectionIO() {})
-        :
-            new VisionObjectDetection(drive, new VisionObjectDetectionIOPhoton());
-        
-        shooter = Constants.shooterMode == Constants.SubsystemMode.DISABLED ?
-          new Shooter() //TODO add argument for sim/real in constructor (will be added in shooter branch)
-        :
-          new Shooter(); //TODO add argument for sim/real in constructor (will be added in shooter branch)
-        
-        /*
-        intake = Constants.intakeMode == Constants.SubsystemMode.DISABLED ?
-            new Intake() do intake
-        :
-            new Intake(); do intake
-        */
+        visionGlobalPose =
+            Constants.visionGlobalPose == Constants.SubsystemMode.DISABLED
+                ? new VisionGlobalPose() // TODO add IO for this
+                : new VisionGlobalPose(); // TODO add IO for this
+
+        visionObjectDetection =
+            Constants.visionObjectDetection == Constants.SubsystemMode.DISABLED
+                ? new VisionObjectDetection(drive, new VisionObjectDetectionIO() {})
+                : new VisionObjectDetection(drive, new VisionObjectDetectionIOPhoton());
+
+        shooter =
+            Constants.shooterMode == Constants.SubsystemMode.DISABLED
+                ? new Shooter() // TODO add argument for sim/real in constructor (will be added in
+                // shooter branch)
+                : new Shooter(); // TODO add argument for sim/real in constructor (will be added in
+        // shooter branch)
+
+        rollers =
+            Constants.rollerMode == Constants.SubsystemMode.DISABLED
+                ? new Rollers(new RollersIO() {})
+                : new Rollers(new RollersIOTalonFX());
+
+        deployer =
+            Constants.deployerMode == Constants.SubsystemMode.DISABLED
+                ? new Deployer(new DeployerIO() {})
+                : new Deployer(new DeployerIOTalonFX());
+
+        intake = new Intake(deployer, rollers);
 
         led = new LED();
-
       }
 
       case SIM -> {
         // Sim robot, instantiate physics sim IO implementations
-        drive = Constants.driveMode == Constants.SubsystemMode.DISABLED ?
-              new Drive(
-                  new GyroIO() {},
-                  new ModuleIO() {},
-                  new ModuleIO() {},
-                  new ModuleIO() {},
-                  new ModuleIO() {})
-            :
-            new Drive(
-                new GyroIO() {},
-                new ModuleIOSim(TunerConstants.FrontLeft),
-                new ModuleIOSim(TunerConstants.FrontRight),
-                new ModuleIOSim(TunerConstants.BackLeft),
-                new ModuleIOSim(TunerConstants.BackRight));
-        
-        visionGlobalPose = Constants.visionGlobalPose == Constants.SubsystemMode.DISABLED ?
-          new VisionGlobalPose() //TODO add IO for this
-        :
-            new VisionGlobalPose(); //TODO add IO for this
-        
-        visionObjectDetection = Constants.visionObjectDetection == Constants.SubsystemMode.DISABLED ?
-          new VisionObjectDetection(drive, new VisionObjectDetectionIO() {})
-        :
-            new VisionObjectDetection(drive, new VisionObjectDetectionIOPhoton()); //TODO add sim io
+        drive =
+            Constants.driveMode == Constants.SubsystemMode.DISABLED
+                ? new Drive(
+                    new GyroIO() {},
+                    new ModuleIO() {},
+                    new ModuleIO() {},
+                    new ModuleIO() {},
+                    new ModuleIO() {})
+                : new Drive(
+                    new GyroIO() {},
+                    new ModuleIOSim(TunerConstants.FrontLeft),
+                    new ModuleIOSim(TunerConstants.FrontRight),
+                    new ModuleIOSim(TunerConstants.BackLeft),
+                    new ModuleIOSim(TunerConstants.BackRight));
 
-        shooter = Constants.shooterMode == Constants.SubsystemMode.DISABLED ?
-          new Shooter() //TODO add actual io
-        :
-          new Shooter(); //TODO add actual io
+        visionGlobalPose =
+            Constants.visionGlobalPose == Constants.SubsystemMode.DISABLED
+                ? new VisionGlobalPose() // TODO add IO for this
+                : new VisionGlobalPose(); // TODO add IO for this
 
-        /*
-        intake = Constants.intakeMode == Constants.SubsystemMode.DISABLED ?
-            new Intake() //TODO add actual io
-        :
-            new Intake(); //TODO add actual io
-        */
-    
+        visionObjectDetection =
+            Constants.visionObjectDetection == Constants.SubsystemMode.DISABLED
+                ? new VisionObjectDetection(drive, new VisionObjectDetectionIO() {})
+                : new VisionObjectDetection(
+                    drive, new VisionObjectDetectionIOPhoton()); // TODO add sim io
 
+        shooter =
+            Constants.shooterMode == Constants.SubsystemMode.DISABLED
+                ? new Shooter() // TODO add actual io
+                : new Shooter(); // TODO add actual io
+
+        deployer =
+            Constants.deployerMode == Constants.SubsystemMode.DISABLED
+                ? new Deployer(new DeployerIO() {})
+                : new Deployer(new DeployerIO() {}); // TODO add sim io
+
+        rollers =
+            Constants.rollerMode == Constants.SubsystemMode.DISABLED
+                ? new Rollers(new RollersIO() {})
+                : new Rollers(new RollersIO() {}); // TODO add sim io
+
+        intake = new Intake(deployer, rollers);
       }
 
       default -> {
@@ -158,10 +188,14 @@ public class RobotContainer {
                 new ModuleIO() {},
                 new ModuleIO() {},
                 new ModuleIO() {});
-        visionGlobalPose = new VisionGlobalPose(); //TODO add IO for this
-        visionObjectDetection = new VisionObjectDetection(drive, new VisionObjectDetectionIOPhoton()); //TODO add emppty io
-        shooter = new Shooter(); //TODO empty io
-        //TODO intake = new Intake();
+        visionGlobalPose = new VisionGlobalPose(); // TODO add IO for this
+        visionObjectDetection =
+            new VisionObjectDetection(
+                drive, new VisionObjectDetectionIOPhoton()); // TODO add emppty io
+        shooter = new Shooter(); // TODO empty io
+        rollers = new Rollers(new RollersIO() {});
+        deployer = new Deployer(new DeployerIO() {});
+        intake = new Intake(deployer, rollers);
         led = new LED();
       }
     }
@@ -227,6 +261,38 @@ public class RobotContainer {
                             new Pose2d(drive.getPose().getTranslation(), Rotation2d.kZero)),
                     drive)
                 .ignoringDisable(true));
+
+    controller
+        .y() // TODO this will be toggle 3
+        .whileFalse(
+            IntakeCommands.setExtend(intake)
+                .onlyIf(() -> currentIntakeCommand == IntakeCommandTypes.RETRACT))
+        .onTrue(new InstantCommand(() -> currentIntakeCommand = IntakeCommandTypes.EXTEND));
+
+    controller
+        .y() // TODO driver button 11 whatever that is
+        .onTrue(
+            IntakeCommands.setIntaking(intake)
+                .alongWith(
+                    new InstantCommand(() -> currentIntakeCommand = IntakeCommandTypes.INTAKING))
+                .onlyIf(() -> currentIntakeCommand == IntakeCommandTypes.IDLE));
+
+    controller
+        .y() // TODO driver button 11
+        .onTrue(
+            IntakeCommands.setIdle(intake)
+                .alongWith(new InstantCommand(() -> currentIntakeCommand = IntakeCommandTypes.IDLE))
+                .onlyIf(() -> currentIntakeCommand == IntakeCommandTypes.IDLE));
+
+    controller
+        .y() // TODO operator toggle 3
+        .whileTrue(
+            IntakeCommands.setRetract(intake)
+                .onlyIf(
+                    () ->
+                        (currentIntakeCommand == IntakeCommandTypes.IDLE)
+                            || (currentIntakeCommand == IntakeCommandTypes.INTAKING)))
+        .onTrue(new InstantCommand(() -> currentIntakeCommand = IntakeCommandTypes.RETRACT));
   }
 
   /**
