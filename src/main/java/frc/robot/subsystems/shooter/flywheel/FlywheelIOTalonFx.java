@@ -131,4 +131,9 @@ public class FlywheelIOTalonFx implements FlywheelIO {
   public void enableBrakeMode(boolean enable) {
     motor.setNeutralMode(enable ? NeutralModeValue.Brake : NeutralModeValue.Coast);
   }
+
+  public TalonFX getTalonFX() {
+    return motor;
+  }
+  
 }
