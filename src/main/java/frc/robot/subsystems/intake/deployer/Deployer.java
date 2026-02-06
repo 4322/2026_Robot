@@ -63,5 +63,4 @@ public class Deployer {
   public boolean isStowed() {
     return (inputs.angleDeg <= Constants.Deployer.retractDeg + Constants.Deployer.tolerance);
   }
-
 }

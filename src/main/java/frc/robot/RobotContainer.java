@@ -14,9 +14,11 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
+import frc.robot.commands.IntakeCommands;
 import frc.robot.constants.Constants;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.drive.Drive;
@@ -25,12 +27,6 @@ import frc.robot.subsystems.drive.GyroIOBoron;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
-import frc.robot.subsystems.led.LED;
-import frc.robot.subsystems.shooter.Shooter;
-import frc.robot.subsystems.vision.visionGlobalPose.VisionGlobalPose;
-import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetection;
-import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetectionIO;
-import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetectionIOPhoton;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.deployer.Deployer;
 import frc.robot.subsystems.intake.deployer.DeployerIO;
@@ -38,7 +34,12 @@ import frc.robot.subsystems.intake.deployer.DeployerIOTalonFX;
 import frc.robot.subsystems.intake.rollers.Rollers;
 import frc.robot.subsystems.intake.rollers.RollersIO;
 import frc.robot.subsystems.intake.rollers.RollersIOTalonFX;
-
+import frc.robot.subsystems.led.LED;
+import frc.robot.subsystems.shooter.Shooter;
+import frc.robot.subsystems.vision.visionGlobalPose.VisionGlobalPose;
+import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetection;
+import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetectionIO;
+import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetectionIOPhoton;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -65,6 +66,18 @@ public class RobotContainer {
 
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
+
+  // Command variables
+  private enum IntakeCommandTypes {
+    EXTEND,
+    RETRACT,
+    EJECT,
+    IDLE,
+    INTAKING
+  }
+
+  private IntakeCommandTypes currentIntakeCommand = IntakeCommandTypes.EXTEND;
+  private IntakeCommandTypes previousIntakeCommand = IntakeCommandTypes.EXTEND;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -152,19 +165,18 @@ public class RobotContainer {
             Constants.shooterMode == Constants.SubsystemMode.DISABLED
                 ? new Shooter() // TODO add actual io
                 : new Shooter(); // TODO add actual io
-        
+
         deployer =
             Constants.deployerMode == Constants.SubsystemMode.DISABLED
                 ? new Deployer(new DeployerIO() {})
                 : new Deployer(new DeployerIO() {}); // TODO add sim io
-        
+
         rollers =
             Constants.rollerMode == Constants.SubsystemMode.DISABLED
                 ? new Rollers(new RollersIO() {})
                 : new Rollers(new RollersIO() {}); // TODO add sim io
 
         intake = new Intake(deployer, rollers);
-        
       }
 
       default -> {
@@ -249,6 +261,38 @@ public class RobotContainer {
                             new Pose2d(drive.getPose().getTranslation(), Rotation2d.kZero)),
                     drive)
                 .ignoringDisable(true));
+
+    controller
+        .y() // TODO this will be toggle 3
+        .whileFalse(
+            IntakeCommands.setExtend(intake)
+                .onlyIf(() -> currentIntakeCommand == IntakeCommandTypes.RETRACT))
+        .onTrue(new InstantCommand(() -> currentIntakeCommand = IntakeCommandTypes.EXTEND));
+
+    controller
+        .y() // TODO driver button 11 whatever that is
+        .onTrue(
+            IntakeCommands.setIntaking(intake)
+                .alongWith(
+                    new InstantCommand(() -> currentIntakeCommand = IntakeCommandTypes.INTAKING))
+                .onlyIf(() -> currentIntakeCommand == IntakeCommandTypes.IDLE));
+
+    controller
+        .y() // TODO driver button 11
+        .onTrue(
+            IntakeCommands.setIdle(intake)
+                .alongWith(new InstantCommand(() -> currentIntakeCommand = IntakeCommandTypes.IDLE))
+                .onlyIf(() -> currentIntakeCommand == IntakeCommandTypes.IDLE));
+
+    controller
+        .y() // TODO operator toggle 3
+        .whileTrue(
+            IntakeCommands.setRetract(intake)
+                .onlyIf(
+                    () ->
+                        (currentIntakeCommand == IntakeCommandTypes.IDLE)
+                            || (currentIntakeCommand == IntakeCommandTypes.INTAKING)))
+        .onTrue(new InstantCommand(() -> currentIntakeCommand = IntakeCommandTypes.RETRACT));
   }
 
   /**

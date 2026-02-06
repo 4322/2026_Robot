@@ -24,7 +24,7 @@ public class Rollers {
   public void periodic() {
     rollersIO.updateInputs(inputs);
     Logger.processInputs("Rollers", inputs);
-    
+
     switch (Constants.rollerMode) {
       case TUNING -> {}
       case DRIVE_TUNING -> {}
@@ -58,5 +58,4 @@ public class Rollers {
   public void setState(RollersState newState) {
     state = newState;
   }
-
 }
