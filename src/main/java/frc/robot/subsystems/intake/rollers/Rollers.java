@@ -8,14 +8,14 @@ public class Rollers {
   private RollersIO rollersIO;
   private RollersIOInputsAutoLogged inputs = new RollersIOInputsAutoLogged();
 
-  public enum rollersGoal {
+  public enum RollersState {
     IDLE,
     INTAKE,
     EJECT,
     DISABLED
   }
 
-  public rollersGoal goal = rollersGoal.IDLE;
+  public RollersState state = RollersState.IDLE;
 
   public Rollers(RollersIO rollersIO) {
     this.rollersIO = rollersIO;
@@ -24,49 +24,39 @@ public class Rollers {
   public void periodic() {
     rollersIO.updateInputs(inputs);
     Logger.processInputs("Rollers", inputs);
-    Logger.recordOutput("Rollers/Goal", goal);
+    
     switch (Constants.rollerMode) {
       case TUNING -> {}
       case DRIVE_TUNING -> {}
       case DISABLED -> {}
       case NORMAL -> {
-        switch (goal) {
+        switch (state) {
           case DISABLED -> {
             if (DriverStation.isEnabled()) {
-              goal = rollersGoal.IDLE;
+              state = RollersState.IDLE;
             }
           }
           case IDLE -> {
-            idle();
+            rollersIO.setVoltage(Constants.Rollers.voltageIdle);
           }
           case INTAKE -> {
-            intake();
+            rollersIO.setVoltage(Constants.Rollers.voltageIntake);
           }
           case EJECT -> {
-            eject();
+            rollersIO.setVoltage(Constants.Rollers.voltageEject);
           }
         }
+        Logger.recordOutput("Rollers/state", state);
       }
     }
   }
 
-  public void setBrakeMode(boolean mode) {
-    rollersIO.enableBreakMode(mode);
+  public void setBrakeMode(boolean enable) {
+    rollersIO.enableBrakeMode(enable);
   }
 
-  public void intake() {
-    rollersIO.setVoltage(Constants.Rollers.voltageIntake);
+  public void setState(RollersState newState) {
+    state = newState;
   }
 
-  public void eject() {
-    rollersIO.setVoltage(Constants.Rollers.voltageEject);
-  }
-
-  public void idle() {
-    rollersIO.stopMotor();
-  }
-
-  public void setGoal(rollersGoal goal) {
-    this.goal = goal;
-  }
 }

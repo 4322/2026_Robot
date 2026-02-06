@@ -7,14 +7,14 @@ public class Deployer {
   private DeployerIO deployerIO;
   private DeployerIOInputsAutoLogged inputs = new DeployerIOInputsAutoLogged();
 
-  public enum deployerGoal {
+  public enum DeployerState {
     DISABLED,
     EXTEND,
     RETRACT,
     // UNJAM TODO
   }
 
-  public deployerGoal goal = deployerGoal.DISABLED;
+  private DeployerState state = DeployerState.DISABLED;
 
   public Deployer(DeployerIO deployerIO) {
     this.deployerIO = deployerIO;
@@ -23,33 +23,25 @@ public class Deployer {
   public void periodic() {
     deployerIO.updateInputs(inputs);
     Logger.processInputs("Deployer", inputs);
-    Logger.recordOutput("Deployer/Goal", goal);
+    Logger.recordOutput("Deployer/state", state);
     switch (Constants.deployerMode) {
       case DISABLED -> {}
       case TUNING -> {}
       case DRIVE_TUNING -> {}
       case NORMAL -> {
-        switch (goal) {
+        switch (state) {
           case DISABLED -> {
             break;
           }
           case EXTEND -> {
-            extend();
+            deployerIO.setPosition(Constants.Deployer.extendDeg);
           }
           case RETRACT -> {
-            retract();
+            deployerIO.setPosition(Constants.Deployer.retractDeg);
           }
         }
       }
     }
-  }
-
-  public void retract() {
-    deployerIO.setPosition(Constants.Deployer.retractDeg);
-  }
-
-  public void extend() {
-    deployerIO.setPosition(Constants.Deployer.extendDeg);
   }
 
   public void unjam() {
@@ -64,11 +56,12 @@ public class Deployer {
     return (inputs.angleDeg >= Constants.Deployer.extendDeg - Constants.Deployer.tolerance);
   }
 
-  public void setGoal(deployerGoal goal) {
-    this.goal = goal;
+  public void setState(DeployerState state) {
+    this.state = state;
   }
 
   public boolean isStowed() {
     return (inputs.angleDeg <= Constants.Deployer.retractDeg + Constants.Deployer.tolerance);
   }
+
 }

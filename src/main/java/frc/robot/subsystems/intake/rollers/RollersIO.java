@@ -25,5 +25,5 @@ public interface RollersIO {
     return null;
   }
 
-  public default void enableBreakMode(boolean mode) {}
+  public default void enableBrakeMode(boolean enable) {}
 }

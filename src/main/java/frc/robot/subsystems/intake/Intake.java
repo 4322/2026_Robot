@@ -2,9 +2,9 @@ package frc.robot.subsystems.intake;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.intake.deployer.Deployer;
-import frc.robot.subsystems.intake.deployer.Deployer.deployerGoal;
+import frc.robot.subsystems.intake.deployer.Deployer.DeployerState;
 import frc.robot.subsystems.intake.rollers.Rollers;
-import frc.robot.subsystems.intake.rollers.Rollers.rollersGoal;
+import frc.robot.subsystems.intake.rollers.Rollers.RollersState;
 import org.littletonrobotics.junction.Logger;
 
 public class Intake extends SubsystemBase {
@@ -16,7 +16,7 @@ public class Intake extends SubsystemBase {
     this.rollers = rollers;
   }
 
-  public enum Goal {
+  public enum IntakeState {
     DISABLED,
     EXTEND,
     RETRACT,
@@ -26,51 +26,52 @@ public class Intake extends SubsystemBase {
     // aadd unjamstill blue and not a priority in docs as of current so TODO
   }
 
-  public Goal goal = Goal.DISABLED;
-  public Goal prevGoal;
+  public IntakeState state = IntakeState.DISABLED;
+  public IntakeState prevState;
 
   @Override
   public void periodic() {
-    Logger.recordOutput("Inttake/State", goal);
-    prevGoal = goal;
-    switch (goal) {
+    Logger.recordOutput("Inttake/State", state);
+    switch (state) {
       case DISABLED -> {
         break;
       }
       case EXTEND -> {
-        deployer.setGoal(deployerGoal.EXTEND);
+        deployer.setState(DeployerState.EXTEND);
+        rollers.setState(RollersState.IDLE);
       }
       case RETRACT -> {
-        deployer.setGoal(deployerGoal.RETRACT);
-        rollers.setGoal(rollersGoal.IDLE);
+        deployer.setState(DeployerState.RETRACT);
+        rollers.setState(RollersState.IDLE);
       }
       case EJECT -> {
-        deployer.setGoal(deployerGoal.EXTEND);
-        rollers.setGoal(rollersGoal.EJECT);
+        deployer.setState(DeployerState.EXTEND);
+        rollers.setState(RollersState.EJECT);
       }
       case IDLE -> {
-        deployer.setGoal(deployerGoal.EXTEND);
-        rollers.setGoal(rollersGoal.IDLE);
+        deployer.setState(DeployerState.EXTEND);
+        rollers.setState(RollersState.IDLE);
       }
       case INTAKING -> {
-        deployer.setGoal(deployerGoal.EXTEND);
-        rollers.setGoal(rollersGoal.INTAKE);
+        deployer.setState(DeployerState.EXTEND);
+        rollers.setState(RollersState.INTAKE);
       }
     }
     deployer.periodic();
     rollers.periodic();
   }
 
-  public void setGoal(Goal desiredGoal) {
-    this.goal = desiredGoal;
+  public void setState(IntakeState desiredState) {
+    prevState = state;
+    state = desiredState;
   }
 
-  public Goal getGoal() {
-    return prevGoal;
+  public IntakeState getState() {
+    return state;
   }
 
-  public void enableBreakMode() {
-    deployer.setBrakeMode(true);
-    rollers.setBrakeMode(true);
+  public void enableBrakeMode(boolean enable) {
+    deployer.setBrakeMode(enable);
+    rollers.setBrakeMode(enable);
   }
 }

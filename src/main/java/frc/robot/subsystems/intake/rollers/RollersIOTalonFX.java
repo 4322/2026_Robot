@@ -69,7 +69,7 @@ public class RollersIOTalonFX implements RollersIO {
   }
 
   @Override
-  public void enableBreakMode(boolean mode) {
-    rollersMotor.setNeutralMode(mode ? NeutralModeValue.Brake : NeutralModeValue.Coast);
+  public void enableBrakeMode(boolean enable) {
+    rollersMotor.setNeutralMode(enable ? NeutralModeValue.Brake : NeutralModeValue.Coast);
   }
 }

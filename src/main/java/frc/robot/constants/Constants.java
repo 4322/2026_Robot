@@ -123,6 +123,7 @@ public final class Constants {
     public static final double supplyCurrentLimit = 40; // TODO
     public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
     public static final InvertedValue motorInvert = InvertedValue.Clockwise_Positive;
+    public static final double voltageIdle = 0;
   }
 
   public class Deployer {
