@@ -38,7 +38,7 @@ public class HoodIOServo implements HoodIO {
       ServoChannelConfig channelConfig = new ServoChannelConfig(ChannelId.fromInt(i));
       channelConfig.disableBehavior(
           BehaviorWhenDisabled.kDoNotSupplyPower); // Config "coast" mode by disabling channel
-      channelConfig.pulseRange(500, 1500, 2500); // Default PWM pulses recommended by REV
+      channelConfig.pulseRange(1000, 1500, 2000); // Default PWM pulses recommended by REV
       config.apply(ChannelId.fromInt(i), channelConfig);
     }
 
@@ -52,21 +52,24 @@ public class HoodIOServo implements HoodIO {
 
     return servoHub.configure(config, ResetMode.kResetSafeParameters);
   }
-  
+
   @Override
-  public void setServoPosition(int angle) { 
-    servo.setPulseWidth(angle);
-      }
-  @Override
-  public void setEncoderPosition(int angle) {
+  public void setEncoderPosition(double angle) {
     encoder.setPosition(angle);
   }
+
+  @Override
+  public void homingPulseWidth() {
+    servo.setPulseWidth(1500); // Set to center position (1500 microseconds)
+  }
+
+  
     
 @Override
   public void updateInputs(HoodIOInputs inputs) {
     inputs.encoderConnected = encoder.isConnected();
     inputs.currentPulseWidth = servo.getPulseWidth();
-    inputs.angleDeg = encoder.getAbsolutePosition().getValueAsDouble();
+    inputs.rotations = encoder.getPosition().getValueAsDouble();
   }
     
     

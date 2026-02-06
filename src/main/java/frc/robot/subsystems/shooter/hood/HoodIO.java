@@ -5,7 +5,7 @@ import org.littletonrobotics.junction.AutoLog;
 public interface HoodIO {
   @AutoLog
   public static class HoodIOInputs {
-    public double angleDeg = 0.0;
+    public double rotations = 0.0;
     public double requestedAngle = 0.0;
     public double currentPulseWidth = 0.0;
     public double appliedVolts = 0.0;
@@ -18,10 +18,9 @@ public interface HoodIO {
 
   public default void updateInputs(HoodIOInputs inputs) {}
 
-  public default void setServoPosition(int angle) {}
-
-   public default void setEncoderPosition(int angle) {
-
+   public default void setEncoderPosition(double angle) {
   }
 
+  public default void homingPulseWidth() {
+  }
 }
