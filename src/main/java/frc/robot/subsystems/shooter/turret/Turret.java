@@ -1,10 +1,13 @@
 package frc.robot.subsystems.shooter.turret;
 
+import edu.wpi.first.math.MathUtil;
 import frc.robot.constants.Constants;
 
 public class Turret {
   private TurretIO io;
   private TurretIOInputsAutoLogged inputs = new TurretIOInputsAutoLogged();
+  private double desiredAzimuth = 0.0;
+  private boolean safeToUnwind = true;
 
   public enum turretState {
     IDLE,
@@ -33,10 +36,12 @@ public class Turret {
 
   public void setAngle(double angle, boolean safeToUnwind) {}
 
-  public void isAtGoal() {}
+  public boolean isAtGoal() {
+    return MathUtil.isNear(desiredAzimuth, inputs.turretDegs, Constants.Turret.tolerance);
+  }
 
   public void preemptiveUnwind() {
-    // io.setAngle();
+    io.setAngle(Constants.Turret.zeroAzimuth);
   }
 
   public void setBrakeMode(Boolean mode) {}

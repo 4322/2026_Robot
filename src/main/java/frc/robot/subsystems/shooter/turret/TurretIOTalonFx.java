@@ -5,6 +5,8 @@ import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.NeutralModeValue;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.constants.Constants;
 
@@ -42,5 +44,15 @@ public class TurretIOTalonFx implements TurretIO {
               + configStatus.getDescription(),
           false);
     }
+  }
+
+  @Override
+  public void updateInputs(TurretIOInputs inputs) {
+    inputs.turretDegs = Units.rotationsToDegrees(turretMotor.getPosition().getValueAsDouble());
+  }
+
+  @Override
+  public void setBrakeMode(boolean mode) {
+    turretMotor.setNeutralMode(mode ? NeutralModeValue.Brake : NeutralModeValue.Coast);
   }
 }
