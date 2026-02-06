@@ -31,6 +31,14 @@ import frc.robot.subsystems.vision.visionGlobalPose.VisionGlobalPose;
 import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetection;
 import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetectionIO;
 import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetectionIOPhoton;
+import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.intake.deployer.Deployer;
+import frc.robot.subsystems.intake.deployer.DeployerIO;
+import frc.robot.subsystems.intake.deployer.DeployerIOTalonFX;
+import frc.robot.subsystems.intake.rollers.Rollers;
+import frc.robot.subsystems.intake.rollers.RollersIO;
+import frc.robot.subsystems.intake.rollers.RollersIOTalonFX;
+
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -45,8 +53,10 @@ public class RobotContainer {
   private static VisionGlobalPose visionGlobalPose;
   private static VisionObjectDetection visionObjectDetection;
   private static Shooter shooter;
-  // TODO private static Intake intake;
+  private static Intake intake;
   private static LED led;
+  private static Rollers rollers;
+  private static Deployer deployer;
 
   private static Drive drive;
 
@@ -95,12 +105,17 @@ public class RobotContainer {
                 : new Shooter(); // TODO add argument for sim/real in constructor (will be added in
         // shooter branch)
 
-        /*
-        intake = Constants.intakeMode == Constants.SubsystemMode.DISABLED ?
-            new Intake() do intake
-        :
-            new Intake(); do intake
-        */
+        rollers =
+            Constants.rollerMode == Constants.SubsystemMode.DISABLED
+                ? new Rollers(new RollersIO() {})
+                : new Rollers(new RollersIOTalonFX());
+
+        deployer =
+            Constants.deployerMode == Constants.SubsystemMode.DISABLED
+                ? new Deployer(new DeployerIO() {})
+                : new Deployer(new DeployerIOTalonFX());
+
+        intake = new Intake(deployer, rollers);
 
         led = new LED();
       }
@@ -137,14 +152,19 @@ public class RobotContainer {
             Constants.shooterMode == Constants.SubsystemMode.DISABLED
                 ? new Shooter() // TODO add actual io
                 : new Shooter(); // TODO add actual io
+        
+        deployer =
+            Constants.deployerMode == Constants.SubsystemMode.DISABLED
+                ? new Deployer(new DeployerIO() {})
+                : new Deployer(new DeployerIO() {}); // TODO add sim io
+        
+        rollers =
+            Constants.rollerMode == Constants.SubsystemMode.DISABLED
+                ? new Rollers(new RollersIO() {})
+                : new Rollers(new RollersIO() {}); // TODO add sim io
 
-        /*
-        intake = Constants.intakeMode == Constants.SubsystemMode.DISABLED ?
-            new Intake() //TODO add actual io
-        :
-            new Intake(); //TODO add actual io
-        */
-
+        intake = new Intake(deployer, rollers);
+        
       }
 
       default -> {
@@ -161,7 +181,9 @@ public class RobotContainer {
             new VisionObjectDetection(
                 drive, new VisionObjectDetectionIOPhoton()); // TODO add emppty io
         shooter = new Shooter(); // TODO empty io
-        // TODO intake = new Intake();
+        rollers = new Rollers(new RollersIO() {});
+        deployer = new Deployer(new DeployerIO() {});
+        intake = new Intake(deployer, rollers);
         led = new LED();
       }
     }
