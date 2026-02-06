@@ -18,12 +18,11 @@ public class DeployerIOTalonFX implements DeployerIO {
   private TalonFXConfiguration motorConfigs = new TalonFXConfiguration();
   private CANcoderConfiguration canCoderConfigs = new CANcoderConfiguration();
   public double requestedPosDeg;
-  private double posRotError;
+  private double posRot;
 
   public DeployerIOTalonFX() {
     deployerMotor = new TalonFX(Constants.Deployer.motorId);
     canCoder = new CANcoder(Constants.Deployer.CANCoderID);
-    canCoder.getConfigurator().apply(canCoderConfigs);
 
     motorConfigs.Feedback.FeedbackRemoteSensorID = canCoder.getDeviceID();
 
@@ -43,7 +42,7 @@ public class DeployerIOTalonFX implements DeployerIO {
     motorConfigs.HardwareLimitSwitch.ForwardLimitEnable = false;
     motorConfigs.HardwareLimitSwitch.ReverseLimitEnable = false;
     StatusCode deployerConfigStatus = deployerMotor.getConfigurator().apply(motorConfigs);
-    canCoder.getConfigurator().apply(canCoderConfigs);
+    StatusCode CANcoderStatus = canCoder.getConfigurator().apply(canCoderConfigs);
     if (deployerConfigStatus != StatusCode.OK) {
       DriverStation.reportError(
           "Talon "
@@ -52,9 +51,19 @@ public class DeployerIOTalonFX implements DeployerIO {
               + deployerConfigStatus.getDescription(),
           false);
     }
-    posRotError =
-        Constants.Deployer.CANCoderHomed - canCoder.getAbsolutePosition().getValueAsDouble();
-    deployerMotor.setPosition(Constants.Deployer.maxGravityDegrees - posRotError);
+    if (CANcoderStatus != StatusCode.OK) {
+      DriverStation.reportError(
+          "Talon "
+              + canCoder.getDeviceID()
+              + " error (CANCoder): "
+              + CANcoderStatus.getDescription(),
+          false);
+    }
+    posRot =
+        canCoder.getAbsolutePosition().getValueAsDouble()
+            - Units.rotationsToDegrees(Constants.Deployer.CANCoderStowed);
+    deployerMotor.setPosition(
+        Units.degreesToRadians(Constants.Deployer.maxGravityDegrees) - posRot);
   }
 
   @Override
@@ -104,12 +113,8 @@ public class DeployerIOTalonFX implements DeployerIO {
   }
 
   @Override
-  public void enableBrakeMode(Boolean mode) {
+  public void enableBrakeMode(boolean mode) {
     deployerMotor.setNeutralMode(mode ? NeutralModeValue.Brake : NeutralModeValue.Coast);
-  }
-
-  public double subtract(Double pos, Double canPos) {
-    return pos - canPos;
   }
 
   private double toCodeCoords(double position) {

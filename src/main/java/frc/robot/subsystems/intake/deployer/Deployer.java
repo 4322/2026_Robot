@@ -1,6 +1,5 @@
 package frc.robot.subsystems.intake.deployer;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.constants.Constants;
 import org.littletonrobotics.junction.Logger;
 
@@ -32,9 +31,7 @@ public class Deployer {
       case NORMAL -> {
         switch (goal) {
           case DISABLED -> {
-            if (DriverStation.isEnabled()) {
-              goal = deployerGoal.EXTEND;
-            }
+            break;
           }
           case EXTEND -> {
             extend();
@@ -63,10 +60,8 @@ public class Deployer {
     deployerIO.enableBrakeMode(mode);
   }
 
-  public Boolean isExtended() {
-    return (inputs.angleDeg >= Constants.Deployer.extendDeg - Constants.Deployer.tolerance)
-        ? true
-        : false;
+  public boolean isExtended() {
+    return (inputs.angleDeg >= Constants.Deployer.extendDeg - Constants.Deployer.tolerance);
   }
 
   public void setGoal(deployerGoal goal) {
@@ -74,8 +69,6 @@ public class Deployer {
   }
 
   public boolean isStowed() {
-    return (inputs.angleDeg <= Constants.Deployer.retractDeg + Constants.Deployer.tolerance)
-        ? true
-        : false;
+    return (inputs.angleDeg <= Constants.Deployer.retractDeg + Constants.Deployer.tolerance);
   }
 }
