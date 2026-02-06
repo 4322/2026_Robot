@@ -60,8 +60,8 @@ public class AreaManager {
           new Translation2d(
               (Units.inchesToMeters(47) - Units.inchesToMeters(12)), Units.inchesToMeters(62.59)),
           new Translation2d((Units.inchesToMeters(47) + Units.inchesToMeters(12)), 0));
-  
-private static Rectangle2d bumpLeftRed =
+
+  private static Rectangle2d bumpLeftRed =
       new Rectangle2d(new Translation2d(0, 6.1722), new Translation2d(2.0574, 10.287));
   private static Rectangle2d bumpRightRed =
       new Rectangle2d(new Translation2d(0, 10.287), new Translation2d(2.0574, 14.4018));
