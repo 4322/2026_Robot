@@ -3,6 +3,7 @@ package frc.robot.constants;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.wpilibj.RobotBase;
 
 /**
@@ -153,5 +154,12 @@ public final class Constants {
 
   public static class Control {
     public static final int toggle1ButtonNumber = 1; // TODO set these
+  }
+
+  public static class ShootingManager {
+    public static final InterpolatingDoubleTreeMap shooterMap = new InterpolatingDoubleTreeMap();
+    static {
+      // shooterMap.put()
+    }
   }
 }
