@@ -2,6 +2,8 @@ package frc.robot.constants;
 
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
@@ -183,9 +185,31 @@ public final class Constants {
   }
 
   public static class ShootingManager {
-    public static final InterpolatingTreeMap<Double, ShootingParameters> shooterMap = new InterpolatingTreeMap<Double, ShootingParameters>(); // TODO not sure why this doesn't work
+    public static final InterpolatingTreeMap<Double, ShootingParameters> shooterMap = new InterpolatingTreeMap<Double, ShootingParameters>(null, null); // TODO not sure what to put for constructor
     static {
       // shooterMap.put()
+    }
+
+    // TODO figure these out
+  }
+
+  public static class ShootingPositions {
+    // Right/left are determined as view from alliance driver station
+
+    public static class Red {
+      public static final Pose2d hubPose = new Pose2d();
+      public static final Pose2d allianceRightPose = new Pose2d();
+      public static final Pose2d allianceLeftPose = new Pose2d();
+      public static final Pose2d neutralRightPose = new Pose2d();
+      public static final Pose2d neutralLeftPose = new Pose2d();
+    }
+
+    public static class Blue {
+      public static final Pose2d hubPose = new Pose2d();
+      public static final Pose2d allianceRightPose = new Pose2d();
+      public static final Pose2d allianceLeftPose = new Pose2d();
+      public static final Pose2d neutralRightPose = new Pose2d();
+      public static final Pose2d neutralLeftPose = new Pose2d();
     }
   }
 
