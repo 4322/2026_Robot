@@ -60,18 +60,20 @@ public class TurretIOTalonFx implements TurretIO {
     turretMotor.setNeutralMode(mode ? NeutralModeValue.Brake : NeutralModeValue.Coast);
   }
 
-  public double getAzimuth(){
-    CANCoderOneMod = CANcoderOne.getPosition().getValueAsDouble() % Constants.Turret.CANCoderOneRatio;
-    CANCoderTwoMod = CANcoderTwo.getPosition().getValueAsDouble() % Constants.Turret.CANCoderTwoRatio;
+  public double getAzimuth() {
+    CANCoderOneMod =
+        CANcoderOne.getPosition().getValueAsDouble() % Constants.Turret.CANCoderOneRatio;
+    CANCoderTwoMod =
+        CANcoderTwo.getPosition().getValueAsDouble() % Constants.Turret.CANCoderTwoRatio;
 
-    turretMod = (((10 *CANCoderOneMod) + (36 * CANCoderTwoMod)) % 45);
+    turretMod = (((10 * CANCoderOneMod) + (36 * CANCoderTwoMod)) % 45);
 
     return turretMod;
-
   }
 
-  public void setAzimuth(double degs){
-    double targetPosition = Units.degreesToRotations(degs) * Constants.Turret.turretGearRatio - Units.degreesToRotations(Constants.Turret.offsetAzimuth);
-    
+  public void setAzimuth(double degs) {
+    double targetPosition =
+        Units.degreesToRotations(degs) * Constants.Turret.turretGearRatio
+            - Units.degreesToRotations(Constants.Turret.offsetAzimuth);
   }
 }
