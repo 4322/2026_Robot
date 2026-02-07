@@ -4,6 +4,8 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
+import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
+import edu.wpi.first.math.interpolation.InverseInterpolator;
 import edu.wpi.first.wpilibj.RobotBase;
 
 /**
@@ -156,10 +158,36 @@ public final class Constants {
     public static final int toggle1ButtonNumber = 1; // TODO set these
   }
 
+  public static class ShootingParameters {
+    private final double flywheelRPS;
+    private final double hoodAngleDeg;
+    private final double timeOfFlightSec;
+
+    public ShootingParameters(double flywheelRPS, double hoodAngleDeg, double timeOfFlightSec) {
+      this.flywheelRPS = flywheelRPS;
+      this.hoodAngleDeg = hoodAngleDeg;
+      this.timeOfFlightSec = timeOfFlightSec;
+    }
+
+    public double getFlywheelRPS() {
+      return flywheelRPS;
+    }
+
+    public double getHoodAngleDeg() {
+      return hoodAngleDeg;
+    }
+
+    public double getTimeOfFlightSec() {
+      return timeOfFlightSec;
+    }
+  }
+
   public static class ShootingManager {
-    public static final InterpolatingDoubleTreeMap shooterMap = new InterpolatingDoubleTreeMap();
+    public static final InterpolatingTreeMap<Double, ShootingParameters> shooterMap = new InterpolatingTreeMap<Double, ShootingParameters>(); // TODO not sure why this doesn't work
     static {
       // shooterMap.put()
     }
   }
+
+  
 }
