@@ -143,6 +143,12 @@ public final class Constants {
     public static final double tolerance = 0.0; // TODO
     public static final double physicalLimitDeg = 360.0; // TODO
     public static final double physicalLimitToleranceDeg = 5.0; // TODO
+    public static final double CANCoderOneRatio = 3.0; // TODO
+    public static final double CANCoderTwoRatio = 8.0; // TODO
+    public static final double turretGearRatio = 90.0; // TODO
+    public static final double minLimitAzimuth = -360.0; // TODO
+    public static final double maxLimitAzimuth = 360.0; // TODO
+    public static final double offsetAzimuth = 90.0; // TODO
   }
 
   public static class Hood {
