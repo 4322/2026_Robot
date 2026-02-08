@@ -1,10 +1,3 @@
-// Copyright (c) 2021-2026 Littleton Robotics
-// http://github.com/Mechanical-Advantage
-//
-// Use of this source code is governed by a BSD
-// license that can be found in the LICENSE file
-// at the root directory of this project.
-
 package frc.robot.constants;
 
 import com.ctre.phoenix6.signals.InvertedValue;
@@ -51,7 +44,6 @@ public final class Constants {
   }
 
   public static final SubsystemMode driveMode = SubsystemMode.NORMAL;
-  public static final SubsystemMode shooterMode = SubsystemMode.NORMAL;
   public static final SubsystemMode flywheelMode = SubsystemMode.NORMAL;
   public static final SubsystemMode hoodMode = SubsystemMode.NORMAL;
   public static final SubsystemMode spindexerMode = SubsystemMode.NORMAL;
@@ -80,7 +72,7 @@ public final class Constants {
     public static final double kP = 1;
     public static final double kI = 0;
     public static final double kD = 0;
-    public static final double indexingMechanismRotationsPerSec = 3; // TODO 
+    public static final double indexingMechanismRotationsPerSec = 3; // TODO
     public static final double stoppedMechanismRotationsPerSec = 0.1; // TODO
 
     public static final double motorToMechanismRatio = 12.0;
@@ -104,13 +96,59 @@ public final class Constants {
     public static final double kD = 0;
 
     public static final double stoppedMechanismRotationsPerSec = 0.1; // TODO
-    public static final double atSpeedMechanismRotationsPerSec = 0.95 * indexingMechanismRotationsPerSec; // TODO
+    public static final double atSpeedMechanismRotationsPerSec =
+        0.95 * indexingMechanismRotationsPerSec; // TODO
     public static final double motorToMechanismRatio = 1.5;
+  }
+
+  public static class Flywheel {
+    public static final int motorId = 23;
+    public static final int followerMotorId = 24;
+    public static final double statorCurrentLimit = 60; // TODO
+    public static final double supplyCurrentLimit = 40;
+    public static final InvertedValue motorInvert = InvertedValue.Clockwise_Positive;
+    public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
+    public static final double kS = 0;
+    public static final double kV = 0;
+    public static final double kP = 1;
+    public static final double kI = 0;
+    public static final double kD = 0;
+    public static final double allowedVelocityErrorRPS = 5.0; // TODO
+
+    public static final double motorToMechanismRatio = 1;
+    public static final double idleMechanismRPS = 5;
+    public static final double shootingMechanismRPS = 10;
+    public static final int canandcolorId = 0;
+    public static final double minFuelDetectionProximity = 0.2;
+    public static final double allowedVelocityErrorMechanismRPS = 0.2;
   }
 
   public static class VisionObjectDetection {
 
     public static final Transform3d robotCenterToCamera = new Transform3d(); // TODO add
     public static final String hostname = null;
+  }
+
+  public static class Turret {
+    public static final int motorId = 13;
+    public static final double kS = 0;
+    public static final double kV = 0;
+    public static final double kP = 1;
+    public static final double kI = 0;
+    public static final double kD = 0;
+    public static final double statorCurrentLimit = 60; // TODO
+    public static final double supplyCurrentLimit = 40;
+    public static final InvertedValue motorInvert = InvertedValue.Clockwise_Positive;
+    public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
+  }
+
+  public static class Hood {
+    public static final int servoHubId = 10;
+    public static final int servoChannelId = 1;
+    public static final int servoDefaultPWM = 0;
+  }
+
+  public static class Control {
+    public static final int toggle1ButtonNumber = 1; // TODO set these
   }
 }

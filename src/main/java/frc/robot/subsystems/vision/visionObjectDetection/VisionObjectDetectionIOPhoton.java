@@ -3,7 +3,6 @@ package frc.robot.subsystems.vision.visionObjectDetection;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.util.Units;
 import frc.robot.constants.Constants;
-
 import java.util.ArrayList;
 import java.util.List;
 import org.photonvision.PhotonCamera;
