@@ -59,9 +59,10 @@ public class HoodIOServo implements HoodIO {
     inputs.encoderConnected = encoder.isConnected();
     inputs.currentPulseWidth = servo.getPulseWidth();
     inputs.rotations = encoder.getPosition().getValueAsDouble(); 
-}
-
-  @Override
+    inputs.encoderRotationsPerInfo = encoder.getVelocity().getValueAsDouble();
+    inputs.servoEnabled = servo.isEnabled(); // Assuming a threshold of 0.1A to determine if the servo is powered
+    inputs.appliedVolts = servo.getCurrent(); // Get the voltage applied to the servo
+    
   public void setEncoderPosition(double angle) {
     encoder.setPosition(angle);
   }

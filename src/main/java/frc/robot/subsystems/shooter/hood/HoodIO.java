@@ -14,6 +14,7 @@ public interface HoodIO {
     public boolean encoderConnected = false;
     public double encoderRotations = 0.0;
     public double encoderRotationsPerInfo = 0.0;
+    public boolean servoEnabled = false;
   }
 
   public default void updateInputs(HoodIOInputs inputs) {}
