@@ -54,13 +54,22 @@ public class HoodIOServo implements HoodIO {
   }
 
   @Override
+  public void updateInputs(HoodIOInputs inputs) {
+    inputs.encoderConnected = encoder.isConnected();
+    inputs.currentPulseWidth = servo.getPulseWidth();
+    inputs.rotations = encoder.getPosition().getValueAsDouble(); 
+}
+
+  @Override
   public void setEncoderPosition(double angle) {
     encoder.setPosition(angle);
   }
 
   @Override
-  public void setServoPosition(double pulseWidth) {
-    servo.setPulseWidth((int)pulseWidth);
+  public void setServoPosition(double angle) {
+   if (inputs.rotations == angle){
+    servo.setPulseWidth((int)(1500 + (angle * 500))); // Assuming 1500 is the center position and 500 is the scaling factor
+   }
   }
 
   @Override
@@ -77,13 +86,5 @@ public class HoodIOServo implements HoodIO {
 
   
     
-@Override
-  public void updateInputs(HoodIOInputs inputs) {
-    inputs.encoderConnected = encoder.isConnected();
-    inputs.currentPulseWidth = servo.getPulseWidth();
-    inputs.rotations = encoder.getPosition().getValueAsDouble();
-  
-    
-    
-}
+
 }
