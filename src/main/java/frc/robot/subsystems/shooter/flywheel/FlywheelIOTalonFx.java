@@ -93,9 +93,12 @@ public class FlywheelIOTalonFx implements FlywheelIO {
   public void updateInputs(FlywheelIOInputs inputs) {
     inputs.motorConnected = motor.isConnected();
     inputs.followerMotorConnected = followerMotor.isConnected();
+
     inputs.requestedMechanismRotations = lastRequestedVelocity;
     inputs.actualMechanismRotations =
         motor.getVelocity().getValueAsDouble() / Constants.Flywheel.motorToMechanismRatio;
+    inputs.actualMechanismRotations =
+        followerMotor.getVelocity().getValueAsDouble() / Constants.Flywheel.motorToMechanismRatio;
     inputs.speedMotorRotations = motor.getVelocity().getValueAsDouble();
     inputs.appliedVolts = motor.getMotorVoltage().getValueAsDouble();
     inputs.motorTempCelsius = motor.getDeviceTemp().getValueAsDouble();
