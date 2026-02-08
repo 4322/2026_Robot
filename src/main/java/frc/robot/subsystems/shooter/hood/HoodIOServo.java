@@ -59,8 +59,20 @@ public class HoodIOServo implements HoodIO {
   }
 
   @Override
+  public void setServoPosition(double pulseWidth) {
+    servo.setPulseWidth((int)pulseWidth);
+  }
+
+  @Override
+  public void setServoVelocity(double pulseWidth) {
+   int currentRequested = ((int)pulseWidth * 500);
+   int velocity = 1500 + currentRequested ;
+   servo.setPulseWidth(velocity);
+  }
+
+  @Override
   public void homingPulseWidth() {
-    servo.setPulseWidth(1500); // Set to center position (1500 microseconds)
+    servo.setPulseWidth(2000);
   }
 
   
@@ -70,7 +82,8 @@ public class HoodIOServo implements HoodIO {
     inputs.encoderConnected = encoder.isConnected();
     inputs.currentPulseWidth = servo.getPulseWidth();
     inputs.rotations = encoder.getPosition().getValueAsDouble();
-  }
+  
     
     
+}
 }

@@ -35,10 +35,10 @@ public class Hood {
         }
       }
       case HOMING -> {
-        //io.setServoPosition(-10); // Move to hard stop
+       io.homingPulseWidth();
        
         homingTimer.start();
-        if (homingTimer.hasElapsed(0.4)) {
+        if (homingTimer.hasElapsed(0.4) || Math.abs(inputs.rotations) > 0.5) { 
           io.setEncoderPosition(0);
           homingTimer.reset();
           homingTimer.stop();

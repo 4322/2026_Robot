@@ -23,4 +23,10 @@ public interface HoodIO {
 
   public default void homingPulseWidth() {
   }
+
+    public default void setServoPosition(double pulseWidth) {
+    }
+
+    public default void setServoVelocity(double pulseWidth) {
+    }
 }
