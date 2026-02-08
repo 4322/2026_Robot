@@ -40,6 +40,7 @@ public class HoodIOServo implements HoodIO {
           BehaviorWhenDisabled.kDoNotSupplyPower); // Config "coast" mode by disabling channel
       channelConfig.pulseRange(1000, 1500, 2000); // Default PWM pulses recommended by REV
       config.apply(ChannelId.fromInt(i), channelConfig);
+      
     }
 
     servoHub.setBankPulsePeriod(Bank.kBank0_2, 20000); //TODO set this
@@ -52,7 +53,7 @@ public class HoodIOServo implements HoodIO {
 
     return servoHub.configure(config, ResetMode.kResetSafeParameters);
   }
-
+// - 315 & + 405 new limits for hood
   @Override
   public void updateInputs(HoodIOInputs inputs) {
     inputs.encoderConnected = encoder.isConnected();
@@ -67,7 +68,8 @@ public class HoodIOServo implements HoodIO {
 
   @Override
   public void setServoPosition(double angle) {
-   if (inputs.rotations == angle){
+   if ((inputs.rotations > angle + 0.10) || (inputs.rotations < (angle - 0.10))) { //I will make them constants dont attack if its about them not being constants
+     servo.setPulseWidth(1000); // Move to hard stop
     servo.setPulseWidth((int)(1500 + (angle * 500))); // Assuming 1500 is the center position and 500 is the scaling factor
    }
   }
