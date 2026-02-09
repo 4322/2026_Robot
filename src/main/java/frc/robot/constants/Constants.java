@@ -2,12 +2,9 @@ package frc.robot.constants;
 
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Transform3d;
-import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
-import edu.wpi.first.math.interpolation.InverseInterpolator;
 import edu.wpi.first.wpilibj.RobotBase;
 
 /**
@@ -185,7 +182,10 @@ public final class Constants {
   }
 
   public static class ShootingManager {
-    public static final InterpolatingTreeMap<Double, ShootingParameters> shooterMap = new InterpolatingTreeMap<Double, ShootingParameters>(null, null); // TODO not sure what to put for constructor
+    public static final InterpolatingTreeMap<Double, ShootingParameters> shooterMap =
+        new InterpolatingTreeMap<Double, ShootingParameters>(
+            null, null); // TODO not sure what to put for constructor
+
     static {
       // shooterMap.put()
     }
@@ -193,7 +193,7 @@ public final class Constants {
     // TODO figure these out
   }
 
-  public static class ShootingPositions {
+  public static class ShootingTargetPoses {
     // Right/left are determined as view from alliance driver station
 
     public static class Red {
@@ -212,6 +212,4 @@ public final class Constants {
       public static final Pose2d neutralLeftPose = new Pose2d();
     }
   }
-
-  
 }
