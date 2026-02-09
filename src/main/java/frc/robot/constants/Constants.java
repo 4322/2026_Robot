@@ -152,7 +152,7 @@ public final class Constants {
   }
 
   public static class Hood {
-    public static final int motorId = 12;
+    public static final int servoChannel = 12;
     public static final int encoderId = 1;
     public static final double gearRatio = 0.1;
     public static final double kS = 0;

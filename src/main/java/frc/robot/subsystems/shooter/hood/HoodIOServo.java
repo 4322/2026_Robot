@@ -21,31 +21,33 @@ public class HoodIOServo implements HoodIO {
   private ServoHubConfig config = new ServoHubConfig();
 
   public HoodIOServo() {
-    servoHub = new ServoHub(Constants.Hood.motorId);
-    servo = servoHub.getServoChannel(ChannelId.fromInt(Constants.Hood.motorId));
+    servoHub = new ServoHub(Constants.Hood.servoChannel);
+    servo = servoHub.getServoChannel(ChannelId.fromInt(Constants.Hood.servoChannel));
     encoder = new CANcoder(Constants.Hood.encoderId);
 
-    REVLibError configStatus = configServo();
+    configServo();
   }
 
-  private REVLibError configServo() {
-    for (int i = 0; i < 6; i++) {
-      ServoChannelConfig channelConfig = new ServoChannelConfig(ChannelId.fromInt(i));
+  private void configServo() {
+      servoHub.configure(config, ResetMode.kResetSafeParameters);
+      
+      ServoChannelConfig channelConfig = new ServoChannelConfig(ChannelId.fromInt(Constants.Hood.servoChannel));
       channelConfig.disableBehavior(
-          BehaviorWhenDisabled.kDoNotSupplyPower); // Config "coast" mode by disabling channel
+      BehaviorWhenDisabled.kDoNotSupplyPower); // Config "coast" mode by disabling channel
       channelConfig.pulseRange(1000, 1500, 2000); // Default PWM pulses recommended by REV
-      config.apply(ChannelId.fromInt(i), channelConfig);
-    }
+      config.apply(ChannelId.fromInt(Constants.Hood.servoChannel), channelConfig);
 
+    
     servoHub.setBankPulsePeriod(Bank.kBank0_2, 20000); // TODO set this
 
     servo.setPowered(true);
 
     // Enables "brake" mode on servos
     servo.setEnabled(true);
-
-    return servoHub.configure(config, ResetMode.kResetSafeParameters);
+ 
   }
+
+  
 
   @Override
   public void updateInputs(HoodIOInputs inputs) {
