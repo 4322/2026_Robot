@@ -8,15 +8,16 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
+import frc.robot.commands.ShooterCommands;
 import frc.robot.constants.Constants;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.drive.Drive;
@@ -27,6 +28,8 @@ import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import frc.robot.subsystems.led.LED;
 import frc.robot.subsystems.shooter.Shooter;
+import frc.robot.subsystems.shooter.Shooter.ShooterState;
+import frc.robot.subsystems.shooter.areaManager.AreaManager;
 import frc.robot.subsystems.shooter.flywheel.Flywheel;
 import frc.robot.subsystems.shooter.flywheel.FlywheelIO;
 import frc.robot.subsystems.shooter.flywheel.FlywheelIOTalonFx;
@@ -45,6 +48,7 @@ import frc.robot.subsystems.vision.visionGlobalPose.VisionGlobalPose;
 import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetection;
 import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetectionIO;
 import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetectionIOPhoton;
+import java.util.function.BooleanSupplier;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -72,9 +76,25 @@ public class RobotContainer {
 
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
+  public static ScoringManager operatorBoard = new ScoringManager(1, 2);
+
+  private enum ShootingCommands {
+    AUTO_SHOOT,
+    INHIBIT_AUTO_SHOOT,
+    AREA_INHIBIT_AUTO_SHOOT
+  }
+
+  private ShootingCommands lastShootingCommand = ShootingCommands.AUTO_SHOOT;
+  private ShootingCommands currentShootingCommand = ShootingCommands.AUTO_SHOOT;
+
+  private final Trigger inNonShootingArea;
 
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
+
+  // Boolean suppliers
+  private final BooleanSupplier toggle1 =
+      () -> operatorBoard.getLeftController().getRawButton(Constants.Control.toggle1ButtonNumber);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -227,6 +247,10 @@ public class RobotContainer {
     autoChooser.addOption(
         "Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
 
+    // Triggers
+    inNonShootingArea =
+        new Trigger(() -> !AreaManager.isShootingArea(drive.getPose().getTranslation()));
+
     // Configure the button bindings
     configureButtonBindings();
   }
@@ -246,29 +270,29 @@ public class RobotContainer {
             () -> -controller.getLeftX(),
             () -> -controller.getRightX()));
 
-    // Lock to 0° when A button is held
-    controller
-        .a()
-        .whileTrue(
-            DriveCommands.joystickDriveAtAngle(
-                drive,
-                () -> -controller.getLeftY(),
-                () -> -controller.getLeftX(),
-                () -> Rotation2d.kZero));
-
-    // Switch to X pattern when X button is pressed
-    controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
-
-    // Reset gyro to 0° when B button is pressed
-    controller
-        .b()
+    // Shooter command bindings
+    shooter.setDefaultCommand(ShooterCommands.autoShoot(shooter, drive));
+    new JoystickButton(operatorBoard.getLeftController(), Constants.Control.toggle1ButtonNumber)
+        .whileTrue(ShooterCommands.inhibitAutoShoot(shooter, toggle1))
         .onTrue(
-            Commands.runOnce(
+            new InstantCommand(() -> currentShootingCommand = ShootingCommands.INHIBIT_AUTO_SHOOT))
+        .onFalse(
+            new InstantCommand(() -> lastShootingCommand = ShootingCommands.INHIBIT_AUTO_SHOOT));
+
+    inNonShootingArea
+        .whileTrue(
+            ShooterCommands.areaInhibitAutoShoot(shooter, drive)
+                .onlyIf(
                     () ->
-                        drive.setPose(
-                            new Pose2d(drive.getPose().getTranslation(), Rotation2d.kZero)),
-                    drive)
-                .ignoringDisable(true));
+                        currentShootingCommand != ShootingCommands.INHIBIT_AUTO_SHOOT
+                            && shooter.getState() != ShooterState.UNWIND
+                            && !toggle1.getAsBoolean()))
+        .onTrue(
+            new InstantCommand(
+                () -> currentShootingCommand = ShootingCommands.AREA_INHIBIT_AUTO_SHOOT))
+        .onFalse(
+            new InstantCommand(
+                () -> lastShootingCommand = ShootingCommands.AREA_INHIBIT_AUTO_SHOOT));
   }
 
   /**

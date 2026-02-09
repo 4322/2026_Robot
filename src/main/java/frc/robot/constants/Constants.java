@@ -129,16 +129,26 @@ public final class Constants {
   }
 
   public static class Turret {
-    public static final int motorId = 13;
-    public static final double kS = 0;
-    public static final double kV = 0;
-    public static final double kP = 1;
-    public static final double kI = 0;
-    public static final double kD = 0;
+    public static final int motorId = 13; // TODO
+    public static final double kS = 0; // TODO
+    public static final double kV = 0; // TODO
+    public static final double kP = 1; // TODO
+    public static final double kI = 0; // TODO
+    public static final double kD = 0; // TODO
     public static final double statorCurrentLimit = 60; // TODO
-    public static final double supplyCurrentLimit = 40;
+    public static final double supplyCurrentLimit = 40; // TODO
     public static final InvertedValue motorInvert = InvertedValue.Clockwise_Positive;
     public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
+    public static final double zeroAzimuth = 0.0;
+    public static final double tolerance = 0.0; // TODO
+    public static final double physicalLimitDeg = 360.0; // TODO
+    public static final double physicalLimitToleranceDeg = 5.0; // TODO
+    public static final double CANCoderOneRatio = 3.0; // TODO
+    public static final double CANCoderTwoRatio = 8.0; // TODO
+    public static final double turretGearRatio = 90.0; // TODO
+    public static final double minLimitAzimuth = -360.0; // TODO
+    public static final double maxLimitAzimuth = 360.0; // TODO
+    public static final double offsetAzimuth = 90.0; // TODO
   }
 
   public static class Hood {
@@ -155,5 +165,9 @@ public final class Constants {
     public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
     public static final int idleDegrees = 0;
     public static final double homingThreshold = 0.1;
+  }
+
+  public static class Control {
+    public static final int toggle1ButtonNumber = 1; // TODO set these
   }
 }

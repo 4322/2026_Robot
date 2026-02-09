@@ -29,6 +29,9 @@ public class Shooter extends SubsystemBase {
   private Turret turret;
 
   private double targetAngle;
+  private double targetFlywheelSpeed;
+
+  private boolean unwindComplete = false;
 
   public Shooter(Flywheel flywheel, Hood hood, Spindexer spindexer, Tunnel tunnel, Turret turret) {
     this.flywheel = flywheel;
@@ -62,13 +65,16 @@ public class Shooter extends SubsystemBase {
             turret.preemptiveUnwind();
           }
         } // TODO hub enable check
+        // TODO unwindComplete = turret.isUnwound();
       }
       case PRESHOOT -> {
-        flywheel.requestShoot(Constants.Flywheel.shootingMechanismRPS); // TODO change to variable
+        flywheel.requestShoot(targetFlywheelSpeed);
         // TODO Turret request position here and hood
       }
       case SHOOT -> {
-        flywheel.requestShoot(Constants.Flywheel.shootingMechanismRPS); // TODO change to variable
+        calculateFiringSolution();
+        flywheel.requestShoot(targetFlywheelSpeed); // TODO change to variable
+        // TODO Turret request position here and hood
         tunnel.requestIndex(
             Constants.Tunnel.dynamicVelocity
                 ? Constants.Tunnel.dynamicVelocityPercent * flywheel.getVelocity()
@@ -91,11 +97,23 @@ public class Shooter extends SubsystemBase {
     Logger.recordOutput("Shooter/State", state.toString());
   }
 
-  public boolean isRewindComplete() {
-    return false; // TODO turret.isUnwound();
+  private void calculateFiringSolution() {
+    // TODO will use firing solution manager here
+    targetAngle = 0;
+    targetFlywheelSpeed = 0;
   }
 
+  public boolean isUnwindComplete() {
+    return unwindComplete;
+  }
+
+  // Turret is at maximum path of travel
   public boolean needsToUnwind() {
+    return false; // TODO
+  }
+
+  // Turret is at center position
+  public boolean isUnwinded() {
     return false; // TODO
   }
 
@@ -116,6 +134,13 @@ public class Shooter extends SubsystemBase {
   }
 
   public void setState(ShooterState newState) {
-    state = newState;
+    if (!(newState == state)) {
+      state = newState;
+      unwindComplete = false;
+    }
+  }
+
+  public ShooterState getState() {
+    return state;
   }
 }
