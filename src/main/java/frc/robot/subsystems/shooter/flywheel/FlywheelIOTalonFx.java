@@ -2,8 +2,10 @@ package frc.robot.subsystems.shooter.flywheel;
 
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.reduxrobotics.sensors.canandcolor.Canandcolor;
 import com.reduxrobotics.sensors.canandcolor.CanandcolorSettings;
@@ -14,6 +16,7 @@ import frc.robot.constants.Constants;
 public class FlywheelIOTalonFx implements FlywheelIO {
 
   private TalonFX motor;
+  private TalonFX followerMotor;
   private Canandcolor canandcolor = new Canandcolor(Constants.Flywheel.canandcolorId);
   private CanandcolorSettings canandcolorConfig = new CanandcolorSettings();
   private double lastRequestedVelocity = -1;
@@ -23,6 +26,7 @@ public class FlywheelIOTalonFx implements FlywheelIO {
 
   public FlywheelIOTalonFx() {
     motor = new TalonFX(Constants.Flywheel.motorId);
+    followerMotor = new TalonFX(Constants.Flywheel.followerMotorId);
 
     config.CurrentLimits.StatorCurrentLimit = Constants.Flywheel.statorCurrentLimit;
     config.CurrentLimits.SupplyCurrentLimit = Constants.Flywheel.supplyCurrentLimit;
@@ -37,6 +41,15 @@ public class FlywheelIOTalonFx implements FlywheelIO {
     config.Slot0.kD = Constants.Flywheel.kD;
 
     StatusCode configStatus = motor.getConfigurator().apply(config);
+    config.MotorOutput.Inverted =
+        Constants.Flywheel.motorInvert; // Invert follower motor opposite of main motor
+    StatusCode followerConfigStatus = followerMotor.getConfigurator().apply(config);
+    // Use a valid control to initialize the follower motor (set to zero velocity for now).
+    // Replace with a proper follower call if/when the correct Fo, nullllower constructor or API is
+    // available.
+    StatusCode followerMotorSetStatus =
+        followerMotor.setControl(new Follower(motor.getDeviceID(), MotorAlignmentValue.Opposed));
+
     canandcolorConfig.setColorFramePeriod(10); // Set color frame period to 10ms
 
     CanandcolorSettings canandcolorConfigStatus =
@@ -56,14 +69,36 @@ public class FlywheelIOTalonFx implements FlywheelIO {
           "Talon " + motor.getDeviceID() + " error (Flywheel): " + configStatus.getDescription(),
           false);
     }
+
+    if (followerConfigStatus != StatusCode.OK) {
+      DriverStation.reportError(
+          "Talon "
+              + followerMotor.getDeviceID()
+              + " error (Flywheel Follower): "
+              + followerConfigStatus.getDescription(),
+          false);
+    }
+
+    if (followerMotorSetStatus != StatusCode.OK) {
+      DriverStation.reportError(
+          "Talon "
+              + followerMotor.getDeviceID()
+              + " set error (Flywheel Follower): "
+              + followerMotorSetStatus.getDescription(),
+          false);
+    }
   }
 
   @Override
   public void updateInputs(FlywheelIOInputs inputs) {
     inputs.motorConnected = motor.isConnected();
+    inputs.followerMotorConnected = followerMotor.isConnected();
+
     inputs.requestedMechanismRotations = lastRequestedVelocity;
     inputs.actualMechanismRotations =
         motor.getVelocity().getValueAsDouble() / Constants.Flywheel.motorToMechanismRatio;
+    inputs.actualMechanismRotations =
+        followerMotor.getVelocity().getValueAsDouble() / Constants.Flywheel.motorToMechanismRatio;
     inputs.speedMotorRotations = motor.getVelocity().getValueAsDouble();
     inputs.appliedVolts = motor.getMotorVoltage().getValueAsDouble();
     inputs.motorTempCelsius = motor.getDeviceTemp().getValueAsDouble();
@@ -99,4 +134,9 @@ public class FlywheelIOTalonFx implements FlywheelIO {
   public void enableBrakeMode(boolean enable) {
     motor.setNeutralMode(enable ? NeutralModeValue.Brake : NeutralModeValue.Coast);
   }
+
+  public TalonFX getTalonFX() {
+    return motor;
+  }
+  
 }

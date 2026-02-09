@@ -105,6 +105,7 @@ public final class Constants {
 
   public static class Flywheel {
     public static final int motorId = 23;
+    public static final int followerMotorId = 24;
     public static final double statorCurrentLimit = 60; // TODO
     public static final double supplyCurrentLimit = 40;
     public static final InvertedValue motorInvert = InvertedValue.Clockwise_Positive;

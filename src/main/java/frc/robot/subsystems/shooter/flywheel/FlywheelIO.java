@@ -9,6 +9,7 @@ public interface FlywheelIO {
   @AutoLog
   public static class FlywheelIOInputs {
     public boolean motorConnected = false;
+    public boolean followerMotorConnected = false;
     public double requestedMechanismRotations = 0.0;
     public double actualMechanismRotations = 0.0;
     public double speedMotorRotations = 0.0;
