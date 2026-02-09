@@ -17,6 +17,9 @@ public class TurretIOTalonFx implements TurretIO {
   private TalonFXConfiguration config = new TalonFXConfiguration();
   private CANcoderConfiguration CANconfigOne = new CANcoderConfiguration();
   private CANcoderConfiguration CANconfigTwo = new CANcoderConfiguration();
+  private double CANCoderOneMod;
+  private double CANCoderTwoMod;
+  private double turretMod;
 
   public TurretIOTalonFx() {
     turretMotor = new TalonFX(Constants.Turret.motorId);
@@ -44,15 +47,33 @@ public class TurretIOTalonFx implements TurretIO {
               + configStatus.getDescription(),
           false);
     }
+    turretMotor.setPosition(getAzimuth());
   }
 
   @Override
   public void updateInputs(TurretIOInputs inputs) {
-    inputs.turretDegs = Units.rotationsToDegrees(turretMotor.getPosition().getValueAsDouble());
+    inputs.turretDegs = Units.rotationsToDegrees(getAzimuth()) - Constants.Turret.offsetAzimuth;
   }
 
   @Override
   public void setBrakeMode(boolean mode) {
     turretMotor.setNeutralMode(mode ? NeutralModeValue.Brake : NeutralModeValue.Coast);
+  }
+
+  public double getAzimuth() {
+    CANCoderOneMod =
+        CANcoderOne.getPosition().getValueAsDouble() % Constants.Turret.CANCoderOneRatio;
+    CANCoderTwoMod =
+        CANcoderTwo.getPosition().getValueAsDouble() % Constants.Turret.CANCoderTwoRatio;
+
+    turretMod = (((10 * CANCoderOneMod) + (36 * CANCoderTwoMod)) % 45);
+
+    return turretMod;
+  }
+
+  public void setAzimuth(double degs) {
+    double targetPosition =
+        Units.degreesToRotations(degs) * Constants.Turret.turretGearRatio
+            - Units.degreesToRotations(Constants.Turret.offsetAzimuth);
   }
 }
