@@ -3,6 +3,7 @@ package frc.robot.subsystems.shooter.turret;
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -75,5 +76,6 @@ public class TurretIOTalonFx implements TurretIO {
     double targetPosition =
         Units.degreesToRotations(degs) * Constants.Turret.turretGearRatio
             - Units.degreesToRotations(Constants.Turret.offsetAzimuth);
+    turretMotor.setControl(new MotionMagicVoltage(Units.degreesToRotations(degs)));
   }
 }
