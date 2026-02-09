@@ -154,6 +154,7 @@ public final class Constants {
   public static class Hood {
     public static final int motorId = 12;
     public static final int encoderId = 1;
+    public static final double gearRatio = 0.1;
     public static final double kS = 0;
     public static final double kV = 0;
     public static final double kP = 1;
@@ -165,6 +166,7 @@ public final class Constants {
     public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
     public static final int idleDegrees = 0;
     public static final double homingThreshold = 0.1;
+    public static final int homingVelocity = 2000;
   }
 
   public static class Control {

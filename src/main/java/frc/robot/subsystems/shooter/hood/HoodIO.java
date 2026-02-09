@@ -20,7 +20,7 @@ public interface HoodIO {
 
   public default void updateInputs(HoodIOInputs inputs) {}
 
-  public default void setEncoderPositionDEG(double angle) {}
+  public default void setEncoderHomed() {}
 
   public default void homingPulseWidth() {}
 
