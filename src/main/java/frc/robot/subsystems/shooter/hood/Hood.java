@@ -31,15 +31,15 @@ public class Hood {
   public Hood(HoodIO io) {
 
     this.io = io;
-    pidController.setTolerance(Constants.Hood.homingThreshold);
-    pidController.enableContinuousInput(-180, 180);
-    pidController.setPID(0.0, 0.0, 0.0);
+    pidController.setTolerance(Constants.Hood.hoodTolerance);
+    pidController.disableContinuousInput();
+    pidController.setPID(Constants.Hood.kP, Constants.Hood.kI, Constants.Hood.kD);
   }
 
   public void periodic() {
     io.updateInputs(inputs);
     Logger.processInputs("Hood", inputs);
-    Logger.recordOutput("meep", requestedAngleDEG);
+    Logger.recordOutput("MEEEP", requestedAngleDEG);
 
     switch (state) {
       case DISABLED -> {
@@ -50,10 +50,10 @@ public class Hood {
       case HOMING -> {
         io.setServoVelocity(Constants.Hood.homingVelocity);
         homingTimer.start();
-        if (Math.abs(inputs.rawRotations - pastEncoderPosition) < Constants.Hood.homingThreshold
+        if (Math.abs(inputs.rawRotations - pastEncoderPosition) < Constants.Hood.hoodTolerance
             || (Math.abs(inputs.rawRotations - pastEncoderPosition)
                 > -Constants.Hood
-                    .homingThreshold)) { // We want to check if the encoder is at 0, but if the
+                    .hoodTolerance)) { // We want to check if the encoder is at 0, but if the
           // encoder is disconnected it will always return 0, so we
           // also check if the timer has elapsed
           io.setEncoderHomed();

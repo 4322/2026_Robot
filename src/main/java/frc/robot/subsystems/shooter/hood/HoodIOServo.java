@@ -30,7 +30,7 @@ public class HoodIOServo implements HoodIO {
 
   private void configServo() {
       servoHub.configure(config, ResetMode.kResetSafeParameters);
-      
+  
       ServoChannelConfig channelConfig = new ServoChannelConfig(ChannelId.fromInt(Constants.Hood.servoChannel));
       channelConfig.disableBehavior(
       BehaviorWhenDisabled.kDoNotSupplyPower); // Config "coast" mode by disabling channel
@@ -44,7 +44,6 @@ public class HoodIOServo implements HoodIO {
 
     // Enables "brake" mode on servos
     servo.setEnabled(true);
- 
   }
 
   
