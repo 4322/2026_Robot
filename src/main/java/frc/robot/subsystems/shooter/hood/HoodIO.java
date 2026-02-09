@@ -20,15 +20,11 @@ public interface HoodIO {
 
   public default void updateInputs(HoodIOInputs inputs) {}
 
-   public default void setEncoderPositionDEG(double angle) {
-  }
+  public default void setEncoderPositionDEG(double angle) {}
 
-  public default void homingPulseWidth() {
-  }
+  public default void homingPulseWidth() {}
 
-    public default void stopAt(double pulseWidth) {
-    }
+  public default void stopAt(double pulseWidth) {}
 
-    public default void setServoVelocity(double pulseWidth) {
-    }
+  public default void setServoVelocity(double pulseWidth) {}
 }

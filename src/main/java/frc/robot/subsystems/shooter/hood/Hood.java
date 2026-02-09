@@ -4,16 +4,20 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.constants.Constants;
+import frc.robot.subsystems.drive.Drive;
+import frc.robot.subsystems.shooter.areaManager.AreaManager;
 import org.littletonrobotics.junction.Logger;
 
 public class Hood {
   private HoodIO io;
   private HoodIOInputsAutoLogged inputs = new HoodIOInputsAutoLogged();
+  private Drive drive;
   private double requestedAngle = 0.0;
   private Timer homingTimer = new Timer();
   private double pastEncoderPosition = 0.0;
   private boolean homed = false;
-  private PIDController pidController = new PIDController(Constants.Hood.kP, Constants.Hood.kI, Constants.Hood.kD);
+  private PIDController pidController =
+      new PIDController(Constants.Hood.kP, Constants.Hood.kI, Constants.Hood.kD);
 
   public enum HoodStates {
     DISABLED,
@@ -25,12 +29,17 @@ public class Hood {
   private HoodStates state = HoodStates.DISABLED;
 
   public Hood(HoodIO io) {
+
     this.io = io;
+    pidController.setTolerance(Constants.Hood.homingThreshold);
+    pidController.enableContinuousInput(-180, 180);
+    pidController.setPID(0.0, 0.0, 0.0);
   }
 
   public void periodic() {
     io.updateInputs(inputs);
     Logger.processInputs("Hood", inputs);
+    Logger.recordOutput("meep", requestedAngle);
 
     switch (state) {
       case DISABLED -> {
@@ -39,31 +48,38 @@ public class Hood {
         }
       }
       case HOMING -> {
-       io.homingPulseWidth();
-       
-        homingTimer.start();
-        if (Math.abs(inputs.rawRotations - pastEncoderPosition) < Constants.Hood.homingThreshold || (Math.abs(inputs.rawRotations - pastEncoderPosition) > -Constants.Hood.homingThreshold)) { // We want to check if the encoder is at 0, but if the encoder is disconnected it will always return 0, so we also check if the timer has elapsed
-          io.setEncoderPositionDEG(0);
+        io.homingPulseWidth();
 
+        homingTimer.start();
+        if (Math.abs(inputs.rawRotations - pastEncoderPosition) < Constants.Hood.homingThreshold
+            || (Math.abs(inputs.rawRotations - pastEncoderPosition)
+                > -Constants.Hood
+                    .homingThreshold)) { // We want to check if the encoder is at 0, but if the
+          // encoder is disconnected it will always return 0, so we
+          // also check if the timer has elapsed
+          io.setEncoderPositionDEG(0);
+          homed = true;
           homingTimer.reset();
           homingTimer.stop();
-          state = HoodStates.SHOOTING;
+          if (AreaManager.isShootingArea(drive.getPose().getTranslation())) {
+            state = HoodStates.SHOOTING;
+          } else {
+            state = HoodStates.IDLE;
+          }
+        } else {
+          pastEncoderPosition = inputs.rawRotations;
         }
-        else {
-            inputs.rawRotations = pastEncoderPosition;
-        }
-      
       }
       case IDLE -> {
         requestIdle();
       }
       case SHOOTING -> {
-      pidController.setSetpoint(requestedAngle);
-      if (pidController.atSetpoint()) {
-      io.stopAt(requestedAngle);
-      } else {
-        io.setServoVelocity((pidController.calculate(inputs.rawRotations)));
-      }
+        pidController.setSetpoint(requestedAngle);
+        if (pidController.atSetpoint() || pidController.equals(0)) {
+          io.stopAt(requestedAngle);
+        } else {
+          io.setServoVelocity((pidController.calculate(inputs.rawRotations, requestedAngle)));
+        }
       }
     }
 
@@ -72,7 +88,7 @@ public class Hood {
 
   public void requestIdle() {
     state = HoodStates.IDLE;
-   pidController.setSetpoint(Constants.Hood.idleDegrees);
+    pidController.setSetpoint(Constants.Hood.idleDegrees);
     requestedAngle = Constants.Hood.idleDegrees;
   }
 
@@ -81,7 +97,6 @@ public class Hood {
       state = HoodStates.SHOOTING;
       requestedAngle = angle;
     }
-    
   }
 
   public void rehome() {

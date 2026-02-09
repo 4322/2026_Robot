@@ -61,11 +61,10 @@ public class Shooter extends SubsystemBase {
           if (tunnel.isStopped()) {
             turret.preemptiveUnwind();
           }
-          
         } // TODO hub enable check
       }
       case PRESHOOT -> {
-        flywheel.requestShoot(Constants.Flywheel.shootingMechanismRPS); //TODO change to variable
+        flywheel.requestShoot(Constants.Flywheel.shootingMechanismRPS); // TODO change to variable
         // TODO Turret request position here and hood
       }
       case SHOOT -> {
