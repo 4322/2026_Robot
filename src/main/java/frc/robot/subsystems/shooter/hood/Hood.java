@@ -19,14 +19,9 @@ public class Hood {
   private PIDController pidController =
       new PIDController(Constants.Hood.kP, Constants.Hood.kI, Constants.Hood.kD);
 
-  public enum HoodStates {
-    DISABLED,
-    HOMING,
-    IDLE,
-    SHOOTING
-  }
 
-  private HoodStates state = HoodStates.DISABLED;
+
+  
 
   public Hood(HoodIO io) {
 
@@ -39,15 +34,10 @@ public class Hood {
   public void periodic() {
     io.updateInputs(inputs);
     Logger.processInputs("Hood", inputs);
-    Logger.recordOutput("MEEEP", requestedAngleDEG);
+    // Logger.recordOutput("Hood/state", state);
+    Logger.recordOutput("Hood/requestedDegree", requestedAngleDEG)
 
-    switch (state) {
-      case DISABLED -> {
-        if (DriverStation.isEnabled()) {
-          state = HoodStates.HOMING;
-        }
-      }
-      case HOMING -> {
+    if (homed){
         io.setServoVelocity(Constants.Hood.homingVelocity);
         homingTimer.start();
         if (Math.abs(inputs.rawRotations - pastEncoderPosition) < Constants.Hood.hoodTolerance
@@ -60,47 +50,29 @@ public class Hood {
           homed = true;
           homingTimer.reset();
           homingTimer.stop();
-          if (AreaManager.isShootingArea(drive.getPose().getTranslation())) {
-            state = HoodStates.SHOOTING;
-          } else {
-            state = HoodStates.IDLE;
-          }
         } else {
           pastEncoderPosition = inputs.rawRotations;
         }
-      }
-      case IDLE -> {
-        requestIdle();
-      }
-      case SHOOTING -> {
-        pidController.setSetpoint(requestedAngleDEG);
-        if (pidController.atSetpoint()) {
-          io.stopAt(requestedAngleDEG);
+    }
+
+    // Logger.recordOutput("Hood/State", state.toString());
+  }
+
+  
+  public void requestGoal(double angle) {
+       pidController.setSetpoint(angle);
+       io.setServoVelocity(angle);
+      requestedAngleDEG = angle;
+      if (pidController.atSetpoint()) {
+         io.setServoVelocity(0);
         } else {
           io.setServoVelocity((pidController.calculate(inputs.degrees, requestedAngleDEG)));
         }
-      }
-    }
-
-    Logger.recordOutput("Hood/State", state.toString());
-  }
-
-  public void requestIdle() {
-    state = HoodStates.IDLE;
-    pidController.setSetpoint(Constants.Hood.idleDegrees);
-    requestedAngleDEG = Constants.Hood.idleDegrees;
-  }
-
-  public void requestShoot(double angle) {
-    if (state != HoodStates.HOMING && state != HoodStates.DISABLED) {
-      state = HoodStates.SHOOTING;
-       pidController.setSetpoint(angle);
-      requestedAngleDEG = angle;
-    }
+    
   }
 
   public void rehome() {
-    state = HoodStates.HOMING;
+    homed = false;
   }
 
   public boolean isAtGoal() {
