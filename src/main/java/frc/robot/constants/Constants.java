@@ -2,7 +2,9 @@ package frc.robot.constants;
 
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
 import edu.wpi.first.wpilibj.RobotBase;
 
 /**
@@ -130,16 +132,26 @@ public final class Constants {
   }
 
   public static class Turret {
-    public static final int motorId = 13;
-    public static final double kS = 0;
-    public static final double kV = 0;
-    public static final double kP = 1;
-    public static final double kI = 0;
-    public static final double kD = 0;
+    public static final int motorId = 13; // TODO
+    public static final double kS = 0; // TODO
+    public static final double kV = 0; // TODO
+    public static final double kP = 1; // TODO
+    public static final double kI = 0; // TODO
+    public static final double kD = 0; // TODO
     public static final double statorCurrentLimit = 60; // TODO
-    public static final double supplyCurrentLimit = 40;
+    public static final double supplyCurrentLimit = 40; // TODO
     public static final InvertedValue motorInvert = InvertedValue.Clockwise_Positive;
     public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
+    public static final double zeroAzimuth = 0.0;
+    public static final double tolerance = 0.0; // TODO
+    public static final double physicalLimitDeg = 360.0; // TODO
+    public static final double physicalLimitToleranceDeg = 5.0; // TODO
+    public static final double CANCoderOneRatio = 3.0; // TODO
+    public static final double CANCoderTwoRatio = 8.0; // TODO
+    public static final double turretGearRatio = 90.0; // TODO
+    public static final double minLimitAzimuth = -360.0; // TODO
+    public static final double maxLimitAzimuth = 360.0; // TODO
+    public static final double offsetAzimuth = 90.0; // TODO
   }
 
   public static class Hood {
@@ -150,5 +162,61 @@ public final class Constants {
 
   public static class Control {
     public static final int toggle1ButtonNumber = 1; // TODO set these
+  }
+
+  public static class ShootingParameters {
+    private final double flywheelRPS;
+    private final double hoodAngleDeg;
+    private final double timeOfFlightSec;
+
+    public ShootingParameters(double flywheelRPS, double hoodAngleDeg, double timeOfFlightSec) {
+      this.flywheelRPS = flywheelRPS;
+      this.hoodAngleDeg = hoodAngleDeg;
+      this.timeOfFlightSec = timeOfFlightSec;
+    }
+
+    public double getFlywheelRPS() {
+      return flywheelRPS;
+    }
+
+    public double getHoodAngleDeg() {
+      return hoodAngleDeg;
+    }
+
+    public double getTimeOfFlightSec() {
+      return timeOfFlightSec;
+    }
+  }
+
+  public static class ShootingManager {
+    public static final InterpolatingTreeMap<Double, ShootingParameters> shooterMap =
+        new InterpolatingTreeMap<Double, ShootingParameters>(
+            null, null); // TODO not sure what to put for constructor
+
+    static {
+      // shooterMap.put()
+    }
+
+    // TODO figure these out
+  }
+
+  public static class ShootingTargetPoses {
+    // Right/left are determined as view from alliance driver station
+
+    public static class Red {
+      public static final Pose2d hubPose = new Pose2d();
+      public static final Pose2d allianceRightPose = new Pose2d();
+      public static final Pose2d allianceLeftPose = new Pose2d();
+      public static final Pose2d neutralRightPose = new Pose2d();
+      public static final Pose2d neutralLeftPose = new Pose2d();
+    }
+
+    public static class Blue {
+      public static final Pose2d hubPose = new Pose2d();
+      public static final Pose2d allianceRightPose = new Pose2d();
+      public static final Pose2d allianceLeftPose = new Pose2d();
+      public static final Pose2d neutralRightPose = new Pose2d();
+      public static final Pose2d neutralLeftPose = new Pose2d();
+    }
   }
 }
