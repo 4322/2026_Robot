@@ -35,7 +35,7 @@ public class Hood {
     io.updateInputs(inputs);
     Logger.processInputs("Hood", inputs);
     // Logger.recordOutput("Hood/state", state);
-    Logger.recordOutput("Hood/requestedDegree", requestedAngleDEG)
+    Logger.recordOutput("Hood/requestedDegree", requestedAngleDEG);
 
     if (homed){
         io.setServoVelocity(Constants.Hood.homingVelocity);
