@@ -11,10 +11,11 @@ import java.util.function.BooleanSupplier;
 
 public class ShooterCommand {
 
-  public static Command turretUnwind(Shooter shooter) {
-    BooleanSupplier rewindComplete = () -> shooter.isRewindComplete();
-    return Commands.run(() -> shooter.setState(ShooterState.UNWIND), shooter).until(rewindComplete);
-  }
+  //   public static Command turretUnwind(Shooter shooter) {
+  //  BooleanSupplier rewindComplete = () -> shooter.isRewindComplete();
+  //     return Commands.run(() -> shooter.setState(ShooterState.UNWIND),
+  // shooter).until(rewindComplete);
+  //   }
 
   public static Command shoot(Shooter shooter, BooleanSupplier end) {
     BooleanSupplier mechanismsAtSpeed = () -> shooter.isMechanismsAtSpeed();
