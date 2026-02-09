@@ -1,5 +1,6 @@
 package frc.robot.subsystems.shooter.hood;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.constants.Constants;
@@ -10,6 +11,9 @@ public class Hood {
   private HoodIOInputsAutoLogged inputs = new HoodIOInputsAutoLogged();
   private double requestedAngle = 0.0;
   private Timer homingTimer = new Timer();
+  private double pastEncoderPosition = 0.0;
+  private boolean homed = false;
+  private PIDController pidController = new PIDController(Constants.Hood.kP, Constants.Hood.kI, Constants.Hood.kD);
 
   public enum HoodStates {
     DISABLED,
@@ -38,18 +42,28 @@ public class Hood {
        io.homingPulseWidth();
        
         homingTimer.start();
-        if (homingTimer.hasElapsed(0.4) || Math.abs(inputs.rotations) > 0.5) { 
-          io.setEncoderPosition(0);
+        if (Math.abs(inputs.rawRotations - pastEncoderPosition) < Constants.Hood.homingThreshold || (Math.abs(inputs.rawRotations - pastEncoderPosition) > -Constants.Hood.homingThreshold)) { // We want to check if the encoder is at 0, but if the encoder is disconnected it will always return 0, so we also check if the timer has elapsed
+          io.setEncoderPositionDEG(0);
+
           homingTimer.reset();
           homingTimer.stop();
           state = HoodStates.SHOOTING;
         }
+        else {
+            inputs.rawRotations = pastEncoderPosition;
+        }
+      
       }
       case IDLE -> {
         requestIdle();
       }
       case SHOOTING -> {
-
+      pidController.setSetpoint(requestedAngle);
+      if (pidController.atSetpoint()) {
+      io.stopAt(requestedAngle);
+      } else {
+        io.setServoVelocity((pidController.calculate(inputs.rawRotations)));
+      }
       }
     }
 
@@ -58,7 +72,7 @@ public class Hood {
 
   public void requestIdle() {
     state = HoodStates.IDLE;
-    // io.setServoPosition(Constants.Hood.idleDegrees);
+   pidController.setSetpoint(Constants.Hood.idleDegrees);
     requestedAngle = Constants.Hood.idleDegrees;
   }
 
@@ -75,6 +89,10 @@ public class Hood {
   }
 
   public boolean isAtGoal() {
-    return Math.abs(inputs.rotations - requestedAngle) < 1.0;
+    return Math.abs(inputs.rawRotations - requestedAngle) < 1.0;
+  }
+
+  public boolean isHomed() {
+    return homed;
   }
 }

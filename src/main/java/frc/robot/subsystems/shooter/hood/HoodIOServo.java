@@ -12,9 +12,11 @@ import com.revrobotics.servohub.config.ServoChannelConfig;
 import com.revrobotics.servohub.config.ServoChannelConfig.BehaviorWhenDisabled;
 import com.revrobotics.servohub.config.ServoHubConfig;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.util.Color;
 import frc.robot.constants.Constants;
-import frc.robot.subsystems.shooter.flywheel.FlywheelIO.FlywheelIOInputs;
+
+import frc.robot.subsystems.shooter.hood.*;
 
 public class HoodIOServo implements HoodIO {
     private ServoHub servoHub;
@@ -22,6 +24,7 @@ public class HoodIOServo implements HoodIO {
     private CANcoder encoder;
 
     private ServoHubConfig config = new ServoHubConfig();
+
 
     public HoodIOServo() {
         servoHub = new ServoHub(Constants.Hood.motorId);
@@ -40,7 +43,8 @@ public class HoodIOServo implements HoodIO {
           BehaviorWhenDisabled.kDoNotSupplyPower); // Config "coast" mode by disabling channel
       channelConfig.pulseRange(1000, 1500, 2000); // Default PWM pulses recommended by REV
       config.apply(ChannelId.fromInt(i), channelConfig);
-      
+
+    
     }
 
     servoHub.setBankPulsePeriod(Bank.kBank0_2, 20000); //TODO set this
@@ -53,24 +57,30 @@ public class HoodIOServo implements HoodIO {
 
     return servoHub.configure(config, ResetMode.kResetSafeParameters);
   }
-// - 315 & + 405 new limits for hood
+
   @Override
   public void updateInputs(HoodIOInputs inputs) {
     inputs.encoderConnected = encoder.isConnected();
     inputs.currentPulseWidth = servo.getPulseWidth();
-    inputs.rotations = encoder.getPosition().getValueAsDouble(); 
+    inputs.rawRotations = encoder.getPosition().getValueAsDouble(); // Convert degrees to rotations
+    
+    inputs.degrees = inputs.rawRotations * 360.0; // Convert rotations to degrees
+    
+    inputs.degrees = inputs.rawRotations * 360.0; // Convert rotations to degrees
     inputs.encoderRotationsPerInfo = encoder.getVelocity().getValueAsDouble();
     inputs.servoEnabled = servo.isEnabled(); // Assuming a threshold of 0.1A to determine if the servo is powered
     inputs.appliedVolts = servo.getCurrent(); // Get the voltage applied to the servo
-    
-  public void setEncoderPosition(double angle) {
-    encoder.setPosition(angle);
+  }
+  
+  @Override
+  public void setEncoderPositionDEG(double degrees) {
+    encoder.setPosition(degrees / 360.0);
   }
 
-  @Override
-  public void setServoPosition(double angle) {
+    @Override
+  public void stopAt(double angle) {
    if ((inputs.rotations > angle + 0.10) || (inputs.rotations < (angle - 0.10))) { //I will make them constants dont attack if its about them not being constants
-     servo.setPulseWidth(1000); // Move to hard stop
+     servo.setPulseWidth(1500); // Move to hard stop
     servo.setPulseWidth((int)(1500 + (angle * 500))); // Assuming 1500 is the center position and 500 is the scaling factor
    }
   }
@@ -80,6 +90,7 @@ public class HoodIOServo implements HoodIO {
    int currentRequested = ((int)pulseWidth * 500);
    int velocity = 1500 + currentRequested ;
    servo.setPulseWidth(velocity);
+
   }
 
   @Override
