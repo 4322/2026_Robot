@@ -74,7 +74,7 @@ public class Hood {
       }
       case SHOOTING -> {
         pidController.setSetpoint(requestedAngleDEG);
-        if (pidController.atSetpoint() || pidController.equals(0)) {
+        if (pidController.atSetpoint()) {
           io.stopAt(requestedAngleDEG);
         } else {
           io.setServoVelocity((pidController.calculate(inputs.degrees, requestedAngleDEG)));
@@ -94,6 +94,7 @@ public class Hood {
   public void requestShoot(double angle) {
     if (state != HoodStates.HOMING && state != HoodStates.DISABLED) {
       state = HoodStates.SHOOTING;
+       pidController.setSetpoint(angle);
       requestedAngleDEG = angle;
     }
   }
@@ -103,7 +104,7 @@ public class Hood {
   }
 
   public boolean isAtGoal() {
-    return Math.abs(inputs.rawRotations - requestedAngleDEG) < 1.0;
+    return pidController.atSetpoint();
   }
 
   public boolean isHomed() {
