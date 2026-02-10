@@ -139,7 +139,7 @@ public final class Constants {
     public static final double supplyCurrentLimit = 40; // TODO
     public static final InvertedValue motorInvert = InvertedValue.Clockwise_Positive;
     public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
-    public static final double goalToleranceDeg = 5.0; // TODO
+    public static final double goalToleranceDeg = 1.0; // TODO
     public static final double CANCoderOneRatio = 3.0; // TODO
     public static final double CANCoderTwoRatio = 8.0; // TODO
     public static final double turretGearRatio = 90.0; // TODO

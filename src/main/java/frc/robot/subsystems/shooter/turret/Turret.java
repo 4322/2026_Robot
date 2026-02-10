@@ -14,6 +14,7 @@ public class Turret {
 
   public enum turretState {
     DISABLED,
+    UNWIND,
     SET_TURRET_ANGLE
   }
 
@@ -35,6 +36,9 @@ public class Turret {
         switch (state) {
           case DISABLED -> {
             break;
+          }
+          case UNWIND -> {
+            io.setAngle(Constants.Turret.midPointPhysicalDeg);
           }
           case SET_TURRET_ANGLE -> {
             if (desiredDeg != null) {
@@ -58,8 +62,8 @@ public class Turret {
     // Goes to side it favors, and if curr angle + desi big than max, set to max, but when safe
     // unwind
     if (desiredDeg != null) {
-      this.turretAzimuth = angle;
-      io.setAzimuth(turretAzimuth);
+      this.turretAzimuth = angle % 360;
+      Logger.recordOutput("Turret/turretAzimuth", turretAzimuth);
       if (inputs.turretDegs >= Constants.Turret.midPointPhysicalDeg) {
         if (angle < inputs.turretDegs - 180) {
           desiredDeg = angle + 360;
@@ -92,12 +96,12 @@ public class Turret {
     return MathUtil.isNear(desiredDeg, inputs.turretDegs, Constants.Turret.goalToleranceDeg);
   }
 
-  public void setTurretDeg(Double deg) {
+  public void setTurretAngleState() {
     state = turretState.SET_TURRET_ANGLE;
   }
 
-  public void preemptiveUnwind() {
-    desiredDeg = Constants.Turret.midPointPhysicalDeg;
+  public void unwind() {
+    state = turretState.UNWIND;
   }
 
   public void setBrakeMode(Boolean mode) {
