@@ -53,7 +53,8 @@ public class TurretIOTalonFx implements TurretIO {
 
   @Override
   public void updateInputs(TurretIOInputs inputs) {
-    inputs.turretDegs = Units.rotationsToDegrees(getAzimuth()) - Constants.Turret.offsetAzimuth;
+    inputs.turretDegs =
+        Units.rotationsToDegrees(getAzimuth()) - Constants.Turret.midPointPhysicalDeg;
   }
 
   @Override
@@ -75,7 +76,7 @@ public class TurretIOTalonFx implements TurretIO {
   public void setAzimuth(double degs) {
     double targetPosition =
         Units.degreesToRotations(degs) * Constants.Turret.turretGearRatio
-            - Units.degreesToRotations(Constants.Turret.offsetAzimuth);
+            - Units.degreesToRotations(Constants.Turret.midPointPhysicalDeg);
     turretMotor.setControl(new MotionMagicVoltage(Units.degreesToRotations(degs)));
   }
 }

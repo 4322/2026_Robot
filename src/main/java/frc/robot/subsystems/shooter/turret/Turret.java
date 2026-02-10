@@ -6,8 +6,8 @@ import frc.robot.constants.Constants;
 public class Turret {
   private TurretIO io;
   private TurretIOInputsAutoLogged inputs = new TurretIOInputsAutoLogged();
-  private Double desiredAzimuth = 0.0;
-  private boolean safeToUnwind = true;
+  private Double desiredDeg = 0.0;
+  private boolean safeToUnwind = false;
 
   public enum turretState {
     DISABLED,
@@ -39,33 +39,29 @@ public class Turret {
   }
 
   public void setAngle(Double angle, boolean safeToUnwind) {
-    this.desiredAzimuth = angle;
+    this.desiredDeg = angle;
+    this.safeToUnwind = safeToUnwind;
     // Rewinds when angle is null, and is safe to unwind
     // Goes to side it favors, and if curr angle + desi big than max, set to max, but when safe
     // unwind
-
+    if (MathUtil.isNear(angle, inputs.turretDegs, 180)) {}
   }
 
-  public boolean safeToUnwind() {
-    if (this.desiredAzimuth == null
-        || (inputs.turretDegs >= Constants.Turret.maxRequestAzimuth
-            || inputs.turretDegs <= Constants.Turret.minRequestAzimuth)) {
-      return true;
-    } else {
-      return false;
-    }
+  public boolean needsToUnwind() {
+    return (inputs.turretDegs >= Constants.Turret.maxUnwindLimitDeg
+        || inputs.turretDegs <= Constants.Turret.minPhysicalLimitDeg);
   }
 
   public boolean isAtGoal() {
-    return MathUtil.isNear(desiredAzimuth, inputs.turretDegs, Constants.Turret.tolerance);
+    return MathUtil.isNear(desiredDeg, inputs.turretDegs, Constants.Turret.goalToleranceDeg);
   }
 
-  public void setTurretAzimuth() {
+  public void setTurretDeg(Double deg) {
     state = turretState.SET_TURRET_ANGLE;
   }
 
   public void preemptiveUnwind() {
-    desiredAzimuth = Constants.Turret.offsetAzimuth;
+    desiredDeg = Constants.Turret.midPointPhysicalDeg;
   }
 
   public void setBrakeMode(Boolean mode) {}

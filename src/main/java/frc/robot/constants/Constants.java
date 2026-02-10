@@ -139,17 +139,17 @@ public final class Constants {
     public static final double supplyCurrentLimit = 40; // TODO
     public static final InvertedValue motorInvert = InvertedValue.Clockwise_Positive;
     public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
-    public static final double tolerance = 0.0; // TODO
-    public static final double physicalLimitDeg = 360.0; // TODO
-    public static final double physicalLimitToleranceDeg = 5.0; // TODO
+    public static final double goalToleranceDeg = 5.0; // TODO
     public static final double CANCoderOneRatio = 3.0; // TODO
     public static final double CANCoderTwoRatio = 8.0; // TODO
     public static final double turretGearRatio = 90.0; // TODO
-    public static final double minLimitAzimuth = -360.0; // TODO
-    public static final double maxLimitAzimuth = 360.0; // TODO
-    public static final double offsetAzimuth = minLimitAzimuth + maxLimitAzimuth / 2.0; // TODO
-    public static final double minRequestAzimuth = minLimitAzimuth + 180.0; // TODO
-    public static final double maxRequestAzimuth = maxLimitAzimuth - 180.0; // TODO
+    public static final double minPhysicalLimitDeg = -360.0; // TODO
+    public static final double maxPhysicalLimitDeg = 360.0; // TODO
+    public static final double midPointPhysicalDeg =
+        (minPhysicalLimitDeg + maxPhysicalLimitDeg) / 2.0;
+    public static final double unwindToleranceDeg = 10.0; // TODO
+    public static final double minUnwindLimitDeg = minPhysicalLimitDeg + unwindToleranceDeg; // TODO
+    public static final double maxUnwindLimitDeg = maxPhysicalLimitDeg - unwindToleranceDeg; // TODO
   }
 
   public static class Hood {
