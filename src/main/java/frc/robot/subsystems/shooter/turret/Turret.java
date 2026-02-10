@@ -96,5 +96,7 @@ public class Turret {
     desiredDeg = Constants.Turret.midPointPhysicalDeg;
   }
 
-  public void setBrakeMode(Boolean mode) {}
+  public void setBrakeMode(Boolean mode) {
+    io.setBrakeMode(mode);
+  }
 }
