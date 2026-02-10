@@ -54,7 +54,7 @@ public class Shooter extends SubsystemBase {
         spindexer.requestIdle();
         if (spindexer.isStopped()) {
           tunnel.requestIdle();
-          flywheel.requestIdle();
+          flywheel.requestGoal(Constants.Flywheel.idleMechanismRPS);
         }
       }
       case UNWIND -> {
@@ -68,12 +68,12 @@ public class Shooter extends SubsystemBase {
         // TODO unwindComplete = turret.isUnwound();
       }
       case PRESHOOT -> {
-        flywheel.requestShoot(targetFlywheelSpeed);
+        flywheel.requestGoal(targetFlywheelSpeed);
         // TODO Turret request position here and hood
       }
       case SHOOT -> {
         calculateFiringSolution();
-        flywheel.requestShoot(targetFlywheelSpeed); // TODO change to variable
+        flywheel.requestGoal(targetFlywheelSpeed); // TODO change to variable
         // TODO Turret request position here and hood
         tunnel.requestIndex(
             Constants.Tunnel.dynamicVelocity

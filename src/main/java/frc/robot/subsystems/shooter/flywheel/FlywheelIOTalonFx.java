@@ -41,9 +41,7 @@ public class FlywheelIOTalonFx implements FlywheelIO {
     config.Slot0.kD = Constants.Flywheel.kD;
 
     StatusCode configStatus = motor.getConfigurator().apply(config);
-    config.MotorOutput.Inverted =
-        Constants.Flywheel.motorInvert; // Invert follower motor opposite of main motor
-    StatusCode followerConfigStatus = followerMotor.getConfigurator().apply(config);
+
     // Use a valid control to initialize the follower motor (set to zero velocity for now).
     // Replace with a proper follower call if/when the correct Fo, nullllower constructor or API is
     // available.
@@ -70,15 +68,6 @@ public class FlywheelIOTalonFx implements FlywheelIO {
           false);
     }
 
-    if (followerConfigStatus != StatusCode.OK) {
-      DriverStation.reportError(
-          "Talon "
-              + followerMotor.getDeviceID()
-              + " error (Flywheel Follower): "
-              + followerConfigStatus.getDescription(),
-          false);
-    }
-
     if (followerMotorSetStatus != StatusCode.OK) {
       DriverStation.reportError(
           "Talon "
@@ -94,14 +83,14 @@ public class FlywheelIOTalonFx implements FlywheelIO {
     inputs.motorConnected = motor.isConnected();
     inputs.followerMotorConnected = followerMotor.isConnected();
 
-    inputs.requestedMechanismRotations = lastRequestedVelocity;
-    
-    inputs.actualMechanismRotations =
+    inputs.requestedMechanismRPS = lastRequestedVelocity;
+
+    inputs.MechanismRPS =
         motor.getVelocity().getValueAsDouble() / Constants.Flywheel.motorToMechanismRatio;
-    inputs.actualMechanismRotations =
+    inputs.follwerMechanismRPS =
         followerMotor.getVelocity().getValueAsDouble() / Constants.Flywheel.motorToMechanismRatio;
 
-    inputs.speedMotorRotations = motor.getVelocity().getValueAsDouble();
+    inputs.speedMotorRPS = motor.getVelocity().getValueAsDouble();
     inputs.appliedVolts = motor.getMotorVoltage().getValueAsDouble();
     inputs.motorTempCelsius = motor.getDeviceTemp().getValueAsDouble();
     inputs.followerMotorTempCelsius = followerMotor.getDeviceTemp().getValueAsDouble();
@@ -119,7 +108,7 @@ public class FlywheelIOTalonFx implements FlywheelIO {
   }
 
   @Override
-  public void setTargetMechanismRotations(double speedMechanismRotations) {
+  public void setTargetMechanismRPS(double speedMechanismRotations) {
     if (speedMechanismRotations != lastRequestedVelocity) {
       motor.setControl(
           velocityRequest
@@ -144,5 +133,4 @@ public class FlywheelIOTalonFx implements FlywheelIO {
   public TalonFX getTalonFX() {
     return motor;
   }
-  
 }

@@ -1,6 +1,5 @@
 package frc.robot.subsystems.shooter.flywheel;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.constants.Constants;
 import org.littletonrobotics.junction.Logger;
 
@@ -11,7 +10,6 @@ public class Flywheel {
   private double ballsShot = 0;
   private boolean fuelDetected = false;
 
-
   public Flywheel(FlywheelIO io) {
     this.io = io;
   }
@@ -20,7 +18,6 @@ public class Flywheel {
     io.updateInputs(inputs);
     Logger.processInputs("Flywheel", inputs);
     Logger.recordOutput("Flywheel/BallsShot", ballsShot);
-    
 
     if (inputs.fuelDetected && !fuelDetected) {
       ballsShot++;
@@ -28,19 +25,11 @@ public class Flywheel {
     } else if (!inputs.fuelDetected) {
       fuelDetected = false;
     }
-
-    
-      
-    
-
-
   }
 
- 
-
   public void requestGoal(double velocity) {
-    io.setTargetMechanismRotations(velocity);
-    inputs.requestedMechanismRotations = velocity;
+    io.setTargetMechanismRPS(velocity);
+    inputs.requestedMechanismRPS = velocity;
   }
 
   public void enableBrakeMode(boolean enable) {
@@ -52,11 +41,11 @@ public class Flywheel {
   }
 
   public boolean atTargetVelocity() {
-    return Math.abs(inputs.actualMechanismRotations - inputs.requestedMechanismRotations)
+    return Math.abs(inputs.MechanismRPS - inputs.requestedMechanismRPS)
         < Constants.Flywheel.allowedVelocityErrorMechanismRPS;
   }
 
   public double getVelocity() {
-    return inputs.actualMechanismRotations;
+    return inputs.MechanismRPS;
   }
 }
