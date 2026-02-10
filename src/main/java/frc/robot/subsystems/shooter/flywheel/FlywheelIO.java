@@ -11,12 +11,18 @@ public interface FlywheelIO {
     public boolean motorConnected = false;
     public boolean followerMotorConnected = false;
     public double requestedMechanismRotations = 0.0;
+    public double followerRequestedMechanismRotations = 0.0;
     public double actualMechanismRotations = 0.0;
+   
     public double speedMotorRotations = 0.0;
+    public double followerspeedMotorRotations = 0.0;
     public double appliedVolts = 0.0;
+    public double followerAppliedVolts = 0.0;
     public double motorTempCelsius = 0.0;
     public double busCurrentAmps = 0.0;
-
+     public double followerMotorTempCelsius = 0.0;
+    public double followerBusCurrentAmps = 0.0;
+    
     public boolean sensorConnected = false;
     public Color color = new Color(0, 0, 0);
     public double proximity = 0.0;
