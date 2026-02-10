@@ -13,7 +13,7 @@ public class Flywheel {
 
   public enum FlywheelStates {
     DISABLED,
-    IDLE,
+    ENABLED,
     SHOOTING
   }
 
@@ -37,26 +37,22 @@ public class Flywheel {
     switch (state) {
       case DISABLED -> {
         if (DriverStation.isEnabled()) {
-          state = FlywheelStates.IDLE;
+          state = FlywheelStates.ENABLED;
         }
       }
-      case IDLE -> {
-        io.setTargetMechanismRotations(Constants.Flywheel.idleMechanismRPS);
+      case ENABLED -> {
+
       }
-      case SHOOTING -> {
-        io.setTargetMechanismRotations(requestedMechanismRPS);
-      }
+      
     }
 
     Logger.recordOutput("Flywheel/State", state.toString());
   }
 
-  public void requestIdle() {
-    state = FlywheelStates.IDLE;
-  }
+ 
 
-  public void requestShoot(double velocity) {
-    state = FlywheelStates.SHOOTING;
+  public void requestGoal(double velocity) {
+    io.setTargetMechanismRotations(velocity);
     requestedMechanismRPS = velocity;
   }
 
