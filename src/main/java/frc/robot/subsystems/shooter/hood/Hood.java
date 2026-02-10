@@ -11,6 +11,7 @@ public class Hood {
   private double requestedAngleDEG = 0.0;
   private Timer homingTimer = new Timer();
   private double pastEncoderPosition = 0.0;
+  private double PIDCalculate;
   private boolean homed = false;
   private PIDController pidController =
       new PIDController(Constants.Hood.kP, Constants.Hood.kI, Constants.Hood.kD);
@@ -27,11 +28,12 @@ public class Hood {
     io.updateInputs(inputs);
     Logger.processInputs("Hood", inputs);
     Logger.recordOutput("Hood/requestedDegree", requestedAngleDEG);
+    Logger.recordOutput("Hood/requestedServoVelocity", PIDCalculate);
 
     if (!homed) {
       io.setServoVelocity(Constants.Hood.homingVelocity);
       homingTimer.start();
-      if (homingTimer.hasElapsed(0.04) && Math.abs(inputs.encoderRPS) < Constants.Hood.hoodTolerance) { 
+      if (homingTimer.hasElapsed(0.04) && Math.abs(inputs.encoderRPS) < Constants.Hood.homingVelocityThreshold) { 
         io.setEncoderHomed();
               io.setServoVelocity(Constants.Hood.idleVelocity);
         homed = true;
@@ -46,13 +48,13 @@ public class Hood {
 
   public void requestGoal(double angle) {
     pidController.setSetpoint(angle);
-    io.setServoVelocity(angle);
     requestedAngleDEG = angle;
     if (pidController.atSetpoint()) {
       io.setServoVelocity(0);
     } else {
       io.setServoVelocity((pidController.calculate(inputs.degrees, requestedAngleDEG)));
     }
+    PIDCalculate = pidController.calculate(inputs.degrees, requestedAngleDEG);
   }
 
   public void rehome() {

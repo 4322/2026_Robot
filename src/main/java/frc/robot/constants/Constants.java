@@ -169,6 +169,7 @@ public final class Constants {
     public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
     public static final int idleVelocity = 0;
     public static final double hoodTolerance = 0.1;
+    public static final dobule homingVelocityThreshold = 1;
     public static final double homingVelocity = -0.2;
   }
 
