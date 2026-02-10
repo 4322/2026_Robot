@@ -11,13 +11,6 @@ public class Flywheel {
   private double ballsShot = 0;
   private boolean fuelDetected = false;
 
-  public enum FlywheelStates {
-    DISABLED,
-    ENABLED,
-    SHOOTING
-  }
-
-  private FlywheelStates state = FlywheelStates.DISABLED;
 
   public Flywheel(FlywheelIO io) {
     this.io = io;
@@ -26,7 +19,7 @@ public class Flywheel {
   public void periodic() {
     io.updateInputs(inputs);
     Logger.processInputs("Flywheel", inputs);
-    Logger.recordOutput("Flywheel/BallsShot", ballsShot)
+    Logger.recordOutput("Flywheel/BallsShot", ballsShot);
     
 
     if (inputs.fuelDetected && !fuelDetected) {
@@ -40,7 +33,7 @@ public class Flywheel {
       
     
 
-    Logger.recordOutput("Flywheel/State", state.toString());
+
   }
 
  
