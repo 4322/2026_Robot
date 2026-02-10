@@ -31,17 +31,14 @@ public class Hood {
     if (!homed) {
       io.setServoVelocity(Constants.Hood.homingVelocity);
       homingTimer.start();
-      if (Math.abs(inputs.rawRotations - pastEncoderPosition) < Constants.Hood.hoodTolerance
-          || (Math.abs(inputs.rawRotations - pastEncoderPosition)
-              > -Constants.Hood
-                  .hoodTolerance)) { // We want to check if the encoder is at 0, but if the
-        // encoder is disconnected it will always return 0, so we
-        // also check if the timer has elapsed
+      if (homingTimer.hasElapsed(0.04) && Math.abs(inputs.encoderRPS) < Constants.Hood.hoodTolerance) { 
         io.setEncoderHomed();
+              io.setServoVelocity(Constants.Hood.idleVelocity);
         homed = true;
         homingTimer.reset();
         homingTimer.stop();
       } else {
+        homingTimer.reset();
         pastEncoderPosition = inputs.rawRotations;
       }
     }

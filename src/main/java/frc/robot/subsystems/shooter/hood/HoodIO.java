@@ -13,7 +13,7 @@ public interface HoodIO {
     public double busCurrentAmps = 0.0;
     public boolean encoderConnected = false;
     public double encoderRotations = 0.0;
-    public double encoderRotationsPerInfo = 0.0;
+    public double encoderRPS = 0.0;
     public boolean servoEnabled = false;
     public double degrees = 0.0;
   }

@@ -167,9 +167,9 @@ public final class Constants {
     public static final double supplyCurrentLimit = 40;
     public static final InvertedValue motorInvert = InvertedValue.Clockwise_Positive;
     public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
-    public static final int idleDegrees = 0;
+    public static final int idleVelocity = 0;
     public static final double hoodTolerance = 0.1;
-    public static final int homingVelocity = 2000;
+    public static final double homingVelocity = -0.2;
   }
 
   public static class Control {
