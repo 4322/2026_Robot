@@ -21,6 +21,7 @@ public class TurretIOTalonFx implements TurretIO {
   private double CANCoderOneMod;
   private double CANCoderTwoMod;
   private double turretMod;
+  private double turretAzimuth;
 
   public TurretIOTalonFx() {
     turretMotor = new TalonFX(Constants.Turret.motorId);
@@ -53,8 +54,8 @@ public class TurretIOTalonFx implements TurretIO {
 
   @Override
   public void updateInputs(TurretIOInputs inputs) {
-    inputs.turretDegs =
-        Units.rotationsToDegrees(getAzimuth()) - Constants.Turret.midPointPhysicalDeg;
+    inputs.turretAzimuth = turretAzimuth;
+    inputs.turretDegs = Units.rotationsToDegrees(getAzimuth()) - Constants.Turret.midPointPhysicalDeg;
   }
 
   @Override
@@ -73,10 +74,14 @@ public class TurretIOTalonFx implements TurretIO {
     return turretMod;
   }
 
-  public void setAzimuth(double degs) {
+  public void setAngle(double degs) {
     double targetPosition =
         Units.degreesToRotations(degs) * Constants.Turret.turretGearRatio
             - Units.degreesToRotations(Constants.Turret.midPointPhysicalDeg);
     turretMotor.setControl(new MotionMagicVoltage(Units.degreesToRotations(degs)));
+  }
+  @Override
+  public void setAzimuth(double getAzimuth){
+    this.turretAzimuth = getAzimuth;
   }
 }

@@ -7,7 +7,9 @@ public class Turret {
   private TurretIO io;
   private TurretIOInputsAutoLogged inputs = new TurretIOInputsAutoLogged();
   private Double desiredDeg = 0.0;
+  private double lastDesiredDeg = 0.0;
   private boolean safeToUnwind = false;
+  private double turretAzimuth = 0.0;
 
   public enum turretState {
     DISABLED,
@@ -31,7 +33,14 @@ public class Turret {
             break;
           }
           case SET_TURRET_ANGLE -> {
-            // TODO
+            if (desiredDeg != null) {
+              lastDesiredDeg = desiredDeg;
+              io.setAngle(desiredDeg);
+            } else if(desiredDeg == null && safeToUnwind) {
+              io.setAngle(Constants.Turret.midPointPhysicalDeg);
+            } else{
+              io.setAngle(lastDesiredDeg);
+            }
           }
         }
       }
@@ -44,12 +53,35 @@ public class Turret {
     // Rewinds when angle is null, and is safe to unwind
     // Goes to side it favors, and if curr angle + desi big than max, set to max, but when safe
     // unwind
-    if (MathUtil.isNear(angle, inputs.turretDegs, 180)) {}
+    if (desiredDeg != null) {
+      this.turretAzimuth = angle;
+      io.setAzimuth(turretAzimuth);
+      if (inputs.turretDegs >= Constants.Turret.midPointPhysicalDeg) {
+        if (angle < inputs.turretDegs - 180) {
+          desiredDeg = angle + 360;
+        } else {
+          desiredDeg = angle;
+        }
+      } else {
+        if (angle > inputs.turretDegs + 180) {
+          desiredDeg = angle - 360;
+        } else {
+          desiredDeg = angle;
+        }
+      }
+      if (desiredDeg >= Constants.Turret.maxPhysicalLimitDeg) {
+        desiredDeg = Constants.Turret.maxPhysicalLimitDeg;
+      } else if (desiredDeg <= Constants.Turret.minPhysicalLimitDeg) {
+        desiredDeg = Constants.Turret.minPhysicalLimitDeg;
+      }
+    } else if (desiredDeg == null && safeToUnwind) {
+      desiredDeg = Constants.Turret.midPointPhysicalDeg;
+    }
   }
 
   public boolean needsToUnwind() {
     return (inputs.turretDegs >= Constants.Turret.maxUnwindLimitDeg
-        || inputs.turretDegs <= Constants.Turret.minPhysicalLimitDeg);
+        || inputs.turretDegs <= Constants.Turret.minUnwindLimitDeg);
   }
 
   public boolean isAtGoal() {
