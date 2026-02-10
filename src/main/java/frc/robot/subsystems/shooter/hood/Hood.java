@@ -9,7 +9,6 @@ import org.littletonrobotics.junction.Logger;
 public class Hood {
   private HoodIO io;
   private HoodIOInputsAutoLogged inputs = new HoodIOInputsAutoLogged();
-  private Drive drive;
   private double requestedAngleDEG = 0.0;
   private Timer homingTimer = new Timer();
   private double pastEncoderPosition = 0.0;
@@ -28,7 +27,6 @@ public class Hood {
   public void periodic() {
     io.updateInputs(inputs);
     Logger.processInputs("Hood", inputs);
-    // Logger.recordOutput("Hood/state", state);
     Logger.recordOutput("Hood/requestedDegree", requestedAngleDEG);
 
     if (homed) {
@@ -49,7 +47,7 @@ public class Hood {
       }
     }
 
-    // Logger.recordOutput("Hood/State", state.toString());
+   
   }
 
   public void requestGoal(double angle) {
