@@ -2,6 +2,7 @@ package frc.robot.subsystems.shooter.turret;
 
 import edu.wpi.first.math.MathUtil;
 import frc.robot.constants.Constants;
+import org.littletonrobotics.junction.Logger;
 
 public class Turret {
   private TurretIO io;
@@ -23,6 +24,9 @@ public class Turret {
   }
 
   public void periodic() {
+    io.updateInputs(inputs);
+    Logger.processInputs("Turret", inputs);
+    Logger.recordOutput("Turret/State", state.toString());
     switch (Constants.turretMode) {
       case DISABLED -> {}
       case TUNING -> {}
