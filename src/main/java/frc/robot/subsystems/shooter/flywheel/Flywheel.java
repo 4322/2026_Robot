@@ -26,25 +26,18 @@ public class Flywheel {
   public void periodic() {
     io.updateInputs(inputs);
     Logger.processInputs("Flywheel", inputs);
+    
 
-    if (inputs.fuelDetected && !fuelDetected) {
+    if (inputs.fuelDetected) {
       ballsShot++;
       fuelDetected = true;
     } else if (!inputs.fuelDetected) {
       fuelDetected = false;
     }
 
-    switch (state) {
-      case DISABLED -> {
-        if (DriverStation.isEnabled()) {
-          state = FlywheelStates.ENABLED;
-        }
-      }
-      case ENABLED -> {
-
-      }
+    
       
-    }
+    
 
     Logger.recordOutput("Flywheel/State", state.toString());
   }
@@ -53,7 +46,7 @@ public class Flywheel {
 
   public void requestGoal(double velocity) {
     io.setTargetMechanismRotations(velocity);
-    requestedMechanismRPS = velocity;
+    inputs.requestedMechanismRotations = velocity;
   }
 
   public void enableBrakeMode(boolean enable) {
