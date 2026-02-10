@@ -26,9 +26,10 @@ public class Flywheel {
   public void periodic() {
     io.updateInputs(inputs);
     Logger.processInputs("Flywheel", inputs);
+    Logger.recordOutput("Flywheel/BallsShot", ballsShot)
     
 
-    if (inputs.fuelDetected) {
+    if (inputs.fuelDetected && !fuelDetected) {
       ballsShot++;
       fuelDetected = true;
     } else if (!inputs.fuelDetected) {
