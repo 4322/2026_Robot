@@ -271,7 +271,8 @@ public class RobotContainer {
             () -> -controller.getRightX()));
 
     // Shooter command bindings
-    shooter.setDefaultCommand(ShooterCommands.autoShoot(shooter, drive));
+    shooter.setDefaultCommand(ShooterCommands.autoShoot(shooter));
+
     new JoystickButton(operatorBoard.getLeftController(), Constants.Control.toggle1ButtonNumber)
         .whileTrue(ShooterCommands.inhibitAutoShoot(shooter, toggle1))
         .onTrue(

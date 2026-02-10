@@ -20,6 +20,6 @@ public interface TurretIO {
   public default void setAngle(double angle) {}
 
   public default void setBrakeMode(boolean mode) {}
-  
+
   public default void setAzimuth(double getAzimuth) {}
 }

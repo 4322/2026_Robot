@@ -36,9 +36,9 @@ public class Turret {
             if (desiredDeg != null) {
               lastDesiredDeg = desiredDeg;
               io.setAngle(desiredDeg);
-            } else if(desiredDeg == null && safeToUnwind) {
+            } else if (desiredDeg == null && safeToUnwind) {
               io.setAngle(Constants.Turret.midPointPhysicalDeg);
-            } else{
+            } else {
               io.setAngle(lastDesiredDeg);
             }
           }

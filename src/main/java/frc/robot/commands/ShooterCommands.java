@@ -70,8 +70,7 @@ public class ShooterCommands {
   }
 
   // Default command
-  public static Command autoShoot(Shooter shooter, Drive drive) {
-    BooleanSupplier needsToUnwind = () -> shooter.needsToUnwind();
+  public static Command autoShoot(Shooter shooter) {
 
     BooleanSupplier end = () -> false;
 
