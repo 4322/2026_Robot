@@ -138,5 +138,4 @@ public class FlywheelIOTalonFx implements FlywheelIO {
   public TalonFX getTalonFX() {
     return motor;
   }
-  
 }

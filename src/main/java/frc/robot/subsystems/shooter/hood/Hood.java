@@ -3,7 +3,6 @@ package frc.robot.subsystems.shooter.hood;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.constants.Constants;
-import frc.robot.subsystems.drive.Drive;
 import org.littletonrobotics.junction.Logger;
 
 public class Hood {
@@ -29,7 +28,7 @@ public class Hood {
     Logger.processInputs("Hood", inputs);
     Logger.recordOutput("Hood/requestedDegree", requestedAngleDEG);
 
-    if (homed) {
+    if (!homed) {
       io.setServoVelocity(Constants.Hood.homingVelocity);
       homingTimer.start();
       if (Math.abs(inputs.rawRotations - pastEncoderPosition) < Constants.Hood.hoodTolerance
@@ -46,8 +45,6 @@ public class Hood {
         pastEncoderPosition = inputs.rawRotations;
       }
     }
-
-   
   }
 
   public void requestGoal(double angle) {
