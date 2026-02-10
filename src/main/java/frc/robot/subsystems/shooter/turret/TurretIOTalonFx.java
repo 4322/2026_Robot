@@ -36,10 +36,12 @@ public class TurretIOTalonFx implements TurretIO {
     config.Slot0.kI = Constants.Turret.kI;
     config.Slot0.kD = Constants.Turret.kD;
 
-    config.HardwareLimitSwitch.ForwardLimitEnable = false;
-    config.HardwareLimitSwitch.ReverseLimitEnable = false;
+    config.HardwareLimitSwitch.ForwardLimitEnable = true;
+    config.HardwareLimitSwitch.ReverseLimitEnable = true;
 
     StatusCode configStatus = turretMotor.getConfigurator().apply(config);
+    StatusCode CANcoderStatus = CANcoderOne.getConfigurator().apply(CANconfigOne);
+    StatusCode CANcoderStatusTwo = CANcoderTwo.getConfigurator().apply(CANconfigTwo);
 
     if (configStatus != StatusCode.OK) {
       DriverStation.reportError(
@@ -49,6 +51,22 @@ public class TurretIOTalonFx implements TurretIO {
               + configStatus.getDescription(),
           false);
     }
+    if (CANcoderStatus != StatusCode.OK) {
+      DriverStation.reportError(
+          "CANCoderOne "
+              + CANcoderOne.getDeviceID()
+              + " error (CANCoderOne): "
+              + CANcoderStatus.getDescription(),
+          false);
+    }
+    if (CANcoderStatusTwo != StatusCode.OK) {
+      DriverStation.reportError(
+          "CANCoderTwo "
+              + CANcoderTwo.getDeviceID()
+              + " error (CANCoderTwo): "
+              + CANcoderStatusTwo.getDescription(),
+          false);
+    }
     turretMotor.setPosition(getAzimuth());
   }
 
@@ -56,6 +74,13 @@ public class TurretIOTalonFx implements TurretIO {
   public void updateInputs(TurretIOInputs inputs) {
     inputs.turretAzimuth = turretAzimuth;
     inputs.turretDegs = Units.rotationsToDegrees(getAzimuth()) - Constants.Turret.midPointPhysicalDeg;
+    inputs.encoderOneRotations = CANcoderOne.getPosition().getValueAsDouble();
+    inputs.encoderTwoRotations = CANcoderTwo.getPosition().getValueAsDouble();
+    inputs.motorConnected = turretMotor.isConnected();
+    inputs.speedMotorRotations = turretMotor.getVelocity().getValueAsDouble();
+    inputs.appliedVolts = turretMotor.getSupplyVoltage().getValueAsDouble();
+    inputs.motorTempCelsius = turretMotor.getDeviceTemp().getValueAsDouble();
+    inputs.statorVolts = turretMotor.getMotorVoltage().getValueAsDouble();
   }
 
   @Override
