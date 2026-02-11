@@ -4,8 +4,10 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
 import edu.wpi.first.wpilibj.RobotBase;
+import frc.robot.constants.Constants.ShootingParameters;
 
 /**
  * This class defines the runtime mode used by AdvantageKit. The mode is always "real" when running
@@ -164,18 +166,18 @@ public final class Constants {
   }
 
   public static class ShootingParameters {
-    private final double flywheelRPS;
+    private final double flywheelRPM;
     private final double hoodAngleDeg;
     private final double timeOfFlightSec;
 
-    public ShootingParameters(double flywheelRPS, double hoodAngleDeg, double timeOfFlightSec) {
-      this.flywheelRPS = flywheelRPS;
+    public ShootingParameters(double flywheelRPM, double hoodAngleDeg, double timeOfFlightSec) {
+      this.flywheelRPM = flywheelRPM;
       this.hoodAngleDeg = hoodAngleDeg;
       this.timeOfFlightSec = timeOfFlightSec;
     }
 
-    public double getFlywheelRPS() {
-      return flywheelRPS;
+    public double getFlywheelRPM() {
+      return flywheelRPM;
     }
 
     public double getHoodAngleDeg() {
@@ -185,37 +187,43 @@ public final class Constants {
     public double getTimeOfFlightSec() {
       return timeOfFlightSec;
     }
-  }
 
+    public static ShootingParameters interpolate(
+        ShootingParameters start, ShootingParameters end, double howFar) {
+      // TODO implement this
+      return new ShootingParameters(0, 0, 0);
+    }
+  }
   public static class ShootingManager {
     public static final InterpolatingTreeMap<Double, ShootingParameters> shooterMap =
         new InterpolatingTreeMap<Double, ShootingParameters>(
-            null, null); // TODO not sure what to put for constructor
+            null, ShootingParameters::interpolate);
+    public static final double latencyCompensation = 0;
 
-    static {
+    static { // TODO tuning points will go here
       // shooterMap.put()
     }
 
-    // TODO figure these out
+    
   }
 
-  public static class ShootingTargetPoses {
+  public static class ShootingTargetTranslations {
     // Right/left are determined as view from alliance driver station
 
     public static class Red {
-      public static final Pose2d hubPose = new Pose2d();
-      public static final Pose2d allianceRightPose = new Pose2d();
-      public static final Pose2d allianceLeftPose = new Pose2d();
-      public static final Pose2d neutralRightPose = new Pose2d();
-      public static final Pose2d neutralLeftPose = new Pose2d();
+      public static final Translation2d hubPose = new Translation2d();
+      public static final Translation2d allianceRightPose = new Translation2d();
+      public static final Translation2d allianceLeftPose = new Translation2d();
+      public static final Translation2d neutralRightPose = new Translation2d();
+      public static final Translation2d neutralLeftPose = new Translation2d();
     }
 
     public static class Blue {
-      public static final Pose2d hubPose = new Pose2d();
-      public static final Pose2d allianceRightPose = new Pose2d();
-      public static final Pose2d allianceLeftPose = new Pose2d();
-      public static final Pose2d neutralRightPose = new Pose2d();
-      public static final Pose2d neutralLeftPose = new Pose2d();
+      public static final Translation2d hubPose = new Translation2d();
+      public static final Translation2d allianceRightPose = new Translation2d();
+      public static final Translation2d allianceLeftPose = new Translation2d();
+      public static final Translation2d neutralRightPose = new Translation2d();
+      public static final Translation2d neutralLeftPose = new Translation2d();
     }
   }
 }

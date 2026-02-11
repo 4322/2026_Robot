@@ -1,32 +1,21 @@
 package frc.robot.subsystems.shooter.shootingManager;
 
+import java.util.Map;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.Robot;
 import frc.robot.constants.Constants;
 import frc.robot.constants.Constants.ShootingParameters;
+import frc.robot.subsystems.shooter.areaManager.AreaManager;
+import frc.robot.subsystems.shooter.areaManager.AreaManager.Zone;
 
 public class ShootingManager {
 
-  public static class ShootingSolution {
-    private double flywheelSpeed;
-    private double hoodAngle;
-
-    public ShootingSolution(double flywheelSpeed, double hoodAngle) {
-      this.flywheelSpeed = flywheelSpeed;
-      this.hoodAngle = hoodAngle;
-    }
-
-    public double getFlywheelSpeed() {
-      return flywheelSpeed;
-    }
-
-    public double getHoodAngle() {
-      return hoodAngle;
-    }
-  }
+  public record ShootingSolution(double flywheelSpeed, double hoodAngle) {}
 
   public enum ShootingTargets {
     HUB,
@@ -36,19 +25,37 @@ public class ShootingManager {
     NEUTRAL_RIGHT
   }
 
-  public static ShootingSolution getShootingSolution(ShootingTargets target, Pose2d robotPose) {
-    // TODO
+  public static ShootingSolution getShootingSolution(Translation2d robotPosition, Translation2d robotVelocity) {
+    // Project future position
+    Translation2d futurePos = robotPosition.plus(robotVelocity.times(Constants.ShootingManager.latencyCompensation));
 
-    double targetX = getShootingTarget(target).getX() - robotPose.getX();
-    double targetY = getShootingTarget(target).getY() - robotPose.getY();
-    Translation2d targetPosition = new Translation2d(targetX, targetY);
+    // Get target vector
+    Translation2d goalPosition = getShootingTarget(robotPosition);
+    Translation2d toGoal = goalPosition.minus(futurePos);
+    double distance = toGoal.getNorm();
+    Translation2d targetDirection = toGoal.div(distance);
 
-    double distance = targetPosition.getNorm();
+    // Get velocity
+    ShootingParameters baseline = Constants.ShootingManager.shooterMap.get(distance);
+    double baselineVelocity = distance / baseline.getTimeOfFlightSec();
 
-    return new ShootingSolution(0, 0);
+    // Build target velocity vector
+    Translation2d targetVelocity = targetDirection.times(baselineVelocity);
+
+    // Compensate for robot velocity
+    Translation2d shotVelocity = targetVelocity.minus(robotVelocity);
+
+    // Get results
+    Rotation2d turretAngle = shotVelocity.getAngle();
+    double requiredVelocity = shotVelocity.getNorm();
+
+    // Use table in reverse: velocity → effective distance → RPM
+        double effectiveDistance = velocityToEffectiveDistance(requiredVelocity);
+
+    return getDynamicShootingSolution(effectiveDistance, requiredVelocity);
   }
 
-  private static ShootingSolution getMapShootingSolution(double distance, double requiredVelocity) {
+  private static ShootingSolution getDynamicShootingSolution(double distance, double requiredVelocity) {
     ShootingParameters baseline = Constants.ShootingManager.shooterMap.get(distance);
     double baselineVelocity = distance / baseline.getTimeOfFlightSec();
     double velocityRatio = requiredVelocity / baselineVelocity;
@@ -57,8 +64,8 @@ public class ShootingManager {
     double hoodFactor = Math.sqrt(velocityRatio);
 
     double adjustedRPM =
-        baseline.getFlywheelRPS()
-            * rpmFactor; // TODO check if difference in rpm / rps will cause issues
+        baseline.getFlywheelRPM()
+            * rpmFactor;
 
     double totalVelocity = baselineVelocity / Math.cos(Math.toRadians(baseline.getHoodAngleDeg()));
 
@@ -69,36 +76,54 @@ public class ShootingManager {
     return new ShootingSolution(adjustedRPM, adjustedHood);
   }
 
-  private static Pose2d getShootingTarget(ShootingTargets target) {
+  public static double velocityToEffectiveDistance(double velocity) {
+    // Binary search or iterate through table to find distance
+    // where (distance / ToF) = velocity
+    // Most InterpolatingTreeMap implementations support inverse lookup
+    // or you can build a reverse map: velocity → distance
+
+    for (Map.Entry<Double, ShootingParameters> entry : Constants.ShootingManager.shooterMap.entrySet()) {
+        double dist = entry.getKey();
+        double vel = dist / entry.getValue().getTimeOfFlightSec();
+        if (vel >= velocity) {
+            return dist; // Interpolate for better accuracy
+        }
+    }
+    return Constants.ShootingManager.shooterMap.lastKey(); // Clamp to max
+}
+
+  private static Translation2d getShootingTarget(Translation2d robotPosition) {
+    Zone zone = AreaManager.getZoneOfPosition(robotPosition);
+    
     if (Robot.alliance == Alliance.Blue) {
-      switch (target) {
-        case HUB:
-          return Constants.ShootingTargetPoses.Blue.hubPose;
-        case ALLIANCE_RIGHT:
-          return Constants.ShootingTargetPoses.Blue.allianceRightPose;
-        case ALLIANCE_LEFT:
-          return Constants.ShootingTargetPoses.Blue.allianceLeftPose;
-        case NEUTRAL_RIGHT:
-          return Constants.ShootingTargetPoses.Blue.neutralRightPose;
-        case NEUTRAL_LEFT:
-          return Constants.ShootingTargetPoses.Blue.neutralLeftPose;
+      switch (zone) {
+        case ALLIANCE_ZONE:
+          return Constants.ShootingTargetTranslations.Blue.hubPose;
+        case RIGHT_NEUTRAL:
+          return Constants.ShootingTargetTranslations.Blue.allianceRightPose;
+        case LEFT_NEUTRAL:
+          return Constants.ShootingTargetTranslations.Blue.allianceLeftPose;
+        case RIGHT_OPPOSITION:
+          return Constants.ShootingTargetTranslations.Blue.neutralRightPose;
+        case LEFT_OPPOSITION:
+          return Constants.ShootingTargetTranslations.Blue.neutralLeftPose;
         default:
-          return new Pose2d();
+          return new Translation2d();
       }
     } else {
-      switch (target) {
-        case HUB:
-          return Constants.ShootingTargetPoses.Red.hubPose;
-        case ALLIANCE_RIGHT:
-          return Constants.ShootingTargetPoses.Red.allianceRightPose;
-        case ALLIANCE_LEFT:
-          return Constants.ShootingTargetPoses.Red.allianceLeftPose;
-        case NEUTRAL_RIGHT:
-          return Constants.ShootingTargetPoses.Red.neutralRightPose;
-        case NEUTRAL_LEFT:
-          return Constants.ShootingTargetPoses.Red.neutralLeftPose;
+      switch (zone) {
+        case ALLIANCE_ZONE:
+          return Constants.ShootingTargetTranslations.Red.hubPose;
+        case RIGHT_NEUTRAL:
+          return Constants.ShootingTargetTranslations.Red.allianceRightPose;
+        case LEFT_NEUTRAL:
+          return Constants.ShootingTargetTranslations.Red.allianceLeftPose;
+        case RIGHT_OPPOSITION:
+          return Constants.ShootingTargetTranslations.Red.neutralRightPose;
+        case LEFT_OPPOSITION:
+          return Constants.ShootingTargetTranslations.Red.neutralLeftPose;
         default:
-          return new Pose2d();
+          return new Translation2d();
       }
     }
   }
