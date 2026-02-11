@@ -62,8 +62,6 @@ public class Turret {
     // Goes to side it favors, and if curr angle + desi big than max, set to max, but when safe
     // unwind
     if (desiredDeg != null) {
-      this.turretAzimuth = angle % 360;
-      Logger.recordOutput("Turret/turretAzimuth", turretAzimuth);
       if (inputs.turretDegs >= Constants.Turret.midPointPhysicalDeg) {
         if (angle < inputs.turretDegs - 180) {
           desiredDeg = angle + 360;
@@ -85,6 +83,8 @@ public class Turret {
     } else if (desiredDeg == null && safeToUnwind) {
       desiredDeg = Constants.Turret.midPointPhysicalDeg;
     }
+    this.turretAzimuth = desiredDeg % 360;
+    Logger.recordOutput("Turret/turretAzimuth", turretAzimuth);
   }
 
   public boolean needsToUnwind() {

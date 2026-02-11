@@ -66,13 +66,12 @@ public class TurretIOTalonFx implements TurretIO {
               + CANcoderStatusTwo.getDescription(),
           false);
     }
-    turretMotor.setPosition(getAzimuth());
+    turretMotor.setPosition(getAngle());
   }
 
   @Override
   public void updateInputs(TurretIOInputs inputs) {
-    inputs.turretDegs =
-        Units.rotationsToDegrees(getAzimuth()) - Constants.Turret.midPointPhysicalDeg;
+    inputs.turretDegs = Units.rotationsToDegrees(turretMotor.getPosition().getValueAsDouble());
     inputs.encoderOneRotations = CANcoderOne.getPosition().getValueAsDouble();
     inputs.encoderTwoRotations = CANcoderTwo.getPosition().getValueAsDouble();
     inputs.motorConnected = turretMotor.isConnected();
@@ -87,7 +86,7 @@ public class TurretIOTalonFx implements TurretIO {
     turretMotor.setNeutralMode(mode ? NeutralModeValue.Brake : NeutralModeValue.Coast);
   }
 
-  public double getAzimuth() {
+  public double getAngle() {
     CANCoderOneMod =
         CANcoderOne.getPosition().getValueAsDouble() % Constants.Turret.CANCoderOneRatio;
     CANCoderTwoMod =
