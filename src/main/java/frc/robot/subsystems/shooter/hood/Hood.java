@@ -40,7 +40,8 @@ public class Hood {
         homingTimer.reset();
         homingTimer.stop();
       } else {
-        homingTimer.reset();
+        if (Math.abs(inputs.encoderRPS) > Constants.Hood.homingVelocityThreshold){
+        homingTimer.reset();}
         pastEncoderPosition = inputs.rawRotations;
       }
     }
