@@ -5,7 +5,9 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
+import edu.wpi.first.math.interpolation.InverseInterpolator;
 import edu.wpi.first.wpilibj.RobotBase;
 import frc.robot.constants.Constants.ShootingParameters;
 
@@ -190,21 +192,33 @@ public final class Constants {
 
     public static ShootingParameters interpolate(
         ShootingParameters start, ShootingParameters end, double howFar) {
-      // TODO implement this
-      return new ShootingParameters(0, 0, 0);
+      return new ShootingParameters(
+          start.flywheelRPM + (end.flywheelRPM - start.flywheelRPM) * howFar,
+          start.hoodAngleDeg + (end.hoodAngleDeg - start.hoodAngleDeg) * howFar,
+          start.timeOfFlightSec + (end.timeOfFlightSec - start.timeOfFlightSec) * howFar);
     }
   }
   public static class ShootingManager {
     public static final InterpolatingTreeMap<Double, ShootingParameters> shooterMap =
         new InterpolatingTreeMap<Double, ShootingParameters>(
-            null, ShootingParameters::interpolate);
+            InverseInterpolator.forDouble(), ShootingParameters::interpolate);
+
+    // Reverse map: velocity to distance for inverse lookup
+    public static final InterpolatingDoubleTreeMap velocityToDistanceMap =
+        new InterpolatingDoubleTreeMap();
+
     public static final double latencyCompensation = 0;
 
-    static { // TODO tuning points will go here
-      // shooterMap.put()
+    // Add entry to both maps
+    public static void putShooterEntry(double distance, ShootingParameters params) {
+      shooterMap.put(distance, params);
+      double velocity = distance / params.getTimeOfFlightSec();
+      velocityToDistanceMap.put(velocity, distance);
     }
 
-    
+    static { // TODO tuning points will go here
+      // putShooterEntry(distance, new ShootingParameters(rpm, hoodDeg, tofSec));
+    }
   }
 
   public static class ShootingTargetTranslations {

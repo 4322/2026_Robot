@@ -1,9 +1,6 @@
 package frc.robot.subsystems.shooter.shootingManager;
 
-import java.util.Map;
-
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -77,20 +74,8 @@ public class ShootingManager {
   }
 
   public static double velocityToEffectiveDistance(double velocity) {
-    // Binary search or iterate through table to find distance
-    // where (distance / ToF) = velocity
-    // Most InterpolatingTreeMap implementations support inverse lookup
-    // or you can build a reverse map: velocity → distance
-
-    for (Map.Entry<Double, ShootingParameters> entry : Constants.ShootingManager.shooterMap.entrySet()) {
-        double dist = entry.getKey();
-        double vel = dist / entry.getValue().getTimeOfFlightSec();
-        if (vel >= velocity) {
-            return dist; // Interpolate for better accuracy
-        }
-    }
-    return Constants.ShootingManager.shooterMap.lastKey(); // Clamp to max
-}
+    return Constants.ShootingManager.velocityToDistanceMap.get(velocity);
+  }
 
   private static Translation2d getShootingTarget(Translation2d robotPosition) {
     Zone zone = AreaManager.getZoneOfPosition(robotPosition);
