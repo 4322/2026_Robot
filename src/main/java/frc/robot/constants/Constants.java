@@ -2,7 +2,6 @@ package frc.robot.constants;
 
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
@@ -198,6 +197,7 @@ public final class Constants {
           start.timeOfFlightSec + (end.timeOfFlightSec - start.timeOfFlightSec) * howFar);
     }
   }
+
   public static class ShootingManager {
     public static final InterpolatingTreeMap<Double, ShootingParameters> shooterMap =
         new InterpolatingTreeMap<Double, ShootingParameters>(
@@ -225,19 +225,19 @@ public final class Constants {
     // Right/left are determined as view from alliance driver station
 
     public static class Red {
-      public static final Translation2d hubPose = new Translation2d();
-      public static final Translation2d allianceRightPose = new Translation2d();
-      public static final Translation2d allianceLeftPose = new Translation2d();
-      public static final Translation2d neutralRightPose = new Translation2d();
-      public static final Translation2d neutralLeftPose = new Translation2d();
+      public static final Translation2d hubTranslation = new Translation2d();
+      public static final Translation2d allianceRightTranslation = new Translation2d();
+      public static final Translation2d allianceLeftTranslation = new Translation2d();
+      public static final Translation2d neutralRightTranslation = new Translation2d();
+      public static final Translation2d neutralLeftTranslation = new Translation2d();
     }
 
     public static class Blue {
-      public static final Translation2d hubPose = new Translation2d();
-      public static final Translation2d allianceRightPose = new Translation2d();
-      public static final Translation2d allianceLeftPose = new Translation2d();
-      public static final Translation2d neutralRightPose = new Translation2d();
-      public static final Translation2d neutralLeftPose = new Translation2d();
+      public static final Translation2d hubTranslation = new Translation2d();
+      public static final Translation2d allianceRightTranslation = new Translation2d();
+      public static final Translation2d allianceLeftTranslation = new Translation2d();
+      public static final Translation2d neutralRightTranslation = new Translation2d();
+      public static final Translation2d neutralLeftTranslation = new Translation2d();
     }
   }
 }
