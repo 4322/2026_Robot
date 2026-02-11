@@ -3,6 +3,7 @@ package frc.robot.subsystems.shooter.turret;
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -34,10 +35,12 @@ public class TurretIOTalonFx implements TurretIO {
     config.Slot0.kI = Constants.Turret.kI;
     config.Slot0.kD = Constants.Turret.kD;
 
-    config.HardwareLimitSwitch.ForwardLimitEnable = false;
-    config.HardwareLimitSwitch.ReverseLimitEnable = false;
+    config.HardwareLimitSwitch.ForwardLimitEnable = true;
+    config.HardwareLimitSwitch.ReverseLimitEnable = true;
 
     StatusCode configStatus = turretMotor.getConfigurator().apply(config);
+    StatusCode CANcoderStatus = CANcoderOne.getConfigurator().apply(CANconfigOne);
+    StatusCode CANcoderStatusTwo = CANcoderTwo.getConfigurator().apply(CANconfigTwo);
 
     if (configStatus != StatusCode.OK) {
       DriverStation.reportError(
@@ -47,12 +50,36 @@ public class TurretIOTalonFx implements TurretIO {
               + configStatus.getDescription(),
           false);
     }
+    if (CANcoderStatus != StatusCode.OK) {
+      DriverStation.reportError(
+          "CANCoderOne "
+              + CANcoderOne.getDeviceID()
+              + " error (CANCoderOne): "
+              + CANcoderStatus.getDescription(),
+          false);
+    }
+    if (CANcoderStatusTwo != StatusCode.OK) {
+      DriverStation.reportError(
+          "CANCoderTwo "
+              + CANcoderTwo.getDeviceID()
+              + " error (CANCoderTwo): "
+              + CANcoderStatusTwo.getDescription(),
+          false);
+    }
     turretMotor.setPosition(getAzimuth());
   }
 
   @Override
   public void updateInputs(TurretIOInputs inputs) {
-    inputs.turretDegs = Units.rotationsToDegrees(getAzimuth()) - Constants.Turret.offsetAzimuth;
+    inputs.turretDegs =
+        Units.rotationsToDegrees(getAzimuth()) - Constants.Turret.midPointPhysicalDeg;
+    inputs.encoderOneRotations = CANcoderOne.getPosition().getValueAsDouble();
+    inputs.encoderTwoRotations = CANcoderTwo.getPosition().getValueAsDouble();
+    inputs.motorConnected = turretMotor.isConnected();
+    inputs.speedMotorRotations = turretMotor.getVelocity().getValueAsDouble();
+    inputs.appliedVolts = turretMotor.getSupplyVoltage().getValueAsDouble();
+    inputs.motorTempCelsius = turretMotor.getDeviceTemp().getValueAsDouble();
+    inputs.statorVolts = turretMotor.getMotorVoltage().getValueAsDouble();
   }
 
   @Override
@@ -71,9 +98,8 @@ public class TurretIOTalonFx implements TurretIO {
     return turretMod;
   }
 
-  public void setAzimuth(double degs) {
-    double targetPosition =
-        Units.degreesToRotations(degs) * Constants.Turret.turretGearRatio
-            - Units.degreesToRotations(Constants.Turret.offsetAzimuth);
+  public void setAngle(double degs) {
+    turretMotor.setControl(
+        new MotionMagicVoltage(Units.degreesToRotations(degs)).withSlot(0).withEnableFOC(true));
   }
 }
