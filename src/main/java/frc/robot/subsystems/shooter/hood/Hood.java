@@ -33,15 +33,17 @@ public class Hood {
     if (!homed) {
       io.setServoVelocity(Constants.Hood.homingVelocity);
       homingTimer.start();
-      if (homingTimer.hasElapsed(0.04) && Math.abs(inputs.encoderRPS) < Constants.Hood.homingVelocityThreshold) { 
+      if (homingTimer.hasElapsed(0.04)
+          && Math.abs(inputs.encoderRPS) < Constants.Hood.homingVelocityThreshold) {
         io.setEncoderHomed();
-              io.setServoVelocity(Constants.Hood.idleVelocity);
+        io.setServoVelocity(Constants.Hood.idleVelocity);
         homed = true;
         homingTimer.reset();
         homingTimer.stop();
       } else {
-        if (Math.abs(inputs.encoderRPS) > Constants.Hood.homingVelocityThreshold){
-        homingTimer.reset();}
+        if (Math.abs(inputs.encoderRPS) > Constants.Hood.homingVelocityThreshold) {
+          homingTimer.reset();
+        }
         pastEncoderPosition = inputs.rawRotations;
       }
     }
