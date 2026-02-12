@@ -18,11 +18,7 @@ public class ShooterCommands {
         .andThen(
             Commands.run(
                 () -> {
-                  if (shooter.needsToUnwind()) {
-                    shooter.setState(ShooterState.UNWIND);
-                  } else {
-                    shooter.setState(ShooterState.SHOOT);
-                  }
+                  shooter.requestShoot();
                 },
                 shooter))
         .until(end);

@@ -3,6 +3,9 @@ package frc.robot.subsystems.shooter;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
+import frc.robot.constants.Constants.FiringParameters;
+import frc.robot.subsystems.shooter.firingManager.FiringManager;
+import frc.robot.subsystems.shooter.firingManager.FiringManager.FiringSolution;
 import frc.robot.subsystems.shooter.flywheel.Flywheel;
 import frc.robot.subsystems.shooter.hood.Hood;
 import frc.robot.subsystems.shooter.spindexer.Spindexer;
@@ -29,7 +32,7 @@ public class Shooter extends SubsystemBase {
   private Turret turret;
 
   private double targetAngle;
-  private double targetFlywheelSpeed;
+  private double targetFlywheelSpeedRPM;
 
   private boolean unwindComplete = false;
 
@@ -68,12 +71,12 @@ public class Shooter extends SubsystemBase {
         // TODO unwindComplete = turret.isUnwound();
       }
       case PRESHOOT -> {
-        flywheel.requestShoot(targetFlywheelSpeed);
+        flywheel.requestShoot(targetFlywheelSpeedRPM);
         // TODO Turret request position here and hood
       }
       case SHOOT -> {
         calculateFiringSolution();
-        flywheel.requestShoot(targetFlywheelSpeed); // TODO change to variable
+        flywheel.requestShoot(targetFlywheelSpeedRPM / 60.0);
         // TODO Turret request position here and hood
         tunnel.requestIndex(
             Constants.Tunnel.dynamicVelocity
@@ -89,18 +92,16 @@ public class Shooter extends SubsystemBase {
     flywheel.periodic();
     spindexer.periodic();
     tunnel.periodic();
-
-    /* TODO once these are all set up
     hood.periodic();
     turret.periodic();
-    */
+    
     Logger.recordOutput("Shooter/State", state.toString());
   }
 
   private void calculateFiringSolution() {
-    // TODO will use firing solution manager here
-    targetAngle = 0;
-    targetFlywheelSpeed = 0;
+    FiringSolution firingSolution = FiringManager.getFiringSolution();
+    targetAngle = firingSolution.hoodAngle();
+    targetFlywheelSpeedRPM = firingSolution.flywheelSpeedRPM();
   }
 
   public boolean isUnwindComplete() {

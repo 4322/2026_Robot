@@ -8,7 +8,7 @@ import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
 import edu.wpi.first.math.interpolation.InverseInterpolator;
 import edu.wpi.first.wpilibj.RobotBase;
-import frc.robot.constants.Constants.ShootingParameters;
+import frc.robot.constants.Constants.FiringParameters;
 
 /**
  * This class defines the runtime mode used by AdvantageKit. The mode is always "real" when running
@@ -169,12 +169,12 @@ public final class Constants {
     public static final int toggle1ButtonNumber = 1; // TODO set these
   }
 
-  public static class ShootingParameters {
+  public static class FiringParameters {
     private final double flywheelRPM;
     private final double hoodAngleDeg;
     private final double timeOfFlightSec;
 
-    public ShootingParameters(double flywheelRPM, double hoodAngleDeg, double timeOfFlightSec) {
+    public FiringParameters(double flywheelRPM, double hoodAngleDeg, double timeOfFlightSec) {
       this.flywheelRPM = flywheelRPM;
       this.hoodAngleDeg = hoodAngleDeg;
       this.timeOfFlightSec = timeOfFlightSec;
@@ -192,29 +192,29 @@ public final class Constants {
       return timeOfFlightSec;
     }
 
-    public static ShootingParameters interpolate(
-        ShootingParameters start, ShootingParameters end, double howFar) {
-      return new ShootingParameters(
+    public static FiringParameters interpolate(
+        FiringParameters start, FiringParameters end, double howFar) {
+      return new FiringParameters(
           start.flywheelRPM + (end.flywheelRPM - start.flywheelRPM) * howFar,
           start.hoodAngleDeg + (end.hoodAngleDeg - start.hoodAngleDeg) * howFar,
           start.timeOfFlightSec + (end.timeOfFlightSec - start.timeOfFlightSec) * howFar);
     }
   }
 
-  public static class ShootingManager {
-    public static final InterpolatingTreeMap<Double, ShootingParameters> shooterMap =
-        new InterpolatingTreeMap<Double, ShootingParameters>(
-            InverseInterpolator.forDouble(), ShootingParameters::interpolate);
+  public static class FiringManager {
+    public static final InterpolatingTreeMap<Double, FiringParameters> firingMap =
+        new InterpolatingTreeMap<Double, FiringParameters>(
+            InverseInterpolator.forDouble(), FiringParameters::interpolate);
 
-    // Reverse map: velocity to distance for inverse lookup
+    // Reverse map for velocity to distance lookup
     public static final InterpolatingDoubleTreeMap velocityToDistanceMap =
         new InterpolatingDoubleTreeMap();
 
     public static final double latencyCompensation = 0;
 
     // Add entry to both maps
-    public static void putShooterEntry(double distance, ShootingParameters params) {
-      shooterMap.put(distance, params);
+    public static void putShooterEntry(double distance, FiringParameters params) {
+      firingMap.put(distance, params);
       double velocity = distance / params.getTimeOfFlightSec();
       velocityToDistanceMap.put(velocity, distance);
     }
@@ -224,7 +224,7 @@ public final class Constants {
     }
   }
 
-  public static class ShootingTargetTranslations {
+  public static class FiringTargetTranslations {
     // Right/left are determined as view from alliance driver station
 
     public static class Red {
