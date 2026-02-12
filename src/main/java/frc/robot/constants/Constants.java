@@ -264,6 +264,5 @@ public final class Constants {
 
     public static final int preBuffer = 3; // TODO
     public static final int postBuffer = 2;
-
   }
 }
