@@ -13,14 +13,7 @@ public class ShooterCommands {
   public static Command shoot(Shooter shooter, BooleanSupplier end) {
     BooleanSupplier flywheelAtSpeed = () -> shooter.isFlywheelAtSpeed();
 
-    return Commands.run(() -> shooter.setState(ShooterState.PRESHOOT), shooter)
-        .until(flywheelAtSpeed)
-        .andThen(
-            Commands.run(
-                () -> {
-                  shooter.requestShoot();
-                },
-                shooter))
+    return Commands.run(() -> shooter.requestShoot())
         .until(end);
   }
 
