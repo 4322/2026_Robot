@@ -259,4 +259,10 @@ public final class Constants {
       public static final Translation2d neutralLeftTranslation = new Translation2d();
     }
   }
+
+  public static class GameManager {
+
+    public static final int postBufferSec = 2;
+
+  }
 }
