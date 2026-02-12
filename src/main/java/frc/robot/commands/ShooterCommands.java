@@ -11,8 +11,6 @@ import java.util.function.BooleanSupplier;
 public class ShooterCommands {
 
   public static Command shoot(Shooter shooter, BooleanSupplier end) {
-    BooleanSupplier mechanismsAtSpeed = () -> shooter.isMechanismsAtSpeed();
-    BooleanSupplier hoodAtAngle = () -> shooter.isHoodAtAngle();
     BooleanSupplier flywheelAtSpeed = () -> shooter.isFlywheelAtSpeed();
 
     return Commands.run(() -> shooter.setState(ShooterState.PRESHOOT), shooter)
