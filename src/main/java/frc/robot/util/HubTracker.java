@@ -8,6 +8,8 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.constants.Constants;
 import java.util.Optional;
 
+// TODO check if in practice mode
+
 /* Made by Tori Dell, FRC Team 5000 Hammerheads
  * CD: https://www.chiefdelphi.com/u/lordoffrogs/
  * Github: https://gist.github.com/LordOfFrogs
