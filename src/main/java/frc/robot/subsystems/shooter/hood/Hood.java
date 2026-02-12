@@ -71,4 +71,8 @@ public class Hood {
   public boolean isHomed() {
     return homed;
   }
+
+  public double getEncoderDetectedPosition(){
+    return inputs.degrees;
+  }
 }
