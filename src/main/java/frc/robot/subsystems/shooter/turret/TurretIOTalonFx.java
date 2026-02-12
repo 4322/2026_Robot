@@ -103,11 +103,4 @@ public class TurretIOTalonFx implements TurretIO {
             - Units.degreesToRotations(Constants.Turret.midPointPhysicalDeg);
     turretMotor.setControl(new MotionMagicVoltage(Units.degreesToRotations(degs)));
   }
-
-  @Override
-  public void setAzimuth(double getAzimuth) {
-    this.turretAzimuth = getAzimuth;
-    turretMotor.setControl(
-        new MotionMagicVoltage(Units.degreesToRotations(degs)).withSlot(0).withEnableFOC(true));
-  }
 }

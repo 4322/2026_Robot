@@ -153,7 +153,7 @@ public class RobotContainer {
                 ? new Turret(new TurretIO() {})
                 : new Turret(new TurretIOTalonFx());
 
-        shooter = new Shooter(flywheel, hood, spindexer, tunnel, turret);
+        shooter = new Shooter(flywheel, hood, spindexer, tunnel, turret, visionGlobalPose, drive);
 
         /*
         intake = Constants.intakeMode == Constants.SubsystemMode.DISABLED ?
@@ -193,7 +193,7 @@ public class RobotContainer {
                 : new VisionObjectDetection(
                     drive, new VisionObjectDetectionIOPhoton()); // TODO add sim io
 
-        shooter = new Shooter(flywheel, hood, spindexer, tunnel, turret);
+        shooter = new Shooter(flywheel, hood, spindexer, tunnel, turret, visionGlobalPose, drive);
 
         /*
         intake = Constants.intakeMode == Constants.SubsystemMode.DISABLED ?
@@ -222,7 +222,7 @@ public class RobotContainer {
         spindexer = new Spindexer(new SpindexerIO() {});
         tunnel = new Tunnel(new TunnelIO() {});
         turret = new Turret(new TurretIO() {});
-        shooter = new Shooter(flywheel, hood, spindexer, tunnel, turret);
+        shooter = new Shooter(flywheel, hood, spindexer, tunnel, turret, visionGlobalPose, drive);
         // TODO intake = new Intake();
         led = new LED();
       }

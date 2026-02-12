@@ -3,8 +3,9 @@ package frc.robot.subsystems.shooter;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
-import frc.robot.constants.Constants.FiringParameters;
 import frc.robot.subsystems.drive.Drive;
+import frc.robot.subsystems.shooter.areaManager.AreaManager;
+import frc.robot.subsystems.shooter.areaManager.AreaManager.Zone;
 import frc.robot.subsystems.shooter.firingManager.FiringManager;
 import frc.robot.subsystems.shooter.firingManager.FiringManager.FiringSolution;
 import frc.robot.subsystems.shooter.flywheel.Flywheel;
@@ -13,7 +14,6 @@ import frc.robot.subsystems.shooter.spindexer.Spindexer;
 import frc.robot.subsystems.shooter.tunnel.Tunnel;
 import frc.robot.subsystems.shooter.turret.Turret;
 import frc.robot.subsystems.vision.visionGlobalPose.VisionGlobalPose;
-
 import org.littletonrobotics.junction.Logger;
 
 public class Shooter extends SubsystemBase {
@@ -41,9 +41,17 @@ public class Shooter extends SubsystemBase {
   private double targetTurretAngleDeg;
 
   private boolean unwindComplete = false;
-  
 
-  public Shooter(Flywheel flywheel, Hood hood, Spindexer spindexer, Tunnel tunnel, Turret turret, VisionGlobalPose visionGlobalPose, Drive drive) {
+  private boolean idleIsUnwinding = false;
+
+  public Shooter(
+      Flywheel flywheel,
+      Hood hood,
+      Spindexer spindexer,
+      Tunnel tunnel,
+      Turret turret,
+      VisionGlobalPose visionGlobalPose,
+      Drive drive) {
     this.flywheel = flywheel;
     this.hood = hood;
     this.spindexer = spindexer;
@@ -58,7 +66,7 @@ public class Shooter extends SubsystemBase {
     switch (state) {
       case DISABLED -> {
         if (DriverStation.isEnabled()) {
-          
+
           state = ShooterState.IDLE;
         }
       }
@@ -66,7 +74,14 @@ public class Shooter extends SubsystemBase {
         spindexer.requestIdle();
         if (spindexer.isStopped()) {
           tunnel.requestIdle();
-          flywheel.requestIdle();
+          flywheel.requestGoal(Constants.Flywheel.idleRPS);
+          turret.setAngle(targetTurretAngleDeg, true);
+          if (AreaManager.getZoneOfPosition(visionGlobalPose.getHybridPose(drive).getTranslation())
+              == Zone.TRENCH_EXCLUSION) { // TODO set trench exclusion zone
+            hood.requestGoal(Constants.Hood.idleAngleDeg);
+          } else {
+            hood.requestGoal(targetHoodAngleDeg);
+          }
         }
       }
       case UNWIND -> {
@@ -76,7 +91,10 @@ public class Shooter extends SubsystemBase {
           if (tunnel.isStopped()) {
             turret.unwind();
           }
-        } // TODO hub enable check
+        }
+        if (turret.isAtGoal()) {
+          unwindComplete = true;
+        }
       }
       case PRESHOOT -> {
         flywheel.requestGoal(targetFlywheelSpeedRPM / 60);
@@ -105,14 +123,17 @@ public class Shooter extends SubsystemBase {
     tunnel.periodic();
     hood.periodic();
     turret.periodic();
-    
+
     Logger.recordOutput("Shooter/State", state.toString());
   }
 
   private void calculateFiringSolution() {
-    FiringSolution firingSolution = FiringManager.getFiringSolution(visionGlobalPose.getHybridPose(drive).getTranslation(), drive.getVelocity());
+    FiringSolution firingSolution =
+        FiringManager.getFiringSolution(
+            visionGlobalPose.getHybridPose(drive).getTranslation(), drive.getVelocity());
     targetHoodAngleDeg = firingSolution.hoodAngle();
     targetFlywheelSpeedRPM = firingSolution.flywheelSpeedRPM();
+    targetTurretAngleDeg = firingSolution.turretAngleDeg();
   }
 
   public boolean isUnwindComplete() {
@@ -122,11 +143,6 @@ public class Shooter extends SubsystemBase {
   // Turret is at maximum path of travel
   public boolean needsToUnwind() {
     return turret.needsToUnwind();
-  }
-
-  // Turret is at center position
-  public boolean isUnwinded() {
-    return turret.isUnwinded();
   }
 
   public boolean isMechanismsAtSpeed() {
@@ -142,7 +158,7 @@ public class Shooter extends SubsystemBase {
   }
 
   public boolean isTurretInPosition() {
-    return false; // TODO
+    return turret.isAtGoal();
   }
 
   public void setState(ShooterState newState) {
@@ -159,10 +175,30 @@ public class Shooter extends SubsystemBase {
   public void requestShoot() {
     calculateFiringSolution();
 
-    if (state == ShooterState.IDLE || 
-    (state == ShooterState.UNWIND && unwindComplete)) {
+    if (state == ShooterState.IDLE || (state == ShooterState.UNWIND && unwindComplete)) {
+      unwindComplete = false;
       state = ShooterState.PRESHOOT;
-      if (hood.)
+      if (hood.isAtGoal() && turret.isAtGoal()) {
+        state = ShooterState.SHOOT;
+      }
+    } else {
+      if (turret.needsToUnwind()) {
+        unwindComplete = false;
+        state = ShooterState.UNWIND;
+      }
+    }
+  }
+
+  public void requestIdle(boolean forceUnwind) {
+    if (forceUnwind) {
+      turret.unwind();
+      if (turret.isAtGoal()) {
+        state = ShooterState.IDLE;
+      } else {
+        state = ShooterState.UNWIND;
+      }
+    } else {
+      state = ShooterState.IDLE;
     }
   }
 }

@@ -4,54 +4,35 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.shooter.Shooter;
-import frc.robot.subsystems.shooter.Shooter.ShooterState;
 import frc.robot.subsystems.shooter.areaManager.AreaManager;
 import java.util.function.BooleanSupplier;
 
 public class ShooterCommands {
 
   public static Command shoot(Shooter shooter, BooleanSupplier end) {
-    BooleanSupplier flywheelAtSpeed = () -> shooter.isFlywheelAtSpeed();
 
-    return Commands.run(() -> shooter.requestShoot())
-        .until(end);
+    return Commands.run(() -> shooter.requestShoot()).until(end);
   }
 
   // Main commands
 
   public static Command inhibitAutoShoot(Shooter shooter, BooleanSupplier toggleOn) {
     BooleanSupplier end = () -> !toggleOn.getAsBoolean();
-    BooleanSupplier needsToUnwind = () -> shooter.needsToUnwind();
-    BooleanSupplier unwinded = () -> shooter.isUnwinded();
-    BooleanSupplier unwindComplete = () -> shooter.isUnwindComplete();
 
     return Commands.run(
             () -> {
-              if ((!unwinded.getAsBoolean() || needsToUnwind.getAsBoolean())
-                  && !unwindComplete.getAsBoolean()) {
-                shooter.setState(ShooterState.UNWIND);
-              } else {
-                shooter.setState(ShooterState.IDLE);
-              }
+              shooter.requestIdle(true);
             })
         .until(end); // BooleanSupplier tied to operator toggle 1 being turned off
   }
 
   public static Command areaInhibitAutoShoot(Shooter shooter, Drive drive) {
-    BooleanSupplier needsToUnwind = () -> shooter.needsToUnwind();
-    BooleanSupplier unwinded = () -> shooter.isUnwinded();
-    BooleanSupplier unwindComplete = () -> shooter.isUnwindComplete();
     BooleanSupplier inShootingArea =
         () -> AreaManager.isShootingArea(drive.getPose().getTranslation());
 
     return Commands.run(
             () -> {
-              if ((!unwinded.getAsBoolean() || needsToUnwind.getAsBoolean())
-                  && !unwindComplete.getAsBoolean()) {
-                shooter.setState(ShooterState.UNWIND);
-              } else {
-                shooter.setState(ShooterState.IDLE);
-              }
+              shooter.requestIdle(true);
             })
         .until(inShootingArea);
   }

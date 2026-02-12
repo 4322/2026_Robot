@@ -12,7 +12,7 @@ import frc.robot.subsystems.shooter.areaManager.AreaManager.Zone;
 
 public class FiringManager {
 
-  public record FiringSolution(double flywheelSpeedRPM, double hoodAngle, Rotation2d turretAngle) {}
+  public record FiringSolution(double flywheelSpeedRPM, double hoodAngle, double turretAngleDeg) {}
 
   public enum FiringTargets {
     HUB,
@@ -71,7 +71,8 @@ public class FiringManager {
     double ratio = MathUtil.clamp(targetHorizFromHood / totalVelocity, 0.0, 1.0);
     double adjustedHood = Math.toDegrees(Math.acos(ratio));
 
-    return new FiringSolution(adjustedRPM, adjustedHood, turretAngle);
+    // TODO verify that this is correct converting rotation 2d -> deg for turret
+    return new FiringSolution(adjustedRPM, adjustedHood, turretAngle.getDegrees());
   }
 
   public static double velocityToEffectiveDistance(double velocity) {

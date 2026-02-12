@@ -356,4 +356,8 @@ public class Drive extends SubsystemBase {
       new Translation2d(TunerConstants.BackRight.LocationX, TunerConstants.BackRight.LocationY)
     };
   }
+
+  public Translation2d getVelocity() {
+    return new Translation2d(); // TODO
+  }
 }

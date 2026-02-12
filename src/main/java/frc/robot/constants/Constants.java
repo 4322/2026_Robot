@@ -126,6 +126,7 @@ public final class Constants {
     public static final int canandcolorId = 0;
     public static final double minFuelDetectionProximity = 0.2;
     public static final double allowedVelocityErrorMechanismRPS = 0.2;
+    public static final int idleRPS = 2;
   }
 
   public static class VisionObjectDetection {
@@ -177,6 +178,7 @@ public final class Constants {
     public static final double hoodTolerance = 0.1;
     public static final double homingVelocityThreshold = 1;
     public static final double homingVelocity = -0.2;
+    public static double idleAngleDeg = 0; // TODO
   }
 
   public static class Control {

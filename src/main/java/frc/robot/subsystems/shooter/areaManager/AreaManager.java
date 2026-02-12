@@ -64,7 +64,8 @@ public class AreaManager {
     LEFT_OPPOSITION,
     RIGHT_OPPOSITION,
     LEFT_NEUTRAL,
-    RIGHT_NEUTRAL
+    RIGHT_NEUTRAL,
+    TRENCH_EXCLUSION // TODO set this
   }
 
   private static Zone zone = Zone.ALLIANCE_ZONE;
