@@ -1,6 +1,5 @@
 package frc.robot.subsystems.shooter.flywheel;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.constants.Constants;
 import org.littletonrobotics.junction.Logger;
 
@@ -11,14 +10,6 @@ public class Flywheel {
   private double ballsShot = 0;
   private boolean fuelDetected = false;
 
-  public enum FlywheelStates {
-    DISABLED,
-    IDLE,
-    SHOOTING
-  }
-
-  private FlywheelStates state = FlywheelStates.DISABLED;
-
   public Flywheel(FlywheelIO io) {
     this.io = io;
   }
@@ -26,6 +17,7 @@ public class Flywheel {
   public void periodic() {
     io.updateInputs(inputs);
     Logger.processInputs("Flywheel", inputs);
+    Logger.recordOutput("Flywheel/BallsShot", ballsShot);
 
     if (inputs.fuelDetected && !fuelDetected) {
       ballsShot++;
@@ -33,31 +25,11 @@ public class Flywheel {
     } else if (!inputs.fuelDetected) {
       fuelDetected = false;
     }
-
-    switch (state) {
-      case DISABLED -> {
-        if (DriverStation.isEnabled()) {
-          state = FlywheelStates.IDLE;
-        }
-      }
-      case IDLE -> {
-        io.setTargetMechanismRotations(Constants.Flywheel.idleMechanismRPS);
-      }
-      case SHOOTING -> {
-        io.setTargetMechanismRotations(requestedMechanismRPS);
-      }
-    }
-
-    Logger.recordOutput("Flywheel/State", state.toString());
   }
 
-  public void requestIdle() {
-    state = FlywheelStates.IDLE;
-  }
-
-  public void requestShoot(double velocity) {
-    state = FlywheelStates.SHOOTING;
-    requestedMechanismRPS = velocity;
+  public void requestGoal(double velocity) {
+    io.setTargetMechanismRPS(velocity);
+    inputs.requestedMechanismRPS = velocity;
   }
 
   public void enableBrakeMode(boolean enable) {
@@ -69,11 +41,11 @@ public class Flywheel {
   }
 
   public boolean atTargetVelocity() {
-    return Math.abs(inputs.actualMechanismRotations - inputs.requestedMechanismRotations)
+    return Math.abs(inputs.MechanismRPS - inputs.requestedMechanismRPS)
         < Constants.Flywheel.allowedVelocityErrorMechanismRPS;
   }
 
   public double getVelocity() {
-    return inputs.actualMechanismRotations;
+    return inputs.MechanismRPS;
   }
 }
