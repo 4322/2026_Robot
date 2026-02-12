@@ -15,7 +15,6 @@ import frc.robot.subsystems.shooter.tunnel.Tunnel;
 import frc.robot.subsystems.shooter.turret.Turret;
 import frc.robot.subsystems.vision.visionGlobalPose.VisionGlobalPose;
 import frc.robot.util.HubTracker;
-
 import org.littletonrobotics.junction.Logger;
 
 public class Shooter extends SubsystemBase {
@@ -176,9 +175,11 @@ public class Shooter extends SubsystemBase {
 
   public void requestShoot() {
     calculateFiringSolution();
+    if (AreaManager.getZoneOfPosition(drive.getPose().getTranslation()) == Zone.ALLIANCE_ZONE
+        && !HubTracker.isAbleToShoot()) {
+      state = ShooterState.IDLE;
 
-    if (!(AreaManager.getZoneOfPosition(drive.getPose().getTranslation()) == Zone.ALLIANCE_ZONE
-        && !HubTracker.isAbleToShoot())) {
+    } else {
       if (state == ShooterState.IDLE || (state == ShooterState.UNWIND && unwindComplete)) {
         unwindComplete = false;
         state = ShooterState.PRESHOOT;
@@ -191,8 +192,6 @@ public class Shooter extends SubsystemBase {
           state = ShooterState.UNWIND;
         }
       }
-    } else {
-      state = ShooterState.IDLE;
     }
   }
 
