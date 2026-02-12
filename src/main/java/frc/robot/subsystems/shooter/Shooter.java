@@ -178,7 +178,7 @@ public class Shooter extends SubsystemBase {
     calculateFiringSolution();
 
     if (!(AreaManager.getZoneOfPosition(drive.getPose().getTranslation()) == Zone.ALLIANCE_ZONE
-        && HubTracker.isAbleToShoot())) {
+        && !HubTracker.isAbleToShoot())) {
       if (state == ShooterState.IDLE || (state == ShooterState.UNWIND && unwindComplete)) {
         unwindComplete = false;
         state = ShooterState.PRESHOOT;
