@@ -1,3 +1,23 @@
 package frc.robot.subsystems.shooter.turret;
 
-public class TurretIO {}
+import org.littletonrobotics.junction.AutoLog;
+
+public interface TurretIO {
+  @AutoLog
+  public static class TurretIOInputs {
+    public boolean motorConnected = false;
+    public double speedMotorRotations = 0.0;
+    public double appliedVolts = 0.0;
+    public double statorVolts = 0.0;
+    public double motorTempCelsius = 0.0;
+    public double encoderOneRotations = 0.0;
+    public double encoderTwoRotations = 0.0;
+    public double turretDegs = 0.0;
+  }
+
+  public default void updateInputs(TurretIOInputs inputs) {}
+
+  public default void setAngle(double angle) {}
+
+  public default void setBrakeMode(boolean mode) {}
+}

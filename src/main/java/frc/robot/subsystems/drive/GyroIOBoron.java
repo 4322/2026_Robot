@@ -2,15 +2,13 @@ package frc.robot.subsystems.drive;
 
 import com.reduxrobotics.sensors.canandgyro.Canandgyro;
 import com.reduxrobotics.sensors.canandgyro.CanandgyroSettings;
-
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 
 public class GyroIOBoron implements GyroIO {
-    private final Canandgyro gyro;
+  private final Canandgyro gyro;
 
   public GyroIOBoron() {
-    gyro = new Canandgyro(0); //TODO set this
+    gyro = new Canandgyro(0); // TODO set this
 
     CanandgyroSettings settings = new CanandgyroSettings();
     settings.setAngularVelocityFramePeriod(0.02);
