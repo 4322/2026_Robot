@@ -62,7 +62,7 @@ public class Shooter extends SubsystemBase {
         if (spindexer.isStopped()) {
           tunnel.requestIdle();
           if (tunnel.isStopped()) {
-            turret.preemptiveUnwind();
+            turret.unwind();
           }
         } // TODO hub enable check
         // TODO unwindComplete = turret.isUnwound();

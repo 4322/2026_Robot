@@ -2,6 +2,7 @@ package frc.robot.subsystems.shooter.turret;
 
 import edu.wpi.first.math.MathUtil;
 import frc.robot.constants.Constants;
+import org.littletonrobotics.junction.Logger;
 
 public class Turret {
   private TurretIO io;
@@ -13,6 +14,7 @@ public class Turret {
 
   public enum turretState {
     DISABLED,
+    UNWIND,
     SET_TURRET_ANGLE
   }
 
@@ -23,6 +25,9 @@ public class Turret {
   }
 
   public void periodic() {
+    io.updateInputs(inputs);
+    Logger.processInputs("Turret", inputs);
+    Logger.recordOutput("Turret/State", state.toString());
     switch (Constants.turretMode) {
       case DISABLED -> {}
       case TUNING -> {}
@@ -31,6 +36,9 @@ public class Turret {
         switch (state) {
           case DISABLED -> {
             break;
+          }
+          case UNWIND -> {
+            io.setAngle(Constants.Turret.midPointPhysicalDeg);
           }
           case SET_TURRET_ANGLE -> {
             if (desiredDeg != null) {
@@ -54,8 +62,6 @@ public class Turret {
     // Goes to side it favors, and if curr angle + desi big than max, set to max, but when safe
     // unwind
     if (desiredDeg != null) {
-      this.turretAzimuth = angle;
-      io.setAzimuth(turretAzimuth);
       if (inputs.turretDegs >= Constants.Turret.midPointPhysicalDeg) {
         if (angle < inputs.turretDegs - 180) {
           desiredDeg = angle + 360;
@@ -77,6 +83,8 @@ public class Turret {
     } else if (desiredDeg == null && safeToUnwind) {
       desiredDeg = Constants.Turret.midPointPhysicalDeg;
     }
+    this.turretAzimuth = desiredDeg % 360;
+    Logger.recordOutput("Turret/turretAzimuth", turretAzimuth);
   }
 
   public boolean needsToUnwind() {
@@ -88,13 +96,15 @@ public class Turret {
     return MathUtil.isNear(desiredDeg, inputs.turretDegs, Constants.Turret.goalToleranceDeg);
   }
 
-  public void setTurretDeg(Double deg) {
+  public void setTurretAngleState() {
     state = turretState.SET_TURRET_ANGLE;
   }
 
-  public void preemptiveUnwind() {
-    desiredDeg = Constants.Turret.midPointPhysicalDeg;
+  public void unwind() {
+    state = turretState.UNWIND;
   }
 
-  public void setBrakeMode(Boolean mode) {}
+  public void setBrakeMode(Boolean mode) {
+    io.setBrakeMode(mode);
+  }
 }

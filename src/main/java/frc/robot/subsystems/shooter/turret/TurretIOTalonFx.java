@@ -21,7 +21,6 @@ public class TurretIOTalonFx implements TurretIO {
   private double CANCoderOneMod;
   private double CANCoderTwoMod;
   private double turretMod;
-  private double turretAzimuth;
 
   public TurretIOTalonFx() {
     turretMotor = new TalonFX(Constants.Turret.motorId);
@@ -36,10 +35,12 @@ public class TurretIOTalonFx implements TurretIO {
     config.Slot0.kI = Constants.Turret.kI;
     config.Slot0.kD = Constants.Turret.kD;
 
-    config.HardwareLimitSwitch.ForwardLimitEnable = false;
-    config.HardwareLimitSwitch.ReverseLimitEnable = false;
+    config.HardwareLimitSwitch.ForwardLimitEnable = true;
+    config.HardwareLimitSwitch.ReverseLimitEnable = true;
 
     StatusCode configStatus = turretMotor.getConfigurator().apply(config);
+    StatusCode CANcoderStatus = CANcoderOne.getConfigurator().apply(CANconfigOne);
+    StatusCode CANcoderStatusTwo = CANcoderTwo.getConfigurator().apply(CANconfigTwo);
 
     if (configStatus != StatusCode.OK) {
       DriverStation.reportError(
@@ -49,14 +50,35 @@ public class TurretIOTalonFx implements TurretIO {
               + configStatus.getDescription(),
           false);
     }
-    turretMotor.setPosition(getAzimuth());
+    if (CANcoderStatus != StatusCode.OK) {
+      DriverStation.reportError(
+          "CANCoderOne "
+              + CANcoderOne.getDeviceID()
+              + " error (CANCoderOne): "
+              + CANcoderStatus.getDescription(),
+          false);
+    }
+    if (CANcoderStatusTwo != StatusCode.OK) {
+      DriverStation.reportError(
+          "CANCoderTwo "
+              + CANcoderTwo.getDeviceID()
+              + " error (CANCoderTwo): "
+              + CANcoderStatusTwo.getDescription(),
+          false);
+    }
+    turretMotor.setPosition(getAngle());
   }
 
   @Override
   public void updateInputs(TurretIOInputs inputs) {
-    inputs.turretAzimuth = turretAzimuth;
-    inputs.turretDegs =
-        Units.rotationsToDegrees(getAzimuth()) - Constants.Turret.midPointPhysicalDeg;
+    inputs.turretDegs = Units.rotationsToDegrees(turretMotor.getPosition().getValueAsDouble());
+    inputs.encoderOneRotations = CANcoderOne.getPosition().getValueAsDouble();
+    inputs.encoderTwoRotations = CANcoderTwo.getPosition().getValueAsDouble();
+    inputs.motorConnected = turretMotor.isConnected();
+    inputs.speedMotorRotations = turretMotor.getVelocity().getValueAsDouble();
+    inputs.appliedVolts = turretMotor.getSupplyVoltage().getValueAsDouble();
+    inputs.motorTempCelsius = turretMotor.getDeviceTemp().getValueAsDouble();
+    inputs.statorVolts = turretMotor.getMotorVoltage().getValueAsDouble();
   }
 
   @Override
@@ -64,7 +86,7 @@ public class TurretIOTalonFx implements TurretIO {
     turretMotor.setNeutralMode(mode ? NeutralModeValue.Brake : NeutralModeValue.Coast);
   }
 
-  public double getAzimuth() {
+  public double getAngle() {
     CANCoderOneMod =
         CANcoderOne.getPosition().getValueAsDouble() % Constants.Turret.CANCoderOneRatio;
     CANCoderTwoMod =
@@ -85,5 +107,7 @@ public class TurretIOTalonFx implements TurretIO {
   @Override
   public void setAzimuth(double getAzimuth) {
     this.turretAzimuth = getAzimuth;
+    turretMotor.setControl(
+        new MotionMagicVoltage(Units.degreesToRotations(degs)).withSlot(0).withEnableFOC(true));
   }
 }
