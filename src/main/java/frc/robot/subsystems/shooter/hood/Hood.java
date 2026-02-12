@@ -1,52 +1,78 @@
 package frc.robot.subsystems.shooter.hood;
 
-import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.Timer;
+import frc.robot.constants.Constants;
 import org.littletonrobotics.junction.Logger;
 
 public class Hood {
   private HoodIO io;
   private HoodIOInputsAutoLogged inputs = new HoodIOInputsAutoLogged();
-  private double requestedAngle = 0.0;
-
-  public enum HoodStates {
-    DISABLED,
-    HOMING,
-    IDLE,
-    SHOOTING
-  }
-
-  private HoodStates state = HoodStates.DISABLED;
+  private double requestedAngleDEG = 0.0;
+  private Timer homingTimer = new Timer();
+  private double pastEncoderPosition = 0.0;
+  private double PIDCalculate;
+  private boolean homed = false;
+  private PIDController pidController =
+      new PIDController(Constants.Hood.kP, Constants.Hood.kI, Constants.Hood.kD);
 
   public Hood(HoodIO io) {
+
     this.io = io;
+    pidController.setTolerance(Constants.Hood.hoodTolerance);
+    pidController.disableContinuousInput();
+    pidController.setPID(Constants.Hood.kP, Constants.Hood.kI, Constants.Hood.kD);
   }
 
   public void periodic() {
     io.updateInputs(inputs);
     Logger.processInputs("Hood", inputs);
+    Logger.recordOutput("Hood/requestedDegree", requestedAngleDEG);
+    Logger.recordOutput("Hood/requestedServoVelocity", PIDCalculate);
 
-    switch (state) {
-      case DISABLED -> {
-        if (DriverStation.isEnabled()) {
-          state = HoodStates.HOMING;
+    if (!homed) {
+      io.setServoVelocity(Constants.Hood.homingVelocity);
+      homingTimer.start();
+      if (homingTimer.hasElapsed(0.04)
+          && Math.abs(inputs.encoderRPS) < Constants.Hood.homingVelocityThreshold) {
+        io.setEncoderHomed();
+        io.setServoVelocity(Constants.Hood.idleVelocity);
+        homed = true;
+        homingTimer.reset();
+        homingTimer.stop();
+      } else {
+        if (Math.abs(inputs.encoderRPS) > Constants.Hood.homingVelocityThreshold) {
+          homingTimer.reset();
         }
+        pastEncoderPosition = inputs.rawRotations;
       }
-      case HOMING -> {
-        // TODO homing logic
-      }
-      case IDLE -> {}
-      case SHOOTING -> {}
     }
-
-    Logger.recordOutput("Hood/State", state.toString());
   }
 
-  public void requestIdle() {
-    state = HoodStates.IDLE;
+  public void requestGoal(double angle) {
+    pidController.setSetpoint(angle);
+    requestedAngleDEG = angle;
+    if (pidController.atSetpoint()) {
+      io.setServoVelocity(0);
+    } else {
+      io.setServoVelocity((pidController.calculate(inputs.degrees, requestedAngleDEG)));
+    }
+    PIDCalculate = pidController.calculate(inputs.degrees, requestedAngleDEG);
   }
 
-  public void requestShoot(double angle) {
-    state = HoodStates.SHOOTING;
-    requestedAngle = angle;
+  public void rehome() {
+    homed = false;
+  }
+
+  public boolean isAtGoal() {
+    return pidController.atSetpoint();
+  }
+
+  public boolean isHomed() {
+    return homed;
+  }
+
+  public double getEncoderDetectedPosition() {
+    return inputs.degrees;
   }
 }
