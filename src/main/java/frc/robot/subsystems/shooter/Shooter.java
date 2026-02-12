@@ -31,7 +31,7 @@ public class Shooter extends SubsystemBase {
   private Tunnel tunnel;
   private Turret turret;
 
-  private double targetAngle;
+  private double targetHoodAngleDeg;
   private double targetFlywheelSpeedRPM;
 
   private boolean unwindComplete = false;
@@ -71,14 +71,14 @@ public class Shooter extends SubsystemBase {
         // TODO unwindComplete = turret.isUnwound();
       }
       case PRESHOOT -> {
-        flywheel.requestGoal(targetFlywheelSpeed / 60);
-        // TODO Turret request position here and hood
+        flywheel.requestGoal(targetFlywheelSpeedRPM / 60);
+        hood.requestGoal(targetHoodAngleDeg);
+        turret.requestGoal();
       }
       case SHOOT -> {
         calculateFiringSolution();
-        flywheel.requestShoot(targetFlywheelSpeedRPM / 60.0);
-        flywheel.requestGoal(targetFlywheelSpeed); // TODO change to variable
-        // TODO Turret request position here and hood
+        flywheel.requestGoal(targetFlywheelSpeedRPM / 60); // TODO change to variable
+        hood.requestGoal(targetHoodAngleDeg);
         tunnel.requestIndex(
             Constants.Tunnel.dynamicVelocity
                 ? Constants.Tunnel.dynamicVelocityPercent * flywheel.getVelocity()
@@ -101,7 +101,7 @@ public class Shooter extends SubsystemBase {
 
   private void calculateFiringSolution() {
     FiringSolution firingSolution = FiringManager.getFiringSolution();
-    targetAngle = firingSolution.hoodAngle();
+    targetHoodAngleDeg = firingSolution.hoodAngle();
     targetFlywheelSpeedRPM = firingSolution.flywheelSpeedRPM();
   }
 
