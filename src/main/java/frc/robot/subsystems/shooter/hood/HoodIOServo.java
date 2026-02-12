@@ -1,37 +1,41 @@
 package frc.robot.subsystems.shooter.hood;
 
-import com.revrobotics.REVLibError;
+import com.ctre.phoenix6.hardware.CANcoder;
+import com.revrobotics.ResetMode;
 import com.revrobotics.servohub.ServoChannel;
 import com.revrobotics.servohub.ServoChannel.ChannelId;
 import com.revrobotics.servohub.ServoHub;
 import com.revrobotics.servohub.ServoHub.Bank;
-import com.revrobotics.servohub.ServoHub.ResetMode;
 import com.revrobotics.servohub.config.ServoChannelConfig;
 import com.revrobotics.servohub.config.ServoChannelConfig.BehaviorWhenDisabled;
 import com.revrobotics.servohub.config.ServoHubConfig;
+import edu.wpi.first.math.MathUtil;
 import frc.robot.constants.Constants;
 
-public class HoodIOServo {
+public class HoodIOServo implements HoodIO {
   private ServoHub servoHub;
   private ServoChannel servo;
+  private CANcoder encoder;
 
   private ServoHubConfig config = new ServoHubConfig();
 
   public HoodIOServo() {
-    servoHub = new ServoHub(Constants.Hood.servoHubId);
-    servo = servoHub.getServoChannel(ChannelId.fromInt(Constants.Hood.servoChannelId));
+    servoHub = new ServoHub(Constants.Hood.servoChannel);
+    servo = servoHub.getServoChannel(ChannelId.fromInt(Constants.Hood.servoChannel));
+    encoder = new CANcoder(Constants.Hood.encoderId);
 
-    REVLibError configStatus = configServo();
+    configServo();
   }
 
-  private REVLibError configServo() {
-    for (int i = 0; i < 6; i++) {
-      ServoChannelConfig channelConfig = new ServoChannelConfig(ChannelId.fromInt(i));
-      channelConfig.disableBehavior(
-          BehaviorWhenDisabled.kDoNotSupplyPower); // Config "coast" mode by disabling channel
-      channelConfig.pulseRange(500, 1500, 2500); // Default PWM pulses recommended by REV
-      config.apply(ChannelId.fromInt(i), channelConfig);
-    }
+  private void configServo() {
+    servoHub.configure(config, ResetMode.kResetSafeParameters);
+
+    ServoChannelConfig channelConfig =
+        new ServoChannelConfig(ChannelId.fromInt(Constants.Hood.servoChannel));
+    channelConfig.disableBehavior(
+        BehaviorWhenDisabled.kDoNotSupplyPower); // Config "coast" mode by disabling channel
+    channelConfig.pulseRange(1000, 1500, 2000); // Default PWM pulses recommended by REV
+    config.apply(ChannelId.fromInt(Constants.Hood.servoChannel), channelConfig);
 
     servoHub.setBankPulsePeriod(Bank.kBank0_2, 20000); // TODO set this
 
@@ -39,16 +43,29 @@ public class HoodIOServo {
 
     // Enables "brake" mode on servos
     servo.setEnabled(true);
-
-    // Set default position
-    servo.setPulseWidth(Constants.Hood.servoDefaultPWM);
-
-    return servoHub.configure(config, ResetMode.kResetSafeParameters);
   }
 
-  public void setServoPosition(boolean pull) {
-    /* TODO figure out what to do for this
-    servo.setPulseWidth(
-        pull ? Constants.Hood.servoDefaultPWM : Constants.Hood.servoDefaultPWM); */
+  @Override
+  public void updateInputs(HoodIOInputs inputs) {
+    inputs.encoderConnected = encoder.isConnected();
+    inputs.currentPulseWidth = servo.getPulseWidth();
+    inputs.rawRotations = encoder.getPosition().getValueAsDouble(); // Convert degrees to rotations
+    inputs.degrees =
+        inputs.rawRotations * 360.0 * Constants.Hood.gearRatio; // Convert rotations to degrees
+    inputs.encoderRPS = encoder.getVelocity().getValueAsDouble();
+    inputs.servoEnabled =
+        servo.isEnabled(); // Assuming a threshold of 0.1A to determine if the servo is powered
+    inputs.appliedVolts = servo.getCurrent(); // Get the voltage applied to the servo
+  }
+
+  @Override
+  public void setEncoderHomed() {
+    encoder.setPosition(0);
+  }
+
+  @Override
+  public void setServoVelocity(double velocity) {
+    int currentRequested = (1500 + ((int) MathUtil.clamp(velocity, -1, 1) * 500));
+    servo.setPulseWidth(currentRequested);
   }
 }

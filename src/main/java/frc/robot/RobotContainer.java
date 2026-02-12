@@ -17,7 +17,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
-import frc.robot.commands.ShooterCommands;
+import frc.robot.commands.Shooter.ShooterCommand;
 import frc.robot.constants.Constants;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.drive.Drive;
@@ -271,9 +271,9 @@ public class RobotContainer {
             () -> -controller.getRightX()));
 
     // Shooter command bindings
-    shooter.setDefaultCommand(ShooterCommands.autoShoot(shooter, drive));
+    // shooter.setDefaultCommand(ShooterCommand.autoShoot(shooter, drive));
     new JoystickButton(operatorBoard.getLeftController(), Constants.Control.toggle1ButtonNumber)
-        .whileTrue(ShooterCommands.inhibitAutoShoot(shooter, toggle1))
+        .whileTrue(ShooterCommand.inhibitAutoShoot(shooter, toggle1))
         .onTrue(
             new InstantCommand(() -> currentShootingCommand = ShootingCommands.INHIBIT_AUTO_SHOOT))
         .onFalse(
@@ -281,7 +281,7 @@ public class RobotContainer {
 
     inNonShootingArea
         .whileTrue(
-            ShooterCommands.areaInhibitAutoShoot(shooter, drive)
+            ShooterCommand.areaInhibitAutoShoot(shooter, drive)
                 .onlyIf(
                     () ->
                         currentShootingCommand != ShootingCommands.INHIBIT_AUTO_SHOOT

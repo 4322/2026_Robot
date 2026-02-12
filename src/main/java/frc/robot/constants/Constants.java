@@ -142,22 +142,38 @@ public final class Constants {
     public static final double supplyCurrentLimit = 40; // TODO
     public static final InvertedValue motorInvert = InvertedValue.Clockwise_Positive;
     public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
-    public static final double zeroAzimuth = 0.0;
-    public static final double tolerance = 0.0; // TODO
-    public static final double physicalLimitDeg = 360.0; // TODO
-    public static final double physicalLimitToleranceDeg = 5.0; // TODO
+    public static final double goalToleranceDeg = 1.0; // TODO
     public static final double CANCoderOneRatio = 3.0; // TODO
     public static final double CANCoderTwoRatio = 8.0; // TODO
+    public static final double CANCoderOneOffset = 0.0; // TODO
+    public static final double CANCoderTwoOffset = 0.0; // TODO
     public static final double turretGearRatio = 90.0; // TODO
-    public static final double minLimitAzimuth = -360.0; // TODO
-    public static final double maxLimitAzimuth = 360.0; // TODO
-    public static final double offsetAzimuth = 90.0; // TODO
+    public static final double minPhysicalLimitDeg = -360.0; // TODO
+    public static final double maxPhysicalLimitDeg = 360.0; // TODO
+    public static final double midPointPhysicalDeg =
+        (minPhysicalLimitDeg + maxPhysicalLimitDeg) / 2.0;
+    public static final double unwindToleranceDeg = 10.0; // TODO
+    public static final double minUnwindLimitDeg = minPhysicalLimitDeg + unwindToleranceDeg; // TODO
+    public static final double maxUnwindLimitDeg = maxPhysicalLimitDeg - unwindToleranceDeg; // TODO
   }
 
   public static class Hood {
-    public static final int servoHubId = 10;
-    public static final int servoChannelId = 1;
-    public static final int servoDefaultPWM = 0;
+    public static final int servoChannel = 12;
+    public static final int encoderId = 1;
+    public static final double gearRatio = 0.1;
+    public static final double kS = 0;
+    public static final double kV = 0;
+    public static final double kP = 1;
+    public static final double kI = 0;
+    public static final double kD = 0;
+    public static final double statorCurrentLimit = 60; // TODO
+    public static final double supplyCurrentLimit = 40;
+    public static final InvertedValue motorInvert = InvertedValue.Clockwise_Positive;
+    public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
+    public static final int idleVelocity = 0;
+    public static final double hoodTolerance = 0.1;
+    public static final double homingVelocityThreshold = 1;
+    public static final double homingVelocity = -0.2;
   }
 
   public static class Control {
