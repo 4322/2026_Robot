@@ -104,6 +104,36 @@ public class HubTracker {
     }
 
     /**
+     * Returns whether the robot is able to shoot, including buffer time around hub windows.
+     */
+    public static boolean isAbleToShoot() {
+        Optional<Alliance> allianceOpt = DriverStation.getAlliance();
+        if (allianceOpt.isEmpty()) {
+            return false;
+        }
+
+        Alliance alliance = allianceOpt.get();
+        double matchTime = getMatchTime();
+        if (matchTime < 0) {
+            return false;
+        }
+
+        for (Shift shift : Shift.values()) {
+            if (!isActive(alliance, shift)) {
+                continue;
+            }
+
+            double bufferedStart = shift.startTime - Constants.HubTracker.preBuffer;
+            double bufferedEnd = shift.endTime + Constants.HubTracker.postBuffer;
+
+            if (matchTime >= bufferedStart && matchTime <= bufferedEnd) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * Returns whether the hub is active for the next {@link Shift} for the specified {@link Alliance}.
      * Will return {@code false} if disabled or in between auto and teleop.
      */

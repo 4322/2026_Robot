@@ -260,9 +260,10 @@ public final class Constants {
     }
   }
 
-  public static class GameManager {
+  public static class HubTracker {
 
-    public static final int postBufferSec = 2;
+    public static final int preBuffer = 3; // TODO
+    public static final int postBuffer = 2;
 
   }
 }
