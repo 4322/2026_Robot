@@ -85,6 +85,14 @@ public class AreaManager {
             : (frontOfHubBlue.contains(position))));
   }
 
+  public static boolean isHoodInLowerArea(Translation2d position) {
+    return ((trenchLeftRed.contains(position)
+            || trenchRightRed.contains(position)
+            || trenchLeftBlue.contains(position)
+            || trenchRightBlue.contains(position)
+    ));
+  }
+
   public static Zone getZoneOfPosition(Translation2d position) {
     if (Robot.alliance == Alliance.Red) {
       if (redAllianceZone.contains(position)) {
