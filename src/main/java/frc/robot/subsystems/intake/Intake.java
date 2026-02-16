@@ -37,23 +37,23 @@ public class Intake extends SubsystemBase {
         break;
       }
       case EXTEND -> {
-        deployer.setState(DeployerState.EXTEND);
+        deployer.setGoal(DeployerState.EXTEND);
         rollers.setState(RollersState.IDLE);
       }
       case RETRACT -> {
-        deployer.setState(DeployerState.RETRACT);
+        deployer.setGoal(DeployerState.RETRACT);
         rollers.setState(RollersState.IDLE);
       }
       case EJECT -> {
-        deployer.setState(DeployerState.EXTEND);
+        deployer.setGoal(DeployerState.EXTEND);
         rollers.setState(RollersState.EJECT);
       }
       case IDLE -> {
-        deployer.setState(DeployerState.EXTEND);
+        deployer.setGoal(DeployerState.EXTEND);
         rollers.setState(RollersState.IDLE);
       }
       case INTAKING -> {
-        deployer.setState(DeployerState.EXTEND);
+        deployer.setGoal(DeployerState.EXTEND);
         rollers.setState(RollersState.INTAKE);
       }
     }

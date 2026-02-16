@@ -56,7 +56,7 @@ public class Deployer {
     return (inputs.angleDeg >= Constants.Deployer.extendDeg - Constants.Deployer.tolerance);
   }
 
-  public void setState(DeployerState state) {
+  public void setGoal(DeployerState state) {
     this.state = state;
   }
 
