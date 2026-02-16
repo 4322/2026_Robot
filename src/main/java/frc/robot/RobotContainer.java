@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
+import frc.robot.commands.IntakeCommands;
 import frc.robot.commands.Shooter.ShooterCommand;
 import frc.robot.constants.Constants;
 import frc.robot.generated.TunerConstants;
@@ -29,8 +30,10 @@ import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.deployer.Deployer;
 import frc.robot.subsystems.intake.deployer.DeployerIO;
+import frc.robot.subsystems.intake.deployer.DeployerIOTalonFX;
 import frc.robot.subsystems.intake.rollers.Rollers;
 import frc.robot.subsystems.intake.rollers.RollersIO;
+import frc.robot.subsystems.intake.rollers.RollersIOTalonFX;
 import frc.robot.subsystems.led.LED;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.shooter.Shooter.ShooterState;
@@ -53,6 +56,7 @@ import frc.robot.subsystems.vision.visionGlobalPose.VisionGlobalPose;
 import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetection;
 import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetectionIO;
 import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetectionIOPhoton;
+import java.util.function.BooleanSupplier;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -73,7 +77,7 @@ public class RobotContainer {
   private static Tunnel tunnel;
   private static Turret turret;
 
-  // TODO private static Intake intake;
+  private static Intake intake;
   private static LED led;
   private static Rollers rollers;
   private static Deployer deployer;
@@ -95,8 +99,24 @@ public class RobotContainer {
 
   private final Trigger inNonShootingArea;
 
+  // Boolean suppliers
+  private final BooleanSupplier toggle1 =
+      () -> operatorBoard.getLeftController().getRawButton(Constants.Control.toggle1ButtonNumber);
+
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
+
+  // Command variables
+  private enum IntakeCommandTypes {
+    EXTEND,
+    RETRACT,
+    EJECT,
+    IDLE,
+    INTAKING
+  }
+
+  private IntakeCommandTypes currentIntakeCommand = IntakeCommandTypes.EXTEND;
+  private IntakeCommandTypes previousIntakeCommand = IntakeCommandTypes.EXTEND;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -157,12 +177,17 @@ public class RobotContainer {
 
         shooter = new Shooter(flywheel, hood, spindexer, tunnel, turret);
 
-        /*
-        intake = Constants.intakeMode == Constants.SubsystemMode.DISABLED ?
-            new Intake() do intake
-        :
-            new Intake(); do intake
-        */
+        rollers =
+            Constants.rollerMode == Constants.SubsystemMode.DISABLED
+                ? new Rollers(new RollersIO() {})
+                : new Rollers(new RollersIOTalonFX());
+
+        deployer =
+            Constants.deployerMode == Constants.SubsystemMode.DISABLED
+                ? new Deployer(new DeployerIO() {})
+                : new Deployer(new DeployerIOTalonFX());
+
+        intake = new Intake(deployer, rollers);
 
         led = new LED();
       }
@@ -229,7 +254,9 @@ public class RobotContainer {
         tunnel = new Tunnel(new TunnelIO() {});
         turret = new Turret(new TurretIO() {});
         shooter = new Shooter(flywheel, hood, spindexer, tunnel, turret);
-        // TODO intake = new Intake();
+        rollers = new Rollers(new RollersIO() {});
+        deployer = new Deployer(new DeployerIO() {});
+        intake = new Intake(deployer, rollers);
         led = new LED();
       }
     }
@@ -299,6 +326,38 @@ public class RobotContainer {
         .onFalse(
             new InstantCommand(
                 () -> lastShootingCommand = ShootingCommands.AREA_INHIBIT_AUTO_SHOOT));
+
+    controller
+        .y() // TODO this will be toggle 3
+        .whileFalse(
+            IntakeCommands.setExtend(intake)
+                .onlyIf(() -> currentIntakeCommand == IntakeCommandTypes.RETRACT))
+        .onTrue(new InstantCommand(() -> currentIntakeCommand = IntakeCommandTypes.EXTEND));
+
+    controller
+        .y() // TODO driver button 11 whatever that is
+        .onTrue(
+            IntakeCommands.setIntaking(intake)
+                .alongWith(
+                    new InstantCommand(() -> currentIntakeCommand = IntakeCommandTypes.INTAKING))
+                .onlyIf(() -> currentIntakeCommand == IntakeCommandTypes.IDLE));
+
+    controller
+        .y() // TODO driver button 11
+        .onTrue(
+            IntakeCommands.setIdle(intake)
+                .alongWith(new InstantCommand(() -> currentIntakeCommand = IntakeCommandTypes.IDLE))
+                .onlyIf(() -> currentIntakeCommand == IntakeCommandTypes.IDLE));
+
+    controller
+        .y() // TODO operator toggle 3
+        .whileTrue(
+            IntakeCommands.setRetract(intake)
+                .onlyIf(
+                    () ->
+                        (currentIntakeCommand == IntakeCommandTypes.IDLE)
+                            || (currentIntakeCommand == IntakeCommandTypes.INTAKING)))
+        .onTrue(new InstantCommand(() -> currentIntakeCommand = IntakeCommandTypes.RETRACT));
   }
 
   /**
