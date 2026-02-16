@@ -259,14 +259,11 @@ public final class Constants {
       public static final Translation2d neutralRightTranslation = new Translation2d();
       public static final Translation2d neutralLeftTranslation = new Translation2d();
     }
-
-    
   }
 
   public static class CANbus {
     public static final String canbusName = "Clockwork";
-    public static final CANBus CANBus = new CANBus(Constants.CANbus.canbusName, "./logs/example.hoot"); // TODO
-
-      
-    }
+    public static final CANBus CANBus =
+        new CANBus(Constants.CANbus.canbusName, "./logs/example.hoot"); // TODO
+  }
 }

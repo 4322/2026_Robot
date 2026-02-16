@@ -87,10 +87,9 @@ public class AreaManager {
 
   public static boolean isHoodInLowerArea(Translation2d position) {
     return ((trenchLeftRed.contains(position)
-            || trenchRightRed.contains(position)
-            || trenchLeftBlue.contains(position)
-            || trenchRightBlue.contains(position)
-    ));
+        || trenchRightRed.contains(position)
+        || trenchLeftBlue.contains(position)
+        || trenchRightBlue.contains(position)));
   }
 
   public static Zone getZoneOfPosition(Translation2d position) {
