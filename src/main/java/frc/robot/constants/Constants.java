@@ -245,8 +245,8 @@ public final class Constants {
     public static final double kI = 0;
     public static final double kD = 0;
     public static final int CANCoderID = 1; // TODO
-    public static final double sensorToMechanismRatio = 2; // TODO
-    public static final double RotorToSensorRatio = 1; // TODO
+    public static final double sensorToMechanismRatio = 3.0; // TODO
+    public static final double RotorToSensorRatio = 12.0; // TODO
     public static final double tolerance = 0.1;
     public static final double CANCoderStowed = 0.5; // TODO
   }
