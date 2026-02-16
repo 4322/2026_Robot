@@ -1,5 +1,6 @@
 package frc.robot.constants;
 
+import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.geometry.Transform3d;
@@ -159,6 +160,8 @@ public final class Constants {
     public static final double unwindToleranceDeg = 10.0; // TODO
     public static final double minUnwindLimitDeg = minPhysicalLimitDeg + unwindToleranceDeg; // TODO
     public static final double maxUnwindLimitDeg = maxPhysicalLimitDeg - unwindToleranceDeg; // TODO
+    public static final int CANCoderOneId = 0;
+    public static final int CANCoderTwoId = 0;
   }
 
   public static class Hood {
@@ -258,6 +261,12 @@ public final class Constants {
       public static final Translation2d neutralRightTranslation = new Translation2d();
       public static final Translation2d neutralLeftTranslation = new Translation2d();
     }
+  }
+
+  public static class CANbus {
+    public static final String canbusName = "Clockwork";
+    public static final CANBus CANBus =
+        new CANBus(Constants.CANbus.canbusName, "./logs/example.hoot"); // TODO
   }
 
   public static class HubTracker {

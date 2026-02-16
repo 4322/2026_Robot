@@ -23,7 +23,9 @@ public class TurretIOTalonFx implements TurretIO {
   private double turretMod;
 
   public TurretIOTalonFx() {
-    turretMotor = new TalonFX(Constants.Turret.motorId);
+    turretMotor = new TalonFX(Constants.Turret.motorId, Constants.CANbus.CANBus);
+    CANcoderOne = new CANcoder(Constants.Turret.CANCoderOneId, Constants.CANbus.CANBus);
+    CANcoderTwo = new CANcoder(Constants.Turret.CANCoderTwoId, Constants.CANbus.CANBus);
     config.CurrentLimits.StatorCurrentLimit = Constants.Turret.statorCurrentLimit;
     config.CurrentLimits.SupplyCurrentLimit = Constants.Turret.supplyCurrentLimit;
     config.MotorOutput.Inverted = Constants.Turret.motorInvert;

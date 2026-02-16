@@ -16,7 +16,7 @@ public class TunnelIOTalonFx implements TunnelIO {
   private VelocityVoltage velocityRequest = new VelocityVoltage(0).withSlot(0);
 
   public TunnelIOTalonFx() {
-    motor = new TalonFX(Constants.Tunnel.tunnelMotorId);
+    motor = new TalonFX(Constants.Tunnel.tunnelMotorId, Constants.CANbus.CANBus);
 
     config.CurrentLimits.StatorCurrentLimit = Constants.Tunnel.statorCurrentLimit;
     config.CurrentLimits.SupplyCurrentLimit = Constants.Tunnel.supplyCurrentLimit;
