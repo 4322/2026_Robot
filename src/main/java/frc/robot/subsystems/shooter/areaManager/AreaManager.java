@@ -13,7 +13,7 @@ public class AreaManager {
   // Alliance Zones
   private static Rectangle2d redAllianceZone =
       new Rectangle2d(
-          new Translation2d(12.51, Units.inchesToMeters(317.69)),
+          new Translation2d( Units.inchesToMeters(651.22), Units.inchesToMeters(317.69)),
           new Translation2d(Units.inchesToMeters(651.22), 0));
   private static Rectangle2d blueAllianceZone =
       new Rectangle2d(
