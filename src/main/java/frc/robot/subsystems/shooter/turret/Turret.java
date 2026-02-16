@@ -31,7 +31,6 @@ public class Turret {
     switch (Constants.turretMode) {
       case DISABLED -> {}
       case TUNING -> {}
-      case DRIVE_TUNING -> {}
       case NORMAL -> {
         switch (state) {
           case DISABLED -> {
