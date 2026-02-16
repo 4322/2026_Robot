@@ -64,4 +64,8 @@ public class Tunnel {
   public boolean isAtSpeed() {
     return inputs.mechanismRotationsPerSec > Constants.Tunnel.atSpeedMechanismRotationsPerSec;
   }
+
+  public double getVelocity() {
+    return inputs.mechanismRotationsPerSec;
+  }
 }
