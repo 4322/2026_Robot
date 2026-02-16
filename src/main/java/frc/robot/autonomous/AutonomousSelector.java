@@ -20,7 +20,11 @@ public class AutonomousSelector {
 
   public enum AutoName {
     DO_NOTHING,
-    TEST_LEAVE
+    LEAVE,
+    TEST_LEAVE,
+    ONE_CORAL_TWO_ALGAE_CENTER,
+    THREE_CORAL_LEFT,
+    THREE_CORAL_RIGHT
   }
 
   private class Auto {
