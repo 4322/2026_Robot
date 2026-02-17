@@ -1,16 +1,18 @@
-// Copyright (c) 2021-2026 Littleton Robotics
-// http://github.com/Mechanical-Advantage
-//
-// Use of this source code is governed by a BSD
-// license that can be found in the LICENSE file
-// at the root directory of this project.
-
 package frc.robot.constants;
 
+import com.ctre.phoenix6.CANBus;
+import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
+import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
+import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
+import edu.wpi.first.math.interpolation.InverseInterpolator;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotBase;
+import frc.robot.constants.Constants.FiringParameters;
 import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetection.ObjectDetectionType;
 
 /**
@@ -46,11 +48,11 @@ public final class Constants {
 
   public enum SubsystemMode {
     DISABLED,
-    NORMAL
+    NORMAL,
+    TUNING
   }
 
   public static final SubsystemMode driveMode = SubsystemMode.NORMAL;
-  public static final SubsystemMode shooterMode = SubsystemMode.NORMAL;
   public static final SubsystemMode flywheelMode = SubsystemMode.NORMAL;
   public static final SubsystemMode hoodMode = SubsystemMode.NORMAL;
   public static final SubsystemMode spindexerMode = SubsystemMode.NORMAL;
@@ -58,9 +60,231 @@ public final class Constants {
   public static final SubsystemMode turretMode = SubsystemMode.NORMAL;
   public static final SubsystemMode deployerMode = SubsystemMode.NORMAL;
   public static final SubsystemMode rollerMode = SubsystemMode.NORMAL;
+  public static final SubsystemMode intakeMode = SubsystemMode.NORMAL;
   public static final SubsystemMode climberMode = SubsystemMode.DISABLED;
+  public static final SubsystemMode ledMode = SubsystemMode.NORMAL;
   public static final SubsystemMode visionGlobalPose = SubsystemMode.NORMAL;
   public static final SubsystemMode visionObjectDetection = SubsystemMode.NORMAL;
+
+  public static class Spindexer {
+    public static final boolean dynamicVelocity = true;
+    public static final double dynamicVelocityPercent = 0.9; // TODO tune
+
+    public static final int spindexerMotorId = 1;
+    public static final double supplyCurrentLimit = 40; // TODO
+    public static final double statorCurrentLimit = 60;
+    public static final InvertedValue motorInvert =
+        InvertedValue.Clockwise_Positive; // TODO set these
+    public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
+    public static final double kS = 0;
+    public static final double kV = 0;
+    public static final double kP = 1;
+    public static final double kI = 0;
+    public static final double kD = 0;
+    public static final double indexingMechanismRotationsPerSec = 3; // TODO
+    public static final double stoppedMechanismRotationsPerSec = 0.1; // TODO
+
+    public static final double motorToMechanismRatio = 12.0; // 10 inch wheel
+  }
+
+  public static class Tunnel {
+    public static final boolean dynamicVelocity = true;
+    public static final double dynamicVelocityPercent = 0.9; // TODO tune
+
+    public static final double indexingMechanismRotationsPerSec = 10;
+    public static final int tunnelMotorId = 0;
+    public static final double statorCurrentLimit = 60; // TODO
+    public static final double supplyCurrentLimit = 40; // TODO
+    public static final InvertedValue motorInvert =
+        InvertedValue.Clockwise_Positive; // TODO set these
+    public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
+    public static final double kS = 0;
+    public static final double kV = 0;
+    public static final double kP = 1;
+    public static final double kI = 0;
+    public static final double kD = 0;
+
+    public static final double stoppedMechanismRotationsPerSec = 0.1; // TODO
+    public static final double atSpeedMechanismRotationsPerSec =
+        0.95 * indexingMechanismRotationsPerSec; // TODO
+    public static final double motorToMechanismRatio = 1.5; // 2 inch diameter
+  }
+
+  public static class Flywheel {
+    public static final int motorId = 23;
+    public static final int followerMotorId = 24;
+    public static final double statorCurrentLimit = 60; // TODO
+    public static final double supplyCurrentLimit = 40;
+    public static final InvertedValue motorInvert = InvertedValue.Clockwise_Positive;
+    public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
+    public static final double kS = 0;
+    public static final double kV = 0;
+    public static final double kP = 1;
+    public static final double kI = 0;
+    public static final double kD = 0;
+    public static final double allowedVelocityErrorRPS = 5.0; // TODO
+
+    public static final double motorToMechanismRatio = 1; // Diameter 4
+
+    public static final double idleMechanismRPS = 5;
+    public static final double shootingMechanismRPS = 10;
+    public static final int canandcolorId = 0;
+    public static final double minFuelDetectionProximity = 0.2;
+    public static final double allowedVelocityErrorMechanismRPS = 0.2;
+    public static final int idleRPS = 2;
+  }
+
+  public static class VisionObjectDetection {
+
+    public static final Transform3d robotCenterToCamera = new Transform3d(); // TODO add
+    public static final String hostname = null;
+  }
+
+  public static class Turret {
+    public static final int motorId = 13; // TODO
+    public static final double kS = 0; // TODO
+    public static final double kV = 0; // TODO
+    public static final double kP = 1; // TODO
+    public static final double kI = 0; // TODO
+    public static final double kD = 0; // TODO
+    public static final double statorCurrentLimit = 60; // TODO
+    public static final double supplyCurrentLimit = 40; // TODO
+    public static final InvertedValue motorInvert = InvertedValue.Clockwise_Positive;
+    public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
+    public static final double goalToleranceDeg = 1.0; // TODO
+    public static final double CANCoderOneRatio = 9.0; // DONE
+    public static final double CANCoderTwoRatio = 5.0; // DONE
+    public static final double CANCoderOneOffset = 0.0; // TODO
+    public static final double CANCoderTwoOffset = 0.0; // TODO
+    public static final double turretGearRatio = 27; // DONE
+    public static final double minPhysicalLimitDeg = -250.0; // TODO
+    public static final double maxPhysicalLimitDeg = 250.0; // TODO
+    public static final double midPointPhysicalDeg =
+        (minPhysicalLimitDeg + maxPhysicalLimitDeg) / 2.0;
+    public static final double unwindToleranceDeg = 10.0; // TODO
+    public static final double minUnwindLimitDeg = minPhysicalLimitDeg + unwindToleranceDeg; // TODO
+    public static final double maxUnwindLimitDeg = maxPhysicalLimitDeg - unwindToleranceDeg; // TODO
+    public static final int CANCoderOneId = 0;
+    public static final int CANCoderTwoId = 0;
+  }
+
+  public static class Hood {
+    public static final int servoChannel = 12;
+    public static final int encoderId = 1;
+    public static final double gearRatio = 164 / 11.0;
+    public static final double kS = 0;
+    public static final double kV = 0;
+    public static final double kP = 1;
+    public static final double kI = 0;
+    public static final double kD = 0;
+    public static final double statorCurrentLimit = 60; // TODO
+    public static final double supplyCurrentLimit = 40;
+    public static final InvertedValue motorInvert = InvertedValue.Clockwise_Positive;
+    public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
+    public static final int idleVelocity = 0;
+    public static final double hoodTolerance = 0.1;
+    public static final double homingVelocityThreshold = 1;
+    public static final double homingVelocity = -0.2;
+    public static double idleAngleDeg = 0; // TODO
+  }
+
+  public static class Control {
+    public static final int toggle1ButtonNumber = 1; // TODO set these
+  }
+
+  public static class FiringParameters {
+    private final double flywheelRPM;
+    private final double hoodAngleDeg;
+    private final double timeOfFlightSec;
+
+    public FiringParameters(double flywheelRPM, double hoodAngleDeg, double timeOfFlightSec) {
+      this.flywheelRPM = flywheelRPM;
+      this.hoodAngleDeg = hoodAngleDeg;
+      this.timeOfFlightSec = timeOfFlightSec;
+    }
+
+    public double getFlywheelRPM() {
+      return flywheelRPM;
+    }
+
+    public double getHoodAngleDeg() {
+      return hoodAngleDeg;
+    }
+
+    public double getTimeOfFlightSec() {
+      return timeOfFlightSec;
+    }
+
+    public static FiringParameters interpolate(
+        FiringParameters start, FiringParameters end, double howFar) {
+      return new FiringParameters(
+          start.flywheelRPM + (end.flywheelRPM - start.flywheelRPM) * howFar,
+          start.hoodAngleDeg + (end.hoodAngleDeg - start.hoodAngleDeg) * howFar,
+          start.timeOfFlightSec + (end.timeOfFlightSec - start.timeOfFlightSec) * howFar);
+    }
+  }
+
+  public static class FiringManager {
+    public static final InterpolatingTreeMap<Double, FiringParameters> firingMap =
+        new InterpolatingTreeMap<Double, FiringParameters>(
+            InverseInterpolator.forDouble(), FiringParameters::interpolate);
+
+    // Reverse map for velocity to distance lookup
+    public static final InterpolatingDoubleTreeMap velocityToDistanceMap =
+        new InterpolatingDoubleTreeMap();
+
+    public static final double latencyCompensation = 0;
+
+    // Add entry to both maps
+    public static void putShooterEntry(double distance, FiringParameters params) {
+      firingMap.put(distance, params);
+      double velocity = distance / params.getTimeOfFlightSec();
+      velocityToDistanceMap.put(velocity, distance);
+    }
+
+    static { // TODO tuning points will go here
+      // putShooterEntry(distance, new ShootingParameters(rpm, hoodDeg, tofSec));
+    }
+  }
+
+  public static class FiringTargetTranslations {
+    // Right/left are determined as view from alliance driver station
+
+    public static class Red {
+      public static final Translation2d hubTranslation = new Translation2d();
+      public static final Translation2d allianceRightTranslation = new Translation2d();
+      public static final Translation2d allianceLeftTranslation = new Translation2d();
+      public static final Translation2d neutralRightTranslation = new Translation2d();
+      public static final Translation2d neutralLeftTranslation = new Translation2d();
+    }
+
+    public static class Blue {
+      public static final Translation2d hubTranslation = new Translation2d();
+      public static final Translation2d allianceRightTranslation = new Translation2d();
+      public static final Translation2d allianceLeftTranslation = new Translation2d();
+      public static final Translation2d neutralRightTranslation = new Translation2d();
+      public static final Translation2d neutralLeftTranslation = new Translation2d();
+    }
+  }
+
+  public static class CANbus {
+    public static final String canbusName = "Clockwork";
+    public static final CANBus CANBus =
+        new CANBus(Constants.CANbus.canbusName, "./logs/example.hoot"); // TODO
+  }
+
+  public static class HubTracker {
+
+    public static final int preBuffer = 3; // TODO
+    public static final int postBuffer = 2;
+  }
+
+  public static class Sim {
+
+    public static final double tunnelRate = 0.2;
+    public static final double spindexerRate = 0.2;
+    public static final double flywheelRate = 0.1;
+  }
 
   public static final class VisionGlobalPose {}
 

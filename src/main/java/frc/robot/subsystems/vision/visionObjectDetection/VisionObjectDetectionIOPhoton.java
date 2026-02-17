@@ -2,6 +2,7 @@ package frc.robot.subsystems.vision.visionObjectDetection;
 
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.util.Units;
+import frc.robot.constants.Constants;
 import java.util.ArrayList;
 import java.util.List;
 import org.photonvision.PhotonCamera;
@@ -11,9 +12,9 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 public class VisionObjectDetectionIOPhoton implements VisionObjectDetectionIO {
   private final PhotonCamera photonCamera;
 
-  public VisionObjectDetectionIOPhoton(String hostname) {
+  public VisionObjectDetectionIOPhoton() {
     PhotonCamera.setVersionCheckEnabled(false);
-    photonCamera = new PhotonCamera(hostname);
+    photonCamera = new PhotonCamera(Constants.VisionObjectDetection.hostname);
   }
 
   @Override
