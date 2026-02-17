@@ -85,9 +85,9 @@ public class FlywheelIOTalonFx implements FlywheelIO {
 
     inputs.requestedMechanismRPS = lastRequestedVelocity;
 
-    inputs.MechanismRPS =
+    inputs.mechanismRPS =
         motor.getVelocity().getValueAsDouble() / Constants.Flywheel.motorToMechanismRatio;
-    inputs.follwerMechanismRPS =
+    inputs.followerMechanismRPS =
         followerMotor.getVelocity().getValueAsDouble() / Constants.Flywheel.motorToMechanismRatio;
 
     inputs.speedMotorRPS = motor.getVelocity().getValueAsDouble();

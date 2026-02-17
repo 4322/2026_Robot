@@ -41,11 +41,11 @@ public class Flywheel {
   }
 
   public boolean atTargetVelocity() {
-    return Math.abs(inputs.MechanismRPS - inputs.requestedMechanismRPS)
+    return Math.abs(inputs.mechanismRPS - inputs.requestedMechanismRPS)
         < Constants.Flywheel.allowedVelocityErrorMechanismRPS;
   }
 
   public double getVelocity() {
-    return inputs.MechanismRPS;
+    return inputs.mechanismRPS;
   }
 }

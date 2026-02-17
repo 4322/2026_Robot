@@ -274,4 +274,11 @@ public final class Constants {
     public static final int preBuffer = 3; // TODO
     public static final int postBuffer = 2;
   }
+
+  public static class Sim {
+
+    public static final double tunnelRate = 0.2;
+    public static final double spindexerRate = 0.2;
+    public static final double flywheelRate = 0.1;
+  }
 }
