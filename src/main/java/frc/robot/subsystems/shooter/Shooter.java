@@ -74,12 +74,7 @@ public class Shooter extends SubsystemBase {
         spindexer.requestIdle();
         turret.setAngle(targetTurretAngleDeg, true);
 
-        // TODO have an outer/inner zone
-        // outer zone - stop spindexer and tunnel
-        // inner - lower hood
-
-        if (AreaManager.getZoneOfPosition(visionGlobalPose.getHybridPose(drive).getTranslation())
-            == Zone.TRENCH_EXCLUSION) {
+        if (AreaManager.isHoodDangerZone(visionGlobalPose.getHybridPose(drive).getTranslation())) {
           hood.requestGoal(Constants.Hood.idleAngleDeg);
         } else {
           hood.requestGoal(targetHoodAngleDeg);
@@ -96,9 +91,7 @@ public class Shooter extends SubsystemBase {
         spindexer.requestIdle();
         turret.setAngle(targetTurretAngleDeg, false);
 
-        // TODO adapt this to have inner/outer zone
-        if (AreaManager.getZoneOfPosition(visionGlobalPose.getHybridPose(drive).getTranslation())
-            == Zone.TRENCH_EXCLUSION) {
+        if (AreaManager.isHoodDangerZone(visionGlobalPose.getHybridPose(drive).getTranslation())) {
           hood.requestGoal(Constants.Hood.idleAngleDeg);
         } else {
           hood.requestGoal(targetHoodAngleDeg);
@@ -120,7 +113,6 @@ public class Shooter extends SubsystemBase {
         turret.setAngle(targetTurretAngleDeg, true);
       }
       case SHOOT -> {
-        calculateFiringSolution();
         flywheel.requestGoal(targetFlywheelSpeedRPM / 60);
         hood.requestGoal(targetHoodAngleDeg);
         turret.setAngle(targetTurretAngleDeg, false);
@@ -160,8 +152,9 @@ public class Shooter extends SubsystemBase {
 
   public void requestShoot() {
 
-    if (AreaManager.getZoneOfPosition(drive.getPose().getTranslation()) == Zone.ALLIANCE_ZONE
-        && !HubTracker.isAbleToShoot()) {
+    if ((AreaManager.getZoneOfPosition(drive.getPose().getTranslation()) == Zone.ALLIANCE_ZONE
+        && !HubTracker.isAbleToShoot())
+        || (AreaManager.isTrenchNoShootingArea(visionGlobalPose.getHybridPose(drive).getTranslation()))) {
       state = ShooterState.IDLE;
 
     } else {

@@ -8,6 +8,8 @@ import frc.robot.Robot;
 public class AreaManager {
   // TODO: Put IN field dimensions
 
+  // Trench exclusion zone is bigger than hood danger zone
+
   // Red Alliance Zones
   private static Rectangle2d redAllianceZone =
       new Rectangle2d(new Translation2d(0, 0), new Translation2d(0, 0));
@@ -44,6 +46,11 @@ public class AreaManager {
       new Rectangle2d(new Translation2d(0, 12.3444), new Translation2d(8.2296, 16.4592));
   private static Rectangle2d frontOfHubRed =
       new Rectangle2d(new Translation2d(16.4592, 0), new Translation2d(24.6888, 4.1148));
+  
+  private static Rectangle2d leftRedHoodDangerZone =
+      new Rectangle2d(new Translation2d(0, 0), new Translation2d(0, 0)); // TODO
+  private static Rectangle2d rightRedHoodDangerZone =
+      new Rectangle2d(new Translation2d(0, 0), new Translation2d(0, 0)); // TODO
 
   // Blue Alliance Non-Shooting Areas
   private static Rectangle2d trenchLeftBlue =
@@ -58,6 +65,10 @@ public class AreaManager {
       new Rectangle2d(new Translation2d(0, 12.3444), new Translation2d(8.2296, 16.4592));
   private static Rectangle2d frontOfHubBlue =
       new Rectangle2d(new Translation2d(16.4592, 0), new Translation2d(24.6888, 4.1148));
+  private static Rectangle2d leftBlueHoodDangerZone =
+      new Rectangle2d(new Translation2d(0, 0), new Translation2d(0, 0)); // TODO
+  private static Rectangle2d rightBlueHoodDangerZone =
+      new Rectangle2d(new Translation2d(0, 0), new Translation2d(0, 0)); // TODO
 
   public enum Zone {
     ALLIANCE_ZONE,
@@ -65,7 +76,8 @@ public class AreaManager {
     RIGHT_OPPOSITION,
     LEFT_NEUTRAL,
     RIGHT_NEUTRAL,
-    TRENCH_EXCLUSION // TODO set this
+    TRENCH_EXCLUSION, // TODO set this
+    HOOD_DANGER_ZONE // TODO set this
   }
 
   private static Zone zone = Zone.ALLIANCE_ZONE;
@@ -86,11 +98,18 @@ public class AreaManager {
             : (frontOfHubBlue.contains(position))));
   }
 
-  public static boolean isHoodInLowerArea(Translation2d position) {
+  public static boolean isTrenchNoShootingArea(Translation2d position) {
     return ((trenchLeftRed.contains(position)
         || trenchRightRed.contains(position)
         || trenchLeftBlue.contains(position)
         || trenchRightBlue.contains(position)));
+  }
+
+  public static boolean isHoodDangerZone(Translation2d position) {
+    return leftRedHoodDangerZone.contains(position)
+        || rightRedHoodDangerZone.contains(position)
+        || leftBlueHoodDangerZone.contains(position)
+        || rightBlueHoodDangerZone.contains(position);
   }
 
   public static Zone getZoneOfPosition(Translation2d position) {
