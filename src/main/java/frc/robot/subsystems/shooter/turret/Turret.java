@@ -16,7 +16,8 @@ public class Turret {
 
   public enum turretState {
     DISABLED,
-    SET_TURRET_ANGLE
+    SET_TURRET_ANGLE,
+    UNWIND
   }
 
   public turretState state = turretState.DISABLED;
@@ -38,15 +39,15 @@ public class Turret {
           case DISABLED -> {
             break;
           }
+          case UNWIND -> {
+            if (desiredDeg != null) {
+              io.setAngle(desiredDeg);
+              safeToUnwind = isAtGoal();
+            }
+          }
           case SET_TURRET_ANGLE -> {
             if (desiredDeg != null && !safeToUnwind) {
               lastDesiredDeg = desiredDeg;
-              io.setAngle(desiredDeg);
-            } else if (safeToUnwind) {
-              desiredDeg =
-                  MathUtil.isNear(Constants.Turret.midPointPhysicalDeg, desiredDeg, 180)
-                      ? desiredDeg
-                      : Constants.Turret.midPointPhysicalDeg;
               io.setAngle(desiredDeg);
             }
           }
@@ -58,23 +59,30 @@ public class Turret {
   public void setAngle(Double angle, boolean safeToUnwind) {
     this.desiredDeg = angle;
     this.safeToUnwind = safeToUnwind;
-    if (desiredDeg != null) {
+    if (desiredDeg != null && state != turretState.UNWIND) {
       if (inputs.turretDegs + 180 >= Constants.Turret.maxPhysicalLimitDeg) {
         minInclusive = true;
         ;
       } else if (inputs.turretDegs - 180 <= Constants.Turret.minPhysicalLimitDeg) {
         minInclusive = true;
       }
-      desiredDeg =
-          ClockUtil.inputModulus(angle - inputs.turretDegs, -180, 180, minInclusive)
-              + inputs.turretDegs;
+      desiredDeg = angleDistance(desiredDeg, inputs.turretDegs, minInclusive);
       if (desiredDeg >= Constants.Turret.maxUnwindLimitDeg) {
         desiredDeg = Constants.Turret.maxPhysicalLimitDeg;
       } else if (desiredDeg <= Constants.Turret.minUnwindLimitDeg) {
         desiredDeg = Constants.Turret.minPhysicalLimitDeg;
       }
-    } else if (desiredDeg == null) {
-      safeToUnwind = true;
+    } else if (desiredDeg == null || safeToUnwind && (state != turretState.UNWIND)) {
+      state = turretState.UNWIND;
+      if (desiredDeg == null) {
+        ;
+        desiredDeg = Constants.Turret.midPointPhysicalDeg;
+      } else {
+        setAngleWithinMidpoint();
+      }
+    } else if (state == turretState.UNWIND && desiredDeg != null) {
+      setAngleWithinMidpoint();
+      state = !safeToUnwind ? turretState.SET_TURRET_ANGLE : state;
     }
     this.turretAzimuth = inputs.turretDegs % 360;
     Logger.recordOutput("Turret/turretAzimuth", turretAzimuth);
@@ -95,9 +103,26 @@ public class Turret {
 
   public void unwind() {
     safeToUnwind = true;
+    state = turretState.UNWIND;
   }
 
   public void setBrakeMode(Boolean mode) {
     io.setBrakeMode(mode);
+  }
+
+  public double angleDistance(double targetAngle, double currentAngle, boolean minInclusive) {
+    double angleDistance =
+        ClockUtil.inputModulus(targetAngle - currentAngle, -180, 180, minInclusive) + currentAngle;
+    return angleDistance;
+  }
+
+  private double setAngleWithinMidpoint() {
+    if (inputs.turretDegs > Constants.Turret.midPointPhysicalDeg) {
+      return desiredDeg = angleDistance(desiredDeg, Constants.Turret.maxMidPointPhysicalDeg, false);
+    } else if (inputs.turretDegs < Constants.Turret.midPointPhysicalDeg) {
+      return desiredDeg = angleDistance(desiredDeg, Constants.Turret.minMidPointPhysicalDeg, true);
+    } else {
+      return desiredDeg = Constants.Turret.midPointPhysicalDeg;
+    }
   }
 }
