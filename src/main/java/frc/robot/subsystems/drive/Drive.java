@@ -360,4 +360,8 @@ public class Drive extends SubsystemBase {
   public Translation2d getVelocity() {
     return new Translation2d(); // TODO
   }
+
+  public Pose2d getPoseAtTimestamp(double timestamp) {
+    return new Pose2d(); // TODO
+  }
 }

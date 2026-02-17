@@ -134,11 +134,6 @@ public final class Constants {
     public static final int idleRPS = 2;
   }
 
-  public static class VisionObjectDetection {
-
-    public static final Transform3d robotCenterToCamera = new Transform3d(); // TODO add
-    public static final String hostname = null;
-  }
 
   public static class Turret {
     public static final int motorId = 13; // TODO
@@ -289,12 +284,14 @@ public final class Constants {
   public static final class VisionGlobalPose {}
 
   public static final class VisionObjectDetection {
+
     public static final ObjectDetectionType detectionType = ObjectDetectionType.OBJECT;
     public static final Transform3d robotCenterToCamera = new Transform3d(
             -0.2208,
             -0.23495,
             0.98315,
             new Rotation3d(0, Units.degreesToRadians(40), Units.degreesToRadians(180)));
-    public static final boolean enableObjectDetectionDebug = false;; // TODO set this
+    public static final boolean enableObjectDetectionDebug = false;
+    public static final String hostname = "camera";; // TODO set this
   }
 }

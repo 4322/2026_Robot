@@ -18,10 +18,8 @@ import frc.robot.subsystems.drive.Drive;
 public class VisionObjectDetection extends SubsystemBase {
   private final VisionObjectDetectionIOInputsAutoLogged inputs = new VisionObjectDetectionIOInputsAutoLogged();
   private final VisionObjectDetectionIO io;
-  private final String hostname;
   private final Transform3d robotCenterToCamera;
   private final Drive drive;
-  private final AreaManager areaManager;
   private Translation2d bestFuelPosition;
 
   public enum ObjectDetectionType {
@@ -30,13 +28,9 @@ public class VisionObjectDetection extends SubsystemBase {
   }
 
   public VisionObjectDetection(
-    String hostname,
     Drive drive,
-    AreaManager areaManager,
     VisionObjectDetectionIO io) {
-    this.hostname = hostname;
     this.drive = drive;
-    this.areaManager = areaManager;
     this.io = io;
     this.robotCenterToCamera = Constants.VisionObjectDetection.robotCenterToCamera;
   }
@@ -44,7 +38,7 @@ public class VisionObjectDetection extends SubsystemBase {
   @Override
   public void periodic() {
     io.updateInputs(inputs);
-    Logger.processInputs(hostname, inputs);
+    Logger.processInputs(Constants.VisionObjectDetection.hostname, inputs);
 
     if (Constants.VisionObjectDetection.enableObjectDetectionDebug) {
       bestFuelPosition = calculateBestObjectPositionOnField(true);
@@ -70,7 +64,7 @@ public class VisionObjectDetection extends SubsystemBase {
           currentRobotTranslation.getDistance(bestObjectTranslation);
       final double currentObjectDifference =
           currentRobotTranslation.getDistance(currentObjectTranslation);
-      if (currentObjectDifference < bestObjectDifference && (!sameZone || areaManager.getZoneOfObject(currentObjectTranslation).equals(areaManager.getZone()))) {
+      if (currentObjectDifference < bestObjectDifference && (!sameZone || AreaManager.getZoneOfPosition(currentObjectTranslation).equals(AreaManager.getZoneOfPosition(drive.getPose().getTranslation())))) {
         bestObjectTranslation = currentObjectTranslation;
       }
     }
@@ -126,6 +120,35 @@ public class VisionObjectDetection extends SubsystemBase {
         .transformBy(objectRotationStartToGround)
         .getTranslation()
         .toTranslation2d();
+  }
+
+  // Computes average position of visible objects on field
+  public Translation2d getCentroidOfVisibleObjects(boolean sameZone) {
+    final Translation2d[] objectPositions = getObjectPositionsOnField();
+
+    if (objectPositions.length == 0) return null;
+
+    double sumX = 0.0;
+    double sumY = 0.0;
+    int count = 0;
+
+    for (Translation2d objectPosition : objectPositions) {
+      if (sameZone
+          && !AreaManager.getZoneOfPosition(objectPosition)
+              .equals(AreaManager.getZoneOfPosition(drive.getPose().getTranslation()))) {
+        continue;
+      }
+      sumX += objectPosition.getX();
+      sumY += objectPosition.getY();
+      count++;
+    }
+
+    if (count == 0) return null;
+
+    Translation2d centroid = new Translation2d(sumX / count, sumY / count);
+    Logger.recordOutput(
+        "VisionObjectDetection/TargetCentroid", new Pose2d(centroid, new Rotation2d()));
+    return centroid;
   }
 
 
