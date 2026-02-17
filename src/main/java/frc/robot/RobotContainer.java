@@ -84,13 +84,14 @@ public class RobotContainer {
     AREA_INHIBIT_AUTO_SHOOT
   }
 
-  private ShootingCommands lastShootingCommand = ShootingCommands.AUTO_SHOOT;
   private ShootingCommands currentShootingCommand = ShootingCommands.AUTO_SHOOT;
 
   private final Trigger inNonShootingArea;
 
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
+
+  boolean inhibitAutoShoot = false;
 
   // Boolean suppliers
   private final BooleanSupplier toggle1 =
@@ -273,27 +274,9 @@ public class RobotContainer {
     // Shooter command bindings
     shooter.setDefaultCommand(ShooterCommands.autoShoot(shooter));
 
-    new JoystickButton(operatorBoard.getLeftController(), Constants.Control.toggle1ButtonNumber)
-        .whileTrue(ShooterCommands.inhibitAutoShoot(shooter, toggle1))
-        .onTrue(
-            new InstantCommand(() -> currentShootingCommand = ShootingCommands.INHIBIT_AUTO_SHOOT))
-        .onFalse(
-            new InstantCommand(() -> lastShootingCommand = ShootingCommands.INHIBIT_AUTO_SHOOT));
+    new JoystickButton(operatorBoard.getLeftController(), Constants.Control.toggle1ButtonNumber).or(inNonShootingArea)
+        .whileTrue(ShooterCommands.inhibitAutoShoot(shooter));
 
-    inNonShootingArea
-        .whileTrue(
-            ShooterCommands.areaInhibitAutoShoot(shooter, drive)
-                .onlyIf(
-                    () ->
-                        currentShootingCommand != ShootingCommands.INHIBIT_AUTO_SHOOT
-                            && shooter.getState() != ShooterState.UNWIND
-                            && !toggle1.getAsBoolean()))
-        .onTrue(
-            new InstantCommand(
-                () -> currentShootingCommand = ShootingCommands.AREA_INHIBIT_AUTO_SHOOT))
-        .onFalse(
-            new InstantCommand(
-                () -> lastShootingCommand = ShootingCommands.AREA_INHIBIT_AUTO_SHOOT));
   }
 
   /**

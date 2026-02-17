@@ -16,25 +16,12 @@ public class ShooterCommands {
 
   // Main commands
 
-  public static Command inhibitAutoShoot(Shooter shooter, BooleanSupplier toggleOn) {
-    BooleanSupplier end = () -> !toggleOn.getAsBoolean();
+  public static Command inhibitAutoShoot(Shooter shooter) {
 
     return Commands.run(
             () -> {
               shooter.requestIdle(true);
-            })
-        .until(end); // BooleanSupplier tied to operator toggle 1 being turned off
-  }
-
-  public static Command areaInhibitAutoShoot(Shooter shooter, Drive drive) {
-    BooleanSupplier inShootingArea =
-        () -> AreaManager.isShootingArea(drive.getPose().getTranslation());
-
-    return Commands.run(
-            () -> {
-              shooter.requestIdle(true);
-            })
-        .until(inShootingArea);
+            }, shooter);
   }
 
   // Default command
