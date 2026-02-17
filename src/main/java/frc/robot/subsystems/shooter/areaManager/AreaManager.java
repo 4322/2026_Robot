@@ -46,7 +46,7 @@ public class AreaManager {
       new Rectangle2d(new Translation2d(0, 12.3444), new Translation2d(8.2296, 16.4592));
   private static Rectangle2d frontOfHubRed =
       new Rectangle2d(new Translation2d(16.4592, 0), new Translation2d(24.6888, 4.1148));
-  
+
   private static Rectangle2d leftRedHoodDangerZone =
       new Rectangle2d(new Translation2d(0, 0), new Translation2d(0, 0)); // TODO
   private static Rectangle2d rightRedHoodDangerZone =

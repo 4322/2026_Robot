@@ -153,8 +153,9 @@ public class Shooter extends SubsystemBase {
   public void requestShoot() {
 
     if ((AreaManager.getZoneOfPosition(drive.getPose().getTranslation()) == Zone.ALLIANCE_ZONE
-        && !HubTracker.isAbleToShoot())
-        || (AreaManager.isTrenchNoShootingArea(visionGlobalPose.getHybridPose(drive).getTranslation()))) {
+            && !HubTracker.isAbleToShoot())
+        || (AreaManager.isTrenchNoShootingArea(
+            visionGlobalPose.getHybridPose(drive).getTranslation()))) {
       state = ShooterState.IDLE;
 
     } else {
