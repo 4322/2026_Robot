@@ -71,17 +71,26 @@ public class Shooter extends SubsystemBase {
           state = ShooterState.IDLE;
         }
       }
+        // If idle and tunnel is still running, keep moving hood and turret
       case IDLE -> {
         spindexer.requestIdle();
+        turret.setAngle(targetTurretAngleDeg, true);
+        
+        // TODO have an outer/inner zone
+        // outer zone - stop spindexer and tunnel
+        // inner - lower hood
+      
+        if (AreaManager.getZoneOfPosition(visionGlobalPose.getHybridPose(drive).getTranslation())
+            == Zone.TRENCH_EXCLUSION) {
+          hood.requestGoal(Constants.Hood.idleAngleDeg);
+        } else {
+          hood.requestGoal(targetHoodAngleDeg);
+        }
+
         if (spindexer.isStopped()) {
           tunnel.requestIdle();
-          flywheel.requestGoal(Constants.Flywheel.idleRPS);
-          turret.setAngle(targetTurretAngleDeg, true);
-          if (AreaManager.getZoneOfPosition(visionGlobalPose.getHybridPose(drive).getTranslation())
-              == Zone.TRENCH_EXCLUSION) { // TODO set trench exclusion zone
-            hood.requestGoal(Constants.Hood.idleAngleDeg);
-          } else {
-            hood.requestGoal(targetHoodAngleDeg);
+          if (tunnel.isStopped()) {
+            flywheel.requestGoal(Constants.Flywheel.idleRPS);
           }
         }
       }
@@ -106,7 +115,7 @@ public class Shooter extends SubsystemBase {
         calculateFiringSolution();
         flywheel.requestGoal(targetFlywheelSpeedRPM / 60);
         hood.requestGoal(targetHoodAngleDeg);
-        turret.setAngle(targetTurretAngleDeg, true);
+        turret.setAngle(targetTurretAngleDeg, false);
 
         tunnel.requestIndex(
             Constants.Tunnel.dynamicVelocity
