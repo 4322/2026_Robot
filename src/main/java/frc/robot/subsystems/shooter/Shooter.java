@@ -43,8 +43,6 @@ public class Shooter extends SubsystemBase {
 
   private boolean unwindComplete = false;
 
-  private boolean idleIsUnwinding = false;
-
   public Shooter(
       Flywheel flywheel,
       Hood hood,
@@ -64,6 +62,7 @@ public class Shooter extends SubsystemBase {
 
   @Override
   public void periodic() {
+    calculateFiringSolution();
     switch (state) {
       case DISABLED -> {
         if (DriverStation.isEnabled()) {
@@ -71,15 +70,14 @@ public class Shooter extends SubsystemBase {
           state = ShooterState.IDLE;
         }
       }
-        // If idle and tunnel is still running, keep moving hood and turret
       case IDLE -> {
         spindexer.requestIdle();
         turret.setAngle(targetTurretAngleDeg, true);
-        
+
         // TODO have an outer/inner zone
         // outer zone - stop spindexer and tunnel
         // inner - lower hood
-      
+
         if (AreaManager.getZoneOfPosition(visionGlobalPose.getHybridPose(drive).getTranslation())
             == Zone.TRENCH_EXCLUSION) {
           hood.requestGoal(Constants.Hood.idleAngleDeg);
@@ -96,6 +94,16 @@ public class Shooter extends SubsystemBase {
       }
       case UNWIND -> {
         spindexer.requestIdle();
+        turret.setAngle(targetTurretAngleDeg, false);
+
+        // TODO adapt this to have inner/outer zone
+        if (AreaManager.getZoneOfPosition(visionGlobalPose.getHybridPose(drive).getTranslation())
+            == Zone.TRENCH_EXCLUSION) {
+          hood.requestGoal(Constants.Hood.idleAngleDeg);
+        } else {
+          hood.requestGoal(targetHoodAngleDeg);
+        }
+
         if (spindexer.isStopped()) {
           tunnel.requestIdle();
           if (tunnel.isStopped()) {
@@ -146,44 +154,12 @@ public class Shooter extends SubsystemBase {
     targetTurretAngleDeg = firingSolution.turretAngleDeg();
   }
 
-  public boolean isUnwindComplete() {
-    return unwindComplete;
-  }
-
-  // Turret is at maximum path of travel
-  public boolean needsToUnwind() {
-    return turret.needsToUnwind();
-  }
-
-  public boolean isMechanismsAtSpeed() {
-    return flywheel.atTargetVelocity() && tunnel.isAtSpeed();
-  }
-
-  public boolean isFlywheelAtSpeed() {
-    return flywheel.atTargetVelocity();
-  }
-
-  public boolean isHoodAtAngle() {
-    return hood.isAtGoal();
-  }
-
-  public boolean isTurretInPosition() {
-    return turret.isAtGoal();
-  }
-
-  public void setState(ShooterState newState) {
-    if (!(newState == state)) {
-      state = newState;
-      unwindComplete = false;
-    }
-  }
-
   public ShooterState getState() {
     return state;
   }
 
   public void requestShoot() {
-    calculateFiringSolution();
+
     if (AreaManager.getZoneOfPosition(drive.getPose().getTranslation()) == Zone.ALLIANCE_ZONE
         && !HubTracker.isAbleToShoot()) {
       state = ShooterState.IDLE;
@@ -204,16 +180,12 @@ public class Shooter extends SubsystemBase {
     }
   }
 
-  public void requestIdle(boolean forceUnwind) {
-    if (forceUnwind) {
-      turret.unwind();
-      if (turret.isAtGoal()) {
-        state = ShooterState.IDLE;
-      } else {
-        state = ShooterState.UNWIND;
-      }
-    } else {
+  public void requestIdle() {
+    if (state == ShooterState.UNWIND && unwindComplete) {
       state = ShooterState.IDLE;
+    } else if (state == ShooterState.PRESHOOT || state == ShooterState.SHOOT) {
+      unwindComplete = false;
+      state = ShooterState.UNWIND;
     }
   }
 }
