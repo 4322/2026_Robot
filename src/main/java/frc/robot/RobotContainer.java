@@ -33,6 +33,7 @@ import frc.robot.subsystems.shooter.flywheel.FlywheelIO;
 import frc.robot.subsystems.shooter.flywheel.FlywheelIOTalonFx;
 import frc.robot.subsystems.shooter.hood.Hood;
 import frc.robot.subsystems.shooter.hood.HoodIO;
+import frc.robot.subsystems.shooter.hood.HoodIOServo;
 import frc.robot.subsystems.shooter.spindexer.Spindexer;
 import frc.robot.subsystems.shooter.spindexer.SpindexerIO;
 import frc.robot.subsystems.shooter.spindexer.SpindexerIOTalonFx;
@@ -135,7 +136,7 @@ public class RobotContainer {
         hood =
             Constants.hoodMode == Constants.SubsystemMode.DISABLED
                 ? new Hood(new HoodIO() {})
-                : new Hood(new HoodIO() {}); // TODO this will have real io
+                : new Hood(new HoodIOServo());
 
         spindexer =
             Constants.spindexerMode == Constants.SubsystemMode.DISABLED
