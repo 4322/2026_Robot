@@ -148,7 +148,21 @@ public class VisionObjectDetection extends SubsystemBase {
     Translation2d centroid = new Translation2d(sumX / count, sumY / count);
     Logger.recordOutput(
         "VisionObjectDetection/TargetCentroid", new Pose2d(centroid, new Rotation2d()));
-    return centroid;
+    if ((AreaManager.getZoneOfPosition(centroid) != AreaManager.getZoneOfPosition(drive.getPose().getTranslation()) 
+      && sameZone)) {
+        return null;
+      } else {
+        return centroid;
+      }
+  }
+
+  // Attempts to get average fuel position, but if that fails, returns closest fuel
+  public Pose2d getBestFuelPose(boolean sameZone) {
+    final Translation2d bestFuelPosition = getCentroidOfVisibleObjects(sameZone);
+    if (bestFuelPosition == null) {
+      return new Pose2d(calculateBestObjectPositionOnField(sameZone), new Rotation2d());
+    }
+    return new Pose2d(bestFuelPosition, new Rotation2d());
   }
 
 
