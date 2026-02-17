@@ -81,7 +81,7 @@ public final class Constants {
     public static final double indexingMechanismRotationsPerSec = 3; // TODO
     public static final double stoppedMechanismRotationsPerSec = 0.1; // TODO
 
-    public static final double motorToMechanismRatio = 12.0;//10 inch wheel
+    public static final double motorToMechanismRatio = 12.0; // 10 inch wheel
   }
 
   public static class Tunnel {
@@ -104,7 +104,7 @@ public final class Constants {
     public static final double stoppedMechanismRotationsPerSec = 0.1; // TODO
     public static final double atSpeedMechanismRotationsPerSec =
         0.95 * indexingMechanismRotationsPerSec; // TODO
-    public static final double motorToMechanismRatio = 1.5; //2 inch diameter
+    public static final double motorToMechanismRatio = 1.5; // 2 inch diameter
   }
 
   public static class Flywheel {
@@ -121,7 +121,7 @@ public final class Constants {
     public static final double kD = 0;
     public static final double allowedVelocityErrorRPS = 5.0; // TODO
 
-    public static final double motorToMechanismRatio = 1;//Diameter 4
+    public static final double motorToMechanismRatio = 1; // Diameter 4
 
     public static final double idleMechanismRPS = 5;
     public static final double shootingMechanismRPS = 10;
@@ -148,11 +148,11 @@ public final class Constants {
     public static final InvertedValue motorInvert = InvertedValue.Clockwise_Positive;
     public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
     public static final double goalToleranceDeg = 1.0; // TODO
-    public static final double CANCoderOneRatio = 9.0; //DONE
-    public static final double CANCoderTwoRatio = 5.0; //DONE
+    public static final double CANCoderOneRatio = 9.0; // DONE
+    public static final double CANCoderTwoRatio = 5.0; // DONE
     public static final double CANCoderOneOffset = 0.0; // TODO
     public static final double CANCoderTwoOffset = 0.0; // TODO
-    public static final double turretGearRatio = 27; //DONE
+    public static final double turretGearRatio = 27; // DONE
     public static final double minPhysicalLimitDeg = -250.0; // TODO
     public static final double maxPhysicalLimitDeg = 250.0; // TODO
     public static final double midPointPhysicalDeg =
@@ -167,7 +167,7 @@ public final class Constants {
   public static class Hood {
     public static final int servoChannel = 12;
     public static final int encoderId = 1;
-    public static final double gearRatio = 164/11.0;
+    public static final double gearRatio = 164 / 11.0;
     public static final double kS = 0;
     public static final double kV = 0;
     public static final double kP = 1;
