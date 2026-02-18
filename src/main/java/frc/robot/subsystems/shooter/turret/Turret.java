@@ -41,7 +41,7 @@ public class Turret {
           case UNWIND -> {
             if (desiredDeg != null && !isAtGoal()) {
               io.setAngle(desiredDeg);
-            } else if (desiredDeg != null && isAtGoal()) {
+            } else if (isAtGoal()) {
               safeToUnwind = false;
             }
           }
