@@ -112,7 +112,7 @@ public class Turret {
     io.setBrakeMode(mode);
   }
 
-  public double angleDistance(double targetAngle, double currentAngle, boolean minInclusive) {
+  private double angleDistance(double targetAngle, double currentAngle, boolean minInclusive) {
     double angleDistance =
         ClockUtil.inputModulus(targetAngle - currentAngle, -180, 180, minInclusive) + currentAngle;
     return angleDistance;
