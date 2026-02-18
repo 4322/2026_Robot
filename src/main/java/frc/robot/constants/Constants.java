@@ -284,6 +284,12 @@ public final class Constants {
   public static final class VisionGlobalPose {}
 
   public static final class VisionObjectDetection {
+    public enum ObjectDetectionTarget {
+      CENTROID,
+      CLOSEST
+    }
+
+    public static final ObjectDetectionTarget mode = ObjectDetectionTarget.CLOSEST;
 
     public static final ObjectDetectionType detectionType = ObjectDetectionType.OBJECT;
     public static final Transform3d robotCenterToCamera = new Transform3d(
