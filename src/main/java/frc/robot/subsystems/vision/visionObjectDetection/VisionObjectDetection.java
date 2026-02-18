@@ -167,6 +167,8 @@ public class VisionObjectDetection extends SubsystemBase {
       return new Pose2d(bestFuelPosition, new Rotation2d());
     } else if (Constants.VisionObjectDetection.mode == ObjectDetectionTarget.CLOSEST) {
       return new Pose2d(calculateBestObjectPositionOnField(sameZone), new Rotation2d());
+    } else {
+      return null;
     }
   }
 
