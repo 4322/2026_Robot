@@ -9,7 +9,6 @@ public class Turret {
   private TurretIO io;
   private TurretIOInputsAutoLogged inputs = new TurretIOInputsAutoLogged();
   private Double desiredDeg = 0.0;
-  private double lastDesiredDeg = 0.0;
   private boolean safeToUnwind = false;
   private boolean minInclusive = false;
   private double turretAzimuth = 0.0;
@@ -48,7 +47,6 @@ public class Turret {
           }
           case SET_TURRET_ANGLE -> {
             if (desiredDeg != null) {
-              lastDesiredDeg = desiredDeg;
               io.setAngle(desiredDeg);
             }
           }
@@ -68,7 +66,7 @@ public class Turret {
         minInclusive = true;
       }
       desiredDeg = angleDistance(desiredDeg, inputs.turretDegs, minInclusive);
-    } else if (desiredDeg == null || safeToUnwind && (state != turretState.UNWIND)) {
+    } else if (desiredDeg == null || this.safeToUnwind && (state != turretState.UNWIND)) {
       state = turretState.UNWIND;
       if (desiredDeg == null) {
         desiredDeg = Constants.Turret.midPointPhysicalDeg;
