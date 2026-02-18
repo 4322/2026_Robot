@@ -12,6 +12,7 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
+import frc.robot.constants.Constants.VisionObjectDetection.ObjectDetectionTarget;
 import frc.robot.subsystems.shooter.areaManager.AreaManager;
 import frc.robot.subsystems.drive.Drive;
 
