@@ -1,9 +1,5 @@
 package frc.robot.subsystems.vision.visionObjectDetection;
 
-import java.util.ArrayList;
-
-import org.littletonrobotics.junction.Logger;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -13,11 +9,13 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
 import frc.robot.constants.Constants.VisionObjectDetection.ObjectDetectionTarget;
-import frc.robot.subsystems.shooter.areaManager.AreaManager;
 import frc.robot.subsystems.drive.Drive;
+import frc.robot.subsystems.shooter.areaManager.AreaManager;
+import org.littletonrobotics.junction.Logger;
 
 public class VisionObjectDetection extends SubsystemBase {
-  private final VisionObjectDetectionIOInputsAutoLogged inputs = new VisionObjectDetectionIOInputsAutoLogged();
+  private final VisionObjectDetectionIOInputsAutoLogged inputs =
+      new VisionObjectDetectionIOInputsAutoLogged();
   private final VisionObjectDetectionIO io;
   private final Transform3d robotCenterToCamera;
   private final Drive drive;
@@ -28,9 +26,7 @@ public class VisionObjectDetection extends SubsystemBase {
     OBJECT
   }
 
-  public VisionObjectDetection(
-    Drive drive,
-    VisionObjectDetectionIO io) {
+  public VisionObjectDetection(Drive drive, VisionObjectDetectionIO io) {
     this.drive = drive;
     this.io = io;
     this.robotCenterToCamera = Constants.VisionObjectDetection.robotCenterToCamera;
@@ -65,7 +61,10 @@ public class VisionObjectDetection extends SubsystemBase {
           currentRobotTranslation.getDistance(bestObjectTranslation);
       final double currentObjectDifference =
           currentRobotTranslation.getDistance(currentObjectTranslation);
-      if (currentObjectDifference < bestObjectDifference && (!sameZone || AreaManager.getZoneOfPosition(currentObjectTranslation).equals(AreaManager.getZoneOfPosition(drive.getPose().getTranslation())))) {
+      if (currentObjectDifference < bestObjectDifference
+          && (!sameZone
+              || AreaManager.getZoneOfPosition(currentObjectTranslation)
+                  .equals(AreaManager.getZoneOfPosition(drive.getPose().getTranslation())))) {
         bestObjectTranslation = currentObjectTranslation;
       }
     }
@@ -75,7 +74,7 @@ public class VisionObjectDetection extends SubsystemBase {
   public boolean hasTargets() {
     return inputs.hasTarget;
   }
-  
+
   public Translation2d[] getObjectPositionsOnField() {
     final Rotation3d[] visibleObjectsRotations = getTargetObjectsRotations();
     final Translation2d[] objectsPositionsOnField =
@@ -92,7 +91,7 @@ public class VisionObjectDetection extends SubsystemBase {
   }
 
   public Rotation3d[] getTargetObjectsRotations() {
-      return inputs.visibleObjectRotations;
+    return inputs.visibleObjectRotations;
   }
 
   /**
@@ -149,12 +148,13 @@ public class VisionObjectDetection extends SubsystemBase {
     Translation2d centroid = new Translation2d(sumX / count, sumY / count);
     Logger.recordOutput(
         "VisionObjectDetection/TargetCentroid", new Pose2d(centroid, new Rotation2d()));
-    if ((AreaManager.getZoneOfPosition(centroid) != AreaManager.getZoneOfPosition(drive.getPose().getTranslation()) 
-      && sameZone)) {
-        return null;
-      } else {
-        return centroid;
-      }
+    if ((AreaManager.getZoneOfPosition(centroid)
+            != AreaManager.getZoneOfPosition(drive.getPose().getTranslation())
+        && sameZone)) {
+      return null;
+    } else {
+      return centroid;
+    }
   }
 
   // Attempts to get average fuel position, but if that fails, returns closest fuel
@@ -171,6 +171,4 @@ public class VisionObjectDetection extends SubsystemBase {
       return null;
     }
   }
-
-
 }
