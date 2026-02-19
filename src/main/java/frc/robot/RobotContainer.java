@@ -97,10 +97,10 @@ public class RobotContainer {
   private final BooleanSupplier toggle1 =
       () -> operatorBoard.getLeftController().getRawButton(Constants.Control.toggle1ButtonNumber);
 
-private final BooleanSupplier toggle4 =
+  private final BooleanSupplier toggle4 =
       () -> operatorBoard.getLeftController().getRawButton(Constants.Control.toggle4ButtonNumber);
 
-    private final BooleanSupplier button3 =
+  private final BooleanSupplier button3 =
       () -> operatorBoard.getLeftController().getRawButton(0); // TODO set button number
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -286,15 +286,15 @@ private final BooleanSupplier toggle4 =
 
     // Toggle 4
     new JoystickButton(operatorBoard.getLeftController(), Constants.Control.toggle4ButtonNumber)
-       .onTrue(
-        new AutoIntake(drive, visionObjectDetection, false).until(() -> (!toggle4.getAsBoolean() || button3.getAsBoolean()))
-       );
-
-       // Button 3
-    new JoystickButton(operatorBoard.getLeftController(), 0 ) // TODO set button number
         .onTrue(
-            new AutoIntake(drive, visionObjectDetection, true).until(() -> !button3.getAsBoolean())
-        );
+            new AutoIntake(drive, visionObjectDetection, false)
+                .until(() -> (!toggle4.getAsBoolean() || button3.getAsBoolean())));
+
+    // Button 3
+    new JoystickButton(operatorBoard.getLeftController(), 0) // TODO set button number
+        .onTrue(
+            new AutoIntake(drive, visionObjectDetection, true)
+                .until(() -> !button3.getAsBoolean()));
   }
 
   /**
