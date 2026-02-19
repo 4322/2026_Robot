@@ -165,4 +165,22 @@ public class AreaManager {
     }
     return zone;
   }
+
+  // Returns true if positions are same larger zone, ignoring right/left designations (ex. right
+  // neutral and left neutral -> true)
+  public static boolean isSameCompleteZone(Translation2d position1, Translation2d position2) {
+    Zone zone1 = getZoneOfPosition(position1);
+    Zone zone2 = getZoneOfPosition(position2);
+
+    if (zone1 == Zone.ALLIANCE_ZONE && zone2 == Zone.ALLIANCE_ZONE) {
+      return true;
+    } else if ((zone1 == Zone.LEFT_OPPOSITION || zone1 == Zone.RIGHT_OPPOSITION)
+        && (zone2 == Zone.LEFT_OPPOSITION || zone2 == Zone.RIGHT_OPPOSITION)) {
+      return true;
+    } else if ((zone1 == Zone.LEFT_NEUTRAL || zone1 == Zone.RIGHT_NEUTRAL)
+        && (zone2 == Zone.LEFT_NEUTRAL || zone2 == Zone.RIGHT_NEUTRAL)) {
+      return true;
+    }
+    return false;
+  }
 }

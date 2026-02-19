@@ -63,8 +63,8 @@ public class VisionObjectDetection extends SubsystemBase {
           currentRobotTranslation.getDistance(currentObjectTranslation);
       if (currentObjectDifference < bestObjectDifference
           && (!sameZone
-              || AreaManager.getZoneOfPosition(currentObjectTranslation)
-                  .equals(AreaManager.getZoneOfPosition(drive.getPose().getTranslation())))) {
+              || AreaManager.isSameCompleteZone(
+                  currentObjectTranslation, drive.getPose().getTranslation()))) {
         bestObjectTranslation = currentObjectTranslation;
       }
     }
@@ -134,8 +134,7 @@ public class VisionObjectDetection extends SubsystemBase {
 
     for (Translation2d objectPosition : objectPositions) {
       if (sameZone
-          && !AreaManager.getZoneOfPosition(objectPosition)
-              .equals(AreaManager.getZoneOfPosition(drive.getPose().getTranslation()))) {
+          && !AreaManager.isSameCompleteZone(objectPosition, drive.getPose().getTranslation())) {
         continue;
       }
       sumX += objectPosition.getX();
@@ -148,9 +147,7 @@ public class VisionObjectDetection extends SubsystemBase {
     Translation2d centroid = new Translation2d(sumX / count, sumY / count);
     Logger.recordOutput(
         "VisionObjectDetection/TargetCentroid", new Pose2d(centroid, new Rotation2d()));
-    if ((AreaManager.getZoneOfPosition(centroid)
-            != AreaManager.getZoneOfPosition(drive.getPose().getTranslation())
-        && sameZone)) {
+    if ((!AreaManager.isSameCompleteZone(centroid, drive.getPose().getTranslation())) && sameZone) {
       return null;
     } else {
       return centroid;
@@ -158,15 +155,15 @@ public class VisionObjectDetection extends SubsystemBase {
   }
 
   // Attempts to get average fuel position, but if that fails, returns closest fuel
-  public Pose2d getBestFuelPose(boolean sameZone) {
+  public Translation2d getBestFuelPose(boolean sameZone) {
     if (Constants.VisionObjectDetection.mode == ObjectDetectionTarget.CENTROID) {
       final Translation2d bestFuelPosition = getCentroidOfVisibleObjects(sameZone);
       if (bestFuelPosition == null) {
-        return new Pose2d(calculateBestObjectPositionOnField(sameZone), new Rotation2d());
+        return calculateBestObjectPositionOnField(sameZone);
       }
-      return new Pose2d(bestFuelPosition, new Rotation2d());
+      return bestFuelPosition;
     } else if (Constants.VisionObjectDetection.mode == ObjectDetectionTarget.CLOSEST) {
-      return new Pose2d(calculateBestObjectPositionOnField(sameZone), new Rotation2d());
+      return calculateBestObjectPositionOnField(sameZone);
     } else {
       return null;
     }

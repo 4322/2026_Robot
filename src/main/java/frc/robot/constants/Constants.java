@@ -183,6 +183,7 @@ public final class Constants {
 
   public static class Control {
     public static final int toggle1ButtonNumber = 1; // TODO set these
+    public static final int toggle4ButtonNumber = 0;
   }
 
   public static class FiringParameters {
@@ -298,6 +299,8 @@ public final class Constants {
             new Rotation3d(0, Units.degreesToRadians(40), Units.degreesToRadians(180)));
     public static final boolean enableObjectDetectionDebug = false;
     public static final String hostname = "camera";
+
+    public static final double fuelIntakeOffset = Units.inchesToMeters(13); // TODO set this
     ; // TODO set this
   }
 }
