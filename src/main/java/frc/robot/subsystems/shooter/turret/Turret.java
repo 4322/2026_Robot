@@ -2,6 +2,7 @@ package frc.robot.subsystems.shooter.turret;
 
 import edu.wpi.first.math.MathUtil;
 import frc.robot.constants.Constants;
+import frc.robot.util.ClockUtil;
 import org.littletonrobotics.junction.Logger;
 
 public class Turret {
@@ -10,11 +11,11 @@ public class Turret {
   private Double desiredDeg = 0.0;
   private double lastDesiredDeg = 0.0;
   private boolean safeToUnwind = false;
+  private boolean minInclusive = false;
   private double turretAzimuth = 0.0;
 
   public enum turretState {
     DISABLED,
-    UNWIND,
     SET_TURRET_ANGLE
   }
 
@@ -31,23 +32,21 @@ public class Turret {
     switch (Constants.turretMode) {
       case DISABLED -> {}
       case TUNING -> {}
-      case DRIVE_TUNING -> {}
       case NORMAL -> {
         switch (state) {
           case DISABLED -> {
             break;
           }
-          case UNWIND -> {
-            io.setAngle(Constants.Turret.midPointPhysicalDeg);
-          }
           case SET_TURRET_ANGLE -> {
-            if (desiredDeg != null) {
+            if (desiredDeg != null && !safeToUnwind) {
               lastDesiredDeg = desiredDeg;
               io.setAngle(desiredDeg);
-            } else if (desiredDeg == null && safeToUnwind) {
-              io.setAngle(Constants.Turret.midPointPhysicalDeg);
-            } else {
-              io.setAngle(lastDesiredDeg);
+            } else if (safeToUnwind) {
+              desiredDeg =
+                  MathUtil.isNear(Constants.Turret.midPointPhysicalDeg, desiredDeg, 180)
+                      ? desiredDeg
+                      : Constants.Turret.midPointPhysicalDeg;
+              io.setAngle(desiredDeg);
             }
           }
         }
@@ -58,32 +57,25 @@ public class Turret {
   public void setAngle(Double angle, boolean safeToUnwind) {
     this.desiredDeg = angle;
     this.safeToUnwind = safeToUnwind;
-    // Rewinds when angle is null, and is safe to unwind
-    // Goes to side it favors, and if curr angle + desi big than max, set to max, but when safe
-    // unwind
     if (desiredDeg != null) {
-      if (inputs.turretDegs >= Constants.Turret.midPointPhysicalDeg) {
-        if (angle < inputs.turretDegs - 180) {
-          desiredDeg = angle + 360;
-        } else {
-          desiredDeg = angle;
-        }
-      } else {
-        if (angle > inputs.turretDegs + 180) {
-          desiredDeg = angle - 360;
-        } else {
-          desiredDeg = angle;
-        }
+      if (inputs.turretDegs + 180 >= Constants.Turret.maxPhysicalLimitDeg) {
+        minInclusive = true;
+        ;
+      } else if (inputs.turretDegs - 180 <= Constants.Turret.minPhysicalLimitDeg) {
+        minInclusive = true;
       }
-      if (desiredDeg >= Constants.Turret.maxPhysicalLimitDeg) {
+      desiredDeg =
+          ClockUtil.inputModulus(angle - inputs.turretDegs, -180, 180, minInclusive)
+              + inputs.turretDegs;
+      if (desiredDeg >= Constants.Turret.maxUnwindLimitDeg) {
         desiredDeg = Constants.Turret.maxPhysicalLimitDeg;
-      } else if (desiredDeg <= Constants.Turret.minPhysicalLimitDeg) {
+      } else if (desiredDeg <= Constants.Turret.minUnwindLimitDeg) {
         desiredDeg = Constants.Turret.minPhysicalLimitDeg;
       }
-    } else if (desiredDeg == null && safeToUnwind) {
-      desiredDeg = Constants.Turret.midPointPhysicalDeg;
+    } else if (desiredDeg == null) {
+      safeToUnwind = true;
     }
-    this.turretAzimuth = desiredDeg % 360;
+    this.turretAzimuth = inputs.turretDegs % 360;
     Logger.recordOutput("Turret/turretAzimuth", turretAzimuth);
   }
 
@@ -101,7 +93,7 @@ public class Turret {
   }
 
   public void unwind() {
-    state = turretState.UNWIND;
+    safeToUnwind = true;
   }
 
   public void setBrakeMode(Boolean mode) {

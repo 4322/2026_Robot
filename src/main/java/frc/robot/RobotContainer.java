@@ -11,14 +11,13 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.IntakeCommands;
-import frc.robot.commands.Shooter.ShooterCommand;
+import frc.robot.commands.ShooterCommands;
 import frc.robot.constants.Constants;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.drive.Drive;
@@ -36,13 +35,13 @@ import frc.robot.subsystems.intake.rollers.RollersIO;
 import frc.robot.subsystems.intake.rollers.RollersIOTalonFX;
 import frc.robot.subsystems.led.LED;
 import frc.robot.subsystems.shooter.Shooter;
-import frc.robot.subsystems.shooter.Shooter.ShooterState;
 import frc.robot.subsystems.shooter.areaManager.AreaManager;
 import frc.robot.subsystems.shooter.flywheel.Flywheel;
 import frc.robot.subsystems.shooter.flywheel.FlywheelIO;
 import frc.robot.subsystems.shooter.flywheel.FlywheelIOTalonFx;
 import frc.robot.subsystems.shooter.hood.Hood;
 import frc.robot.subsystems.shooter.hood.HoodIO;
+import frc.robot.subsystems.shooter.hood.HoodIOServo;
 import frc.robot.subsystems.shooter.spindexer.Spindexer;
 import frc.robot.subsystems.shooter.spindexer.SpindexerIO;
 import frc.robot.subsystems.shooter.spindexer.SpindexerIOTalonFx;
@@ -94,17 +93,19 @@ public class RobotContainer {
     AREA_INHIBIT_AUTO_SHOOT
   }
 
-  private ShootingCommands lastShootingCommand = ShootingCommands.AUTO_SHOOT;
   private ShootingCommands currentShootingCommand = ShootingCommands.AUTO_SHOOT;
 
   private final Trigger inNonShootingArea;
+
+  // Dashboard inputs
+  private final LoggedDashboardChooser<Command> autoChooser;
+
+  boolean inhibitAutoShoot = false;
 
   // Boolean suppliers
   private final BooleanSupplier toggle1 =
       () -> operatorBoard.getLeftController().getRawButton(Constants.Control.toggle1ButtonNumber);
 
-  // Dashboard inputs
-  private final LoggedDashboardChooser<Command> autoChooser;
 
   // Command variables
   private enum IntakeCommandTypes {
@@ -158,7 +159,7 @@ public class RobotContainer {
         hood =
             Constants.hoodMode == Constants.SubsystemMode.DISABLED
                 ? new Hood(new HoodIO() {})
-                : new Hood(new HoodIO() {}); // TODO this will have real io
+                : new Hood(new HoodIOServo());
 
         spindexer =
             Constants.spindexerMode == Constants.SubsystemMode.DISABLED
@@ -175,7 +176,7 @@ public class RobotContainer {
                 ? new Turret(new TurretIO() {})
                 : new Turret(new TurretIOTalonFx());
 
-        shooter = new Shooter(flywheel, hood, spindexer, tunnel, turret);
+        shooter = new Shooter(flywheel, hood, spindexer, tunnel, turret, visionGlobalPose, drive);
 
         rollers =
             Constants.rollerMode == Constants.SubsystemMode.DISABLED
@@ -220,7 +221,7 @@ public class RobotContainer {
                 : new VisionObjectDetection(
                     drive, new VisionObjectDetectionIOPhoton()); // TODO add sim io
 
-        shooter = new Shooter(flywheel, hood, spindexer, tunnel, turret);
+        shooter = new Shooter(flywheel, hood, spindexer, tunnel, turret, visionGlobalPose, drive);
 
         deployer =
             Constants.deployerMode == Constants.SubsystemMode.DISABLED
@@ -253,7 +254,7 @@ public class RobotContainer {
         spindexer = new Spindexer(new SpindexerIO() {});
         tunnel = new Tunnel(new TunnelIO() {});
         turret = new Turret(new TurretIO() {});
-        shooter = new Shooter(flywheel, hood, spindexer, tunnel, turret);
+        shooter = new Shooter(flywheel, hood, spindexer, tunnel, turret, visionGlobalPose, drive);
         rollers = new Rollers(new RollersIO() {});
         deployer = new Deployer(new DeployerIO() {});
         intake = new Intake(deployer, rollers);
@@ -304,60 +305,11 @@ public class RobotContainer {
             () -> -controller.getRightX()));
 
     // Shooter command bindings
-    // shooter.setDefaultCommand(ShooterCommand.autoShoot(shooter, drive));
+    shooter.setDefaultCommand(ShooterCommands.autoShoot(shooter));
+
     new JoystickButton(operatorBoard.getLeftController(), Constants.Control.toggle1ButtonNumber)
-        .whileTrue(ShooterCommand.inhibitAutoShoot(shooter, toggle1))
-        .onTrue(
-            new InstantCommand(() -> currentShootingCommand = ShootingCommands.INHIBIT_AUTO_SHOOT))
-        .onFalse(
-            new InstantCommand(() -> lastShootingCommand = ShootingCommands.INHIBIT_AUTO_SHOOT));
-
-    inNonShootingArea
-        .whileTrue(
-            ShooterCommand.areaInhibitAutoShoot(shooter, drive)
-                .onlyIf(
-                    () ->
-                        currentShootingCommand != ShootingCommands.INHIBIT_AUTO_SHOOT
-                            && shooter.getState() != ShooterState.UNWIND
-                            && !toggle1.getAsBoolean()))
-        .onTrue(
-            new InstantCommand(
-                () -> currentShootingCommand = ShootingCommands.AREA_INHIBIT_AUTO_SHOOT))
-        .onFalse(
-            new InstantCommand(
-                () -> lastShootingCommand = ShootingCommands.AREA_INHIBIT_AUTO_SHOOT));
-
-    controller
-        .y() // TODO this will be toggle 3
-        .whileFalse(
-            IntakeCommands.setExtend(intake)
-                .onlyIf(() -> currentIntakeCommand == IntakeCommandTypes.RETRACT))
-        .onTrue(new InstantCommand(() -> currentIntakeCommand = IntakeCommandTypes.EXTEND));
-
-    controller
-        .y() // TODO driver button 11 whatever that is
-        .onTrue(
-            IntakeCommands.setIntaking(intake)
-                .alongWith(
-                    new InstantCommand(() -> currentIntakeCommand = IntakeCommandTypes.INTAKING))
-                .onlyIf(() -> currentIntakeCommand == IntakeCommandTypes.IDLE));
-
-    controller
-        .y() // TODO driver button 11
-        .onTrue(
-            IntakeCommands.setIdle(intake)
-                .alongWith(new InstantCommand(() -> currentIntakeCommand = IntakeCommandTypes.IDLE))
-                .onlyIf(() -> currentIntakeCommand == IntakeCommandTypes.IDLE));
-
-    controller
-        .y() // TODO operator toggle 3
-        .whileTrue(
-            IntakeCommands.setRetract(intake)
-                .onlyIf(
-                    () ->
-                        (currentIntakeCommand == IntakeCommandTypes.IDLE)
-                            || (currentIntakeCommand == IntakeCommandTypes.INTAKING)))
-        .onTrue(new InstantCommand(() -> currentIntakeCommand = IntakeCommandTypes.RETRACT));
+        .or(inNonShootingArea)
+        .whileTrue(ShooterCommands.inhibitAutoShoot(shooter));
   }
 
   /**
