@@ -16,7 +16,6 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
-import frc.robot.commands.IntakeCommands;
 import frc.robot.commands.ShooterCommands;
 import frc.robot.constants.Constants;
 import frc.robot.generated.TunerConstants;
@@ -105,7 +104,6 @@ public class RobotContainer {
   // Boolean suppliers
   private final BooleanSupplier toggle1 =
       () -> operatorBoard.getLeftController().getRawButton(Constants.Control.toggle1ButtonNumber);
-
 
   // Command variables
   private enum IntakeCommandTypes {

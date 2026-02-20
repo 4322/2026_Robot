@@ -253,10 +253,10 @@ public final class Constants {
     public static final double CANCoderStowed = 0.5; // TODO
   }
 
-  public static class ShootingManager {
-    public static final InterpolatingTreeMap<Double, ShootingParameters> shooterMap =
-        new InterpolatingTreeMap<Double, ShootingParameters>(
-            InverseInterpolator.forDouble(), ShootingParameters::interpolate);
+  public static class FiringManager {
+    public static final InterpolatingTreeMap<Double, FiringParameters> firingMap =
+        new InterpolatingTreeMap<Double, FiringParameters>(
+            InverseInterpolator.forDouble(), FiringParameters::interpolate);
 
     // Reverse map for velocity to distance lookup
     public static final InterpolatingDoubleTreeMap velocityToDistanceMap =

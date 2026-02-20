@@ -27,7 +27,6 @@ public class Rollers {
 
     switch (Constants.rollerMode) {
       case TUNING -> {}
-      case DRIVE_TUNING -> {}
       case DISABLED -> {}
       case NORMAL -> {
         switch (state) {

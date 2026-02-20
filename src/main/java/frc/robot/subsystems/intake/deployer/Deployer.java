@@ -27,7 +27,6 @@ public class Deployer {
     switch (Constants.deployerMode) {
       case DISABLED -> {}
       case TUNING -> {}
-      case DRIVE_TUNING -> {}
       case NORMAL -> {
         switch (state) {
           case DISABLED -> {
