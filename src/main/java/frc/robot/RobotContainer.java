@@ -25,6 +25,13 @@ import frc.robot.subsystems.drive.GyroIOBoron;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
+import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.intake.deployer.Deployer;
+import frc.robot.subsystems.intake.deployer.DeployerIO;
+import frc.robot.subsystems.intake.deployer.DeployerIOTalonFX;
+import frc.robot.subsystems.intake.rollers.Rollers;
+import frc.robot.subsystems.intake.rollers.RollersIO;
+import frc.robot.subsystems.intake.rollers.RollersIOTalonFX;
 import frc.robot.subsystems.led.LED;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.shooter.areaManager.AreaManager;
@@ -68,8 +75,10 @@ public class RobotContainer {
   private static Tunnel tunnel;
   private static Turret turret;
 
-  // TODO private static Intake intake;
+  private static Intake intake;
   private static LED led;
+  private static Rollers rollers;
+  private static Deployer deployer;
 
   private static Drive drive;
 
@@ -95,6 +104,18 @@ public class RobotContainer {
   // Boolean suppliers
   private final BooleanSupplier toggle1 =
       () -> operatorBoard.getLeftController().getRawButton(Constants.Control.toggle1ButtonNumber);
+
+  // Command variables
+  private enum IntakeCommandTypes {
+    EXTEND,
+    RETRACT,
+    EJECT,
+    IDLE,
+    INTAKING
+  }
+
+  private IntakeCommandTypes currentIntakeCommand = IntakeCommandTypes.EXTEND;
+  private IntakeCommandTypes previousIntakeCommand = IntakeCommandTypes.EXTEND;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -155,12 +176,17 @@ public class RobotContainer {
 
         shooter = new Shooter(flywheel, hood, spindexer, tunnel, turret, visionGlobalPose, drive);
 
-        /*
-        intake = Constants.intakeMode == Constants.SubsystemMode.DISABLED ?
-            new Intake() do intake
-        :
-            new Intake(); do intake
-        */
+        rollers =
+            Constants.rollerMode == Constants.SubsystemMode.DISABLED
+                ? new Rollers(new RollersIO() {})
+                : new Rollers(new RollersIOTalonFX());
+
+        deployer =
+            Constants.deployerMode == Constants.SubsystemMode.DISABLED
+                ? new Deployer(new DeployerIO() {})
+                : new Deployer(new DeployerIOTalonFX());
+
+        intake = new Intake(deployer, rollers);
 
         led = new LED();
       }
@@ -195,13 +221,17 @@ public class RobotContainer {
 
         shooter = new Shooter(flywheel, hood, spindexer, tunnel, turret, visionGlobalPose, drive);
 
-        /*
-        intake = Constants.intakeMode == Constants.SubsystemMode.DISABLED ?
-            new Intake() //TODO add actual io
-        :
-            new Intake(); //TODO add actual io
-        */
+        deployer =
+            Constants.deployerMode == Constants.SubsystemMode.DISABLED
+                ? new Deployer(new DeployerIO() {})
+                : new Deployer(new DeployerIO() {}); // TODO add sim io
 
+        rollers =
+            Constants.rollerMode == Constants.SubsystemMode.DISABLED
+                ? new Rollers(new RollersIO() {})
+                : new Rollers(new RollersIO() {}); // TODO add sim io
+
+        intake = new Intake(deployer, rollers);
       }
 
       default -> {
@@ -223,7 +253,9 @@ public class RobotContainer {
         tunnel = new Tunnel(new TunnelIO() {});
         turret = new Turret(new TurretIO() {});
         shooter = new Shooter(flywheel, hood, spindexer, tunnel, turret, visionGlobalPose, drive);
-        // TODO intake = new Intake();
+        rollers = new Rollers(new RollersIO() {});
+        deployer = new Deployer(new DeployerIO() {});
+        intake = new Intake(deployer, rollers);
         led = new LED();
       }
     }
