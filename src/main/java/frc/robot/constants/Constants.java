@@ -3,8 +3,6 @@ package frc.robot.constants;
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-import com.pathplanner.lib.path.PathPlannerPath;
-
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
@@ -301,8 +299,7 @@ public final class Constants {
 
   public static class CANbus {
     public static final String canbusName = "Clockwork";
-    public static final CANBus CANBus =
-        new CANBus(Constants.CANbus.canbusName, "./logs/example.hoot"); // TODO
+    public static final CANBus CANBus = new CANBus(Constants.CANbus.canbusName);
   }
 
   public static class HubTracker {
@@ -318,7 +315,5 @@ public final class Constants {
     public static final double flywheelRate = 0.1;
   }
 
-  public static class Autonomous {
-    
-  }
+  public static class Autonomous {}
 }
