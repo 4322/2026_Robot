@@ -49,12 +49,7 @@ public class Simulator extends SubsystemBase {
   }
 
   private enum AutoAnomaly {
-    NONE,
-    DROP_CORAL1_EARLY,
-    DROP_CORAL1_LATE,
-    DROP_CORAL2_LATE,
-    DROP_ALGAE1_EARLY,
-    RELEASE_TRIGGER_EARLY
+    NONE
   }
 
   private enum TeleopScenario {
@@ -271,6 +266,7 @@ public class Simulator extends SubsystemBase {
       return List.of();
     }
     double t = 0.0;
+    // TODO
     return switch (autoScenario) {
       default -> List.of();
     };
@@ -283,8 +279,8 @@ public class Simulator extends SubsystemBase {
     double t = 0.0;
     int eventNum = 1;
 
+
     return switch (teleopScenario) {
-      case SCORE_L4 -> List.of();
 
       case LOOK_FROM_APRILTAG_RED_SIDE -> List.of();
 
