@@ -17,7 +17,6 @@ import frc.robot.constants.Constants;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.shooter.areaManager.AreaManager;
 import frc.robot.util.HubTracker;
-
 import org.littletonrobotics.junction.Logger;
 
 public class LED extends SubsystemBase {
@@ -80,7 +79,7 @@ public class LED extends SubsystemBase {
       } else {
         setLEDState(LEDState.SHOOTING_AREA_INACTIVE);
       }
-     
+
     } else {
       setLEDState(LEDState.NON_SHOOTING_AREA);
     }
@@ -95,7 +94,7 @@ public class LED extends SubsystemBase {
         case DISABLED -> {
           setLEDs(AnimationType.RAINBOW, 0);
         }
-        // TODO
+          // TODO
       }
     }
   }

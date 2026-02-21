@@ -53,7 +53,7 @@ public class Shooter extends SubsystemBase {
       Turret turret,
       VisionGlobalPose visionGlobalPose,
       Drive drive,
-    LED led) {
+      LED led) {
     this.flywheel = flywheel;
     this.hood = hood;
     this.spindexer = spindexer;
@@ -145,8 +145,7 @@ public class Shooter extends SubsystemBase {
 
   private void calculateFiringSolution() {
     FiringSolution firingSolution =
-        FiringManager.getFiringSolution(
-            drive.getPose().getTranslation(), drive.getVelocity());
+        FiringManager.getFiringSolution(drive.getPose().getTranslation(), drive.getVelocity());
     targetHoodAngleDeg = firingSolution.hoodAngle();
     targetFlywheelSpeedRPM = firingSolution.flywheelSpeedRPM();
     targetTurretAngleDeg = firingSolution.turretAngleDeg();
@@ -160,8 +159,7 @@ public class Shooter extends SubsystemBase {
 
     if ((AreaManager.getZoneOfPosition(drive.getPose().getTranslation()) == Zone.ALLIANCE_ZONE
             && !HubTracker.isAbleToShoot())
-        || (AreaManager.isTrenchNoShootingArea(
-            drive.getPose().getTranslation()))) {
+        || (AreaManager.isTrenchNoShootingArea(drive.getPose().getTranslation()))) {
       state = ShooterState.IDLE;
 
     } else {

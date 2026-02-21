@@ -24,7 +24,8 @@ public class AutoIntake extends Command {
   private boolean autodrive;
   private LED led;
 
-  public AutoIntake(Drive drive, VisionObjectDetection visionObjectDetection, LED led, boolean autodrive) {
+  public AutoIntake(
+      Drive drive, VisionObjectDetection visionObjectDetection, LED led, boolean autodrive) {
     this.drive = drive;
     this.visionObjectDetection = visionObjectDetection;
     this.led = led;
