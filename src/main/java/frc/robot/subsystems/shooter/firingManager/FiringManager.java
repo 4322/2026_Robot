@@ -91,9 +91,13 @@ public class FiringManager {
         case LEFT_NEUTRAL:
           return Constants.FiringTargetTranslations.Blue.allianceLeftTranslation;
         case RIGHT_OPPOSITION:
-          return Constants.FiringManager.alwaysTargetAllianceZone ? Constants.FiringTargetTranslations.Blue.allianceRightTranslation : Constants.FiringTargetTranslations.Blue.neutralRightTranslation;
+          return Constants.FiringManager.alwaysTargetAllianceZone
+              ? Constants.FiringTargetTranslations.Blue.allianceRightTranslation
+              : Constants.FiringTargetTranslations.Blue.neutralRightTranslation;
         case LEFT_OPPOSITION:
-          return Constants.FiringManager.alwaysTargetAllianceZone ? Constants.FiringTargetTranslations.Blue.allianceLeftTranslation : Constants.FiringTargetTranslations.Blue.neutralLeftTranslation;
+          return Constants.FiringManager.alwaysTargetAllianceZone
+              ? Constants.FiringTargetTranslations.Blue.allianceLeftTranslation
+              : Constants.FiringTargetTranslations.Blue.neutralLeftTranslation;
         default:
           return new Translation2d();
       }
@@ -106,9 +110,13 @@ public class FiringManager {
         case LEFT_NEUTRAL:
           return Constants.FiringTargetTranslations.Red.allianceLeftTranslation;
         case RIGHT_OPPOSITION:
-          return Constants.FiringManager.alwaysTargetAllianceZone ? Constants.FiringTargetTranslations.Red.allianceRightTranslation : Constants.FiringTargetTranslations.Red.neutralRightTranslation;
+          return Constants.FiringManager.alwaysTargetAllianceZone
+              ? Constants.FiringTargetTranslations.Red.allianceRightTranslation
+              : Constants.FiringTargetTranslations.Red.neutralRightTranslation;
         case LEFT_OPPOSITION:
-          return Constants.FiringManager.alwaysTargetAllianceZone ? Constants.FiringTargetTranslations.Red.allianceLeftTranslation : Constants.FiringTargetTranslations.Red.neutralLeftTranslation;
+          return Constants.FiringManager.alwaysTargetAllianceZone
+              ? Constants.FiringTargetTranslations.Red.allianceLeftTranslation
+              : Constants.FiringTargetTranslations.Red.neutralLeftTranslation;
         default:
           return new Translation2d();
       }
