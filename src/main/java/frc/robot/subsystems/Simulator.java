@@ -49,12 +49,7 @@ public class Simulator extends SubsystemBase {
   }
 
   private enum AutoAnomaly {
-    NONE,
-    DROP_CORAL1_EARLY,
-    DROP_CORAL1_LATE,
-    DROP_CORAL2_LATE,
-    DROP_ALGAE1_EARLY,
-    RELEASE_TRIGGER_EARLY
+    NONE
   }
 
   private enum TeleopScenario {
@@ -215,38 +210,9 @@ public class Simulator extends SubsystemBase {
     }
   }
 
+  // TODO
   private List<RegressionTest> regressionTestCases() {
-    return switch (regressTest) {
-      case DOUBLE_DOUBLE -> List.of(
-          new RegressionTest(
-              "Test 1",
-              AutoName.ONE_CORAL_TWO_ALGAE_CENTER,
-              List.of(AutoAnomaly.NONE),
-              TeleopScenario.SCORE_L4,
-              List.of(TeleAnomaly.NONE),
-              Alliance.Red),
-          new RegressionTest(
-              "Test 2", AutoName.THREE_CORAL_RIGHT, TeleopScenario.SCORE_L4, Alliance.Blue));
-
-      case DOUBLE_AUTO -> List.of(
-          new RegressionTest("Test 1", AutoName.ONE_CORAL_TWO_ALGAE_CENTER, Alliance.Blue),
-          new RegressionTest(
-              "Test 2", AutoName.THREE_CORAL_RIGHT, List.of(AutoAnomaly.NONE), Alliance.Red));
-
-      case DOUBLE_TELEOP -> List.of(
-          new RegressionTest("Test 1", TeleopScenario.SCORE_L4, Alliance.Blue),
-          new RegressionTest(
-              "Test 2", TeleopScenario.SCORE_L4, List.of(TeleAnomaly.NONE), Alliance.Red));
-
-      case APRIL_TAG_TEST -> List.of(
-          new RegressionTest("Test 1", TeleopScenario.LOOK_FROM_APRILTAG_RED_SIDE, Alliance.Blue));
-
-      case CONTROLLER_TEST -> List.of(
-          new RegressionTest("Controller Test 1", TeleopScenario.CONTROLLER_TEST1, Alliance.Blue),
-          new RegressionTest("Controller Test 2", TeleopScenario.CONTROLLER_TEST2, Alliance.Blue));
-
-      default -> List.of();
-    };
+    return List.of(new RegressionTest("Default", AutoName.DO_NOTHING, Alliance.Blue));
   }
 
   private class SimEvent {
@@ -300,11 +266,8 @@ public class Simulator extends SubsystemBase {
       return List.of();
     }
     double t = 0.0;
+    // TODO
     return switch (autoScenario) {
-      case ONE_CORAL_TWO_ALGAE_CENTER -> List.of();
-
-      case THREE_CORAL_LEFT, THREE_CORAL_RIGHT -> List.of();
-
       default -> List.of();
     };
   }
@@ -316,8 +279,8 @@ public class Simulator extends SubsystemBase {
     double t = 0.0;
     int eventNum = 1;
 
+
     return switch (teleopScenario) {
-      case SCORE_L4 -> List.of();
 
       case LOOK_FROM_APRILTAG_RED_SIDE -> List.of();
 
