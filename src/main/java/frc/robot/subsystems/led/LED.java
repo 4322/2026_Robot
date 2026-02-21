@@ -14,6 +14,10 @@ import com.ctre.phoenix6.signals.StatusLedWhenActiveValue;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
+import frc.robot.subsystems.drive.Drive;
+import frc.robot.subsystems.shooter.areaManager.AreaManager;
+import frc.robot.util.HubTracker;
+
 import org.littletonrobotics.junction.Logger;
 
 public class LED extends SubsystemBase {
@@ -23,6 +27,8 @@ public class LED extends SubsystemBase {
   private boolean climberDeployed = false;
   private boolean autoFuelPickup = false;
   private boolean turretUnwinding = false;
+
+  private Drive drive;
 
   public enum LEDState {
     DISABLED,
@@ -46,7 +52,9 @@ public class LED extends SubsystemBase {
     TWINKLE
   }
 
-  public LED() {
+  public LED(Drive drive) {
+    this.drive = drive;
+
     CANdleConfiguration config = new CANdleConfiguration();
     config.LED.StripType = Constants.LED.stripType;
     config.LED.BrightnessScalar = Constants.LED.brightnessScalar;
@@ -66,8 +74,15 @@ public class LED extends SubsystemBase {
       setLEDState(LEDState.AUTO_FUEL_PICKUP);
     } else if (turretUnwinding) {
       setLEDState(LEDState.TURRET_UNWINDING);
+    } else if (AreaManager.isShootingArea(drive.getPose().getTranslation())) {
+      if (HubTracker.isAbleToShoot()) {
+        setLEDState(LEDState.SHOOTING_AREA_ACTIVE);
+      } else {
+        setLEDState(LEDState.SHOOTING_AREA_INACTIVE);
+      }
+     
     } else {
-      // TODO add other states
+      setLEDState(LEDState.NON_SHOOTING_AREA);
     }
   }
 
@@ -80,6 +95,7 @@ public class LED extends SubsystemBase {
         case DISABLED -> {
           setLEDs(AnimationType.RAINBOW, 0);
         }
+        // TODO
       }
     }
   }

@@ -7,6 +7,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.constants.Constants;
 import frc.robot.subsystems.drive.Drive;
+import frc.robot.subsystems.led.LED;
 import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetection;
 import java.util.function.Supplier;
 import org.littletonrobotics.junction.Logger;
@@ -21,10 +22,12 @@ public class AutoIntake extends Command {
   private Rotation2d targetAngle;
   private Translation2d fuelPose;
   private boolean autodrive;
+  private LED led;
 
-  public AutoIntake(Drive drive, VisionObjectDetection visionObjectDetection, boolean autodrive) {
+  public AutoIntake(Drive drive, VisionObjectDetection visionObjectDetection, LED led, boolean autodrive) {
     this.drive = drive;
     this.visionObjectDetection = visionObjectDetection;
+    this.led = led;
     this.autodrive = autodrive;
   }
 
@@ -32,6 +35,7 @@ public class AutoIntake extends Command {
   public void initialize() {
     fuelPose = null;
     targetAngle = null;
+    led.requestAutoFuelPickup(true);
   }
 
   @Override
@@ -69,5 +73,6 @@ public class AutoIntake extends Command {
   public void end(boolean interrupted) {
     // TODO end drive to pose
     // TODO drive.requestFieldRelativeMode();
+    led.requestAutoFuelPickup(false);
   }
 }

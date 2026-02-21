@@ -265,8 +265,4 @@ public class VisionGlobalPose extends SubsystemBase {
         double timestampSeconds,
         Matrix<N3, N1> visionMeasurementStdDevs);
   }
-
-  public Pose2d getHybridPose(Drive drive) {
-    return new Pose2d();
-  }
 }

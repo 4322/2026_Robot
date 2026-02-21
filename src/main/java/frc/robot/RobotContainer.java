@@ -204,7 +204,7 @@ public class RobotContainer {
                 ? new Turret(new TurretIO() {})
                 : new Turret(new TurretIOTalonFx());
 
-        shooter = new Shooter(flywheel, hood, spindexer, tunnel, turret, visionGlobalPose, drive);
+        shooter = new Shooter(flywheel, hood, spindexer, tunnel, turret, visionGlobalPose, drive, led);
 
         rollers =
             Constants.rollerMode == Constants.SubsystemMode.DISABLED
@@ -218,7 +218,7 @@ public class RobotContainer {
 
         intake = new Intake(deployer, rollers);
 
-        led = new LED();
+        led = new LED(drive);
       }
 
       case SIM -> {
@@ -283,7 +283,7 @@ public class RobotContainer {
                 ? new Turret(new TurretIO() {})
                 : new Turret(new TurretIOSim());
 
-        shooter = new Shooter(flywheel, hood, spindexer, tunnel, turret, visionGlobalPose, drive);
+        shooter = new Shooter(flywheel, hood, spindexer, tunnel, turret, visionGlobalPose, drive, led);
 
         deployer =
             Constants.deployerMode == Constants.SubsystemMode.DISABLED
@@ -320,11 +320,11 @@ public class RobotContainer {
         spindexer = new Spindexer(new SpindexerIO() {});
         tunnel = new Tunnel(new TunnelIO() {});
         turret = new Turret(new TurretIO() {});
-        shooter = new Shooter(flywheel, hood, spindexer, tunnel, turret, visionGlobalPose, drive);
+        shooter = new Shooter(flywheel, hood, spindexer, tunnel, turret, visionGlobalPose, drive, led);
         rollers = new Rollers(new RollersIO() {});
         deployer = new Deployer(new DeployerIO() {});
         intake = new Intake(deployer, rollers);
-        led = new LED();
+        led = new LED(drive);
       }
     }
 
@@ -380,13 +380,13 @@ public class RobotContainer {
     // Toggle 4
     new JoystickButton(operatorBoard.getLeftController(), Constants.Control.toggle4ButtonNumber)
         .onTrue(
-            new AutoIntake(drive, visionObjectDetection, false)
+            new AutoIntake(drive, visionObjectDetection, led, false)
                 .until(() -> (!toggle4.getAsBoolean() || button3.getAsBoolean())));
 
     // Button 3
     new JoystickButton(operatorBoard.getLeftController(), 0) // TODO set button number
         .onTrue(
-            new AutoIntake(drive, visionObjectDetection, true)
+            new AutoIntake(drive, visionObjectDetection, led, true)
                 .until(() -> !button3.getAsBoolean()));
   }
 

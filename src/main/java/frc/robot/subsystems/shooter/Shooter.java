@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
 import frc.robot.subsystems.drive.Drive;
+import frc.robot.subsystems.led.LED;
 import frc.robot.subsystems.shooter.areaManager.AreaManager;
 import frc.robot.subsystems.shooter.areaManager.AreaManager.Zone;
 import frc.robot.subsystems.shooter.firingManager.FiringManager;
@@ -36,6 +37,7 @@ public class Shooter extends SubsystemBase {
   private Turret turret;
   private VisionGlobalPose visionGlobalPose;
   private Drive drive;
+  private LED led;
 
   private double targetHoodAngleDeg;
   private double targetFlywheelSpeedRPM;
@@ -50,12 +52,14 @@ public class Shooter extends SubsystemBase {
       Tunnel tunnel,
       Turret turret,
       VisionGlobalPose visionGlobalPose,
-      Drive drive) {
+      Drive drive,
+    LED led) {
     this.flywheel = flywheel;
     this.hood = hood;
     this.spindexer = spindexer;
     this.tunnel = tunnel;
     this.turret = turret;
+    this.led = led;
     this.visionGlobalPose = visionGlobalPose;
     this.drive = drive;
   }
@@ -74,7 +78,7 @@ public class Shooter extends SubsystemBase {
         spindexer.requestIdle();
         turret.setAngle(targetTurretAngleDeg, true);
 
-        if (AreaManager.isHoodDangerZone(visionGlobalPose.getHybridPose(drive).getTranslation())) {
+        if (AreaManager.isHoodDangerZone(drive.getPose().getTranslation())) {
           hood.requestGoal(Constants.Hood.idleAngleDeg);
         } else {
           hood.requestGoal(targetHoodAngleDeg);
@@ -91,7 +95,7 @@ public class Shooter extends SubsystemBase {
         spindexer.requestIdle();
         turret.setAngle(targetTurretAngleDeg, false);
 
-        if (AreaManager.isHoodDangerZone(visionGlobalPose.getHybridPose(drive).getTranslation())) {
+        if (AreaManager.isHoodDangerZone(drive.getPose().getTranslation())) {
           hood.requestGoal(Constants.Hood.idleAngleDeg);
         } else {
           hood.requestGoal(targetHoodAngleDeg);
@@ -134,13 +138,15 @@ public class Shooter extends SubsystemBase {
     hood.periodic();
     turret.periodic();
 
+    led.requestTurretUnwinding(state == ShooterState.UNWIND);
+
     Logger.recordOutput("Shooter/State", state.toString());
   }
 
   private void calculateFiringSolution() {
     FiringSolution firingSolution =
         FiringManager.getFiringSolution(
-            visionGlobalPose.getHybridPose(drive).getTranslation(), drive.getVelocity());
+            drive.getPose().getTranslation(), drive.getVelocity());
     targetHoodAngleDeg = firingSolution.hoodAngle();
     targetFlywheelSpeedRPM = firingSolution.flywheelSpeedRPM();
     targetTurretAngleDeg = firingSolution.turretAngleDeg();
@@ -155,7 +161,7 @@ public class Shooter extends SubsystemBase {
     if ((AreaManager.getZoneOfPosition(drive.getPose().getTranslation()) == Zone.ALLIANCE_ZONE
             && !HubTracker.isAbleToShoot())
         || (AreaManager.isTrenchNoShootingArea(
-            visionGlobalPose.getHybridPose(drive).getTranslation()))) {
+            drive.getPose().getTranslation()))) {
       state = ShooterState.IDLE;
 
     } else {
