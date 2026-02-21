@@ -9,7 +9,6 @@ import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
 import edu.wpi.first.math.interpolation.InverseInterpolator;
 import edu.wpi.first.wpilibj.RobotBase;
-import frc.robot.constants.Constants.FiringParameters;
 
 /**
  * This class defines the runtime mode used by AdvantageKit. The mode is always "real" when running
