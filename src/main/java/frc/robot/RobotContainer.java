@@ -94,6 +94,7 @@ public class RobotContainer {
     INHIBIT_AUTO_SHOOT,
     AREA_INHIBIT_AUTO_SHOOT
   }
+
   private final Trigger inNonShootingArea;
 
   // Dashboard inputs
@@ -284,9 +285,7 @@ public class RobotContainer {
                 new VisionGlobalPoseIO() {},
                 new VisionGlobalPoseIO() {},
                 new VisionGlobalPoseIO() {});
-        visionObjectDetection =
-            new VisionObjectDetection(
-                drive, new VisionObjectDetectionIO() {});
+        visionObjectDetection = new VisionObjectDetection(drive, new VisionObjectDetectionIO() {});
         flywheel = new Flywheel(new FlywheelIO() {});
         hood = new Hood(new HoodIO() {});
         spindexer = new Spindexer(new SpindexerIO() {});

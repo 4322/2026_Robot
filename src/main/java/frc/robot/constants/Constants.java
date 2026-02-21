@@ -4,7 +4,6 @@ import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.StripTypeValue;
-
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -366,7 +365,7 @@ public final class Constants {
   public static class Autonomous {}
 
   public static class LED {
-     public static final int CANdleID = 99;
+    public static final int CANdleID = 99;
     public static final StripTypeValue stripType = StripTypeValue.RGBW; // TODO set these
     public static final double brightnessScalar = 0.5;
     public static final int ledStart = 0;
