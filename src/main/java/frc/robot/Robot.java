@@ -38,26 +38,14 @@ public class Robot extends LoggedRobot {
 
   public static Alliance alliance = DriverStation.Alliance.Blue;
 
-  // Mirrored paths
-  public static PathPlannerPath ThreeCoralStartToJuliet;
-  public static PathPlannerPath JulietToFeed1;
-  public static PathPlannerPath JulietToFeed2;
-  public static PathPlannerPath KilotoFeed;
-  public static PathPlannerPath DeltatoFeed;
+  public static PathPlannerPath R_NeutralR_Intake_Mid_Flip;
+  public static PathPlannerPath R_NeutralRMid_To_ShootR;
+  public static PathPlannerPath R_NeutralR_Intake_To_Mid;
+  public static PathPlannerPath R_Neutral_Mid_To_ShootR;
+  public static PathPlannerPath R_NeutralR_Intake_Full_Flip;
+  public static PathPlannerPath R_NeutralR_Intake_Full;
+  public static PathPlannerPath R_StartR_To_NeutralR_Intake;
 
-  // Mirrors of the above
-  public static PathPlannerPath ThreeCoralStartToEcho;
-  public static PathPlannerPath EchoToFeed1;
-  public static PathPlannerPath EchoToFeed2;
-
-  // Non-mirrored paths
-  public static PathPlannerPath Leave;
-  public static PathPlannerPath TestLeave;
-  public static PathPlannerPath CenterStartToGulf;
-  public static PathPlannerPath CenterAlgaeScoreToLeave;
-  public static PathPlannerPath RightAlgaeScoreToIJ;
-  public static PathPlannerPath GH_ToRightAlgaeScore;
-  public static PathPlannerPath IJ_ToCenterAlgaeScore;
 
   public Robot() {
     Logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME); // Set a metadata value
@@ -184,7 +172,14 @@ public class Robot extends LoggedRobot {
     Logger.disableConsoleCapture();
 
     try {
-
+      R_NeutralR_Intake_Mid_Flip =  PathPlannerPath.fromPathFile("R_NeutralR_Intake_Mid_Flip");
+      R_NeutralRMid_To_ShootR = PathPlannerPath.fromPathFile("R_NeutralRMid_To_ShootR");
+      R_NeutralR_Intake_To_Mid = PathPlannerPath.fromPathFile("R_NeutralR_Intake_To_Mid");
+      R_Neutral_Mid_To_ShootR = PathPlannerPath.fromPathFile("R_Neutral_Mid_To_ShootR");
+      R_NeutralR_Intake_Full_Flip = PathPlannerPath.fromPathFile("R_NeutralR_Intake_Full_Flip");
+      R_NeutralR_Intake_Full = PathPlannerPath.fromPathFile("R_NeutralR_Intake_Full");
+      R_StartR_To_NeutralR_Intake = PathPlannerPath.fromPathFile("R_StartR_To_NeutralR_Intake");
+      
     } catch (Exception e) {
       DriverStation.reportError("Failed to load PathPlanner path - " + e.getMessage(), true);
       System.exit(1);
