@@ -1,3 +1,3 @@
 package frc.robot.subsystems.shooter.turret;
 
-public class TurretIOSim {}
+public class TurretIOSim implements TurretIO {}

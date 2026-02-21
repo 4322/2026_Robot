@@ -38,18 +38,23 @@ import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.shooter.areaManager.AreaManager;
 import frc.robot.subsystems.shooter.flywheel.Flywheel;
 import frc.robot.subsystems.shooter.flywheel.FlywheelIO;
+import frc.robot.subsystems.shooter.flywheel.FlywheelIOSim;
 import frc.robot.subsystems.shooter.flywheel.FlywheelIOTalonFx;
 import frc.robot.subsystems.shooter.hood.Hood;
 import frc.robot.subsystems.shooter.hood.HoodIO;
 import frc.robot.subsystems.shooter.hood.HoodIOServo;
+import frc.robot.subsystems.shooter.hood.HoodIOSim;
 import frc.robot.subsystems.shooter.spindexer.Spindexer;
 import frc.robot.subsystems.shooter.spindexer.SpindexerIO;
+import frc.robot.subsystems.shooter.spindexer.SpindexerIOSim;
 import frc.robot.subsystems.shooter.spindexer.SpindexerIOTalonFx;
 import frc.robot.subsystems.shooter.tunnel.Tunnel;
 import frc.robot.subsystems.shooter.tunnel.TunnelIO;
+import frc.robot.subsystems.shooter.tunnel.TunnelIOSim;
 import frc.robot.subsystems.shooter.tunnel.TunnelIOTalonFx;
 import frc.robot.subsystems.shooter.turret.Turret;
 import frc.robot.subsystems.shooter.turret.TurretIO;
+import frc.robot.subsystems.shooter.turret.TurretIOSim;
 import frc.robot.subsystems.shooter.turret.TurretIOTalonFx;
 import frc.robot.subsystems.vision.visionGlobalPose.VisionGlobalPose;
 import frc.robot.subsystems.vision.visionGlobalPose.VisionGlobalPoseIO;
@@ -253,6 +258,30 @@ public class RobotContainer {
                 ? new VisionObjectDetection(drive, new VisionObjectDetectionIO() {})
                 : new VisionObjectDetection(
                     drive, new VisionObjectDetectionIO() {}); // TODO make sim for this
+        flywheel =
+            Constants.flywheelMode == Constants.SubsystemMode.DISABLED
+                ? new Flywheel(new FlywheelIO() {})
+                : new Flywheel(new FlywheelIOSim());
+
+        hood =
+            Constants.hoodMode == Constants.SubsystemMode.DISABLED
+                ? new Hood(new HoodIO() {})
+                : new Hood(new HoodIOSim()); // TODO still need logic for hood sim
+
+        spindexer =
+            Constants.spindexerMode == Constants.SubsystemMode.DISABLED
+                ? new Spindexer(new SpindexerIO() {})
+                : new Spindexer(new SpindexerIOSim());
+
+        tunnel =
+            Constants.tunnelMode == Constants.SubsystemMode.DISABLED
+                ? new Tunnel(new TunnelIO() {})
+                : new Tunnel(new TunnelIOSim());
+
+        turret =
+            Constants.turretMode == Constants.SubsystemMode.DISABLED
+                ? new Turret(new TurretIO() {})
+                : new Turret(new TurretIOSim());
 
         shooter = new Shooter(flywheel, hood, spindexer, tunnel, turret, visionGlobalPose, drive);
 

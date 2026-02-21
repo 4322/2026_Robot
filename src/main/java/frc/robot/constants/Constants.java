@@ -265,14 +265,14 @@ public final class Constants {
     public static final double latencyCompensation = 0;
 
     // Add entry to both maps
-    public static void putShooterEntry(double distance, FiringParameters params) {
+    public static void putFiringMapEntry(double distance, FiringParameters params) {
       firingMap.put(distance, params);
       double velocity = distance / params.getTimeOfFlightSec();
       velocityToDistanceMap.put(velocity, distance);
     }
 
     static { // TODO tuning points will go here
-      // putShooterEntry(distance, new ShootingParameters(rpm, hoodDeg, tofSec));
+      putFiringMapEntry(0, new FiringParameters(1, 0, 1)); // TODO temp values
     }
 
     public static final boolean alwaysTargetAllianceZone =

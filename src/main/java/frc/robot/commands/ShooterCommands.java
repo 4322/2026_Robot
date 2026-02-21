@@ -9,7 +9,7 @@ public class ShooterCommands {
 
   public static Command shoot(Shooter shooter, BooleanSupplier end) {
 
-    return Commands.run(() -> shooter.requestShoot()).until(end);
+    return Commands.run(() -> shooter.requestShoot(), shooter).until(end);
   }
 
   // Main commands

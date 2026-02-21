@@ -66,8 +66,8 @@ public class LED extends SubsystemBase {
       setLEDState(LEDState.AUTO_FUEL_PICKUP);
     } else if (turretUnwinding) {
       setLEDState(LEDState.TURRET_UNWINDING);
-    } else  {
-     // TODO add other states
+    } else {
+      // TODO add other states
     }
   }
 
@@ -80,7 +80,6 @@ public class LED extends SubsystemBase {
         case DISABLED -> {
           setLEDs(AnimationType.RAINBOW, 0);
         }
-
       }
     }
   }
@@ -166,5 +165,4 @@ public class LED extends SubsystemBase {
   public void requestTurretUnwinding(boolean value) {
     turretUnwinding = value;
   }
-
 }
