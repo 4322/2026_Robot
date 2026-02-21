@@ -8,7 +8,7 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.util.Units;
 import java.util.List;
 
-public class FeildConstants {
+public class FieldConstants {
   private static double fieldLength = Units.inchesToMeters(651.22);
   private static double fieldWidth = Units.inchesToMeters(317.69);
   public static final double aprilTagWidth = Units.inchesToMeters(6.50);
