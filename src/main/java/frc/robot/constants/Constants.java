@@ -274,6 +274,8 @@ public final class Constants {
     static { // TODO tuning points will go here
       // putShooterEntry(distance, new ShootingParameters(rpm, hoodDeg, tofSec));
     }
+
+    public static final boolean alwaysTargetAllianceZone = false; // TODO figure out what we want to do for this
   }
 
   public static class FiringTargetTranslations {
