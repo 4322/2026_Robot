@@ -18,10 +18,20 @@ import org.littletonrobotics.junction.Logger;
 
 public class LED extends SubsystemBase {
   private CANdle leds = new CANdle(Constants.LED.CANdleID);
-  private LEDState state = LEDState.OFF;
+  private LEDState state = LEDState.DISABLED;
+
+  private boolean climberDeployed = false;
+  private boolean autoFuelPickup = false;
+  private boolean turretUnwinding = false;
 
   public enum LEDState {
-    OFF
+    DISABLED,
+    CLIMBER_DEPLOYED,
+    AUTO_FUEL_PICKUP,
+    TURRET_UNWINDING,
+    SHOOTING_AREA_ACTIVE,
+    SHOOTING_AREA_INACTIVE,
+    NON_SHOOTING_AREA
   }
 
   private enum AnimationType {
@@ -49,7 +59,15 @@ public class LED extends SubsystemBase {
   public void periodic() {
     Logger.recordOutput("LED/State", state.toString());
     if (DriverStation.isDisabled()) {
-      setLEDState(LEDState.OFF);
+      setLEDState(LEDState.DISABLED);
+    } else if (climberDeployed) {
+      setLEDState(LEDState.CLIMBER_DEPLOYED);
+    } else if (autoFuelPickup) {
+      setLEDState(LEDState.AUTO_FUEL_PICKUP);
+    } else if (turretUnwinding) {
+      setLEDState(LEDState.TURRET_UNWINDING);
+    } else  {
+     // TODO add other states
     }
   }
 
@@ -59,7 +77,10 @@ public class LED extends SubsystemBase {
       clearLEDs(leds);
 
       switch (state) {
-        case OFF -> {}
+        case DISABLED -> {
+          setLEDs(AnimationType.RAINBOW, 0);
+        }
+
       }
     }
   }
@@ -127,4 +148,23 @@ public class LED extends SubsystemBase {
       }
     }
   }
+
+  private void unsetAllRequests() {
+    climberDeployed = false;
+    autoFuelPickup = false;
+    turretUnwinding = false;
+  }
+
+  public void requestClimberDeployed(boolean value) {
+    climberDeployed = value;
+  }
+
+  public void requestAutoFuelPickup(boolean value) {
+    autoFuelPickup = value;
+  }
+
+  public void requestTurretUnwinding(boolean value) {
+    turretUnwinding = value;
+  }
+
 }
