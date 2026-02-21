@@ -254,7 +254,7 @@ public class RobotContainer {
             Constants.visionObjectDetection == Constants.SubsystemMode.DISABLED
                 ? new VisionObjectDetection(drive, new VisionObjectDetectionIO() {})
                 : new VisionObjectDetection(
-                    drive, new VisionObjectDetectionIOPhoton()); // TODO add sim io
+                    drive, new VisionObjectDetectionIO() {}); // TODO make sim for this
 
         shooter = new Shooter(flywheel, hood, spindexer, tunnel, turret, visionGlobalPose, drive);
 
@@ -289,7 +289,7 @@ public class RobotContainer {
                 new VisionGlobalPoseIO() {});
         visionObjectDetection =
             new VisionObjectDetection(
-                drive, new VisionObjectDetectionIOPhoton()); // TODO add emppty io
+                drive, new VisionObjectDetectionIO() {});
         flywheel = new Flywheel(new FlywheelIO() {});
         hood = new Hood(new HoodIO() {});
         spindexer = new Spindexer(new SpindexerIO() {});
