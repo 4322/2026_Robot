@@ -21,7 +21,7 @@ import java.util.Map;
 import org.littletonrobotics.junction.Logger;
 
 public class Simulator extends SubsystemBase {
-  private static final RegressTests regressTest = RegressTests.DOUBLE_DOUBLE;
+  private static final RegressTests regressTest = RegressTests.DO_NOTHING;
   public static AutoName autoScenario;
   private TeleopScenario teleopScenario;
   private List<TeleAnomaly> teleAnomalies;
@@ -33,19 +33,13 @@ public class Simulator extends SubsystemBase {
   public static boolean slipWheels = false;
 
   private enum RegressTests {
-    DOUBLE_DOUBLE,
-    DOUBLE_AUTO,
-    DOUBLE_TELEOP,
-    APRIL_TAG_TEST,
+    DO_NOTHING,
+    SHOOT,
     CONTROLLER_TEST
   }
 
   private enum TeleAnomaly {
-    NONE,
-    DROP_CORAL1_EARLY,
-    DROP_CORAL1_LATE,
-    DROP_CORAL2_LATE,
-    DROP_ALGAE1_EARLY
+    NONE
   }
 
   private enum AutoAnomaly {
@@ -54,8 +48,7 @@ public class Simulator extends SubsystemBase {
 
   private enum TeleopScenario {
     NONE,
-    SCORE_L4,
-    LOOK_FROM_APRILTAG_RED_SIDE,
+    SHOOT,
     CONTROLLER_TEST1,
     CONTROLLER_TEST2
   }
@@ -63,13 +56,8 @@ public class Simulator extends SubsystemBase {
   private enum EventType {
     SET_POSE,
     FLYWHEEL_DETECT_FUEL,
-    END_EFFECTOR_DETECT_ALGAE,
-    END_EFFECTOR_NO_CORAL,
-    END_EFFECTOR_NO_ALGAE,
-    CORAL_IN_INDEXER,
-    CORAL_NOT_IN_INDEXER,
-    CORAL_VISIBLE,
-    CORAL_NOT_VISIBLE,
+    FUEL_VISIBLE,
+    FUEL_NOT_VISIBLE,
     PRESS_A,
     HOLD_A,
     RELEASE_A,
@@ -210,9 +198,16 @@ public class Simulator extends SubsystemBase {
     }
   }
 
-  // TODO
   private List<RegressionTest> regressionTestCases() {
-    return List.of(new RegressionTest("Default", AutoName.DO_NOTHING, Alliance.Blue));
+    return switch (regressTest) {
+      case DO_NOTHING -> List.of(
+          new RegressionTest("Do nothing", AutoName.DO_NOTHING, Alliance.Blue));
+      case SHOOT -> List.of(new RegressionTest("Shoot", TeleopScenario.SHOOT, Alliance.Blue));
+      case CONTROLLER_TEST -> List.of(
+          new RegressionTest("Controller Test 1", TeleopScenario.CONTROLLER_TEST1, Alliance.Blue),
+          new RegressionTest("Controller Test 2", TeleopScenario.CONTROLLER_TEST2, Alliance.Blue));
+      default -> List.of();
+    };
   }
 
   private class SimEvent {
@@ -280,8 +275,6 @@ public class Simulator extends SubsystemBase {
     int eventNum = 1;
 
     return switch (teleopScenario) {
-      case LOOK_FROM_APRILTAG_RED_SIDE -> List.of();
-
       case CONTROLLER_TEST1 -> List.of(
           new SimEvent(
               t += 1.0, "Start pose", EventType.SET_POSE, new Pose2d(12, 4, Rotation2d.k180deg)),
@@ -435,20 +428,11 @@ public class Simulator extends SubsystemBase {
       if (currentEvent.eventStatus == EventStatus.ACTIVE) {
         Logger.recordOutput("Sim/EventName", currentEvent.eventName);
         Logger.recordOutput("Sim/EventType", currentEvent.eventType);
-        /*   What we used to have:
-        case END_EFFECTOR_NO_CORAL -> endEffectorIOSim.simCoralReleased();
-        case END_EFFECTOR_NO_ALGAE -> endEffectorIOSim.simAlgaeReleased();
-        case END_EFFECTOR_DETECT_CORAL -> endEffectorIOSim.simCoralHeld();
-        case END_EFFECTOR_DETECT_ALGAE -> endEffectorIOSim.simAlgaeHeld();
-        case CORAL_IN_PICKUP_AREA -> indexerIOSim.simCoralDetectedInPickupArea();
-        case CORAL_NOT_IN_PICKUP_AREA -> indexerIOSim.simCoralNOTDetectedInPickupArea();
-        case CORAL_IN_INDEXER -> indexerIOSim.simCoralDetectedInIndexer();
-        case CORAL_NOT_IN_INDEXER -> indexerIOSim.simCoralNOTDetectedInIndexer();
-        case CORAL_VISIBLE -> visionObjectDetectionIOSim.coralDetected(
-        currentEvent.pose.getTranslation(), WPIUtilJNI.now() * 1.0e-6);
-        case CORAL_NOT_VISIBLE -> visionObjectDetectionIOSim.noCoral(); */
         switch (currentEvent.eventType) {
           case SET_POSE -> drive.setPose(currentEvent.pose);
+            // case FUEL_VISIBLE -> visionObjectDetectionIOSim.FuelDetected(
+            // currentEvent.pose.getTranslation(), WPIUtilJNI.now() * 1.0e-6);
+            // case FUEL_NOT_VISIBLE -> visionObjectDetectionIOSim.noCoral();
           case PRESS_A -> pressButton(XboxController.Button.kA);
           case HOLD_A -> holdButton(XboxController.Button.kA);
           case RELEASE_A -> releaseButton(XboxController.Button.kA);
