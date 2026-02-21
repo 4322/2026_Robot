@@ -84,7 +84,7 @@ public class RobotContainer {
   private static Drive drive;
 
   // Controller
-  private final CommandXboxController controller = new CommandXboxController(0);
+  public static final CommandXboxController controller = new CommandXboxController(0);
   public static ScoringManager operatorBoard = new ScoringManager(1, 2);
 
   private enum ShootingCommands {

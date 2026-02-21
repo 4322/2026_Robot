@@ -26,6 +26,7 @@ public final class Constants {
   public static final Mode currentMode = RobotBase.isReal() ? Mode.REAL : simMode;
 
   public static final boolean buzz = false;
+  public static final boolean wantDriveTestAutos = false;
 
   public static final String logPath = "/home/lvuser/logs";
   public static final long minFreeSpace = 1000000000; // 1 GB
@@ -298,8 +299,7 @@ public final class Constants {
 
   public static class CANbus {
     public static final String canbusName = "Clockwork";
-    public static final CANBus CANBus =
-        new CANBus(Constants.CANbus.canbusName, "./logs/example.hoot"); // TODO
+    public static final CANBus CANBus = new CANBus(Constants.CANbus.canbusName);
   }
 
   public static class HubTracker {
