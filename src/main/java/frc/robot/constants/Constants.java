@@ -3,8 +3,6 @@ package frc.robot.constants;
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-import com.pathplanner.lib.path.PathPlannerPath;
-
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -315,7 +313,31 @@ public final class Constants {
     public static final double flywheelRate = 0.1;
   }
 
-  public static final class VisionGlobalPose {}
+  public static final class VisionGlobalPose {
+    // TODO
+    public static final boolean enableGlobalPoseTrigEstimation = false;
+    // Camera names, must match names configured on coprocessor
+    public static String frontRightName = "frontRight";
+    public static String frontLeftName = "frontLeft";
+    public static String backRightName = "backRight";
+    public static String backLeftName = "backLeft";
+
+    // Robot to camera transforms
+    // TODO
+    public static Transform3d frontRightTransform = new Transform3d();
+    public static Transform3d frontLeftTransform = new Transform3d();
+    public static Transform3d backRightTransform = new Transform3d();
+    public static Transform3d backLeftTransform = new Transform3d();
+
+    // Basic filtering thresholds
+    // TODO
+    public static double maxAmbiguity = 0.15;
+    public static double maxZError = 0.75;
+    public static double maxAvgTagDistance = 3;
+
+    public static double stdDevBaseline = 0.2;
+    public static double thetaStdDevBaseline = 0.075;
+  }
 
   public static final class VisionObjectDetection {
     public enum ObjectDetectionTarget {
@@ -339,7 +361,5 @@ public final class Constants {
     ; // TODO set this
   }
 
-  public static class Autonomous {
-    
-  }
+  public static class Autonomous {}
 }

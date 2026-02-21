@@ -3,18 +3,15 @@ package frc.robot.subsystems.vision.visionGlobalPose;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform3d;
-import frc.robot.constants.Constants;
 import frc.robot.constants.FieldConstants;
-
 import java.util.LinkedList;
 import java.util.List;
 import org.photonvision.PhotonCamera;
 import org.photonvision.targeting.MultiTargetPNPResult;
 import org.photonvision.targeting.PhotonPipelineResult;
-import org.photonvision.targeting.PhotonTrackedTarget;
 
 public class VisionGlobalPoseIOPhoton implements VisionGlobalPoseIO {
-    
+
   protected final PhotonCamera camera;
   protected final Transform3d robotToCamera;
 
@@ -29,7 +26,6 @@ public class VisionGlobalPoseIOPhoton implements VisionGlobalPoseIO {
   public VisionGlobalPoseIOPhoton(String name, Transform3d robotToCamera) {
     camera = new PhotonCamera(name);
     this.robotToCamera = robotToCamera;
-
   }
 
   @Override
@@ -52,82 +48,78 @@ public class VisionGlobalPoseIOPhoton implements VisionGlobalPoseIO {
       }
 
       if (result.multitagResult.isPresent()) { // Multitag result
-            MultiTargetPNPResult multitagResult = result.multitagResult.get();
+        MultiTargetPNPResult multitagResult = result.multitagResult.get();
 
-            // Calculate robot pose
-            Transform3d fieldToCamera = multitagResult.estimatedPose.best;
-            Transform3d fieldToCameraAlt = multitagResult.estimatedPose.alt;
+        // Calculate robot pose
+        Transform3d fieldToCamera = multitagResult.estimatedPose.best;
+        Transform3d fieldToCameraAlt = multitagResult.estimatedPose.alt;
 
-            Transform3d fieldToRobot = fieldToCamera.plus(robotToCamera.inverse());
-            Transform3d fieldToRobotAlt = fieldToCameraAlt.plus(robotToCamera.inverse());
-            Pose3d robotPose =
-                new Pose3d(fieldToRobot.getTranslation(), fieldToRobot.getRotation());
-            Pose3d altPose3d =
-                new Pose3d(fieldToRobotAlt.getTranslation(), fieldToRobotAlt.getRotation());
+        Transform3d fieldToRobot = fieldToCamera.plus(robotToCamera.inverse());
+        Transform3d fieldToRobotAlt = fieldToCameraAlt.plus(robotToCamera.inverse());
+        Pose3d robotPose = new Pose3d(fieldToRobot.getTranslation(), fieldToRobot.getRotation());
+        Pose3d altPose3d =
+            new Pose3d(fieldToRobotAlt.getTranslation(), fieldToRobotAlt.getRotation());
 
-            // Calculate average tag distance
-            double totalTagDistance = 0.0;
-            double totalTagDistanceAlt = 0.0;
-            for (var target : result.targets) {
-              totalTagDistance += target.bestCameraToTarget.getTranslation().getNorm();
-              totalTagDistanceAlt += target.altCameraToTarget.getTranslation().getNorm();
-            }
+        // Calculate average tag distance
+        double totalTagDistance = 0.0;
+        double totalTagDistanceAlt = 0.0;
+        for (var target : result.targets) {
+          totalTagDistance += target.bestCameraToTarget.getTranslation().getNorm();
+          totalTagDistanceAlt += target.altCameraToTarget.getTranslation().getNorm();
+        }
 
-            // Add observation
-            globalPoseObservations.add(
-                new GlobalPoseObservation(
-                    result.getTimestampSeconds(),
-                    robotPose,
-                    altPose3d,
-                    multitagResult.estimatedPose.ambiguity,
-                    multitagResult.fiducialIDsUsed.size(),
-                    totalTagDistance / result.targets.size(),
-                    totalTagDistanceAlt / result.targets.size(),
-                    true));
+        // Add observation
+        globalPoseObservations.add(
+            new GlobalPoseObservation(
+                result.getTimestampSeconds(),
+                robotPose,
+                altPose3d,
+                multitagResult.estimatedPose.ambiguity,
+                multitagResult.fiducialIDsUsed.size(),
+                totalTagDistance / result.targets.size(),
+                totalTagDistanceAlt / result.targets.size(),
+                true));
 
-          } else if (!result.targets.isEmpty()) { // Single tag result
-            var target = result.targets.get(0);
+      } else if (!result.targets.isEmpty()) { // Single tag result
+        var target = result.targets.get(0);
 
-            // Calculate robot pose
-            var tagPose = FieldConstants.aprilTagFieldLayout.getTagPose(target.fiducialId);
-            if (tagPose.isPresent()) {
-              Transform3d fieldToTarget =
-                  new Transform3d(tagPose.get().getTranslation(), tagPose.get().getRotation());
+        // Calculate robot pose
+        var tagPose = FieldConstants.aprilTagFieldLayout.getTagPose(target.fiducialId);
+        if (tagPose.isPresent()) {
+          Transform3d fieldToTarget =
+              new Transform3d(tagPose.get().getTranslation(), tagPose.get().getRotation());
 
-              Transform3d cameraToTarget = target.bestCameraToTarget;
-              Transform3d cameraToTargetAlt = target.altCameraToTarget;
-              Transform3d fieldToCamera = fieldToTarget.plus(cameraToTarget.inverse());
-              Transform3d fieldToCameraAlt = fieldToTarget.plus(cameraToTargetAlt.inverse());
+          Transform3d cameraToTarget = target.bestCameraToTarget;
+          Transform3d cameraToTargetAlt = target.altCameraToTarget;
+          Transform3d fieldToCamera = fieldToTarget.plus(cameraToTarget.inverse());
+          Transform3d fieldToCameraAlt = fieldToTarget.plus(cameraToTargetAlt.inverse());
 
-              Transform3d fieldToRobot = fieldToCamera.plus(robotToCamera.inverse());
-              Transform3d fieldToRobotAlt = fieldToCameraAlt.plus(robotToCamera.inverse());
+          Transform3d fieldToRobot = fieldToCamera.plus(robotToCamera.inverse());
+          Transform3d fieldToRobotAlt = fieldToCameraAlt.plus(robotToCamera.inverse());
 
-              Pose3d robotPose =
-                  new Pose3d(fieldToRobot.getTranslation(), fieldToRobot.getRotation());
-              Pose3d robotPoseAlt =
-                  new Pose3d(fieldToRobotAlt.getTranslation(), fieldToRobotAlt.getRotation());
+          Pose3d robotPose = new Pose3d(fieldToRobot.getTranslation(), fieldToRobot.getRotation());
+          Pose3d robotPoseAlt =
+              new Pose3d(fieldToRobotAlt.getTranslation(), fieldToRobotAlt.getRotation());
 
-              // Add observation
-              globalPoseObservations.add(
-                  new GlobalPoseObservation(
-                      result.getTimestampSeconds(),
-                      robotPose,
-                      robotPoseAlt,
-                      target.poseAmbiguity,
-                      1,
-                      cameraToTarget.getTranslation().getNorm(),
-                      cameraToTargetAlt.getTranslation().getNorm(),
-                      false));
-            }
-          }
+          // Add observation
+          globalPoseObservations.add(
+              new GlobalPoseObservation(
+                  result.getTimestampSeconds(),
+                  robotPose,
+                  robotPoseAlt,
+                  target.poseAmbiguity,
+                  1,
+                  cameraToTarget.getTranslation().getNorm(),
+                  cameraToTargetAlt.getTranslation().getNorm(),
+                  false));
+        }
       }
-    
+    }
 
     // Save pose observations to inputs object
     inputs.globalPoseObservations = new GlobalPoseObservation[globalPoseObservations.size()];
     for (int i = 0; i < globalPoseObservations.size(); i++) {
       inputs.globalPoseObservations[i] = globalPoseObservations.get(i);
     }
-
   }
 }

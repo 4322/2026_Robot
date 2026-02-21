@@ -279,9 +279,7 @@ public class Simulator extends SubsystemBase {
     double t = 0.0;
     int eventNum = 1;
 
-
     return switch (teleopScenario) {
-
       case LOOK_FROM_APRILTAG_RED_SIDE -> List.of();
 
       case CONTROLLER_TEST1 -> List.of(

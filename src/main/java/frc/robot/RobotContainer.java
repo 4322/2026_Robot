@@ -52,6 +52,8 @@ import frc.robot.subsystems.shooter.turret.Turret;
 import frc.robot.subsystems.shooter.turret.TurretIO;
 import frc.robot.subsystems.shooter.turret.TurretIOTalonFx;
 import frc.robot.subsystems.vision.visionGlobalPose.VisionGlobalPose;
+import frc.robot.subsystems.vision.visionGlobalPose.VisionGlobalPoseIO;
+import frc.robot.subsystems.vision.visionGlobalPose.VisionGlobalPoseIOPhoton;
 import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetection;
 import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetectionIO;
 import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetectionIOPhoton;
@@ -148,8 +150,26 @@ public class RobotContainer {
 
         visionGlobalPose =
             Constants.visionGlobalPose == Constants.SubsystemMode.DISABLED
-                ? new VisionGlobalPose() // TODO add IO for this
-                : new VisionGlobalPose(); // TODO add IO for this
+                ? new VisionGlobalPose(
+                    drive,
+                    new VisionGlobalPoseIOPhoton(
+                        Constants.VisionGlobalPose.frontRightName,
+                        Constants.VisionGlobalPose.frontRightTransform),
+                    new VisionGlobalPoseIOPhoton(
+                        Constants.VisionGlobalPose.frontLeftName,
+                        Constants.VisionGlobalPose.frontLeftTransform),
+                    new VisionGlobalPoseIOPhoton(
+                        Constants.VisionGlobalPose.backRightName,
+                        Constants.VisionGlobalPose.backRightTransform),
+                    new VisionGlobalPoseIOPhoton(
+                        Constants.VisionGlobalPose.backLeftName,
+                        Constants.VisionGlobalPose.backLeftTransform))
+                : new VisionGlobalPose(
+                    drive,
+                    new VisionGlobalPoseIO() {},
+                    new VisionGlobalPoseIO() {},
+                    new VisionGlobalPoseIO() {},
+                    new VisionGlobalPoseIO() {});
 
         visionObjectDetection =
             Constants.visionObjectDetection == Constants.SubsystemMode.DISABLED
@@ -217,8 +237,18 @@ public class RobotContainer {
 
         visionGlobalPose =
             Constants.visionGlobalPose == Constants.SubsystemMode.DISABLED
-                ? new VisionGlobalPose() // TODO add IO for this
-                : new VisionGlobalPose(); // TODO add IO for this
+                ? new VisionGlobalPose(
+                    drive,
+                    new VisionGlobalPoseIO() {},
+                    new VisionGlobalPoseIO() {},
+                    new VisionGlobalPoseIO() {},
+                    new VisionGlobalPoseIO() {})
+                : new VisionGlobalPose(
+                    drive,
+                    new VisionGlobalPoseIO() {},
+                    new VisionGlobalPoseIO() {},
+                    new VisionGlobalPoseIO() {},
+                    new VisionGlobalPoseIO() {}); // TODO make sim for this
 
         visionObjectDetection =
             Constants.visionObjectDetection == Constants.SubsystemMode.DISABLED
@@ -250,7 +280,13 @@ public class RobotContainer {
                 new ModuleIO() {},
                 new ModuleIO() {},
                 new ModuleIO() {});
-        visionGlobalPose = new VisionGlobalPose(); // TODO add IO for this
+        visionGlobalPose =
+            new VisionGlobalPose(
+                drive,
+                new VisionGlobalPoseIO() {},
+                new VisionGlobalPoseIO() {},
+                new VisionGlobalPoseIO() {},
+                new VisionGlobalPoseIO() {});
         visionObjectDetection =
             new VisionObjectDetection(
                 drive, new VisionObjectDetectionIOPhoton()); // TODO add emppty io
