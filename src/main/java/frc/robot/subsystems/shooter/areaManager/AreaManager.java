@@ -15,62 +15,66 @@ public class AreaManager {
   // Alliance Zones
   private static Rectangle2d redAllianceZone =
       new Rectangle2d(
-          new Translation2d(12.51, Units.inchesToMeters(317.69)),
-          new Translation2d(Units.inchesToMeters(651.22), 0));
+          new Translation2d(Units.inchesToMeters(651.22), Units.inchesToMeters(317.69)),
+          new Translation2d(Units.inchesToMeters(494.61), 0));
   private static Rectangle2d blueAllianceZone =
       new Rectangle2d(
-          new Translation2d(0, Units.inchesToMeters(317.69)),
-          new Translation2d(Units.inchesToMeters(158.61), 0));
+         new Translation2d(Units.inchesToMeters(156.61), Units.inchesToMeters(317.69)),
+          new Translation2d(0, 0));
 
   // Neutral Zones
   private static Rectangle2d leftNeutralZone =
       new Rectangle2d(
-          new Translation2d(4.03, Units.inchesToMeters(317.69)),
+          new Translation2d(Units.inchesToMeters(494.61), Units.inchesToMeters(317.69)),
           new Translation2d(
-              11.22, Units.inchesToMeters(158.84))); // When looking from Blue Alliance side
+              Units.inchesToMeters(156.61), Units.inchesToMeters(158.84))); // When looking from Blue Alliance side
   private static Rectangle2d rightNeutralZone =
       new Rectangle2d(
-          new Translation2d(4.03, Units.inchesToMeters(158.84)),
-          new Translation2d(11.22, 0)); // When looking from Blue Alliance side
+          new Translation2d(Units.inchesToMeters(494.61), Units.inchesToMeters(158.84)),
+          new Translation2d(Units.inchesToMeters(156.61), Units.inchesToMeters(0))); // When looking from Blue Alliance side
+  
   // Opposition Zones
   private static Rectangle2d leftBlueOppositionZone =
       new Rectangle2d(
-          new Translation2d(0, Units.inchesToMeters(317.69)),
-          new Translation2d(Units.inchesToMeters(158.61), Units.inchesToMeters(158.84)));
+          new Translation2d(Units.inchesToMeters(156.61), Units.inchesToMeters(317.69)),
+          new Translation2d(0, Units.inchesToMeters(158.84)));
   private static Rectangle2d rightBlueOppositionZone =
       new Rectangle2d(
-          new Translation2d(0, Units.inchesToMeters(158.84)),
-          new Translation2d(Units.inchesToMeters(158.61), 0));
+          new Translation2d(Units.inchesToMeters(156.61), Units.inchesToMeters(158.84)),
+          new Translation2d(0, 0));
   private static Rectangle2d leftRedOppositionZone =
       new Rectangle2d(
-          new Translation2d(12.51, Units.inchesToMeters(317.69)),
-          new Translation2d(Units.inchesToMeters(651.22), Units.inchesToMeters(158.84)));
+          new Translation2d(Units.inchesToMeters(651.22), Units.inchesToMeters(317.69)),
+          new Translation2d(Units.inchesToMeters(494.61), Units.inchesToMeters(158.84)));
   private static Rectangle2d rightRedOppositionZone =
       new Rectangle2d(
-          new Translation2d(12.51, Units.inchesToMeters(158.84)),
-          new Translation2d(Units.inchesToMeters(651.22), 0));
+          new Translation2d(Units.inchesToMeters(651.22), Units.inchesToMeters(158.84)),
+          new Translation2d(Units.inchesToMeters(494.61), 0));
 
   // Non-Shooting Areas
   private static Rectangle2d trenchLeftRed =
       new Rectangle2d(
           new Translation2d(
-              (Units.inchesToMeters(47) - Units.inchesToMeters(12)), Units.inchesToMeters(317.69)),
+              (Units.inchesToMeters(494.61) + Units.inchesToMeters(12)), Units.inchesToMeters(317.69)),
           new Translation2d(
-              (Units.inchesToMeters(47) + Units.inchesToMeters(12)), Units.inchesToMeters(255.1)));
+              (Units.inchesToMeters(447.61) - Units.inchesToMeters(12)), Units.inchesToMeters(255.1)));
+  
   private static Rectangle2d trenchRightRed =
       new Rectangle2d(
           new Translation2d(
-              (Units.inchesToMeters(47) - Units.inchesToMeters(12)), Units.inchesToMeters(62.59)),
-          new Translation2d((Units.inchesToMeters(47) + Units.inchesToMeters(12)), 0));
+              (Units.inchesToMeters(494.61) + Units.inchesToMeters(12)), Units.inchesToMeters(62.59)),
+          new Translation2d(
+              (Units.inchesToMeters(447.61) - Units.inchesToMeters(12)), Units.inchesToMeters(0)));
 
+  //TODO: UNDER
   private static Rectangle2d bumpLeftRed =
-      new Rectangle2d(new Translation2d(0, 6.1722), new Translation2d(2.0574, 10.287));
+      new Rectangle2d(new Translation2d(Units.inchesToMeters(156.61), Units.inchesToMeters(6.1722)), new Translation2d(Units.inchesToMeters(2.0574), Units.inchesToMeters(10.287)));
   private static Rectangle2d bumpRightRed =
-      new Rectangle2d(new Translation2d(0, 10.287), new Translation2d(2.0574, 14.4018));
+      new Rectangle2d(new Translation2d(Units.inchesToMeters(0), Units.inchesToMeters(10.287)), new Translation2d(Units.inchesToMeters(2.0574), Units.inchesToMeters(14.4018)));
   private static Rectangle2d backOfHubRed =
-      new Rectangle2d(new Translation2d(0, 12.3444), new Translation2d(8.2296, 16.4592));
+      new Rectangle2d(new Translation2d(Units.inchesToMeters(0), Units.inchesToMeters(12.3444)), new Translation2d(Units.inchesToMeters(8.2296), Units.inchesToMeters(16.4592)));
   private static Rectangle2d frontOfHubRed =
-      new Rectangle2d(new Translation2d(16.4592, 0), new Translation2d(24.6888, 4.1148));
+      new Rectangle2d(new Translation2d(Units.inchesToMeters(16.4592), Units.inchesToMeters(0)), new Translation2d(Units.inchesToMeters(24.6888), Units.inchesToMeters(4.1148)));
 
   private static Rectangle2d leftRedHoodDangerZone =
       new Rectangle2d(new Translation2d(0, 0), new Translation2d(0, 0)); // TODO
