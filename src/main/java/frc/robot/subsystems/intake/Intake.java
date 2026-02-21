@@ -31,7 +31,7 @@ public class Intake extends SubsystemBase {
 
   @Override
   public void periodic() {
-    Logger.recordOutput("Inttake/State", state);
+    Logger.recordOutput("Intake/State", state);
     switch (state) {
       case DISABLED -> {
         break;
