@@ -91,9 +91,6 @@ public class RobotContainer {
     INHIBIT_AUTO_SHOOT,
     AREA_INHIBIT_AUTO_SHOOT
   }
-
-  private ShootingCommands currentShootingCommand = ShootingCommands.AUTO_SHOOT;
-
   private final Trigger inNonShootingArea;
 
   // Dashboard inputs
