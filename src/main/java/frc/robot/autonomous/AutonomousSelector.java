@@ -6,8 +6,12 @@ import frc.robot.constants.Constants;
 import frc.robot.constants.Constants.Mode;
 import frc.robot.subsystems.Simulator;
 import frc.robot.subsystems.drive.Drive;
+import frc.robot.subsystems.led.LED;
+import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.shooter.hood.Hood;
 import frc.robot.subsystems.shooter.turret.Turret;
+import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetection;
+
 import java.util.List;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
@@ -34,7 +38,13 @@ public class AutonomousSelector {
   private List<Auto> autos;
   private AutoName defaultAuto = AutoName.DO_NOTHING;
 
-  public AutonomousSelector(Drive drive, Hood hood, Turret turret) {
+  public AutonomousSelector(
+      Drive drive,
+      Hood hood,
+      Turret turret,
+      Shooter shooter,
+      VisionObjectDetection visionObjectDetection,
+      LED led) {
     autos = List.of(new Auto(AutoName.DO_NOTHING, new DoNothing(hood)));
 
     for (Auto nextAuto : autos) {

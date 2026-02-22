@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.autonomous.AutonomousSelector;
 import frc.robot.commands.AutoIntake;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.ShooterCommands;
@@ -89,6 +90,8 @@ public class RobotContainer {
   private static Deployer deployer;
 
   private static Drive drive;
+
+  public static AutonomousSelector autonomousSelector;
 
   // Controller
   public static final CommandXboxController controller = new CommandXboxController(0);
@@ -399,6 +402,11 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return autoChooser.get();
+    return autonomousSelector.get();
+  }
+
+  public void configureAutonomousSelector() {
+    autonomousSelector =
+        new AutonomousSelector(drive, hood, turret, shooter, visionObjectDetection, led);
   }
 }
