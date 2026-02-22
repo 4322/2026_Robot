@@ -179,9 +179,8 @@ public final class Constants {
     public static final InvertedValue motorInvert = InvertedValue.Clockwise_Positive;
     public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
     public static final int idleVelocity = 0;
-    public static final double hoodTolerance = 0.1;
-    public static final double PIDTolerance = 0.1;
-    public static final double homingVelocityThreshold = 1;
+    public static final double toleranceDeg = 0.1;
+    public static final double homingVelocityThresholdRPS = 1;
     public static final double homingVelocity = -0.2;
     public static final double idleAngleDeg = 0; // TODO
     public static final double iSat = 0; // TODO

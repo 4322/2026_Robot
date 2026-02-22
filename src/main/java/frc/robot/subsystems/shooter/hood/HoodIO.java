@@ -23,7 +23,8 @@ public interface HoodIO {
 
   public default void homingPulseWidth() {}
 
-  public default void setServoVelocity(double pulseWidth) {}
+  // velocity range: -1 to 1
+  public default void setServoVelocity(double velocity) {}
 
   public default void simEstimatedPosition() {}
 
