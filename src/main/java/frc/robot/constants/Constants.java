@@ -281,7 +281,12 @@ public final class Constants {
     }
 
     static { // TODO tuning points will go here
-      putFiringMapEntry(0, new FiringParameters(1, 0, 1)); // TODO temp values
+      putFiringMapEntry(0.5, new FiringParameters(30, 0, 1)); // TODO temp values
+      putFiringMapEntry(1, new FiringParameters(35, 10, 1.1));
+      putFiringMapEntry(5, new FiringParameters(100, 20, 5));
+      putFiringMapEntry(10, new FiringParameters(200, 40, 10));
+      putFiringMapEntry(20, new FiringParameters(400, 60, 20));
+
     }
 
     public static final boolean alwaysTargetAllianceZone =
