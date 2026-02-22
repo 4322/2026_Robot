@@ -13,7 +13,7 @@ import java.util.function.Supplier;
 import org.littletonrobotics.junction.Logger;
 
 public class AutoIntake extends Command {
-  // TODO adapt this to extend drive to pose
+  // TODO adapt this to extend a modified version drive to pose
 
   private Drive drive;
   private VisionObjectDetection visionObjectDetection;

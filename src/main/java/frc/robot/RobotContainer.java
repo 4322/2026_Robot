@@ -11,6 +11,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -18,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.autonomous.AutonomousSelector;
 import frc.robot.commands.AutoIntake;
 import frc.robot.commands.DriveCommands;
+import frc.robot.commands.IntakeCommands;
 import frc.robot.commands.ShooterCommands;
 import frc.robot.constants.Constants;
 import frc.robot.generated.TunerConstants;
@@ -394,6 +396,39 @@ public class RobotContainer {
         .onTrue(
             new AutoIntake(drive, visionObjectDetection, led, true)
                 .until(() -> !button3.getAsBoolean()));
+
+    controller
+        .y() // TODO this will be toggle 3
+        .whileFalse(
+            IntakeCommands.setExtend(intake)
+                .onlyIf(() -> currentIntakeCommand == IntakeCommandTypes.RETRACT))
+        .onTrue(new InstantCommand(() -> currentIntakeCommand = IntakeCommandTypes.EXTEND));
+
+    controller
+        .y() // TODO driver button 11 whatever that is
+        .onTrue(
+            IntakeCommands.setIntaking(intake)
+                .alongWith(
+                    new InstantCommand(() -> currentIntakeCommand = IntakeCommandTypes.INTAKING))
+                .onlyIf(() -> currentIntakeCommand == IntakeCommandTypes.IDLE));
+
+    controller
+        .y() // TODO driver button 11
+        .onTrue(
+            IntakeCommands.setIdle(intake)
+                .alongWith(new InstantCommand(() -> currentIntakeCommand = IntakeCommandTypes.IDLE))
+                .onlyIf(() -> currentIntakeCommand == IntakeCommandTypes.IDLE));
+
+    controller
+        .y() // TODO operator toggle 3
+        .whileTrue(
+            IntakeCommands.setRetract(intake)
+                .onlyIf(
+                    () ->
+                        (currentIntakeCommand == IntakeCommandTypes.IDLE)
+                            || (currentIntakeCommand == IntakeCommandTypes.INTAKING)))
+        .onTrue(new InstantCommand(() -> currentIntakeCommand = IntakeCommandTypes.RETRACT));
+
   }
 
   /**

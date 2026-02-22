@@ -3,6 +3,8 @@ package frc.robot.autonomous.modes;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Robot;
 import frc.robot.commands.AutoIntake;
@@ -20,6 +22,11 @@ public class RHalfSweepShoot extends SequentialCommandGroup {
 
     setName("R_HALF_SWEEP_SHOOT");
     addCommands(
+      new InstantCommand(() -> {if (Robot.alliance == Alliance.Blue) {
+                drive.setPose(startPoseBlue);
+              } else {
+                drive.setPose(startPoseRed);
+              }}),
         AutoBuilder.followPath(Robot.R_StartR_To_NeutralR_Intake),
         AutoBuilder.followPath(Robot.R_NeutralR_Intake_To_Mid),
         AutoBuilder.followPath(Robot.R_NeutralR_Intake_Mid_Flip),

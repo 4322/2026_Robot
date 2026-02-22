@@ -328,6 +328,8 @@ public class Drive extends SubsystemBase {
     poseEstimator.resetPosition(rawGyroRotation, getModulePositions(), pose);
   }
 
+  
+
   /** Adds a new timestamped vision measurement. */
   public void addVisionMeasurement(
       Pose2d visionRobotPoseMeters,
@@ -361,7 +363,7 @@ public class Drive extends SubsystemBase {
     return new Translation2d(); // TODO
   }
 
-  public Pose2d getPoseAtTimestamp(double timestamp) {
-    return new Pose2d(); // TODO
+  public Pose2d getPoseAtTimestamp(double timestampSeconds) {
+    return poseEstimator.sampleAt(timestampSeconds).orElse(null);
   }
 }
