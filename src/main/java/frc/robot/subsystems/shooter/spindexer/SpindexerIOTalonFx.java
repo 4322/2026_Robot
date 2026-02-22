@@ -16,7 +16,7 @@ public class SpindexerIOTalonFx implements SpindexerIO {
   private VelocityVoltage velocityRequest = new VelocityVoltage(0).withSlot(0);
 
   public SpindexerIOTalonFx() {
-    motor = new TalonFX(Constants.Spindexer.spindexerMotorId, Constants.CANbus.CANBus);
+    motor = new TalonFX(Constants.Spindexer.spindexerMotorId, Constants.CANivore.CANBus);
 
     config.CurrentLimits.StatorCurrentLimit = Constants.Spindexer.statorCurrentLimit;
     config.CurrentLimits.SupplyCurrentLimit = Constants.Spindexer.supplyCurrentLimit;

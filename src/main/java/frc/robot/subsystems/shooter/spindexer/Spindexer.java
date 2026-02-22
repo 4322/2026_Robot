@@ -26,18 +26,24 @@ public class Spindexer {
     io.updateInputs(inputs);
     Logger.processInputs("Spindexer", inputs);
 
-    switch (state) {
-      case DISABLED -> {
-        if (DriverStation.isEnabled()) {
-          state = SpindexerStates.IDLE;
+    switch (Constants.spindexerMode) {
+      case TUNING -> {}
+      case NORMAL -> {
+        switch (state) {
+          case DISABLED -> {
+            if (DriverStation.isEnabled()) {
+              state = SpindexerStates.IDLE;
+            }
+          }
+          case IDLE -> {
+            io.stop();
+          }
+          case INDEXING -> {
+            io.setTargetMechanismRotations(requestedSpeed);
+          }
         }
       }
-      case IDLE -> {
-        io.stop();
-      }
-      case INDEXING -> {
-        io.setTargetMechanismRotations(requestedSpeed);
-      }
+      case DISABLED -> {}
     }
 
     Logger.recordOutput("Spindexer/State", state.toString());

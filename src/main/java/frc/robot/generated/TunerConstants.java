@@ -98,8 +98,12 @@ public class TunerConstants {
   private static final double kCoupleRatio = 3.8181818181818183;
 
   private static final double kDriveGearRatio = 7.03;
-  private static final double kSteerGearRatio = 26.09;
+  private static final double kSteerGearRatio = 287 / 11.0;
   private static final Distance kWheelRadius = Inches.of(2);
+
+  private static final double R1 = 54 / 12 * 25 / 32.0 * 30 / 15.0;
+  private static final double R2 = 54 / 14.0 * 25 / 32.0 * 30 / 15.0;
+  private static final double R3 = 54 / 16.0 * 25 / 32.0 * 30 / 15.0;
 
   private static final boolean kInvertLeftSide = false;
   private static final boolean kInvertRightSide = true;
@@ -115,7 +119,7 @@ public class TunerConstants {
 
   public static final SwerveDrivetrainConstants DrivetrainConstants =
       new SwerveDrivetrainConstants()
-          .withCANBusName(Constants.CANbus.canbusName)
+          .withCANBusName(Constants.CANivore.canbusName)
           .withPigeon2Id(kPigeonId)
           .withPigeon2Configs(pigeonConfigs);
 

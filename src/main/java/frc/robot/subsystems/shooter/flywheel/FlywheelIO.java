@@ -12,10 +12,10 @@ public interface FlywheelIO {
     public boolean followerMotorConnected = false;
     public double requestedMechanismRPS = 0.0;
     public double followerRequestedMechanismRPS = 0.0;
-    public double MechanismRPS = 0.0;
-    public double follwerMechanismRPS = 0.0;
+    public double mechanismRPS = 0.0;
+    public double followerMechanismRPS = 0.0;
     public double speedMotorRPS = 0.0;
-    public double followerspeedMotorRPS = 0.0;
+    public double followerSpeedMotorRPS = 0.0;
     public double appliedVolts = 0.0;
     public double followerAppliedVolts = 0.0;
     public double motorTempCelsius = 0.0;

@@ -6,7 +6,6 @@ public interface HoodIO {
   @AutoLog
   public static class HoodIOInputs {
     public double rawRotations = 0.0;
-    public double requestedAngle = 0.0;
     public double currentPulseWidth = 0.0;
     public double appliedVolts = 0.0;
     public double motorTempCelsius = 0.0;
@@ -25,4 +24,8 @@ public interface HoodIO {
   public default void homingPulseWidth() {}
 
   public default void setServoVelocity(double pulseWidth) {}
+
+  public default void simEstimatedPosition() {}
+
+  public default void setBrakeMode(boolean brake) {}
 }
