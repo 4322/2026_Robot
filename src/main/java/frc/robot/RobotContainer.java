@@ -181,7 +181,7 @@ public class RobotContainer {
             Constants.visionObjectDetection == Constants.SubsystemMode.DISABLED
                 ? new VisionObjectDetection(drive, new VisionObjectDetectionIO() {})
                 : new VisionObjectDetection(drive, new VisionObjectDetectionIOPhoton());
-
+        led = new LED(drive);
         flywheel =
             Constants.flywheelMode == Constants.SubsystemMode.DISABLED
                 ? new Flywheel(new FlywheelIO() {})
@@ -221,8 +221,6 @@ public class RobotContainer {
                 : new Deployer(new DeployerIOTalonFX());
 
         intake = new Intake(deployer, rollers);
-
-        led = new LED(drive);
       }
 
       case SIM -> {
@@ -262,6 +260,7 @@ public class RobotContainer {
                 ? new VisionObjectDetection(drive, new VisionObjectDetectionIO() {})
                 : new VisionObjectDetection(
                     drive, new VisionObjectDetectionIO() {}); // TODO make sim for this
+        led = new LED(drive);
         flywheel =
             Constants.flywheelMode == Constants.SubsystemMode.DISABLED
                 ? new Flywheel(new FlywheelIO() {})
@@ -319,7 +318,9 @@ public class RobotContainer {
                 new VisionGlobalPoseIO() {},
                 new VisionGlobalPoseIO() {},
                 new VisionGlobalPoseIO() {});
+        led = new LED(drive);
         visionObjectDetection = new VisionObjectDetection(drive, new VisionObjectDetectionIO() {});
+        led = new LED(drive);
         flywheel = new Flywheel(new FlywheelIO() {});
         hood = new Hood(new HoodIO() {});
         spindexer = new Spindexer(new SpindexerIO() {});
@@ -330,7 +331,6 @@ public class RobotContainer {
         rollers = new Rollers(new RollersIO() {});
         deployer = new Deployer(new DeployerIO() {});
         intake = new Intake(deployer, rollers);
-        led = new LED(drive);
       }
     }
 
