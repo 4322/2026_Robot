@@ -185,7 +185,9 @@ public static class Drive {
     public static final double hoodTolerance = 0.1;
     public static final double homingVelocityThreshold = 1;
     public static final double homingVelocity = -0.2;
-    public static double idleAngleDeg = 0; // TODO
+    public static final double idleAngleDeg = 0; // TODO
+    public static final double iSat = 0; // TODO
+    public static final double iZone = 0; // TODO
   }
 
   public static class Control {

@@ -118,4 +118,9 @@ public class LoggedTunableNumber implements DoubleSupplier {
   public double getAsDouble() {
     return get();
   }
+
+  public double get(int i) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'get'");
+  }
 }
