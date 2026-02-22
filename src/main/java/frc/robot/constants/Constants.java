@@ -54,7 +54,7 @@ public final class Constants {
 
   public static final SubsystemMode driveMode = SubsystemMode.NORMAL;
   public static final SubsystemMode flywheelMode = SubsystemMode.NORMAL;
-  public static final SubsystemMode hoodMode = SubsystemMode.NORMAL;
+  public static final SubsystemMode hoodMode = SubsystemMode.TUNING;
   public static final SubsystemMode spindexerMode = SubsystemMode.NORMAL;
   public static final SubsystemMode tunnelMode = SubsystemMode.NORMAL;
   public static final SubsystemMode turretMode = SubsystemMode.NORMAL;
@@ -66,11 +66,10 @@ public final class Constants {
   public static final SubsystemMode visionGlobalPose = SubsystemMode.NORMAL;
   public static final SubsystemMode visionObjectDetection = SubsystemMode.NORMAL;
 
-public static class Drive {
+  public static class Drive {
 
     public static final int gyroID = 12; // TODO
-
-}
+  }
 
   public static class Spindexer {
     public static final boolean dynamicVelocity = true;
@@ -183,9 +182,12 @@ public static class Drive {
     public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
     public static final int idleVelocity = 0;
     public static final double hoodTolerance = 0.1;
+    public static final double PIDTolerance = 0.1;
     public static final double homingVelocityThreshold = 1;
     public static final double homingVelocity = -0.2;
-    public static double idleAngleDeg = 0; // TODO
+    public static final double idleAngleDeg = 0; // TODO
+    public static final double iSat = 0; // TODO
+    public static final double iZone = 0; // TODO
   }
 
   public static class Control {
