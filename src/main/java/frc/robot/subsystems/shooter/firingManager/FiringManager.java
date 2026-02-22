@@ -1,6 +1,7 @@
 package frc.robot.subsystems.shooter.firingManager;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -66,7 +67,7 @@ public class FiringManager {
     Logger.recordOutput("FiringManager/futurePos", futurePos);
     // Get target vector
     Translation2d goalPosition = getShootingTarget(robotPosition);
-    Logger.recordOutput("FiringManager/goalPosition", goalPosition);
+    Logger.recordOutput("FiringManager/goalPosition", new Pose2d(goalPosition, new Rotation2d()));
     Translation2d toGoal = goalPosition.minus(futurePos);
     double distance = toGoal.getNorm();
     Logger.recordOutput("FiringManager/distance", distance);
@@ -84,6 +85,7 @@ public class FiringManager {
 
     // Compensate for robot velocity
     Translation2d shotVelocity = targetVelocity.minus(robotVelocity);
+    Logger.recordOutput("FiringManager/actualShootingTarget", new Pose2d(shotVelocity, new Rotation2d()));
 
     // Get results
     Rotation2d turretAngle = shotVelocity.getAngle();
