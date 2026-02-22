@@ -12,7 +12,6 @@ import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
 import edu.wpi.first.math.interpolation.InverseInterpolator;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotBase;
-import frc.robot.constants.Constants.FiringParameters;
 import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetection.ObjectDetectionType;
 
 /**
@@ -66,6 +65,12 @@ public final class Constants {
   public static final SubsystemMode ledMode = SubsystemMode.NORMAL;
   public static final SubsystemMode visionGlobalPose = SubsystemMode.NORMAL;
   public static final SubsystemMode visionObjectDetection = SubsystemMode.NORMAL;
+
+public static class Drive {
+
+    public static final int gyroID = 12; // TODO
+
+}
 
   public static class Spindexer {
     public static final boolean dynamicVelocity = true;

@@ -44,11 +44,11 @@ public class LED extends SubsystemBase {
     FIRE,
     LARSON,
     RAINBOW,
-    RGB_FADE,
     SINGLE_FADE,
     SOLID_COLOR,
     STROBE,
-    TWINKLE
+    TWINKLE,
+    RGB_FADE
   }
 
   public LED(Drive drive) {
@@ -94,7 +94,22 @@ public class LED extends SubsystemBase {
         case DISABLED -> {
           setLEDs(AnimationType.RAINBOW, 0);
         }
-          // TODO
+        case CLIMBER_DEPLOYED -> {}
+        case AUTO_FUEL_PICKUP -> {
+          setLEDs(AnimationType.STROBE, 0, 0, 0, 255);
+        }
+        case TURRET_UNWINDING -> {
+          setLEDs(AnimationType.LARSON, 0, 255, 0, 255);
+        }
+        case SHOOTING_AREA_ACTIVE -> {
+          setLEDs(AnimationType.COLOR_FLOW, 0, 0, 255, 0);
+        }
+        case SHOOTING_AREA_INACTIVE -> {
+          setLEDs(AnimationType.COLOR_FLOW, 0, 255, 255, 0);
+        }
+        case NON_SHOOTING_AREA -> {
+          setLEDs(AnimationType.COLOR_FLOW, 0, 255, 0, 0);
+        }
       }
     }
   }
@@ -143,6 +158,7 @@ public class LED extends SubsystemBase {
                 .withSlot(slot)
                 .withColor(new RGBWColor(r, g, b)));
       }
+      case RAINBOW, FIRE, RGB_FADE -> {}
     }
   }
 
@@ -152,7 +168,7 @@ public class LED extends SubsystemBase {
         leds.setControl(
             new RainbowAnimation(Constants.LED.ledStart, Constants.LED.ledEnd).withSlot(slot));
       }
-      case COLOR_FLOW -> {
+      case RGB_FADE -> {
         leds.setControl(
             new RgbFadeAnimation(Constants.LED.ledStart, Constants.LED.ledEnd).withSlot(slot));
       }
@@ -160,13 +176,8 @@ public class LED extends SubsystemBase {
         leds.setControl(
             new FireAnimation(Constants.LED.ledStart, Constants.LED.ledEnd).withSlot(slot));
       }
+      case LARSON, SINGLE_FADE, SOLID_COLOR, STROBE, TWINKLE, COLOR_FLOW -> {}
     }
-  }
-
-  private void unsetAllRequests() {
-    climberDeployed = false;
-    autoFuelPickup = false;
-    turretUnwinding = false;
   }
 
   public void requestClimberDeployed(boolean value) {

@@ -25,4 +25,6 @@ public interface HoodIO {
   public default void homingPulseWidth() {}
 
   public default void setServoVelocity(double pulseWidth) {}
+
+  public default void setBrakeMode(boolean brake) {}
 }

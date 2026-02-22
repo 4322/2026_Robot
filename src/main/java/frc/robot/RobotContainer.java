@@ -112,10 +112,6 @@ public class RobotContainer {
 
   boolean inhibitAutoShoot = false;
 
-  // Boolean suppliers
-  private final BooleanSupplier toggle1 =
-      () -> operatorBoard.getLeftController().getRawButton(Constants.Control.toggle1ButtonNumber);
-
   // Command variables
   private enum IntakeCommandTypes {
     EXTEND,
@@ -126,7 +122,10 @@ public class RobotContainer {
   }
 
   private IntakeCommandTypes currentIntakeCommand = IntakeCommandTypes.EXTEND;
-  private IntakeCommandTypes previousIntakeCommand = IntakeCommandTypes.EXTEND;
+
+  // Boolean suppliers
+  private final BooleanSupplier toggle1 =
+      () -> operatorBoard.getLeftController().getRawButton(Constants.Control.toggle1ButtonNumber);
 
   private final BooleanSupplier toggle4 =
       () -> operatorBoard.getLeftController().getRawButton(Constants.Control.toggle4ButtonNumber);
@@ -428,7 +427,6 @@ public class RobotContainer {
                         (currentIntakeCommand == IntakeCommandTypes.IDLE)
                             || (currentIntakeCommand == IntakeCommandTypes.INTAKING)))
         .onTrue(new InstantCommand(() -> currentIntakeCommand = IntakeCommandTypes.RETRACT));
-
   }
 
   /**
@@ -444,4 +442,15 @@ public class RobotContainer {
     autonomousSelector =
         new AutonomousSelector(drive, hood, turret, shooter, visionObjectDetection, led);
   }
+
+  public void setBrakeMode(boolean brake) {
+    deployer.setBrakeMode(brake);
+    rollers.setBrakeMode(brake);
+    flywheel.enableBrakeMode(brake);
+    hood.enableBrakeMode(brake);
+    spindexer.enableBrakeMode(brake);
+    tunnel.enableBrakeMode(brake);
+    turret.setBrakeMode(brake);
+  }
+
 }

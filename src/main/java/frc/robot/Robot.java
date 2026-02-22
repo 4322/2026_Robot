@@ -267,14 +267,14 @@ public class Robot extends LoggedRobot {
     }
 
     if (coastButtonTimer.hasElapsed(0.1)) {
-      // TODO: RobotContainer.getSuperstructure().CoastMotors();
+      robotContainer.setBrakeMode(false);
     }
 
     if (coastButtonTimer.hasElapsed(10)) {
-      // TODO: DriverStation.reportWarning("Break Mode Trying To Activate", false);
-      // RobotContainer.getSuperstructure().BreakMotors();
-      // coastButtonTimer.stop();
-      // coastButtonTimer.reset();
+      DriverStation.reportWarning("Brake Mode Trying To Activate", false);
+      robotContainer.setBrakeMode(true);
+      coastButtonTimer.stop();
+      coastButtonTimer.reset();
     }
   }
 

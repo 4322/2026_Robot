@@ -78,4 +78,8 @@ public class Hood {
   public double getEncoderDetectedPosition() {
     return inputs.degrees;
   }
+
+  public void enableBrakeMode(boolean brake) {
+    io.setBrakeMode(brake);
+  }
 }

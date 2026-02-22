@@ -68,4 +68,9 @@ public class HoodIOServo implements HoodIO {
     int currentRequested = (1500 + ((int) MathUtil.clamp(velocity, -1, 1) * 500));
     servo.setPulseWidth(currentRequested);
   }
+
+  @Override
+  public void setBrakeMode(boolean brake) {
+    servo.setEnabled(brake);
+  }
 }
