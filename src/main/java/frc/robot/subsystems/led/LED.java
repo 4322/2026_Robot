@@ -1,32 +1,20 @@
 package frc.robot.subsystems.led;
 
-import com.ctre.phoenix6.configs.CANdleConfiguration;
-import com.ctre.phoenix6.controls.ColorFlowAnimation;
-import com.ctre.phoenix6.controls.EmptyAnimation;
-import com.ctre.phoenix6.controls.FireAnimation;
-import com.ctre.phoenix6.controls.LarsonAnimation;
-import com.ctre.phoenix6.controls.RainbowAnimation;
-import com.ctre.phoenix6.controls.RgbFadeAnimation;
-import com.ctre.phoenix6.controls.SingleFadeAnimation;
-import com.ctre.phoenix6.hardware.CANdle;
-import com.ctre.phoenix6.signals.RGBWColor;
-import com.ctre.phoenix6.signals.StatusLedWhenActiveValue;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.constants.Constants;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.shooter.areaManager.AreaManager;
 import frc.robot.util.HubTracker;
 import org.littletonrobotics.junction.Logger;
 
 public class LED extends SubsystemBase {
-  private CANdle leds = new CANdle(Constants.LED.CANdleID);
   private LEDState state = LEDState.DISABLED;
 
   private boolean climberDeployed = false;
   private boolean autoFuelPickup = false;
   private boolean turretUnwinding = false;
 
+  private LEDIO io;
   private Drive drive;
 
   public enum LEDState {
@@ -39,7 +27,7 @@ public class LED extends SubsystemBase {
     NON_SHOOTING_AREA
   }
 
-  private enum AnimationType {
+  public enum AnimationType {
     COLOR_FLOW,
     FIRE,
     LARSON,
@@ -51,15 +39,9 @@ public class LED extends SubsystemBase {
     RGB_FADE
   }
 
-  public LED(Drive drive) {
+  public LED(LEDIO io, Drive drive) {
+    this.io = io;
     this.drive = drive;
-
-    CANdleConfiguration config = new CANdleConfiguration();
-    config.LED.StripType = Constants.LED.stripType;
-    config.LED.BrightnessScalar = Constants.LED.brightnessScalar;
-    config.CANdleFeatures.StatusLedWhenActive = StatusLedWhenActiveValue.Enabled;
-
-    leds.getConfigurator().apply(config);
   }
 
   @Override
@@ -88,95 +70,29 @@ public class LED extends SubsystemBase {
   private void setLEDState(LEDState newState) {
     if (state != newState) {
       state = newState;
-      clearLEDs(leds);
+      io.clearLEDs();
 
       switch (state) {
         case DISABLED -> {
-          setLEDs(AnimationType.RAINBOW, 0);
+          io.setLEDs(AnimationType.RAINBOW, 0);
         }
         case CLIMBER_DEPLOYED -> {}
         case AUTO_FUEL_PICKUP -> {
-          setLEDs(AnimationType.STROBE, 0, 0, 0, 255);
+          io.setLEDs(AnimationType.STROBE, 0, 0, 0, 255);
         }
         case TURRET_UNWINDING -> {
-          setLEDs(AnimationType.LARSON, 0, 255, 0, 255);
+          io.setLEDs(AnimationType.LARSON, 0, 255, 0, 255);
         }
         case SHOOTING_AREA_ACTIVE -> {
-          setLEDs(AnimationType.COLOR_FLOW, 0, 0, 255, 0);
+          io.setLEDs(AnimationType.COLOR_FLOW, 0, 0, 255, 0);
         }
         case SHOOTING_AREA_INACTIVE -> {
-          setLEDs(AnimationType.COLOR_FLOW, 0, 255, 255, 0);
+          io.setLEDs(AnimationType.COLOR_FLOW, 0, 255, 255, 0);
         }
         case NON_SHOOTING_AREA -> {
-          setLEDs(AnimationType.COLOR_FLOW, 0, 255, 0, 0);
+          io.setLEDs(AnimationType.COLOR_FLOW, 0, 255, 0, 0);
         }
       }
-    }
-  }
-
-  private void clearLEDs(CANdle leds) {
-    for (int i = 0; i < 8; i++) {
-      leds.setControl(new EmptyAnimation(i));
-    }
-  }
-
-  private void setLEDs(AnimationType animation, int slot, int r, int g, int b) {
-    switch (animation) {
-      case COLOR_FLOW -> {
-        leds.setControl(
-            new ColorFlowAnimation(Constants.LED.ledStart, Constants.LED.ledEnd)
-                .withSlot(slot)
-                .withColor(new RGBWColor(r, g, b)));
-      }
-      case LARSON -> {
-        leds.setControl(
-            new LarsonAnimation(Constants.LED.ledStart, Constants.LED.ledEnd)
-                .withSlot(slot)
-                .withColor(new RGBWColor(r, g, b)));
-      }
-      case SINGLE_FADE -> {
-        leds.setControl(
-            new SingleFadeAnimation(Constants.LED.ledStart, Constants.LED.ledEnd)
-                .withSlot(slot)
-                .withColor(new RGBWColor(r, g, b)));
-      }
-      case SOLID_COLOR -> {
-        leds.setControl(
-            new SingleFadeAnimation(Constants.LED.ledStart, Constants.LED.ledEnd)
-                .withSlot(slot)
-                .withColor(new RGBWColor(r, g, b)));
-      }
-      case STROBE -> {
-        leds.setControl(
-            new SingleFadeAnimation(Constants.LED.ledStart, Constants.LED.ledEnd)
-                .withSlot(slot)
-                .withColor(new RGBWColor(r, g, b)));
-      }
-      case TWINKLE -> {
-        leds.setControl(
-            new SingleFadeAnimation(Constants.LED.ledStart, Constants.LED.ledEnd)
-                .withSlot(slot)
-                .withColor(new RGBWColor(r, g, b)));
-      }
-      case RAINBOW, FIRE, RGB_FADE -> {}
-    }
-  }
-
-  private void setLEDs(AnimationType animation, int slot) {
-    switch (animation) {
-      case RAINBOW -> {
-        leds.setControl(
-            new RainbowAnimation(Constants.LED.ledStart, Constants.LED.ledEnd).withSlot(slot));
-      }
-      case RGB_FADE -> {
-        leds.setControl(
-            new RgbFadeAnimation(Constants.LED.ledStart, Constants.LED.ledEnd).withSlot(slot));
-      }
-      case FIRE -> {
-        leds.setControl(
-            new FireAnimation(Constants.LED.ledStart, Constants.LED.ledEnd).withSlot(slot));
-      }
-      case LARSON, SINGLE_FADE, SOLID_COLOR, STROBE, TWINKLE, COLOR_FLOW -> {}
     }
   }
 

@@ -40,6 +40,9 @@ import frc.robot.subsystems.intake.rollers.RollersIO;
 import frc.robot.subsystems.intake.rollers.RollersIOSim;
 import frc.robot.subsystems.intake.rollers.RollersIOTalonFX;
 import frc.robot.subsystems.led.LED;
+import frc.robot.subsystems.led.LEDIO;
+import frc.robot.subsystems.led.LEDIOCANdle;
+import frc.robot.subsystems.led.LEDIOSim;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.shooter.areaManager.AreaManager;
 import frc.robot.subsystems.shooter.flywheel.Flywheel;
@@ -185,7 +188,12 @@ public class RobotContainer {
             Constants.visionObjectDetection == Constants.SubsystemMode.DISABLED
                 ? new VisionObjectDetection(drive, new VisionObjectDetectionIO() {})
                 : new VisionObjectDetection(drive, new VisionObjectDetectionIOPhoton());
-        led = new LED(drive);
+        led =
+            new LED(
+                Constants.ledMode == Constants.SubsystemMode.DISABLED
+                    ? new LEDIO() {}
+                    : new LEDIOCANdle(),
+                drive);
         flywheel =
             Constants.flywheelMode == Constants.SubsystemMode.DISABLED
                 ? new Flywheel(new FlywheelIO() {})
@@ -264,7 +272,12 @@ public class RobotContainer {
                 ? new VisionObjectDetection(drive, new VisionObjectDetectionIO() {})
                 : new VisionObjectDetection(
                     drive, new VisionObjectDetectionIO() {}); // TODO make sim for this
-        led = new LED(drive);
+        led =
+            new LED(
+                Constants.ledMode == Constants.SubsystemMode.DISABLED
+                    ? new LEDIO() {}
+                    : new LEDIOSim(),
+                drive);
         flywheel =
             Constants.flywheelMode == Constants.SubsystemMode.DISABLED
                 ? new Flywheel(new FlywheelIO() {})
@@ -322,9 +335,8 @@ public class RobotContainer {
                 new VisionGlobalPoseIO() {},
                 new VisionGlobalPoseIO() {},
                 new VisionGlobalPoseIO() {});
-        led = new LED(drive);
+        led = new LED(new LEDIO() {}, drive);
         visionObjectDetection = new VisionObjectDetection(drive, new VisionObjectDetectionIO() {});
-        led = new LED(drive);
         flywheel = new Flywheel(new FlywheelIO() {});
         hood = new Hood(new HoodIO() {});
         spindexer = new Spindexer(new SpindexerIO() {});
@@ -399,7 +411,7 @@ public class RobotContainer {
             new AutoIntake(drive, visionObjectDetection, led, true)
                 .until(() -> !button3.getAsBoolean()));
 
-    new  JoystickButton(operatorBoard.getLeftController(), Constants.Control.toggle3ButtonNumber)
+    new JoystickButton(operatorBoard.getLeftController(), Constants.Control.toggle3ButtonNumber)
         .whileFalse(
             IntakeCommands.setExtend(intake)
                 .onlyIf(() -> currentIntakeCommand == IntakeCommandTypes.RETRACT))
