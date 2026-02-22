@@ -21,7 +21,7 @@ import java.util.Map;
 import org.littletonrobotics.junction.Logger;
 
 public class Simulator extends SubsystemBase {
-  private static final RegressTests regressTest = RegressTests.DO_NOTHING;
+  private static final RegressTests regressTest = RegressTests.CONTROLLER_TEST;
   public static AutoName autoScenario;
   private TeleopScenario teleopScenario;
   private List<TeleAnomaly> teleAnomalies;
@@ -35,7 +35,8 @@ public class Simulator extends SubsystemBase {
   private enum RegressTests {
     DO_NOTHING,
     SHOOT,
-    CONTROLLER_TEST
+    CONTROLLER_TEST,
+    TEST_SUBSYSTEMS
   }
 
   private enum TeleAnomaly {
@@ -50,7 +51,8 @@ public class Simulator extends SubsystemBase {
     NONE,
     SHOOT,
     CONTROLLER_TEST1,
-    CONTROLLER_TEST2
+    CONTROLLER_TEST2,
+    MOVE_AND_SHOOT
   }
 
   private enum EventType {
@@ -206,6 +208,8 @@ public class Simulator extends SubsystemBase {
       case CONTROLLER_TEST -> List.of(
           new RegressionTest("Controller Test 1", TeleopScenario.CONTROLLER_TEST1, Alliance.Blue),
           new RegressionTest("Controller Test 2", TeleopScenario.CONTROLLER_TEST2, Alliance.Blue));
+      case TEST_SUBSYSTEMS -> List.of(
+          new RegressionTest("Move and Shoot", TeleopScenario.MOVE_AND_SHOOT, Alliance.Blue));
       default -> List.of();
     };
   }
@@ -343,6 +347,15 @@ public class Simulator extends SubsystemBase {
               EventType.MOVE_JOYSTICK_TURN,
               new Pose2d(0, -0.3, Rotation2d.kZero)),
           new SimEvent(t += 1.0, "Final Movement", EventType.END_OF_SCENARIO));
+      case MOVE_AND_SHOOT -> List.of(
+          new SimEvent(
+              t, "Start Pose", EventType.SET_POSE, new Pose2d(4.44, 0.650, Rotation2d.kZero)),
+          new SimEvent(t += 1.0, "Deploy intake", EventType.PRESS_Y), // TODO figure out binding
+          new SimEvent(
+              t += 1.0,
+              "Event " + eventNum++,
+              EventType.MOVE_JOYSTICK_DRIVE,
+              new Pose2d(-0.5, 0, Rotation2d.kZero)));
 
       default -> List.of();
     };
