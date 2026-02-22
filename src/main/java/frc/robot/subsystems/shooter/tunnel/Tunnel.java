@@ -24,30 +24,23 @@ public class Tunnel {
   public void periodic() {
     io.updateInputs(inputs);
     Logger.processInputs("Tunnel", inputs);
-switch (Constants.tunnelMode) {
-      case TUNING -> {
-
-      }
+    switch (Constants.tunnelMode) {
+      case TUNING -> {}
       case NORMAL -> {
-      switch (state) {
-      case DISABLED -> {
-        if (DriverStation.isEnabled()) {
-          state = TunnelStates.IDLE;
+        switch (state) {
+          case DISABLED -> {
+            if (DriverStation.isEnabled()) {
+              state = TunnelStates.IDLE;
+            }
+          }
+          case IDLE -> {
+            io.stop();
+          }
+          case INDEXING -> {
+            io.setTargetMechanismRotations(requestedSpeed);
+          }
         }
       }
-      case IDLE -> {
-        io.stop();
-      }
-      case INDEXING -> {
-        io.setTargetMechanismRotations(requestedSpeed);
-      }
-      }
-    }
-      case DISABLED -> {
-
-      }
-    }
-    
     }
 
     Logger.recordOutput("Tunnel/State", state.toString());

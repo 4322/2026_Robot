@@ -76,13 +76,13 @@ public class Hood {
             pastEncoderPosition = inputs.rawRotations;
           }
         } else if (DriverStation.isEnabled()) {
-        if (pidController.atSetpoint()) {
-          io.setServoVelocity(0);
-        } else {
-          PIDCalculate = pidController.calculate(inputs.degrees, requestedAngleDEG);
-          io.setServoVelocity(PIDCalculate);
-          Logger.recordOutput("Hood/requestedServoVelocity", PIDCalculate);
-        }
+          if (pidController.atSetpoint()) {
+            io.setServoVelocity(0);
+          } else {
+            PIDCalculate = pidController.calculate(inputs.degrees, requestedAngleDEG);
+            io.setServoVelocity(PIDCalculate);
+            Logger.recordOutput("Hood/requestedServoVelocity", PIDCalculate);
+          }
         }
       }
     }
