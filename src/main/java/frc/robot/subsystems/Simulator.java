@@ -164,11 +164,13 @@ public class Simulator extends SubsystemBase {
       this.alliance = alliance;
     }
 
+    @SuppressWarnings("unused")
     RegressionTest(
         String name, AutoName autoScenario, List<AutoAnomaly> autoAnomalies, Alliance alliance) {
       this(name, autoScenario, autoAnomalies, null, null, alliance);
     }
 
+    @SuppressWarnings("unused")
     RegressionTest(
         String name,
         AutoName autoScenario,
@@ -178,11 +180,13 @@ public class Simulator extends SubsystemBase {
       this(name, autoScenario, (List<AutoAnomaly>) null, teleopScenario, teleAnomalies, alliance);
     }
 
+    @SuppressWarnings("unused")
     RegressionTest(
         String name, AutoName autoScenario, TeleopScenario teleopScenario, Alliance alliance) {
       this(name, autoScenario, teleopScenario, null, alliance);
     }
 
+    @SuppressWarnings("unused")
     RegressionTest(String name, AutoName autoScenario, Alliance alliance) {
       this(name, autoScenario, null, null, alliance);
     }
@@ -229,6 +233,7 @@ public class Simulator extends SubsystemBase {
       this(eventTime, eventName, eventType, (Translation2d) null, eventStatus);
     }
 
+    @SuppressWarnings("unused")
     SimEvent(double eventTime, String eventName, EventType eventType, Translation2d position) {
       this(eventTime, eventName, eventType, new Pose2d(position, Rotation2d.kZero));
     }
@@ -360,12 +365,14 @@ public class Simulator extends SubsystemBase {
               t += 5.0,
               "Event " + eventNum++,
               EventType.MOVE_JOYSTICK_DRIVE,
-              new Pose2d(0, -0.5, Rotation2d.k180deg)));
+              new Pose2d(0.5, 0.5, Rotation2d.k180deg)),
+          new SimEvent(t += 5.0, "Final Movement", EventType.END_OF_SCENARIO));
 
       default -> List.of();
     };
   }
 
+  @SuppressWarnings("unused")
   private boolean aListContains(AutoAnomaly aAnomaly) {
     if (autoAnomalies == null) {
       return false;
@@ -373,6 +380,7 @@ public class Simulator extends SubsystemBase {
     return autoAnomalies.contains(aAnomaly);
   }
 
+  @SuppressWarnings("unused")
   private boolean tListContains(TeleAnomaly tAnomaly) {
     if (teleAnomalies == null) {
       return false;
