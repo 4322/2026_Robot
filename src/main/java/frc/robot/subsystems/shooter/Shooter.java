@@ -67,6 +67,10 @@ public class Shooter extends SubsystemBase {
   @Override
   public void periodic() {
     calculateFiringSolution();
+    Logger.recordOutput("Shooter/TargetHoodAngleDeg", targetHoodAngleDeg);
+    Logger.recordOutput("Shooter/TargetFlywheelSpeedRPS", targetFlywheelSpeedRPM / 60);
+    Logger.recordOutput("Shooter/TargetTurretAngleDeg", targetTurretAngleDeg);
+    
     switch (state) {
       case DISABLED -> {
         if (DriverStation.isEnabled()) {
@@ -79,8 +83,10 @@ public class Shooter extends SubsystemBase {
         turret.setAngle(targetTurretAngleDeg, true);
 
         if (AreaManager.isHoodDangerZone(drive.getPose().getTranslation())) {
+          Logger.recordOutput("Shooter/isHoodDangerZone", true);
           hood.requestGoal(Constants.Hood.idleAngleDeg);
         } else {
+          Logger.recordOutput("Shooter/isHoodDangerZone", false);
           hood.requestGoal(targetHoodAngleDeg);
         }
 
@@ -141,6 +147,9 @@ public class Shooter extends SubsystemBase {
     led.requestTurretUnwinding(state == ShooterState.UNWIND);
 
     Logger.recordOutput("Shooter/State", state.toString());
+    Logger.recordOutput("Shooter/unwindComplete", unwindComplete);
+    Logger.recordOutput("Shooter/spindexerStopped", spindexer.isStopped());
+    Logger.recordOutput("Shooter/tunnelStopped", tunnel.isStopped());
   }
 
   private void calculateFiringSolution() {
