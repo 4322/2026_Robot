@@ -14,26 +14,23 @@ public class Hood {
       new LoggedTunableNumber("Hood/kI", Constants.Hood.kI);
   private static final LoggedTunableNumber kD =
       new LoggedTunableNumber("Hood/kD", Constants.Hood.kD);
-  private static final LoggedTunableNumber PIDTolerance =
-      new LoggedTunableNumber("Hood/PIDTolerance", Constants.Hood.PIDTolerance);
-  private static final LoggedTunableNumber angle = new LoggedTunableNumber("Hood/Angle", 0);
+  private static final LoggedTunableNumber toleranceDeg =
+      new LoggedTunableNumber("Hood/toleranceDeg", Constants.Hood.toleranceDeg);
+  private static final LoggedTunableNumber tuningGoalDeg =
+      new LoggedTunableNumber("Hood/tuningGoalDeg", 0);
 
   private HoodIO io;
   private HoodIOInputsAutoLogged inputs = new HoodIOInputsAutoLogged();
-  private double requestedAngleDEG;
+  private double requestedAngleDeg;
   private Timer homingTimer = new Timer();
-  private double pastEncoderPosition = 0.0;
-  private double PIDCalculate;
+  private double pidVelocity;
   private boolean homed = false;
   private PIDController pidController = new PIDController(kP.get(), kI.get(), kD.get());
 
   public Hood(HoodIO io) {
-
     this.io = io;
-    pidController.setTolerance(Constants.Hood.hoodTolerance);
     pidController.disableContinuousInput();
-    pidController.setPID(kP.get(), kI.get(), kD.get());
-    pidController.setTolerance(PIDTolerance.get());
+    pidController.setTolerance(toleranceDeg.get());
   }
 
   public void periodic() {
@@ -42,56 +39,57 @@ public class Hood {
     Logger.processInputs("Hood", inputs);
 
     switch (Constants.hoodMode) {
+      case DISABLED -> {
+        homed = true;
+      }
       case TUNING -> {
         LoggedTunableNumber.ifChanged(
-            hashCode(), () -> pidController.setPID(kP.get(), kI.get(), kD.get()));
+            hashCode(), () -> pidController.setPID(kP.get(), kI.get(), kD.get()), kP, kI, kD);
         LoggedTunableNumber.ifChanged(
-            hashCode(), () -> pidController.setTolerance(PIDTolerance.get()));
-        requestGoal(angle.get());
+            hashCode(), () -> pidController.setTolerance(toleranceDeg.get()), toleranceDeg);
+        requestGoal(tuningGoalDeg.get());
 
+        pidVelocity = pidController.calculate(inputs.degrees, requestedAngleDeg);
         if (pidController.atSetpoint()) {
-          io.setServoVelocity(0);
-        } else {
-          PIDCalculate = pidController.calculate(inputs.degrees, requestedAngleDEG);
-          io.setServoVelocity(PIDCalculate);
-          Logger.recordOutput("Hood/requestedServoVelocity", PIDCalculate);
+          pidVelocity = 0;
         }
+        io.setServoVelocity(pidVelocity);
+        Logger.recordOutput("Hood/requestedServoVelocity", pidVelocity);
       }
       case NORMAL -> {
         if (!homed && DriverStation.isEnabled()) {
           io.setServoVelocity(Constants.Hood.homingVelocity);
           homingTimer.start();
-          if (homingTimer.hasElapsed(0.04)
-              && Math.abs(inputs.encoderRPS) < Constants.Hood.homingVelocityThreshold) {
+          if (Math.abs(inputs.encoderRPS) > Constants.Hood.homingVelocityThresholdRPS) {
+            homingTimer.reset();
+          } else if (homingTimer.hasElapsed(0.04)) {
             io.setEncoderHomed();
             io.setServoVelocity(Constants.Hood.idleVelocity);
             homed = true;
-            homingTimer.reset();
             homingTimer.stop();
-          } else {
-            if ((Math.abs(inputs.encoderRPS) > Constants.Hood.homingVelocityThreshold)
-                || DriverStation.isDisabled()) {
-              homingTimer.reset();
-            }
-            pastEncoderPosition = inputs.rawRotations;
+            homingTimer.reset();
           }
         } else if (DriverStation.isEnabled()) {
+          pidVelocity = pidController.calculate(inputs.degrees, requestedAngleDeg);
           if (pidController.atSetpoint()) {
-            io.setServoVelocity(0);
-          } else {
-            PIDCalculate = pidController.calculate(inputs.degrees, requestedAngleDEG);
-            io.setServoVelocity(PIDCalculate);
-            Logger.recordOutput("Hood/requestedServoVelocity", PIDCalculate);
+            pidVelocity = 0;
           }
+          io.setServoVelocity(pidVelocity);
+          Logger.recordOutput("Hood/requestedServoVelocity", pidVelocity);
+        } else {
+          io.setServoVelocity(Constants.Hood.idleVelocity);
+          homingTimer.stop();
+          homingTimer.reset();
         }
       }
     }
+    Logger.recordOutput("Hood/homed", homed);
   }
 
   public void requestGoal(double angle) {
     pidController.setSetpoint(angle);
-    this.requestedAngleDEG = angle;
-    Logger.recordOutput("Hood/requestedDegree", requestedAngleDEG);
+    this.requestedAngleDeg = angle;
+    Logger.recordOutput("Hood/requestedDegree", requestedAngleDeg);
   }
 
   public void rehome() {
