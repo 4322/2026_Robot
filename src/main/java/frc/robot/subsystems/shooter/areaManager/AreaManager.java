@@ -1,10 +1,13 @@
 package frc.robot.subsystems.shooter.areaManager;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rectangle2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.Robot;
+import frc.robot.RobotContainer;
+import org.littletonrobotics.junction.Logger;
 
 public class AreaManager {
   // TODO: Put IN field dimensions
@@ -200,5 +203,91 @@ public class AreaManager {
       return true;
     }
     return false;
+  }
+
+  public static void logZones() {
+    Logger.recordOutput("AreaManager/RedAllianceZone", redAllianceZone);
+    Logger.recordOutput("AreaManager/BlueAllianceZone", blueAllianceZone);
+    Logger.recordOutput("AreaManager/LeftNeutralZone", leftNeutralZone);
+    Logger.recordOutput("AreaManager/RightNeutralZone", rightNeutralZone);
+    Logger.recordOutput("AreaManager/LeftBlueOppositionZone", leftBlueOppositionZone);
+    Logger.recordOutput("AreaManager/RightBlueOppositionZone", rightBlueOppositionZone);
+    Logger.recordOutput("AreaManager/LeftRedOppositionZone", leftRedOppositionZone);
+    Logger.recordOutput("AreaManager/RightRedOppositionZone", rightRedOppositionZone);
+    Logger.recordOutput("AreaManager/LeftRedHoodDangerZone", leftRedHoodDangerZone);
+    Logger.recordOutput("AreaManager/RightRedHoodDangerZone", rightRedHoodDangerZone);
+    Logger.recordOutput("AreaManager/LeftBlueHoodDangerZone", leftBlueHoodDangerZone);
+    Logger.recordOutput("AreaManager/RightBlueHoodDangerZone", rightBlueHoodDangerZone);
+    Logger.recordOutput("AreaManager/TrenchLeftRed", trenchLeftRed);
+    Logger.recordOutput("AreaManager/TrenchRightRed", trenchRightRed);
+    Logger.recordOutput("AreaManager/TrenchLeftBlue", trenchLeftBlue);
+    Logger.recordOutput("AreaManager/TrenchRightBlue", trenchRightBlue);
+    Logger.recordOutput("AreaManager/BumpLeftRed", bumpLeftRed);
+    Logger.recordOutput("AreaManager/BumpRightRed", bumpRightRed);
+    Logger.recordOutput("AreaManager/BackOfHubRed", backOfHubRed);
+    Logger.recordOutput("AreaManager/FrontOfHubRed", frontOfHubRed);
+    Logger.recordOutput("AreaManager/BumpLeftBlue", bumpLeftBlue);
+    Logger.recordOutput("AreaManager/BumpRightBlue", bumpRightBlue);
+    Logger.recordOutput("AreaManager/BackOfHubBlue", backOfHubBlue);
+    Logger.recordOutput("AreaManager/FrontOfHubBlue", frontOfHubBlue);
+
+    RobotContainer.getField()
+        .getObject("AllianceZones")
+        .setPoses(new Pose2d[] {redAllianceZone.getCenter(), blueAllianceZone.getCenter()});
+    RobotContainer.getField()
+        .getObject("NeutralZones")
+        .setPoses(new Pose2d[] {leftNeutralZone.getCenter(), rightNeutralZone.getCenter()});
+    RobotContainer.getField()
+        .getObject("RedOppositionZones")
+        .setPoses(
+            new Pose2d[] {leftRedOppositionZone.getCenter(), rightRedOppositionZone.getCenter()});
+    RobotContainer.getField()
+        .getObject("BlueOppositionZones")
+        .setPoses(
+            new Pose2d[] {leftBlueOppositionZone.getCenter(), rightBlueOppositionZone.getCenter()});
+    RobotContainer.getField()
+        .getObject("RedHoodDangerZones")
+        .setPoses(
+            new Pose2d[] {leftRedHoodDangerZone.getCenter(), rightRedHoodDangerZone.getCenter()});
+    RobotContainer.getField()
+        .getObject("BlueHoodDangerZones")
+        .setPoses(
+            new Pose2d[] {leftBlueHoodDangerZone.getCenter(), rightBlueHoodDangerZone.getCenter()});
+    RobotContainer.getField()
+        .getObject("TrenchExclusionZones")
+        .setPoses(
+            new Pose2d[] {
+              trenchLeftRed.getCenter(),
+              trenchRightRed.getCenter(),
+              trenchLeftBlue.getCenter(),
+              trenchRightBlue.getCenter()
+            });
+    RobotContainer.getField()
+        .getObject("BumpZones")
+        .setPoses(
+            new Pose2d[] {
+              bumpLeftRed.getCenter(),
+              bumpRightRed.getCenter(),
+              bumpLeftBlue.getCenter(),
+              bumpRightBlue.getCenter()
+            });
+    RobotContainer.getField()
+        .getObject("HubZones")
+        .setPoses(
+            new Pose2d[] {
+              backOfHubRed.getCenter(),
+              frontOfHubRed.getCenter(),
+              backOfHubBlue.getCenter(),
+              frontOfHubBlue.getCenter()
+            });
+    RobotContainer.getField()
+        .getObject("HoodDangerZones")
+        .setPoses(
+            new Pose2d[] {
+              leftRedHoodDangerZone.getCenter(),
+              rightRedHoodDangerZone.getCenter(),
+              leftBlueHoodDangerZone.getCenter(),
+              rightBlueHoodDangerZone.getCenter()
+            });
   }
 }

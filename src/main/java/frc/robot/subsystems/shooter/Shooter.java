@@ -68,6 +68,7 @@ public class Shooter extends SubsystemBase {
 
   @Override
   public void periodic() {
+    AreaManager.logZones();
     calculateFiringSolution();
     Logger.recordOutput("Shooter/TargetHoodAngleDeg", targetHoodAngleDeg);
     Logger.recordOutput("Shooter/TargetFlywheelSpeedRPS", targetFlywheelSpeedRPM / 60);

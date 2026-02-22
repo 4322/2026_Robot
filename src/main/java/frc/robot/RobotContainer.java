@@ -10,6 +10,8 @@ package frc.robot;
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -100,6 +102,8 @@ public class RobotContainer {
   private static Drive drive;
 
   public static AutonomousSelector autonomousSelector;
+
+  private static Field2d field;
 
   // Controller
   public static final CommandXboxController controller = new CommandXboxController(0);
@@ -375,6 +379,13 @@ public class RobotContainer {
 
     // Configure the button bindings
     configureButtonBindings();
+
+    field = new Field2d();
+    SmartDashboard.putData("Field", field);
+  }
+
+  public static Field2d getField() {
+    return field;
   }
 
   /**
