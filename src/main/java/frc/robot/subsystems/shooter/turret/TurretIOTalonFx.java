@@ -115,8 +115,8 @@ public class TurretIOTalonFx implements TurretIO {
     prevRotationsOne = (int) CANcoderOne.getPosition().getValueAsDouble();
     prevRotationsTwo = (int) CANcoderTwo.getPosition().getValueAsDouble();
 
-    CANCoderOneMod = mod(CANcoderOneRotations, Constants.Turret.CANCoderOneRatio);
-    CANCoderTwoMod = mod(CANcoderTwoRotations, Constants.Turret.CANCoderTwoRatio);
+    CANCoderOneMod = mod((int) CANcoderOneRotations, (int) Constants.Turret.CANCoderOneRatio);
+    CANCoderTwoMod = mod((int) CANcoderTwoRotations, (int) Constants.Turret.CANCoderTwoRatio);
 
     turretMod = mod((10 * CANCoderOneMod) + (36 * CANCoderTwoMod), 45);
 
