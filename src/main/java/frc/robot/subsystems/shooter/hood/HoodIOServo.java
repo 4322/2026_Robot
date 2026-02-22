@@ -9,6 +9,7 @@ import com.revrobotics.servohub.ServoHub.Bank;
 import com.revrobotics.servohub.config.ServoChannelConfig;
 import com.revrobotics.servohub.config.ServoChannelConfig.BehaviorWhenDisabled;
 import com.revrobotics.servohub.config.ServoHubConfig;
+
 import edu.wpi.first.math.MathUtil;
 import frc.robot.constants.Constants;
 
@@ -16,6 +17,7 @@ public class HoodIOServo implements HoodIO {
   private ServoHub servoHub;
   private ServoChannel servo;
   private CANcoder encoder;
+  private  int currentRequested = 1500;
 
   private ServoHubConfig config = new ServoHubConfig();
 
@@ -48,7 +50,7 @@ public class HoodIOServo implements HoodIO {
   @Override
   public void updateInputs(HoodIOInputs inputs) {
     inputs.encoderConnected = encoder.isConnected();
-    inputs.currentPulseWidth = servo.getPulseWidth();
+    inputs.currentPulseWidth = currentRequested;
     inputs.rawRotations = encoder.getPosition().getValueAsDouble(); // Convert degrees to rotations
     inputs.degrees =
         inputs.rawRotations * 360.0 * Constants.Hood.gearRatio; // Convert rotations to degrees
@@ -65,7 +67,7 @@ public class HoodIOServo implements HoodIO {
 
   @Override
   public void setServoVelocity(double velocity) {
-    int currentRequested = (1500 + ((int) MathUtil.clamp(velocity, -1, 1) * 500));
+    this.currentRequested = (1500 + ((int) MathUtil.clamp(velocity, -1, 1) * 500));
     servo.setPulseWidth(currentRequested);
   }
 }
