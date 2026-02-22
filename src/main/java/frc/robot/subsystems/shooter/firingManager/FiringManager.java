@@ -64,10 +64,10 @@ public class FiringManager {
             : Constants.FiringManager.latencyCompensationPassing;
     Translation2d futurePos = robotPosition.plus(robotVelocity.times(latencyCompensation));
 
-    Logger.recordOutput("FiringManager/futurePos", futurePos);
+    Logger.recordOutput("FiringManager/futurePos", new Pose2d(futurePos, new Rotation2d()));
     // Get target vector
     Translation2d goalPosition = getShootingTarget(robotPosition);
-    Logger.recordOutput("FiringManager/goalPosition", new Pose2d(goalPosition, new Rotation2d()));
+    Logger.recordOutput("FiringManager/targetPosition", new Pose2d(goalPosition, new Rotation2d()));
     Translation2d toGoal = goalPosition.minus(futurePos);
     double distance = toGoal.getNorm();
     Logger.recordOutput("FiringManager/distance", distance);
@@ -85,7 +85,9 @@ public class FiringManager {
 
     // Compensate for robot velocity
     Translation2d shotVelocity = targetVelocity.minus(robotVelocity);
-    Logger.recordOutput("FiringManager/actualShootingTarget", new Pose2d(shotVelocity, new Rotation2d()));
+    Logger.recordOutput(
+        "FiringManager/calculatedShootingTarget",
+        new Pose2d(robotPosition.plus(shotVelocity), new Rotation2d()));
 
     // Get results
     Rotation2d turretAngle = shotVelocity.getAngle();
