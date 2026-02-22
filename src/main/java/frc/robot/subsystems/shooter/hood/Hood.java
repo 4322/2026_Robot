@@ -1,6 +1,7 @@
 package frc.robot.subsystems.shooter.hood;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.constants.Constants;
 import org.littletonrobotics.junction.Logger;
@@ -30,7 +31,7 @@ public class Hood {
     Logger.recordOutput("Hood/requestedDegree", requestedAngleDEG);
     Logger.recordOutput("Hood/requestedServoVelocity", PIDCalculate);
 
-    if (!homed) {
+    if (!homed && DriverStation.isEnabled()) {
       io.setServoVelocity(Constants.Hood.homingVelocity);
       homingTimer.start();
       if (homingTimer.hasElapsed(0.04)
@@ -41,10 +42,17 @@ public class Hood {
         homingTimer.reset();
         homingTimer.stop();
       } else {
-        if (Math.abs(inputs.encoderRPS) > Constants.Hood.homingVelocityThreshold) {
+        if ((Math.abs(inputs.encoderRPS) > Constants.Hood.homingVelocityThreshold)
+            || DriverStation.isDisabled()) {
           homingTimer.reset();
         }
         pastEncoderPosition = inputs.rawRotations;
+      }
+    } else if (DriverStation.isEnabled()) {
+      if (pidController.atSetpoint()) {
+        io.setServoVelocity(0);
+      } else {
+        io.setServoVelocity((pidController.calculate(inputs.degrees, requestedAngleDEG)));
       }
     }
   }
@@ -52,11 +60,6 @@ public class Hood {
   public void requestGoal(double angle) {
     pidController.setSetpoint(angle);
     requestedAngleDEG = angle;
-    if (pidController.atSetpoint()) {
-      io.setServoVelocity(0);
-    } else {
-      io.setServoVelocity((pidController.calculate(inputs.degrees, requestedAngleDEG)));
-    }
     PIDCalculate = pidController.calculate(inputs.degrees, requestedAngleDEG);
   }
 
