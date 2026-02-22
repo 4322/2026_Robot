@@ -26,6 +26,5 @@ public interface HoodIO {
 
   public default void setServoVelocity(double pulseWidth) {}
 
-
   public default void simEstimatedPosition() {}
 }

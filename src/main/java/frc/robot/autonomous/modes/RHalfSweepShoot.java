@@ -22,11 +22,14 @@ public class RHalfSweepShoot extends SequentialCommandGroup {
 
     setName("R_HALF_SWEEP_SHOOT");
     addCommands(
-      new InstantCommand(() -> {if (Robot.alliance == Alliance.Blue) {
+        new InstantCommand(
+            () -> {
+              if (Robot.alliance == Alliance.Blue) {
                 drive.setPose(startPoseBlue);
               } else {
                 drive.setPose(startPoseRed);
-              }}),
+              }
+            }),
         AutoBuilder.followPath(Robot.R_StartR_To_NeutralR_Intake),
         AutoBuilder.followPath(Robot.R_NeutralR_Intake_To_Mid),
         AutoBuilder.followPath(Robot.R_NeutralR_Intake_Mid_Flip),

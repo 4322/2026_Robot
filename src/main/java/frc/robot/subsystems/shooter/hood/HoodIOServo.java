@@ -9,7 +9,6 @@ import com.revrobotics.servohub.ServoHub.Bank;
 import com.revrobotics.servohub.config.ServoChannelConfig;
 import com.revrobotics.servohub.config.ServoChannelConfig.BehaviorWhenDisabled;
 import com.revrobotics.servohub.config.ServoHubConfig;
-
 import edu.wpi.first.math.MathUtil;
 import frc.robot.constants.Constants;
 
@@ -17,7 +16,7 @@ public class HoodIOServo implements HoodIO {
   private ServoHub servoHub;
   private ServoChannel servo;
   private CANcoder encoder;
-  private  int currentRequested = 1500;
+  private int currentRequested = 1500;
 
   private ServoHubConfig config = new ServoHubConfig();
 

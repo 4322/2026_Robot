@@ -428,7 +428,6 @@ public class RobotContainer {
                         (currentIntakeCommand == IntakeCommandTypes.IDLE)
                             || (currentIntakeCommand == IntakeCommandTypes.INTAKING)))
         .onTrue(new InstantCommand(() -> currentIntakeCommand = IntakeCommandTypes.RETRACT));
-
   }
 
   /**
