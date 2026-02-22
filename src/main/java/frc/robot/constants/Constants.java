@@ -193,6 +193,8 @@ public final class Constants {
   public static class Control {
     public static final int toggle1ButtonNumber = 1; // TODO set these
     public static final int toggle4ButtonNumber = 0;
+    public static final int button3ButtonNumber = 0;
+    public static int toggle3ButtonNumber;
   }
 
   public static class FiringParameters {

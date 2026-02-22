@@ -32,9 +32,11 @@ import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.deployer.Deployer;
 import frc.robot.subsystems.intake.deployer.DeployerIO;
+import frc.robot.subsystems.intake.deployer.DeployerIOSim;
 import frc.robot.subsystems.intake.deployer.DeployerIOTalonFX;
 import frc.robot.subsystems.intake.rollers.Rollers;
 import frc.robot.subsystems.intake.rollers.RollersIO;
+import frc.robot.subsystems.intake.rollers.RollersIOSim;
 import frc.robot.subsystems.intake.rollers.RollersIOTalonFX;
 import frc.robot.subsystems.led.LED;
 import frc.robot.subsystems.shooter.Shooter;
@@ -131,7 +133,7 @@ public class RobotContainer {
       () -> operatorBoard.getLeftController().getRawButton(Constants.Control.toggle4ButtonNumber);
 
   private final BooleanSupplier button3 =
-      () -> operatorBoard.getLeftController().getRawButton(0); // TODO set button number
+      () -> operatorBoard.getLeftController().getRawButton(Constants.Control.button3ButtonNumber);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -270,7 +272,7 @@ public class RobotContainer {
         hood =
             Constants.hoodMode == Constants.SubsystemMode.DISABLED
                 ? new Hood(new HoodIO() {})
-                : new Hood(new HoodIOSim()); // TODO still need logic for hood sim
+                : new Hood(new HoodIOSim());
 
         spindexer =
             Constants.spindexerMode == Constants.SubsystemMode.DISABLED
@@ -293,13 +295,11 @@ public class RobotContainer {
         deployer =
             Constants.deployerMode == Constants.SubsystemMode.DISABLED
                 ? new Deployer(new DeployerIO() {})
-                : new Deployer(new DeployerIO() {}); // TODO add sim io
-
+                : new Deployer(new DeployerIOSim());
         rollers =
             Constants.rollerMode == Constants.SubsystemMode.DISABLED
                 ? new Rollers(new RollersIO() {})
-                : new Rollers(new RollersIO() {}); // TODO add sim io
-
+                : new Rollers(new RollersIOSim());
         intake = new Intake(deployer, rollers);
       }
 
@@ -391,13 +391,12 @@ public class RobotContainer {
                 .until(() -> (!toggle4.getAsBoolean() || button3.getAsBoolean())));
 
     // Button 3
-    new JoystickButton(operatorBoard.getLeftController(), 0) // TODO set button number
+    new JoystickButton(operatorBoard.getLeftController(), Constants.Control.button3ButtonNumber)
         .onTrue(
             new AutoIntake(drive, visionObjectDetection, led, true)
                 .until(() -> !button3.getAsBoolean()));
 
-    controller
-        .y() // TODO this will be toggle 3
+    new  JoystickButton(operatorBoard.getLeftController(), Constants.Control.toggle3ButtonNumber)
         .whileFalse(
             IntakeCommands.setExtend(intake)
                 .onlyIf(() -> currentIntakeCommand == IntakeCommandTypes.RETRACT))
@@ -418,8 +417,7 @@ public class RobotContainer {
                 .alongWith(new InstantCommand(() -> currentIntakeCommand = IntakeCommandTypes.IDLE))
                 .onlyIf(() -> currentIntakeCommand == IntakeCommandTypes.IDLE));
 
-    controller
-        .y() // TODO operator toggle 3
+    new JoystickButton(operatorBoard.getLeftController(), Constants.Control.toggle3ButtonNumber)
         .whileTrue(
             IntakeCommands.setRetract(intake)
                 .onlyIf(
