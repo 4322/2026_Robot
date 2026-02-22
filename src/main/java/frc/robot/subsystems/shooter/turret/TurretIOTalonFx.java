@@ -18,8 +18,13 @@ public class TurretIOTalonFx implements TurretIO {
   private TalonFXConfiguration config = new TalonFXConfiguration();
   private CANcoderConfiguration CANconfigOne = new CANcoderConfiguration();
   private CANcoderConfiguration CANconfigTwo = new CANcoderConfiguration();
-  private double CANCoderOneMod;
-  private double CANCoderTwoMod;
+  private int CANCoderOneMod;
+  private int CANCoderTwoMod;
+  private int resolution = 4096;
+  private int CANcoderOneRotations = 0;
+  private int CANcoderTwoRotations = 0;
+  private int prevRotationsOne = 0;
+  private int prevRotationsTwo = 0;
   private double turretMod;
 
   public TurretIOTalonFx() {
@@ -39,6 +44,11 @@ public class TurretIOTalonFx implements TurretIO {
 
     config.HardwareLimitSwitch.ForwardLimitEnable = true;
     config.HardwareLimitSwitch.ReverseLimitEnable = true;
+
+    config.Feedback.SensorToMechanismRatio = Constants.Turret.turretGearRatio;
+
+    CANconfigOne.MagnetSensor.MagnetOffset = Constants.Turret.CANCoderOneOffset;
+    CANconfigTwo.MagnetSensor.MagnetOffset = Constants.Turret.CANCoderTwoOffset;
 
     StatusCode configStatus = turretMotor.getConfigurator().apply(config);
     StatusCode CANcoderStatus = CANcoderOne.getConfigurator().apply(CANconfigOne);
@@ -68,12 +78,14 @@ public class TurretIOTalonFx implements TurretIO {
               + CANcoderStatusTwo.getDescription(),
           false);
     }
-    turretMotor.setPosition(getAngle());
+    turretMotor.setPosition(getRotation());
   }
 
   @Override
   public void updateInputs(TurretIOInputs inputs) {
-    inputs.turretDegs = Units.rotationsToDegrees(turretMotor.getPosition().getValueAsDouble());
+    inputs.turretDegs =
+        Units.rotationsToDegrees(turretMotor.getPosition().getValueAsDouble())
+            / Constants.Turret.turretGearRatio;
     inputs.encoderOneRotations = CANcoderOne.getPosition().getValueAsDouble();
     inputs.encoderTwoRotations = CANcoderTwo.getPosition().getValueAsDouble();
     inputs.motorConnected = turretMotor.isConnected();
@@ -88,21 +100,40 @@ public class TurretIOTalonFx implements TurretIO {
     turretMotor.setNeutralMode(mode ? NeutralModeValue.Brake : NeutralModeValue.Coast);
   }
 
-  public double getAngle() {
-    CANCoderOneMod =
-        CANcoderOne.getPosition().getValueAsDouble() % Constants.Turret.CANCoderOneRatio;
-    CANCoderTwoMod =
-        CANcoderTwo.getPosition().getValueAsDouble() % Constants.Turret.CANCoderTwoRatio;
+  private double getRotation() {
+    if (CANcoderOne.getPosition().getValueAsDouble() < prevRotationsOne - resolution / 2) {
+      CANcoderOneRotations++;
+    } else if (CANcoderOne.getPosition().getValueAsDouble() > prevRotationsOne + resolution / 2) {
+      CANcoderOneRotations--;
+    }
+    if (CANcoderTwo.getPosition().getValueAsDouble() < prevRotationsTwo - resolution / 2) {
+      CANcoderTwoRotations++;
+    } else if (CANcoderTwo.getPosition().getValueAsDouble() > prevRotationsTwo + resolution / 2) {
+      CANcoderTwoRotations--;
+    }
 
-    turretMod = (((10 * CANCoderOneMod) + (36 * CANCoderTwoMod)) % 45);
+    prevRotationsOne = (int) CANcoderOne.getPosition().getValueAsDouble();
+    prevRotationsTwo = (int) CANcoderTwo.getPosition().getValueAsDouble();
 
-    return turretMod;
+    CANCoderOneMod = mod((int) CANcoderOneRotations, (int) Constants.Turret.CANCoderOneRatio);
+    CANCoderTwoMod = mod((int) CANcoderTwoRotations, (int) Constants.Turret.CANCoderTwoRatio);
+
+    turretMod = mod((10 * CANCoderOneMod) + (36 * CANCoderTwoMod), 45);
+
+    return turretMod
+        + (CANcoderOne.getPosition().getValueAsDouble()
+            / (double) resolution
+            / Constants.Turret.CANCoderTwoRatio);
+  }
+
+  private int mod(int a, int b) {
+    return ((a % b) + b) % b;
   }
 
   public void setAngle(double degs) {
-    double targetPosition =
-        Units.degreesToRotations(degs) * Constants.Turret.turretGearRatio
-            - Units.degreesToRotations(Constants.Turret.midPointPhysicalDeg);
-    turretMotor.setControl(new MotionMagicVoltage(Units.degreesToRotations(degs)));
+    turretMotor.setControl(
+        new MotionMagicVoltage(Units.degreesToRotations(degs) * Constants.Turret.turretGearRatio)
+            .withEnableFOC(true)
+            .withSlot(0));
   }
 }

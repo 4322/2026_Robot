@@ -160,6 +160,8 @@ public final class Constants {
     public static final double maxPhysicalLimitDeg = 250.0; // TODO
     public static final double midPointPhysicalDeg =
         (minPhysicalLimitDeg + maxPhysicalLimitDeg) / 2.0;
+    public static final double maxMidPointPhysicalDeg = midPointPhysicalDeg + 180.0; // TODO
+    public static final double minMidPointPhysicalDeg = midPointPhysicalDeg - 180.0;
     public static final double unwindToleranceDeg = 10.0; // TODO
     public static final double minUnwindLimitDeg = minPhysicalLimitDeg + unwindToleranceDeg; // TODO
     public static final double maxUnwindLimitDeg = maxPhysicalLimitDeg - unwindToleranceDeg; // TODO
