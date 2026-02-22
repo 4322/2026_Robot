@@ -286,7 +286,6 @@ public final class Constants {
       putFiringMapEntry(5, new FiringParameters(100, 20, 5));
       putFiringMapEntry(10, new FiringParameters(200, 40, 10));
       putFiringMapEntry(20, new FiringParameters(400, 60, 20));
-
     }
 
     public static final boolean alwaysTargetAllianceZone =

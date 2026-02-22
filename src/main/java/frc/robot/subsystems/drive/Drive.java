@@ -358,7 +358,8 @@ public class Drive extends SubsystemBase {
   }
 
   public Translation2d getVelocity() {
-    return new Translation2d(); // TODO
+    return new Translation2d(
+        getChassisSpeeds().vxMetersPerSecond, getChassisSpeeds().vyMetersPerSecond);
   }
 
   public Pose2d getPoseAtTimestamp(double timestampSeconds) {
