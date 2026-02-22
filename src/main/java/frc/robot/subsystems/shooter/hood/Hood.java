@@ -4,9 +4,21 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.constants.Constants;
+import frc.robot.util.LoggedTunableNumber;
+
 import org.littletonrobotics.junction.Logger;
 
+
+
 public class Hood {
+private static final LoggedTunableNumber kP = new LoggedTunableNumber("kP");
+  private static final LoggedTunableNumber kI = new LoggedTunableNumber("kI");
+  private static final LoggedTunableNumber iSat = new LoggedTunableNumber("iSat");
+  private static final LoggedTunableNumber iZone = new LoggedTunableNumber("iZone");
+  private static final LoggedTunableNumber kD = new LoggedTunableNumber("kD");
+  private static final LoggedTunableNumber kG = new LoggedTunableNumber("kG");
+  private static final LoggedTunableNumber kV = new LoggedTunableNumber("kV");
+  private static final LoggedTunableNumber kS = new LoggedTunableNumber("kS");
   private HoodIO io;
   private HoodIOInputsAutoLogged inputs = new HoodIOInputsAutoLogged();
   private double requestedAngleDEG = 0.0;

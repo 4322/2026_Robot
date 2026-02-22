@@ -31,7 +31,7 @@ public final class Constants {
   public static final long minFreeSpace = 1000000000; // 1 GB
   public static final int dioCoastButton = 0;
   public static final double coastButtonDelaySec = 10.0;
-
+  public static final boolean tuningWithLoggableNumbers = true;
   public static final double brownoutVoltage = 5.75;
 
   public static final double loopPeriodSecs = 0.02;
@@ -66,6 +66,7 @@ public final class Constants {
   public static final SubsystemMode ledMode = SubsystemMode.NORMAL;
   public static final SubsystemMode visionGlobalPose = SubsystemMode.NORMAL;
   public static final SubsystemMode visionObjectDetection = SubsystemMode.NORMAL;
+
 
   public static class Spindexer {
     public static final boolean dynamicVelocity = true;
