@@ -265,29 +265,47 @@ public final class Constants {
   }
 
   public static class FiringManager {
-    public static final InterpolatingTreeMap<Double, FiringParameters> firingMap =
+    public static final InterpolatingTreeMap<Double, FiringParameters> firingMapScoring =
+        new InterpolatingTreeMap<Double, FiringParameters>(
+            InverseInterpolator.forDouble(), FiringParameters::interpolate);
+    public static final InterpolatingTreeMap<Double, FiringParameters> firingMapPassing =
         new InterpolatingTreeMap<Double, FiringParameters>(
             InverseInterpolator.forDouble(), FiringParameters::interpolate);
 
-    // Reverse map for velocity to distance lookup
-    public static final InterpolatingDoubleTreeMap velocityToDistanceMap =
+    // Reverse maps for velocity to distance lookup
+    public static final InterpolatingDoubleTreeMap velocityToDistanceMapScoring =
+        new InterpolatingDoubleTreeMap();
+    public static final InterpolatingDoubleTreeMap velocityToDistanceMapPassing =
         new InterpolatingDoubleTreeMap();
 
-    public static final double latencyCompensation = 0;
+    public static final double latencyCompensationScoring = 0;
+    public static final double latencyCompensationPassing = 0;
 
     // Add entry to both maps
-    public static void putFiringMapEntry(double distance, FiringParameters params) {
-      firingMap.put(distance, params);
+    public static void putFiringMapEntryScoring(double distance, FiringParameters params) {
+      firingMapScoring.put(distance, params);
       double velocity = distance / params.getTimeOfFlightSec();
-      velocityToDistanceMap.put(velocity, distance);
+      velocityToDistanceMapScoring.put(velocity, distance);
+    }
+
+    public static void putFiringMapEntryPassing(double distance, FiringParameters params) {
+      firingMapPassing.put(distance, params);
+      double velocity = distance / params.getTimeOfFlightSec();
+      velocityToDistanceMapPassing.put(velocity, distance);
     }
 
     static { // TODO tuning points will go here
-      putFiringMapEntry(0.5, new FiringParameters(30, 0, 1)); // TODO temp values
-      putFiringMapEntry(1, new FiringParameters(35, 10, 1.1));
-      putFiringMapEntry(5, new FiringParameters(100, 20, 5));
-      putFiringMapEntry(10, new FiringParameters(200, 40, 10));
-      putFiringMapEntry(20, new FiringParameters(400, 60, 20));
+      putFiringMapEntryScoring(0.5, new FiringParameters(30, 0, 1)); // TODO temp values
+      putFiringMapEntryScoring(1, new FiringParameters(35, 10, 1.1));
+      putFiringMapEntryScoring(5, new FiringParameters(100, 20, 5));
+      putFiringMapEntryScoring(10, new FiringParameters(200, 40, 10));
+      putFiringMapEntryScoring(20, new FiringParameters(400, 60, 20));
+
+      putFiringMapEntryPassing(0.5, new FiringParameters(30, 0, 1)); // TODO temp values
+      putFiringMapEntryPassing(1, new FiringParameters(35, 10, 1.1));
+      putFiringMapEntryPassing(5, new FiringParameters(100, 20, 5));
+      putFiringMapEntryPassing(10, new FiringParameters(200, 40, 10));
+      putFiringMapEntryPassing(20, new FiringParameters(400, 60, 20));
     }
 
     public static final boolean alwaysTargetAllianceZone =

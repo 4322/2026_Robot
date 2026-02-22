@@ -154,7 +154,7 @@ public class Shooter extends SubsystemBase {
 
   private void calculateFiringSolution() {
     FiringSolution firingSolution =
-        FiringManager.getFiringSolution(drive.getPose().getTranslation(), drive.getVelocity());
+        FiringManager.getFiringSolution(drive.getPose().getTranslation(), drive.getVelocity(), AreaManager.getZoneOfPosition(drive.getPose().getTranslation()) == Zone.ALLIANCE_ZONE);
     targetHoodAngleDeg = firingSolution.hoodAngle();
     targetFlywheelSpeedRPM = firingSolution.flywheelSpeedRPM();
     targetTurretAngleDeg = firingSolution.turretAngleDeg();

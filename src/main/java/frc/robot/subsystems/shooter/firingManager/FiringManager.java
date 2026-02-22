@@ -13,7 +13,7 @@ import org.littletonrobotics.junction.Logger;
 
 public class FiringManager {
 
-  public record FiringSolution(double flywheelSpeedRPM, double hoodAngle, double turretAngleDeg) {}
+  public record FiringSolution(double flywheelSpeedRPM, double hoodAngle, double turretAngleDeg, double tunnelSpeedRPS, double indexerSpeedRPS) {}
 
   public enum FiringTargets {
     HUB,
@@ -24,11 +24,13 @@ public class FiringManager {
   }
 
   public static FiringSolution getFiringSolution(
-      Translation2d robotPosition, Translation2d robotVelocity) {
+      Translation2d robotPosition, Translation2d robotVelocity, boolean isScoring) {
 
     // Project future position
+    double latencyCompensation = isScoring ? Constants.FiringManager.latencyCompensationScoring : Constants.FiringManager.latencyCompensationPassing;
     Translation2d futurePos =
-        robotPosition.plus(robotVelocity.times(Constants.FiringManager.latencyCompensation));
+        robotPosition.plus(robotVelocity.times(latencyCompensation));
+    
     Logger.recordOutput("FiringManager/futurePos", futurePos);
     // Get target vector
     Translation2d goalPosition = getShootingTarget(robotPosition);
@@ -39,7 +41,7 @@ public class FiringManager {
     Translation2d targetDirection = toGoal.div(distance);
 
     // Get velocity
-    FiringParameters baseline = Constants.FiringManager.firingMap.get(distance);
+    FiringParameters baseline = isScoring ? Constants.FiringManager.firingMapScoring.get(distance) : Constants.FiringManager.firingMapPassing.get(distance);
     double baselineVelocity = distance / baseline.getTimeOfFlightSec();
 
     // Build target velocity vector
@@ -54,15 +56,16 @@ public class FiringManager {
     Logger.recordOutput("FiringManager/requiredVelocity", requiredVelocity);
 
     // Use table in reverse: velocity -> effective distance → RPM
-    double effectiveDistance = velocityToEffectiveDistance(requiredVelocity);
+    double effectiveDistance = velocityToEffectiveDistance(requiredVelocity, isScoring);
     Logger.recordOutput("FiringManager/effectiveDistance", effectiveDistance);
 
-    return getHybridFiringSolution(effectiveDistance, requiredVelocity, turretAngle);
+    // TODO implement tunnel/indexer speed
+    return getHybridFiringSolution(effectiveDistance, requiredVelocity, turretAngle, Constants.Tunnel.indexingMechanismRotationsPerSec, Constants.Spindexer.indexingMechanismRotationsPerSec, isScoring);
   }
 
   private static FiringSolution getHybridFiringSolution(
-      double distance, double requiredVelocity, Rotation2d turretAngle) {
-    FiringParameters baseline = Constants.FiringManager.firingMap.get(distance);
+      double distance, double requiredVelocity, Rotation2d turretAngle, double tunnelSpeedRPS, double indexerSpeedRPS, boolean isScoring) {
+    FiringParameters baseline = isScoring ? Constants.FiringManager.firingMapScoring.get(distance) : Constants.FiringManager.firingMapPassing.get(distance);
     double baselineVelocity = distance / baseline.getTimeOfFlightSec();
     double velocityRatio = requiredVelocity / baselineVelocity;
 
@@ -82,11 +85,11 @@ public class FiringManager {
     Logger.recordOutput("FiringManager/FiringSolution/adjustedRPM", adjustedRPM);
     Logger.recordOutput("FiringManager/FiringSolution/adjustedHood", adjustedHood);
     Logger.recordOutput("FiringManager/FiringSolution/turretAngle", turretAngle.getDegrees());
-    return new FiringSolution(adjustedRPM, adjustedHood, turretAngle.getDegrees());
+    return new FiringSolution(adjustedRPM, adjustedHood, turretAngle.getDegrees(), tunnelSpeedRPS, indexerSpeedRPS);
   }
 
-  public static double velocityToEffectiveDistance(double velocity) {
-    return Constants.FiringManager.velocityToDistanceMap.get(velocity);
+  public static double velocityToEffectiveDistance(double velocity, boolean isScoring) {
+    return isScoring ? Constants.FiringManager.velocityToDistanceMapScoring.get(velocity) : Constants.FiringManager.velocityToDistanceMapPassing.get(velocity);
   }
 
   private static Translation2d getShootingTarget(Translation2d robotPosition) {
