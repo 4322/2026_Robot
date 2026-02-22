@@ -27,4 +27,6 @@ public interface HoodIO {
   public default void setServoVelocity(double pulseWidth) {}
 
   public default void simEstimatedPosition() {}
+
+  public default void setBrakeMode(boolean brake) {}
 }

@@ -90,4 +90,8 @@ private static final LoggedTunableNumber kP = new LoggedTunableNumber("kP");
   public double getEncoderDetectedPosition() {
     return inputs.degrees;
   }
+
+  public void enableBrakeMode(boolean brake) {
+    io.setBrakeMode(brake);
+  }
 }
