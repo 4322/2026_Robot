@@ -65,6 +65,7 @@ public final class Constants {
   public static final SubsystemMode ledMode = SubsystemMode.NORMAL;
   public static final SubsystemMode visionGlobalPose = SubsystemMode.NORMAL;
   public static final SubsystemMode visionObjectDetection = SubsystemMode.NORMAL;
+  public static final SubsystemMode firingManager = SubsystemMode.NORMAL;
 
   public static class Drive {
 
@@ -86,7 +87,6 @@ public final class Constants {
     public static final double kP = 1;
     public static final double kI = 0;
     public static final double kD = 0;
-    public static final double indexingMechanismRotationsPerSec = 3; // TODO
     public static final double stoppedMechanismRotationsPerSec = 0.1; // TODO
 
     public static final double motorToMechanismRatio = 12.0; // 10 inch wheel
@@ -94,9 +94,7 @@ public final class Constants {
 
   public static class Tunnel {
     public static final boolean dynamicVelocity = true;
-    public static final double dynamicVelocityPercent = 0.9; // TODO tune
 
-    public static final double indexingMechanismRotationsPerSec = 10;
     public static final int tunnelMotorId = 0;
     public static final double statorCurrentLimit = 60; // TODO
     public static final double supplyCurrentLimit = 40; // TODO
@@ -110,9 +108,8 @@ public final class Constants {
     public static final double kD = 0;
 
     public static final double stoppedMechanismRotationsPerSec = 0.1; // TODO
-    public static final double atSpeedMechanismRotationsPerSec =
-        0.95 * indexingMechanismRotationsPerSec; // TODO
     public static final double motorToMechanismRatio = 1.5; // 2 inch diameter
+    public static final double minPercentVelocity = 0.95;
   }
 
   public static class Flywheel {
@@ -132,7 +129,6 @@ public final class Constants {
     public static final double motorToMechanismRatio = 1; // Diameter 4
 
     public static final double idleMechanismRPS = 5;
-    public static final double shootingMechanismRPS = 10;
     public static final int canandcolorId = 0;
     public static final double minFuelDetectionProximity = 0.2;
     public static final double allowedVelocityErrorMechanismRPS = 0.2;
@@ -199,38 +195,6 @@ public final class Constants {
     public static int toggle3ButtonNumber;
   }
 
-  public static class FiringParameters {
-    private final double flywheelRPM;
-    private final double hoodAngleDeg;
-    private final double timeOfFlightSec;
-
-    public FiringParameters(double flywheelRPM, double hoodAngleDeg, double timeOfFlightSec) {
-      this.flywheelRPM = flywheelRPM;
-      this.hoodAngleDeg = hoodAngleDeg;
-      this.timeOfFlightSec = timeOfFlightSec;
-    }
-
-    public double getFlywheelRPM() {
-      return flywheelRPM;
-    }
-
-    public double getHoodAngleDeg() {
-      return hoodAngleDeg;
-    }
-
-    public double getTimeOfFlightSec() {
-      return timeOfFlightSec;
-    }
-
-    public static FiringParameters interpolate(
-        FiringParameters start, FiringParameters end, double howFar) {
-      return new FiringParameters(
-          start.flywheelRPM + (end.flywheelRPM - start.flywheelRPM) * howFar,
-          start.hoodAngleDeg + (end.hoodAngleDeg - start.hoodAngleDeg) * howFar,
-          start.timeOfFlightSec + (end.timeOfFlightSec - start.timeOfFlightSec) * howFar);
-    }
-  }
-
   public class Rollers {
     public static final double voltageIntake = 50; // TODO
     public static final double voltageEject = -50; // TODO
@@ -264,6 +228,57 @@ public final class Constants {
     public static final double CANCoderStowed = 0.5; // TODO
   }
 
+  public static class FiringParameters {
+    private final double flywheelRPM;
+    private final double hoodAngleDeg;
+    private final double timeOfFlightSec;
+    private final double tunnelRPS;
+    private final double indexerRPS;
+
+    public FiringParameters(
+        double flywheelRPM,
+        double hoodAngleDeg,
+        double timeOfFlightSec,
+        double tunnelRPS,
+        double indexerRPS) {
+      this.flywheelRPM = flywheelRPM;
+      this.hoodAngleDeg = hoodAngleDeg;
+      this.timeOfFlightSec = timeOfFlightSec;
+      this.tunnelRPS = tunnelRPS;
+      this.indexerRPS = indexerRPS;
+    }
+
+    public double getFlywheelRPM() {
+      return flywheelRPM;
+    }
+
+    public double getTunnelRPS() {
+      return tunnelRPS;
+    }
+
+    public double getIndexerRPS() {
+      return indexerRPS;
+    }
+
+    public double getHoodAngleDeg() {
+      return hoodAngleDeg;
+    }
+
+    public double getTimeOfFlightSec() {
+      return timeOfFlightSec;
+    }
+
+    public static FiringParameters interpolate(
+        FiringParameters start, FiringParameters end, double howFar) {
+      return new FiringParameters(
+          start.flywheelRPM + (end.flywheelRPM - start.flywheelRPM) * howFar,
+          start.hoodAngleDeg + (end.hoodAngleDeg - start.hoodAngleDeg) * howFar,
+          start.timeOfFlightSec + (end.timeOfFlightSec - start.timeOfFlightSec) * howFar,
+          start.tunnelRPS + (end.tunnelRPS - start.tunnelRPS) * howFar,
+          start.indexerRPS + (end.indexerRPS - start.indexerRPS) * howFar);
+    }
+  }
+
   public static class FiringManager {
     public static final InterpolatingTreeMap<Double, FiringParameters> firingMapScoring =
         new InterpolatingTreeMap<Double, FiringParameters>(
@@ -295,17 +310,16 @@ public final class Constants {
     }
 
     static { // TODO tuning points will go here
-      putFiringMapEntryScoring(0.5, new FiringParameters(30, 0, 1)); // TODO temp values
-      putFiringMapEntryScoring(1, new FiringParameters(35, 10, 1.1));
-      putFiringMapEntryScoring(5, new FiringParameters(100, 20, 5));
-      putFiringMapEntryScoring(10, new FiringParameters(200, 40, 10));
-      putFiringMapEntryScoring(20, new FiringParameters(400, 60, 20));
-
-      putFiringMapEntryPassing(0.5, new FiringParameters(30, 0, 1)); // TODO temp values
-      putFiringMapEntryPassing(1, new FiringParameters(35, 10, 1.1));
-      putFiringMapEntryPassing(5, new FiringParameters(100, 20, 5));
-      putFiringMapEntryPassing(10, new FiringParameters(200, 40, 10));
-      putFiringMapEntryPassing(20, new FiringParameters(400, 60, 20));
+      putFiringMapEntryScoring(0.5, new FiringParameters(30, 0, 1, 5, 5)); // TODO temp values
+      putFiringMapEntryScoring(1, new FiringParameters(35, 10, 1.1, 5, 5));
+      putFiringMapEntryScoring(5, new FiringParameters(100, 20, 5, 5, 5));
+      putFiringMapEntryScoring(10, new FiringParameters(200, 40, 10, 5, 5));
+      putFiringMapEntryScoring(20, new FiringParameters(400, 60, 20, 5, 5));
+      putFiringMapEntryPassing(0.5, new FiringParameters(30, 0, 1, 5, 5)); // TODO temp values
+      putFiringMapEntryPassing(1, new FiringParameters(35, 10, 1.1, 5, 5));
+      putFiringMapEntryPassing(5, new FiringParameters(100, 20, 5, 5, 5));
+      putFiringMapEntryPassing(10, new FiringParameters(200, 40, 10, 5, 5));
+      putFiringMapEntryPassing(20, new FiringParameters(400, 60, 20, 5, 5));
     }
 
     public static final boolean alwaysTargetAllianceZone =

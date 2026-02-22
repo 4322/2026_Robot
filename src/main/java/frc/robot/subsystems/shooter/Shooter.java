@@ -42,6 +42,8 @@ public class Shooter extends SubsystemBase {
   private double targetHoodAngleDeg;
   private double targetFlywheelSpeedRPM;
   private double targetTurretAngleDeg;
+  private double targetTunnelSpeedRPS;
+  private double targetIndexerSpeedRPS;
 
   private boolean unwindComplete = false;
 
@@ -70,7 +72,21 @@ public class Shooter extends SubsystemBase {
     Logger.recordOutput("Shooter/TargetHoodAngleDeg", targetHoodAngleDeg);
     Logger.recordOutput("Shooter/TargetFlywheelSpeedRPS", targetFlywheelSpeedRPM / 60);
     Logger.recordOutput("Shooter/TargetTurretAngleDeg", targetTurretAngleDeg);
-    
+
+    if (Constants.firingManager == Constants.SubsystemMode.TUNING) {
+      flywheel.requestGoal(targetFlywheelSpeedRPM);
+      hood.requestGoal(targetHoodAngleDeg);
+      turret.setAngle(targetTurretAngleDeg, true);
+      tunnel.requestIndex(targetTunnelSpeedRPS);
+      spindexer.requestIndex(targetIndexerSpeedRPS);
+      flywheel.periodic();
+      spindexer.periodic();
+      tunnel.periodic();
+      hood.periodic();
+      turret.periodic();
+      return;
+    }
+
     switch (state) {
       case DISABLED -> {
         if (DriverStation.isEnabled()) {
@@ -129,12 +145,14 @@ public class Shooter extends SubsystemBase {
 
         tunnel.requestIndex(
             Constants.Tunnel.dynamicVelocity
-                ? Constants.Tunnel.dynamicVelocityPercent * flywheel.getVelocity()
-                : Constants.Tunnel.indexingMechanismRotationsPerSec);
-        spindexer.requestIndex(
-            Constants.Spindexer.dynamicVelocity
-                ? Constants.Spindexer.dynamicVelocityPercent * tunnel.getVelocity()
-                : Constants.Spindexer.indexingMechanismRotationsPerSec);
+                ? (flywheel.getVelocity() / (targetFlywheelSpeedRPM / 60)) * targetTunnelSpeedRPS
+                : targetTunnelSpeedRPS);
+        if (tunnel.getVelocity() > Constants.Tunnel.minPercentVelocity * targetTunnelSpeedRPS) {
+          spindexer.requestIndex(
+              Constants.Spindexer.dynamicVelocity
+                  ? (tunnel.getVelocity() / targetTunnelSpeedRPS) * targetIndexerSpeedRPS
+                  : targetIndexerSpeedRPS);
+        }
       }
     }
 
@@ -154,10 +172,15 @@ public class Shooter extends SubsystemBase {
 
   private void calculateFiringSolution() {
     FiringSolution firingSolution =
-        FiringManager.getFiringSolution(drive.getPose().getTranslation(), drive.getVelocity(), AreaManager.getZoneOfPosition(drive.getPose().getTranslation()) == Zone.ALLIANCE_ZONE);
+        FiringManager.getFiringSolution(
+            drive.getPose().getTranslation(),
+            drive.getVelocity(),
+            AreaManager.getZoneOfPosition(drive.getPose().getTranslation()) == Zone.ALLIANCE_ZONE);
     targetHoodAngleDeg = firingSolution.hoodAngle();
     targetFlywheelSpeedRPM = firingSolution.flywheelSpeedRPM();
     targetTurretAngleDeg = firingSolution.turretAngleDeg();
+    targetTunnelSpeedRPS = firingSolution.tunnelSpeedRPS();
+    targetIndexerSpeedRPS = firingSolution.indexerSpeedRPS();
   }
 
   public ShooterState getState() {
@@ -165,6 +188,9 @@ public class Shooter extends SubsystemBase {
   }
 
   public void requestShoot() {
+    if (Constants.firingManager == Constants.SubsystemMode.TUNING) {
+      return;
+    }
 
     if ((AreaManager.getZoneOfPosition(drive.getPose().getTranslation()) == Zone.ALLIANCE_ZONE
             && !HubTracker.isAbleToShoot())

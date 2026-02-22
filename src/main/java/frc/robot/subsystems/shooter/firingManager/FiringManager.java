@@ -9,11 +9,17 @@ import frc.robot.constants.Constants;
 import frc.robot.constants.Constants.FiringParameters;
 import frc.robot.subsystems.shooter.areaManager.AreaManager;
 import frc.robot.subsystems.shooter.areaManager.AreaManager.Zone;
+import frc.robot.util.LoggedTunableNumber;
 import org.littletonrobotics.junction.Logger;
 
 public class FiringManager {
 
-  public record FiringSolution(double flywheelSpeedRPM, double hoodAngle, double turretAngleDeg, double tunnelSpeedRPS, double indexerSpeedRPS) {}
+  public record FiringSolution(
+      double flywheelSpeedRPM,
+      double hoodAngle,
+      double turretAngleDeg,
+      double tunnelSpeedRPS,
+      double indexerSpeedRPS) {}
 
   public enum FiringTargets {
     HUB,
@@ -23,14 +29,40 @@ public class FiringManager {
     NEUTRAL_RIGHT
   }
 
+  private static final LoggedTunableNumber flywheelSpeedRPM =
+      new LoggedTunableNumber("FiringManager/flywheelSpeedRPM", 0);
+  private static final LoggedTunableNumber hoodAngle =
+      new LoggedTunableNumber("FiringManager/hoodAngle", 0);
+  private static final LoggedTunableNumber turretAngleDeg =
+      new LoggedTunableNumber("FiringManager/turretAngleDeg", 0);
+  private static final LoggedTunableNumber tunnelSpeedRPS =
+      new LoggedTunableNumber("FiringManager/tunnelSpeedRPS", 0);
+  private static final LoggedTunableNumber indexerSpeedRPS =
+      new LoggedTunableNumber("FiringManager/indexerSpeedRPS", 0);
+
   public static FiringSolution getFiringSolution(
       Translation2d robotPosition, Translation2d robotVelocity, boolean isScoring) {
+    if (Constants.firingManager == Constants.SubsystemMode.TUNING) {
+      Logger.recordOutput("FiringManager/requestedTuning/flywheelSpeedRPM", flywheelSpeedRPM.get());
+      Logger.recordOutput("FiringManager/requestedTuning/hoodAngle", hoodAngle.get());
+      Logger.recordOutput("FiringManager/requestedTuning/turretAngleDeg", turretAngleDeg.get());
+      Logger.recordOutput("FiringManager/requestedTuning/tunnelSpeedRPS", tunnelSpeedRPS.get());
+      Logger.recordOutput("FiringManager/requestedTuning/indexerSpeedRPS", indexerSpeedRPS.get());
+      return new FiringSolution(
+          flywheelSpeedRPM.get(),
+          hoodAngle.get(),
+          turretAngleDeg.get(),
+          tunnelSpeedRPS.get(),
+          indexerSpeedRPS.get());
+    }
 
     // Project future position
-    double latencyCompensation = isScoring ? Constants.FiringManager.latencyCompensationScoring : Constants.FiringManager.latencyCompensationPassing;
-    Translation2d futurePos =
-        robotPosition.plus(robotVelocity.times(latencyCompensation));
-    
+    double latencyCompensation =
+        isScoring
+            ? Constants.FiringManager.latencyCompensationScoring
+            : Constants.FiringManager.latencyCompensationPassing;
+    Translation2d futurePos = robotPosition.plus(robotVelocity.times(latencyCompensation));
+
     Logger.recordOutput("FiringManager/futurePos", futurePos);
     // Get target vector
     Translation2d goalPosition = getShootingTarget(robotPosition);
@@ -41,7 +73,10 @@ public class FiringManager {
     Translation2d targetDirection = toGoal.div(distance);
 
     // Get velocity
-    FiringParameters baseline = isScoring ? Constants.FiringManager.firingMapScoring.get(distance) : Constants.FiringManager.firingMapPassing.get(distance);
+    FiringParameters baseline =
+        isScoring
+            ? Constants.FiringManager.firingMapScoring.get(distance)
+            : Constants.FiringManager.firingMapPassing.get(distance);
     double baselineVelocity = distance / baseline.getTimeOfFlightSec();
 
     // Build target velocity vector
@@ -60,12 +95,26 @@ public class FiringManager {
     Logger.recordOutput("FiringManager/effectiveDistance", effectiveDistance);
 
     // TODO implement tunnel/indexer speed
-    return getHybridFiringSolution(effectiveDistance, requiredVelocity, turretAngle, Constants.Tunnel.indexingMechanismRotationsPerSec, Constants.Spindexer.indexingMechanismRotationsPerSec, isScoring);
+    return getHybridFiringSolution(
+        effectiveDistance,
+        requiredVelocity,
+        turretAngle,
+        baseline.getTunnelRPS(),
+        baseline.getIndexerRPS(),
+        isScoring);
   }
 
   private static FiringSolution getHybridFiringSolution(
-      double distance, double requiredVelocity, Rotation2d turretAngle, double tunnelSpeedRPS, double indexerSpeedRPS, boolean isScoring) {
-    FiringParameters baseline = isScoring ? Constants.FiringManager.firingMapScoring.get(distance) : Constants.FiringManager.firingMapPassing.get(distance);
+      double distance,
+      double requiredVelocity,
+      Rotation2d turretAngle,
+      double tunnelSpeedRPS,
+      double indexerSpeedRPS,
+      boolean isScoring) {
+    FiringParameters baseline =
+        isScoring
+            ? Constants.FiringManager.firingMapScoring.get(distance)
+            : Constants.FiringManager.firingMapPassing.get(distance);
     double baselineVelocity = distance / baseline.getTimeOfFlightSec();
     double velocityRatio = requiredVelocity / baselineVelocity;
 
@@ -85,11 +134,14 @@ public class FiringManager {
     Logger.recordOutput("FiringManager/FiringSolution/adjustedRPM", adjustedRPM);
     Logger.recordOutput("FiringManager/FiringSolution/adjustedHood", adjustedHood);
     Logger.recordOutput("FiringManager/FiringSolution/turretAngle", turretAngle.getDegrees());
-    return new FiringSolution(adjustedRPM, adjustedHood, turretAngle.getDegrees(), tunnelSpeedRPS, indexerSpeedRPS);
+    return new FiringSolution(
+        adjustedRPM, adjustedHood, turretAngle.getDegrees(), tunnelSpeedRPS, indexerSpeedRPS);
   }
 
   public static double velocityToEffectiveDistance(double velocity, boolean isScoring) {
-    return isScoring ? Constants.FiringManager.velocityToDistanceMapScoring.get(velocity) : Constants.FiringManager.velocityToDistanceMapPassing.get(velocity);
+    return isScoring
+        ? Constants.FiringManager.velocityToDistanceMapScoring.get(velocity)
+        : Constants.FiringManager.velocityToDistanceMapPassing.get(velocity);
   }
 
   private static Translation2d getShootingTarget(Translation2d robotPosition) {
