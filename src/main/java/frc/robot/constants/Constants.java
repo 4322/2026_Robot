@@ -7,6 +7,7 @@ import com.ctre.phoenix6.signals.StripTypeValue;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
 import edu.wpi.first.math.interpolation.InverseInterpolator;
@@ -163,6 +164,10 @@ public final class Constants {
     public static final double maxUnwindLimitDeg = maxPhysicalLimitDeg - unwindToleranceDeg; // TODO
     public static final int CANCoderOneId = 0;
     public static final int CANCoderTwoId = 0;
+    public static final Translation2d originToTurret =
+        new Translation2d(); // TODO transcribe to wpilib coordinates
+    // x: 6.75 in
+    // y: 4.75 in
   }
 
   public static class Hood {
@@ -374,7 +379,10 @@ public final class Constants {
 
     // Robot to camera transforms
     // TODO
-    public static Transform3d frontRightTransform = new Transform3d();
+    public static Transform3d frontRightTransform =
+        new Transform3d(
+            new Translation3d(14.199859, 12.199859, 21.455136),
+            new Rotation3d(0, 0, 0)); // x: 14.199859 y: 12.199859 z: 21.455136 | angle
     public static Transform3d frontLeftTransform = new Transform3d();
     public static Transform3d backRightTransform = new Transform3d();
     public static Transform3d backLeftTransform = new Transform3d();

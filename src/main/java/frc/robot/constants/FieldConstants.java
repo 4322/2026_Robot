@@ -4,13 +4,175 @@ import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Quaternion;
+import edu.wpi.first.math.geometry.Rectangle2d;
 import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import java.util.List;
 
 public class FieldConstants {
   public static double fieldLength = Units.inchesToMeters(651.22);
   public static double fieldWidth = Units.inchesToMeters(317.69);
+
+  public static double centerLineX = fieldLength / 2;
+  public static double centerLineY = fieldWidth / 2;
+  public static double blueLineX = Units.inchesToMeters(182.11);
+  public static double redLineX = Units.inchesToMeters(167.00);
+
+  // All left/right designations are relative to blue alliance station
+  public static class Blue {
+    public static Translation2d hubTranslation = new Translation2d(blueLineX, centerLineY);
+    public static Rectangle2d allianceZone =
+        new Rectangle2d(
+            new Translation2d(Units.inchesToMeters(156.61), Units.inchesToMeters(317.69)),
+            new Translation2d(0, 0));
+    public static Rectangle2d rightAllianceZone =
+        new Rectangle2d(
+            new Translation2d(0, 0),
+            new Translation2d(blueLineX - Units.inchesToMeters(22.20), centerLineY));
+    public static Rectangle2d leftAllianceZone =
+        new Rectangle2d(
+            new Translation2d(0, centerLineY),
+            new Translation2d(blueLineX - Units.inchesToMeters(22.20), fieldWidth));
+    public static Rectangle2d trenchLeft =
+        new Rectangle2d(
+            new Translation2d(
+                blueLineX - Units.inchesToMeters(22.20),
+                centerLineY + Units.inchesToMeters(133.47 - (24.97 + 12.00))),
+            new Translation2d(blueLineX + Units.inchesToMeters(22.20), fieldWidth));
+    public static Rectangle2d trenchRight =
+        new Rectangle2d(
+            new Translation2d(blueLineX - Units.inchesToMeters(22.20), 0),
+            new Translation2d(
+                blueLineX + Units.inchesToMeters(22.20), Units.inchesToMeters(50.59)));
+
+    public static Rectangle2d bumpRight =
+        new Rectangle2d(
+            new Translation2d(
+                blueLineX - Units.inchesToMeters(22.20), Units.inchesToMeters(50.59 + 12.00)),
+            new Translation2d(
+                blueLineX + Units.inchesToMeters(22.20),
+                Units.inchesToMeters(50.59 + 12.00 + 73.00)));
+
+    public static Rectangle2d bumpLeft =
+        new Rectangle2d(
+            new Translation2d(
+                blueLineX - Units.inchesToMeters(22.20),
+                Units.inchesToMeters(fieldWidth - (50.35 + 12.00 + 73.00))),
+            new Translation2d(
+                blueLineX + Units.inchesToMeters(22.20),
+                Units.inchesToMeters(fieldWidth - (50.35 + 12.00))));
+
+    public static Rectangle2d stopShootLeft =
+        new Rectangle2d(
+            new Translation2d(
+                blueLineX - Units.inchesToMeters(22.20 + 6),
+                centerLineY + Units.inchesToMeters(133.47 - (24.97 + 12.00))),
+            new Translation2d(blueLineX + Units.inchesToMeters(22.20 + 6), fieldWidth));
+    public static Rectangle2d stopShootRight =
+        new Rectangle2d(
+            new Translation2d(blueLineX - Units.inchesToMeters(22.20 + 6), 0),
+            new Translation2d(
+                blueLineX + Units.inchesToMeters(22.20 + 6), Units.inchesToMeters(50.59)));
+
+    public static Rectangle2d frontOfHub =
+        new Rectangle2d(
+            new Translation2d(
+                blueLineX - Units.inchesToMeters(22.20 + 40),
+                centerLineY - Units.inchesToMeters(58.41 / 2)),
+            new Translation2d(
+                blueLineX - Units.inchesToMeters(22.20),
+                centerLineY + Units.inchesToMeters(58.41 / 2)));
+  }
+
+  public static class Red {
+    public static Translation2d hubTranslation = new Translation2d(redLineX, centerLineY);
+    public static Rectangle2d allianceZone =
+        new Rectangle2d(
+            new Translation2d(Units.inchesToMeters(651.22), Units.inchesToMeters(317.69)),
+            new Translation2d(Units.inchesToMeters(494.61), 0));
+
+    public static Rectangle2d rightAllianceZone =
+        new Rectangle2d(
+            new Translation2d(redLineX + Units.inchesToMeters(22.20), 0),
+            new Translation2d(fieldLength, centerLineY));
+    public static Rectangle2d leftAllianceZone =
+        new Rectangle2d(
+            new Translation2d(redLineX + Units.inchesToMeters(22.20), centerLineY),
+            new Translation2d(fieldLength, fieldWidth));
+
+    public static Rectangle2d trenchLeft =
+        new Rectangle2d(
+            new Translation2d(
+                redLineX - Units.inchesToMeters(22.20),
+                centerLineY + Units.inchesToMeters(133.47 - (24.97 + 12.00))),
+            new Translation2d(redLineX + Units.inchesToMeters(22.20), fieldWidth));
+    public static Rectangle2d trenchRight =
+        new Rectangle2d(
+            new Translation2d(redLineX - Units.inchesToMeters(22.20), 0),
+            new Translation2d(redLineX + Units.inchesToMeters(22.20), Units.inchesToMeters(50.59)));
+    public static Rectangle2d bumpRight =
+        new Rectangle2d(
+            new Translation2d(
+                redLineX - Units.inchesToMeters(22.20), Units.inchesToMeters(50.59 + 12.00)),
+            new Translation2d(
+                redLineX + Units.inchesToMeters(22.20),
+                Units.inchesToMeters(50.59 + 12.00 + 73.00)));
+
+    public static Rectangle2d bumpLeft =
+        new Rectangle2d(
+            new Translation2d(
+                redLineX - Units.inchesToMeters(22.20),
+                Units.inchesToMeters(fieldWidth - (50.35 + 12.00 + 73.00))),
+            new Translation2d(
+                redLineX + Units.inchesToMeters(22.20),
+                Units.inchesToMeters(fieldWidth - (50.35 + 12.00))));
+
+    public static Rectangle2d stopShootLeft =
+        new Rectangle2d(
+            new Translation2d(
+                redLineX - Units.inchesToMeters(22.20 + 6),
+                centerLineY + Units.inchesToMeters(133.47 - (24.97 + 12.00))),
+            new Translation2d(redLineX + Units.inchesToMeters(22.20 + 6), fieldWidth));
+    public static Rectangle2d stopShootRight =
+        new Rectangle2d(
+            new Translation2d(redLineX - Units.inchesToMeters(22.20 + 6), 0),
+            new Translation2d(
+                redLineX + Units.inchesToMeters(22.20 + 6), Units.inchesToMeters(50.59)));
+    public static Rectangle2d frontOfHub =
+        new Rectangle2d(
+            new Translation2d(
+                redLineX + Units.inchesToMeters(22.20),
+                centerLineY - Units.inchesToMeters(58.41 / 2)),
+            new Translation2d(
+                redLineX + Units.inchesToMeters(22.20 + 40),
+                centerLineY + Units.inchesToMeters(58.41 / 2)));
+  }
+
+  public static class Neutral {
+    public static Rectangle2d rightNeutral =
+        new Rectangle2d(new Translation2d(blueLineX, 0), new Translation2d(redLineX, centerLineY));
+    public static Rectangle2d leftNeutral =
+        new Rectangle2d(
+            new Translation2d(blueLineX, centerLineX), new Translation2d(redLineX, fieldWidth));
+    public static Rectangle2d backBlueHub =
+        new Rectangle2d(
+            new Translation2d(
+                blueLineX + Units.inchesToMeters(22.20),
+                centerLineY - Units.inchesToMeters(58.41 / 2)),
+            new Translation2d(
+                blueLineX + Units.inchesToMeters(80.00),
+                centerLineY + Units.inchesToMeters(58.41 / 2)));
+    public static Rectangle2d backRedHub =
+        new Rectangle2d(
+            new Translation2d(
+                redLineX - Units.inchesToMeters(22.20),
+                centerLineY - Units.inchesToMeters(58.41 / 2)),
+            new Translation2d(
+                redLineX - Units.inchesToMeters(80.00),
+                centerLineY + Units.inchesToMeters(58.41 / 2)));
+  }
+
   public static final double aprilTagWidth = Units.inchesToMeters(6.50);
   public static final int aprilTagCount = 32;
   public static final AprilTagFieldLayout aprilTagFieldLayout =

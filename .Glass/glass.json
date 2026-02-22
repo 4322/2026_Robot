@@ -23,6 +23,90 @@
     },
     "windows": {
       "/SmartDashboard/Field": {
+        "AllianceZones": {
+          "arrows": false,
+          "color": [
+            1.0,
+            0.0,
+            0.0,
+            255.0
+          ]
+        },
+        "BlueHoodDangerZones": {
+          "color": [
+            1.0,
+            0.3544303774833679,
+            0.0,
+            255.0
+          ]
+        },
+        "BlueOppositionZones": {
+          "arrows": false,
+          "color": [
+            1.0,
+            0.8354430198669434,
+            0.0,
+            255.0
+          ]
+        },
+        "BumpZones": {
+          "color": [
+            0.12658238410949707,
+            1.0,
+            0.0,
+            255.0
+          ]
+        },
+        "HoodDangerZones": {
+          "color": [
+            0.0,
+            0.07594943046569824,
+            1.0,
+            255.0
+          ]
+        },
+        "HubZones": {
+          "color": [
+            0.6582274436950684,
+            0.0,
+            1.0,
+            255.0
+          ]
+        },
+        "NeutralZones": {
+          "arrows": false,
+          "color": [
+            1.0,
+            0.49367088079452515,
+            0.9423169493675232,
+            255.0
+          ]
+        },
+        "RedHoodDangerZones": {
+          "color": [
+            0.7805907130241394,
+            0.41499757766723633,
+            0.0,
+            255.0
+          ]
+        },
+        "RedOppositionZones": {
+          "arrows": false,
+          "color": [
+            0.31277042627334595,
+            0.5147679448127747,
+            0.0,
+            255.0
+          ]
+        },
+        "TrenchExclusionZones": {
+          "color": [
+            0.0,
+            0.0486033670604229,
+            0.38396626710891724,
+            255.0
+          ]
+        },
         "bottom": 1914,
         "builtin": "",
         "height": 8.069275856018066,

@@ -68,7 +68,6 @@ public class Shooter extends SubsystemBase {
 
   @Override
   public void periodic() {
-    AreaManager.logZones();
     calculateFiringSolution();
     Logger.recordOutput("Shooter/TargetHoodAngleDeg", targetHoodAngleDeg);
     Logger.recordOutput("Shooter/TargetFlywheelSpeedRPS", targetFlywheelSpeedRPM / 60);
@@ -195,7 +194,7 @@ public class Shooter extends SubsystemBase {
 
     if ((AreaManager.getZoneOfPosition(drive.getPose().getTranslation()) == Zone.ALLIANCE_ZONE
             && !HubTracker.isAbleToShoot())
-        || (AreaManager.isTrenchNoShootingArea(drive.getPose().getTranslation()))) {
+        || (AreaManager.isTrench(drive.getPose().getTranslation()))) {
       state = ShooterState.IDLE;
 
     } else {
