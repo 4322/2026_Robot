@@ -14,13 +14,13 @@ public class Hood {
       new LoggedTunableNumber("Hood/kI", Constants.Hood.kI);
   private static final LoggedTunableNumber kD =
       new LoggedTunableNumber("Hood/kD", Constants.Hood.kD);
-    private static final LoggedTunableNumber PIDTolerance =
+  private static final LoggedTunableNumber PIDTolerance =
       new LoggedTunableNumber("Hood/PIDTolerance", Constants.Hood.PIDTolerance);
   private static final LoggedTunableNumber angle = new LoggedTunableNumber("Hood/Angle", 0);
 
   private HoodIO io;
   private HoodIOInputsAutoLogged inputs = new HoodIOInputsAutoLogged();
-  private double requestedAngleDEG = 0.0;
+  private double requestedAngleDEG;
   private Timer homingTimer = new Timer();
   private double pastEncoderPosition = 0.0;
   private double PIDCalculate;
@@ -40,8 +40,7 @@ public class Hood {
 
     io.updateInputs(inputs);
     Logger.processInputs("Hood", inputs);
-    Logger.recordOutput("Hood/requestedDegree", requestedAngleDEG);
-    Logger.recordOutput("Hood/requestedServoVelocity", PIDCalculate);
+
     switch (Constants.hoodMode) {
       case TUNING -> {
         LoggedTunableNumber.ifChanged(
@@ -53,7 +52,9 @@ public class Hood {
         if (pidController.atSetpoint()) {
           io.setServoVelocity(0);
         } else {
-          io.setServoVelocity((pidController.calculate(inputs.degrees, requestedAngleDEG)));
+          PIDCalculate = pidController.calculate(inputs.degrees, requestedAngleDEG);
+          io.setServoVelocity(PIDCalculate);
+          Logger.recordOutput("Hood/requestedServoVelocity", PIDCalculate);
         }
       }
       case NORMAL -> {
@@ -87,8 +88,8 @@ public class Hood {
 
   public void requestGoal(double angle) {
     pidController.setSetpoint(angle);
-    requestedAngleDEG = angle;
-    PIDCalculate = pidController.calculate(inputs.degrees, requestedAngleDEG);
+    this.requestedAngleDEG = angle;
+    Logger.recordOutput("Hood/requestedDegree", requestedAngleDEG);
   }
 
   public void rehome() {
