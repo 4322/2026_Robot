@@ -299,9 +299,9 @@ public final class Constants {
     }
   }
 
-  public static class CANbus {
+  public static class CANivore {
     public static final String canbusName = "Clockwork";
-    public static final CANBus CANBus = new CANBus(Constants.CANbus.canbusName);
+    public static final CANBus CANBus = new CANBus(Constants.CANivore.canbusName);
   }
 
   public static class HubTracker {
