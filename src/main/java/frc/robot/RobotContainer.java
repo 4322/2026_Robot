@@ -422,12 +422,6 @@ public class RobotContainer {
             new AutoIntake(drive, visionObjectDetection, led, true)
                 .until(() -> !button3.getAsBoolean()));
 
-    new JoystickButton(operatorBoard.getLeftController(), Constants.Control.toggle3ButtonNumber)
-        .whileFalse(
-            IntakeCommands.setExtend(intake)
-                .onlyIf(() -> currentIntakeCommand == IntakeCommandTypes.RETRACT))
-        .onTrue(new InstantCommand(() -> currentIntakeCommand = IntakeCommandTypes.EXTEND));
-
     controller
         .y() // TODO driver button 11 whatever that is
         .onTrue(
@@ -441,16 +435,26 @@ public class RobotContainer {
         .onTrue(
             IntakeCommands.setIdle(intake)
                 .alongWith(new InstantCommand(() -> currentIntakeCommand = IntakeCommandTypes.IDLE))
-                .onlyIf(() -> currentIntakeCommand == IntakeCommandTypes.IDLE));
+                .onlyIf(() -> currentIntakeCommand == IntakeCommandTypes.INTAKING));
 
-    new JoystickButton(operatorBoard.getLeftController(), Constants.Control.toggle3ButtonNumber)
-        .whileTrue(
+    Trigger toggle3 =
+        new JoystickButton(
+            operatorBoard.getLeftController(), Constants.Control.toggle3ButtonNumber);
+
+    toggle3
+        .onTrue(
             IntakeCommands.setRetract(intake)
+                .alongWith(
+                    new InstantCommand(() -> currentIntakeCommand = IntakeCommandTypes.RETRACT))
                 .onlyIf(
                     () ->
-                        (currentIntakeCommand == IntakeCommandTypes.IDLE)
-                            || (currentIntakeCommand == IntakeCommandTypes.INTAKING)))
-        .onTrue(new InstantCommand(() -> currentIntakeCommand = IntakeCommandTypes.RETRACT));
+                        currentIntakeCommand == IntakeCommandTypes.IDLE
+                            || currentIntakeCommand == IntakeCommandTypes.INTAKING))
+        .onFalse(
+            IntakeCommands.setExtend(intake)
+                .alongWith(
+                    new InstantCommand(() -> currentIntakeCommand = IntakeCommandTypes.EXTEND))
+                .onlyIf(() -> currentIntakeCommand == IntakeCommandTypes.RETRACT));
   }
 
   /**

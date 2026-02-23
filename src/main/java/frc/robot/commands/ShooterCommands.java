@@ -3,13 +3,12 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.shooter.Shooter;
-import java.util.function.BooleanSupplier;
 
 public class ShooterCommands {
 
-  public static Command shoot(Shooter shooter, BooleanSupplier end) {
+  public static Command shoot(Shooter shooter) {
 
-    return Commands.run(() -> shooter.requestShoot(), shooter).until(end);
+    return Commands.run(() -> shooter.requestShoot(), shooter);
   }
 
   // Main commands
@@ -26,8 +25,6 @@ public class ShooterCommands {
   // Default command
   public static Command autoShoot(Shooter shooter) {
 
-    BooleanSupplier end = () -> false;
-
-    return shoot(shooter, end);
+    return shoot(shooter);
   }
 }

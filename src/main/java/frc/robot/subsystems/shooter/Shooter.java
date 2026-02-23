@@ -127,6 +127,7 @@ public class Shooter extends SubsystemBase {
           tunnel.requestIdle();
           if (tunnel.isStopped()) {
             turret.unwind();
+            flywheel.requestGoal(Constants.Flywheel.idleRPS);
           }
         }
         if (turret.isAtGoal()) {
@@ -195,16 +196,28 @@ public class Shooter extends SubsystemBase {
       return;
     }
 
-    if ((AreaManager.getZoneOfPosition(drive.getPose().getTranslation()) == Zone.ALLIANCE_ZONE
-            && !HubTracker.isAbleToShoot())
-        || (AreaManager.isTrench(drive.getPose().getTranslation()))) {
+    if ((AreaManager.isTrench(drive.getPose().getTranslation()))) {
+      // Emergency hood lower
       state = ShooterState.IDLE;
+
+    } else if (AreaManager.getZoneOfPosition(drive.getPose().getTranslation()) == Zone.ALLIANCE_ZONE
+        && !HubTracker.isAbleToShoot()) {
+      // Don't shoot if inactive
+      if (turret.needsToUnwind()) {
+        unwindComplete = false;
+        state = ShooterState.UNWIND;
+      }
+      if (state == ShooterState.UNWIND && unwindComplete) {
+        unwindComplete = false;
+        state = ShooterState.IDLE;
+      }
 
     } else {
       if (state == ShooterState.IDLE || (state == ShooterState.UNWIND && unwindComplete)) {
         unwindComplete = false;
         state = ShooterState.PRESHOOT;
-        if (hood.isAtGoal() && turret.isAtGoal()) {
+        calculateFiringSolution();
+        if (hood.isAtGoal() && turret.isAtGoal() && flywheel.atTargetVelocity()) {
           state = ShooterState.SHOOT;
         }
       } else {
