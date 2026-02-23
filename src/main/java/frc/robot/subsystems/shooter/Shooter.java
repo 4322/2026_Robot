@@ -168,6 +168,8 @@ public class Shooter extends SubsystemBase {
     Logger.recordOutput("Shooter/unwindComplete", unwindComplete);
     Logger.recordOutput("Shooter/spindexerStopped", spindexer.isStopped());
     Logger.recordOutput("Shooter/tunnelStopped", tunnel.isStopped());
+    Logger.recordOutput(
+        "Shooter/currentZone", AreaManager.getZoneOfPosition(drive.getPose().getTranslation()));
   }
 
   private void calculateFiringSolution() {
@@ -188,6 +190,7 @@ public class Shooter extends SubsystemBase {
   }
 
   public void requestShoot() {
+    Logger.recordOutput("Shooter/currentMethod", "requestShoot()");
     if (Constants.firingManager == Constants.SubsystemMode.TUNING) {
       return;
     }
@@ -214,6 +217,7 @@ public class Shooter extends SubsystemBase {
   }
 
   public void requestIdle() {
+    Logger.recordOutput("Shooter/currentMethod", "requestIdle()");
     if (state == ShooterState.UNWIND && unwindComplete) {
       state = ShooterState.IDLE;
     } else if (state == ShooterState.PRESHOOT || state == ShooterState.SHOOT) {

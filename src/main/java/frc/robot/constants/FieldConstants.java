@@ -17,15 +17,13 @@ public class FieldConstants {
   public static double centerLineX = fieldLength / 2;
   public static double centerLineY = fieldWidth / 2;
   public static double blueLineX = Units.inchesToMeters(182.11);
-  public static double redLineX = Units.inchesToMeters(167.00);
+  public static double redLineX = Units.inchesToMeters(167.00) + centerLineX;
 
   // All left/right designations are relative to blue alliance station
   public static class Blue {
     public static Translation2d hubTranslation = new Translation2d(blueLineX, centerLineY);
     public static Rectangle2d allianceZone =
-        new Rectangle2d(
-            new Translation2d(Units.inchesToMeters(156.61), Units.inchesToMeters(317.69)),
-            new Translation2d(0, 0));
+        new Rectangle2d(new Translation2d(blueLineX, fieldWidth), new Translation2d(0, 0));
     public static Rectangle2d rightAllianceZone =
         new Rectangle2d(
             new Translation2d(0, 0),
@@ -88,9 +86,7 @@ public class FieldConstants {
   public static class Red {
     public static Translation2d hubTranslation = new Translation2d(redLineX, centerLineY);
     public static Rectangle2d allianceZone =
-        new Rectangle2d(
-            new Translation2d(Units.inchesToMeters(651.22), Units.inchesToMeters(317.69)),
-            new Translation2d(Units.inchesToMeters(494.61), 0));
+        new Rectangle2d(new Translation2d(fieldLength, fieldWidth), new Translation2d(redLineX, 0));
 
     public static Rectangle2d rightAllianceZone =
         new Rectangle2d(

@@ -20,7 +20,8 @@ public class AreaManager {
     LEFT_STOP_SHOOT,
     RIGHT_STOP_SHOOT,
     LEFT_OPPOSITION_STOP_SHOOT,
-    RIGHT_OPPOSITION_STOP_SHOOT
+    RIGHT_OPPOSITION_STOP_SHOOT,
+    UNKNOWN
   }
 
   private static Zone zone = Zone.ALLIANCE_ZONE;
@@ -59,17 +60,7 @@ public class AreaManager {
 
   public static Zone getZoneOfPosition(Translation2d position) {
     if (Robot.alliance == Alliance.Blue) {
-      if (FieldConstants.Blue.allianceZone.contains(position)) {
-        return Zone.ALLIANCE_ZONE;
-      } else if (FieldConstants.Red.rightAllianceZone.contains(position)) {
-        return Zone.RIGHT_OPPOSITION;
-      } else if (FieldConstants.Red.leftAllianceZone.contains(position)) {
-        return Zone.LEFT_OPPOSITION;
-      } else if (FieldConstants.Neutral.rightNeutral.contains(position)) {
-        return Zone.RIGHT_NEUTRAL;
-      } else if (FieldConstants.Neutral.leftNeutral.contains(position)) {
-        return Zone.LEFT_NEUTRAL;
-      } else if (FieldConstants.Blue.trenchLeft.contains(position)) {
+      if (FieldConstants.Blue.trenchLeft.contains(position)) {
         return Zone.LEFT_TRENCH;
       } else if (FieldConstants.Blue.trenchRight.contains(position)) {
         return Zone.RIGHT_TRENCH;
@@ -85,8 +76,35 @@ public class AreaManager {
         return Zone.LEFT_OPPOSITION_STOP_SHOOT;
       } else if (FieldConstants.Red.stopShootRight.contains(position)) {
         return Zone.RIGHT_OPPOSITION_STOP_SHOOT;
+      } else if (FieldConstants.Blue.allianceZone.contains(position)) {
+        return Zone.ALLIANCE_ZONE;
+      } else if (FieldConstants.Red.rightAllianceZone.contains(position)) {
+        return Zone.RIGHT_OPPOSITION;
+      } else if (FieldConstants.Red.leftAllianceZone.contains(position)) {
+        return Zone.LEFT_OPPOSITION;
+      } else if (FieldConstants.Neutral.rightNeutral.contains(position)) {
+        return Zone.RIGHT_NEUTRAL;
+      } else if (FieldConstants.Neutral.leftNeutral.contains(position)) {
+        return Zone.LEFT_NEUTRAL;
       }
     } else {
+      if (FieldConstants.Red.trenchLeft.contains(position)) {
+        return Zone.LEFT_TRENCH;
+      } else if (FieldConstants.Red.trenchRight.contains(position)) {
+        return Zone.RIGHT_TRENCH;
+      } else if (FieldConstants.Blue.trenchLeft.contains(position)) {
+        return Zone.LEFT_OPPOSITION_TRENCH;
+      } else if (FieldConstants.Blue.trenchRight.contains(position)) {
+        return Zone.RIGHT_OPPOSITION_TRENCH;
+      } else if (FieldConstants.Red.stopShootLeft.contains(position)) {
+        return Zone.LEFT_STOP_SHOOT;
+      } else if (FieldConstants.Red.stopShootRight.contains(position)) {
+        return Zone.RIGHT_STOP_SHOOT;
+      } else if (FieldConstants.Blue.stopShootLeft.contains(position)) {
+        return Zone.LEFT_OPPOSITION_STOP_SHOOT;
+      } else if (FieldConstants.Blue.stopShootRight.contains(position)) {
+        return Zone.RIGHT_OPPOSITION_STOP_SHOOT;
+      } else
       if (FieldConstants.Red.allianceZone.contains(position)) {
         return Zone.ALLIANCE_ZONE;
       } else if (FieldConstants.Blue.rightAllianceZone.contains(position)) {
@@ -97,25 +115,9 @@ public class AreaManager {
         return Zone.RIGHT_NEUTRAL;
       } else if (FieldConstants.Neutral.leftNeutral.contains(position)) {
         return Zone.LEFT_NEUTRAL;
-      } else if (FieldConstants.Red.trenchLeft.contains(position)) {
-        return Zone.LEFT_TRENCH;
-      } else if (FieldConstants.Red.trenchRight.contains(position)) {
-        return Zone.RIGHT_TRENCH;
-      } else if (FieldConstants.Blue.trenchLeft.contains(position)) {
-        return Zone.LEFT_OPPOSITION_TRENCH;
-      } else if (FieldConstants.Blue.trenchRight.contains(position)) {
-        return Zone.RIGHT_OPPOSITION_TRENCH;
-      } else if (FieldConstants.Red.stopShootLeft.contains(position)) {
-        return Zone.LEFT_STOP_SHOOT;
-      } else if (FieldConstants.Red.stopShootRight.contains(position)) {
-        return Zone.RIGHT_STOP_SHOOT;
-      } else if (FieldConstants.Blue.stopShootLeft.contains(position)) {
-        return Zone.LEFT_OPPOSITION_STOP_SHOOT;
-      } else if (FieldConstants.Blue.stopShootRight.contains(position)) {
-        return Zone.RIGHT_OPPOSITION_STOP_SHOOT;
       }
     }
-    return null;
+    return Zone.UNKNOWN;
   }
 
   // Returns true if positions are same larger zone, ignoring right/left designations (ex. right

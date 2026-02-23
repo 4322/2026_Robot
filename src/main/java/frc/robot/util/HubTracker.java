@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.constants.Constants;
 import java.util.Optional;
+import org.littletonrobotics.junction.Logger;
 
 // TODO check if in practice mode
 
@@ -107,12 +108,14 @@ public class HubTracker {
   public static boolean isAbleToShoot() {
     Optional<Alliance> allianceOpt = DriverStation.getAlliance();
     if (allianceOpt.isEmpty()) {
+      Logger.recordOutput("HubTracker/isAbleToShoot", "Alliance Empty");
       return false;
     }
 
     Alliance alliance = allianceOpt.get();
     double matchTime = getMatchTime();
     if (matchTime < 0) {
+      Logger.recordOutput("HubTracker/isAbleToShoot", "Match Time Negative");
       return false;
     }
 
@@ -125,9 +128,11 @@ public class HubTracker {
       double bufferedEnd = shift.endTime + Constants.HubTracker.postBuffer;
 
       if (matchTime >= bufferedStart && matchTime <= bufferedEnd) {
+        Logger.recordOutput("HubTracker/isAbleToShoot", "True");
         return true;
       }
     }
+    Logger.recordOutput("HubTracker/isAbleToShoot", "False");
     return false;
   }
 

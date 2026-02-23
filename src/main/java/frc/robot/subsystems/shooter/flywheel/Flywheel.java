@@ -32,10 +32,8 @@ public class Flywheel {
   }
 
   public void requestGoal(double velocity) {
-    if (Constants.flywheelMode == Constants.SubsystemMode.NORMAL) {
-      io.setTargetMechanismRPS(velocity);
-      inputs.requestedMechanismRPS = velocity;
-    }
+    io.setTargetMechanismRPS(velocity);
+    inputs.requestedMechanismRPS = velocity;
   }
 
   public void enableBrakeMode(boolean enable) {
