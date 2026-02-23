@@ -6,6 +6,7 @@ import edu.wpi.first.units.measure.Time;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.constants.Constants;
+import frc.robot.constants.Constants.Mode;
 import java.util.Optional;
 import org.littletonrobotics.junction.Logger;
 
@@ -180,6 +181,10 @@ public class HubTracker {
    * if in between auto and teleop
    */
   public static double getMatchTime() {
+    // TODO get match time working for sim
+    if (Constants.simMode == Mode.SIM) {
+      return 10;
+    }
     if (DriverStation.isAutonomous()) {
       if (DriverStation.getMatchTime() < 0) return DriverStation.getMatchTime();
       return 20 - DriverStation.getMatchTime();

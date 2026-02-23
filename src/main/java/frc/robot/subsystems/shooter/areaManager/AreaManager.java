@@ -104,8 +104,7 @@ public class AreaManager {
         return Zone.LEFT_OPPOSITION_STOP_SHOOT;
       } else if (FieldConstants.Blue.stopShootRight.contains(position)) {
         return Zone.RIGHT_OPPOSITION_STOP_SHOOT;
-      } else
-      if (FieldConstants.Red.allianceZone.contains(position)) {
+      } else if (FieldConstants.Red.allianceZone.contains(position)) {
         return Zone.ALLIANCE_ZONE;
       } else if (FieldConstants.Blue.rightAllianceZone.contains(position)) {
         return Zone.RIGHT_OPPOSITION;
