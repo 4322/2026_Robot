@@ -7,6 +7,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.constants.Constants;
 import frc.robot.subsystems.drive.Drive;
+import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.led.LED;
 import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetection;
 import java.util.function.Supplier;
@@ -23,13 +24,20 @@ public class AutoIntake extends Command {
   private Translation2d fuelPose;
   private boolean autodrive;
   private LED led;
+  private Intake intake;
 
   public AutoIntake(
-      Drive drive, VisionObjectDetection visionObjectDetection, LED led, boolean autodrive) {
+      Drive drive,
+      VisionObjectDetection visionObjectDetection,
+      LED led,
+      Intake intake,
+      boolean autodrive) {
     this.drive = drive;
     this.visionObjectDetection = visionObjectDetection;
     this.led = led;
+    this.intake = intake;
     this.autodrive = autodrive;
+    addRequirements(intake);
   }
 
   @Override
@@ -37,6 +45,7 @@ public class AutoIntake extends Command {
     fuelPose = null;
     targetAngle = null;
     led.requestAutoFuelPickup(true);
+    intake.setState(Intake.IntakeState.INTAKING);
   }
 
   @Override

@@ -21,7 +21,7 @@ import java.util.Map;
 import org.littletonrobotics.junction.Logger;
 
 public class Simulator extends SubsystemBase {
-  private static final RegressTests regressTest = RegressTests.TEST_SUBSYSTEMS;
+  private static final RegressTests regressTest = RegressTests.SUBSYSTEM_TEST;
   public static AutoName autoScenario;
   private TeleopScenario teleopScenario;
   private List<TeleAnomaly> teleAnomalies;
@@ -36,7 +36,7 @@ public class Simulator extends SubsystemBase {
     DO_NOTHING,
     SHOOT,
     CONTROLLER_TEST,
-    TEST_SUBSYSTEMS
+    SUBSYSTEM_TEST
   }
 
   private enum TeleAnomaly {
@@ -52,7 +52,7 @@ public class Simulator extends SubsystemBase {
     SHOOT,
     CONTROLLER_TEST1,
     CONTROLLER_TEST2,
-    MOVE_AND_SHOOT
+    SUBSYSTEM_TEST
   }
 
   private enum EventType {
@@ -104,6 +104,13 @@ public class Simulator extends SubsystemBase {
     DISABLE_WHEEL_SLIP,
     BLUE_INACTIVE_FIRST,
     RED_INACTIVE_FIRST,
+    TOGGLE_1_ON,
+    TOGGLE_1_OFF,
+    TOGGLE_3_ON,
+    TOGGLE_3_OFF,
+    TOGGLE_4_ON,
+    TOGGLE_4_OFF,
+
     END_OF_SCENARIO
   }
 
@@ -212,8 +219,8 @@ public class Simulator extends SubsystemBase {
       case CONTROLLER_TEST -> List.of(
           new RegressionTest("Controller Test 1", TeleopScenario.CONTROLLER_TEST1, Alliance.Blue),
           new RegressionTest("Controller Test 2", TeleopScenario.CONTROLLER_TEST2, Alliance.Blue));
-      case TEST_SUBSYSTEMS -> List.of(
-          new RegressionTest("Move and Shoot", TeleopScenario.MOVE_AND_SHOOT, Alliance.Blue));
+      case SUBSYSTEM_TEST -> List.of(
+          new RegressionTest("Subsystem Test", TeleopScenario.SUBSYSTEM_TEST, Alliance.Blue));
       default -> List.of();
     };
   }
@@ -352,7 +359,7 @@ public class Simulator extends SubsystemBase {
               EventType.MOVE_JOYSTICK_TURN,
               new Pose2d(0, -0.3, Rotation2d.kZero)),
           new SimEvent(t += 1.0, "Final Movement", EventType.END_OF_SCENARIO));
-      case MOVE_AND_SHOOT -> List.of(
+      case SUBSYSTEM_TEST -> List.of(
           new SimEvent(
               t, "Start Pose", EventType.SET_POSE, new Pose2d(4.44, 0.650, Rotation2d.kZero)),
           new SimEvent(t += 1.0, "Deploy intake", EventType.PRESS_Y), // TODO figure out binding

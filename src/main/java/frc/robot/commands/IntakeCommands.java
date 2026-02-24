@@ -7,14 +7,6 @@ import frc.robot.subsystems.intake.Intake.IntakeState;
 
 public class IntakeCommands {
 
-  public static Command setExtend(Intake intake) {
-    return Commands.runOnce(
-        () -> {
-          intake.setState(IntakeState.EXTEND);
-        },
-        intake);
-  }
-
   public static Command setRetract(Intake intake) {
     return Commands.runOnce(
         () -> {
@@ -40,7 +32,7 @@ public class IntakeCommands {
   }
 
   public static Command setIntaking(Intake intake) {
-    return Commands.runOnce(
+    return Commands.run(
         () -> {
           intake.setState(IntakeState.INTAKING);
         },

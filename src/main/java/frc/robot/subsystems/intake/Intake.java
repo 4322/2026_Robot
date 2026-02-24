@@ -18,7 +18,6 @@ public class Intake extends SubsystemBase {
 
   public enum IntakeState {
     DISABLED,
-    EXTEND,
     RETRACT,
     EJECT,
     IDLE,
@@ -35,10 +34,6 @@ public class Intake extends SubsystemBase {
     switch (state) {
       case DISABLED -> {
         break;
-      }
-      case EXTEND -> {
-        deployer.setGoal(DeployerState.EXTEND);
-        rollers.setState(RollersState.IDLE);
       }
       case RETRACT -> {
         deployer.setGoal(DeployerState.RETRACT);

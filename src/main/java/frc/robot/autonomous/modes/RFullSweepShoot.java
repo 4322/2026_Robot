@@ -7,11 +7,13 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Robot;
 import frc.robot.commands.AutoIntake;
 import frc.robot.subsystems.drive.Drive;
+import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.led.LED;
 import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetection;
 
 public class RFullSweepShoot extends SequentialCommandGroup {
-  public RFullSweepShoot(Drive drive, VisionObjectDetection visionObjectDetection, LED led) {
+  public RFullSweepShoot(
+      Drive drive, VisionObjectDetection visionObjectDetection, LED led, Intake intake) {
     setName("R_FULL_SWEEP_SHOOT");
     addCommands(
         new InstantCommand(
@@ -26,7 +28,7 @@ public class RFullSweepShoot extends SequentialCommandGroup {
         AutoBuilder.followPath(Robot.R_StartR_To_NeutralR_Intake),
         AutoBuilder.followPath(Robot.R_NeutralR_Intake_Full),
         AutoBuilder.followPath(Robot.R_NeutralR_Intake_Full_Flip),
-        new AutoIntake(drive, visionObjectDetection, led, true),
+        new AutoIntake(drive, visionObjectDetection, led, intake, true),
         AutoBuilder.followPath(Robot.R_Neutral_Mid_To_ShootR));
   }
 }

@@ -13,7 +13,6 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -117,6 +116,9 @@ public class RobotContainer {
   }
 
   private final Trigger inNonShootingArea;
+
+  private final Trigger toggle3 =
+      new JoystickButton(operatorBoard.getLeftController(), Constants.Control.toggle3ButtonNumber);
 
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
@@ -415,48 +417,19 @@ public class RobotContainer {
     // Toggle 4
     new JoystickButton(operatorBoard.getLeftController(), Constants.Control.toggle4ButtonNumber)
         .onTrue(
-            new AutoIntake(drive, visionObjectDetection, led, false)
+            new AutoIntake(drive, visionObjectDetection, led, intake, false)
                 .until(() -> (!toggle4.getAsBoolean() || button3.getAsBoolean())));
 
-    // Button 3
-    new JoystickButton(operatorBoard.getLeftController(), Constants.Control.button3ButtonNumber)
-        .onTrue(
-            new AutoIntake(drive, visionObjectDetection, led, true)
-                .until(() -> !button3.getAsBoolean()));
+    // TODO Button 3
+    controller.a().onTrue(new AutoIntake(drive, visionObjectDetection, led, intake, true));
+
+    intake.setDefaultCommand(IntakeCommands.setIdle(intake));
 
     controller
         .y() // TODO driver button 11 whatever that is
-        .onTrue(
-            IntakeCommands.setIntaking(intake)
-                .alongWith(
-                    new InstantCommand(() -> currentIntakeCommand = IntakeCommandTypes.INTAKING))
-                .onlyIf(() -> currentIntakeCommand == IntakeCommandTypes.IDLE));
+        .toggleOnTrue(IntakeCommands.setIntaking(intake));
 
-    controller
-        .y() // TODO driver button 11
-        .onTrue(
-            IntakeCommands.setIdle(intake)
-                .alongWith(new InstantCommand(() -> currentIntakeCommand = IntakeCommandTypes.IDLE))
-                .onlyIf(() -> currentIntakeCommand == IntakeCommandTypes.INTAKING));
-
-    Trigger toggle3 =
-        new JoystickButton(
-            operatorBoard.getLeftController(), Constants.Control.toggle3ButtonNumber);
-
-    toggle3
-        .onTrue(
-            IntakeCommands.setRetract(intake)
-                .alongWith(
-                    new InstantCommand(() -> currentIntakeCommand = IntakeCommandTypes.RETRACT))
-                .onlyIf(
-                    () ->
-                        currentIntakeCommand == IntakeCommandTypes.IDLE
-                            || currentIntakeCommand == IntakeCommandTypes.INTAKING))
-        .onFalse(
-            IntakeCommands.setExtend(intake)
-                .alongWith(
-                    new InstantCommand(() -> currentIntakeCommand = IntakeCommandTypes.EXTEND))
-                .onlyIf(() -> currentIntakeCommand == IntakeCommandTypes.RETRACT));
+    toggle3.whileTrue(IntakeCommands.setRetract(intake));
   }
 
   /**
