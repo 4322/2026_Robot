@@ -117,9 +117,6 @@ public class RobotContainer {
 
   private final Trigger inNonShootingArea;
 
-  private final Trigger toggle3 =
-      new JoystickButton(operatorBoard.getLeftController(), Constants.Control.toggle3ButtonNumber);
-
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
 
@@ -429,7 +426,8 @@ public class RobotContainer {
         .y() // TODO driver button 11 whatever that is
         .toggleOnTrue(IntakeCommands.setIntaking(intake));
 
-    toggle3.whileTrue(IntakeCommands.setRetract(intake));
+    new JoystickButton(operatorBoard.getLeftController(), Constants.Control.toggle3ButtonNumber)
+        .whileTrue(IntakeCommands.setRetract(intake));
   }
 
   /**

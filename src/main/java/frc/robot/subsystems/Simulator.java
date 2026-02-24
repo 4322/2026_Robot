@@ -362,17 +362,56 @@ public class Simulator extends SubsystemBase {
       case SUBSYSTEM_TEST -> List.of(
           new SimEvent(
               t, "Start Pose", EventType.SET_POSE, new Pose2d(4.44, 0.650, Rotation2d.kZero)),
-          new SimEvent(t += 1.0, "Deploy intake", EventType.PRESS_Y), // TODO figure out binding
           new SimEvent(
-              t += 10.0,
-              "Event " + eventNum++,
+              t += 4.0, "Start Intake Press", EventType.PRESS_Y), // TODO figure out binding
+          new SimEvent(t += 1.0, "Start Intake Release", EventType.PRESS_Y),
+          new SimEvent(
+              t += 2.0,
+              "Drive 1",
               EventType.MOVE_JOYSTICK_DRIVE,
-              new Pose2d(-0.5, 0, Rotation2d.k180deg)),
+              new Pose2d(0.5, 0, Rotation2d.k180deg)),
           new SimEvent(
-              t += 5.0,
-              "Event " + eventNum++,
+              t += 1.0,
+              "Drive 2",
               EventType.MOVE_JOYSTICK_DRIVE,
               new Pose2d(0.5, 0.5, Rotation2d.k180deg)),
+          new SimEvent(
+              t, "Turn 1", EventType.MOVE_JOYSTICK_TURN, new Pose2d(0, -0.5, Rotation2d.kZero)),
+          new SimEvent(
+              t += 1.5,
+              "Drive 3",
+              EventType.MOVE_JOYSTICK_DRIVE,
+              new Pose2d(0, -0.5, Rotation2d.k180deg)),
+          new SimEvent(
+              t, "Turn 2", EventType.MOVE_JOYSTICK_TURN, new Pose2d(0, 0.5, Rotation2d.kZero)),
+          new SimEvent(
+              t += 1.5, "Turn 3", EventType.MOVE_JOYSTICK_TURN, new Pose2d(0, 0, Rotation2d.kZero)),
+          new SimEvent(
+              t += 0.75,
+              "Drive 4",
+              EventType.MOVE_JOYSTICK_DRIVE,
+              new Pose2d(-0.8, 0, Rotation2d.k180deg)),
+          new SimEvent(
+              t += 2,
+              "Drive 5",
+              EventType.MOVE_JOYSTICK_DRIVE,
+              new Pose2d(-0.5, 0.5, Rotation2d.k180deg)),
+          new SimEvent(
+              t += 0.75,
+              "Drive 6",
+              EventType.MOVE_JOYSTICK_DRIVE,
+              new Pose2d(0.5, 0.5, Rotation2d.k180deg)),
+          new SimEvent(
+              t += 1,
+              "Drive 7",
+              EventType.MOVE_JOYSTICK_DRIVE,
+              new Pose2d(0, 0.75, Rotation2d.k180deg)),
+          new SimEvent(
+              t += 1.5,
+              "Drive 8",
+              EventType.MOVE_JOYSTICK_DRIVE,
+              new Pose2d(0, 0, Rotation2d.k180deg)),
+              
           new SimEvent(t += 999.0, "Final Movement", EventType.END_OF_SCENARIO));
 
       default -> List.of();
@@ -413,6 +452,10 @@ public class Simulator extends SubsystemBase {
   boolean momentaryPOV;
 
   private final Drive drive;
+
+  // Operator board simulation
+  private final int operatorHidPort = RobotContainer.operatorBoard.getLeftController().getPort();
+  private int operatorButtonBitmask = 0;
 
   public Simulator(Drive drive) {
     this.drive = drive;
@@ -516,6 +559,18 @@ public class Simulator extends SubsystemBase {
           case DISABLE_WHEEL_SLIP -> slipWheels = false;
           case BLUE_INACTIVE_FIRST -> gameSpecificMessage = "B";
           case RED_INACTIVE_FIRST -> gameSpecificMessage = "R";
+          case TOGGLE_1_ON -> setOperatorToggle(
+              frc.robot.constants.Constants.Control.toggle1ButtonNumber, true);
+          case TOGGLE_1_OFF -> setOperatorToggle(
+              frc.robot.constants.Constants.Control.toggle1ButtonNumber, false);
+          case TOGGLE_3_ON -> setOperatorToggle(
+              frc.robot.constants.Constants.Control.toggle3ButtonNumber, true);
+          case TOGGLE_3_OFF -> setOperatorToggle(
+              frc.robot.constants.Constants.Control.toggle3ButtonNumber, false);
+          case TOGGLE_4_ON -> setOperatorToggle(
+              frc.robot.constants.Constants.Control.toggle4ButtonNumber, true);
+          case TOGGLE_4_OFF -> setOperatorToggle(
+              frc.robot.constants.Constants.Control.toggle4ButtonNumber, false);
           case END_OF_SCENARIO -> {}
         }
       }
@@ -549,6 +604,7 @@ public class Simulator extends SubsystemBase {
       DriverStationSim.setGameSpecificMessage(gameSpecificMessage);
       DriverStationSim.setJoystickPOV(hidPort, 0, activePOV);
       DriverStationSim.setJoystickButtons(hidPort, activeButtonBitmask);
+      DriverStationSim.setJoystickButtons(operatorHidPort, operatorButtonBitmask);
       // notifyNewData() fails 1 out of 5000 calls for unknown reasons
       DriverStationSim.notifyNewData();
     } while (DriverStation.getStickAxisCount(hidPort) != 6
@@ -572,6 +628,9 @@ public class Simulator extends SubsystemBase {
     DriverStationSim.setJoystickIsXbox(hidPort, true);
     DriverStationSim.setJoystickAxisCount(hidPort, 6);
     DriverStationSim.setJoystickButtonCount(hidPort, 10);
+
+    DriverStationSim.setJoystickButtonCount(operatorHidPort, 12);
+    DriverStationSim.setJoystickAxisCount(operatorHidPort, 0);
   }
 
   private void resetScenario() {
@@ -606,6 +665,7 @@ public class Simulator extends SubsystemBase {
     stopJoystick();
     activeButtonBitmask = 0;
     momentaryButtonBitmask = 0;
+    operatorButtonBitmask = 0;
     gameSpecificMessage = "";
     DriverStationSim.setEnabled(false);
 
@@ -674,6 +734,15 @@ public class Simulator extends SubsystemBase {
 
   private void releaseTrigger(ControllerAxis axis) {
     persistAxis(axis, 0.0);
+  }
+
+  // Operator board toggle control
+  private void setOperatorToggle(int buttonNumber, boolean on) {
+    if (on) {
+      operatorButtonBitmask |= 1 << (buttonNumber - 1);
+    } else {
+      operatorButtonBitmask &= ~(1 << (buttonNumber - 1));
+    }
   }
 
   public static boolean wheelSlip() {
