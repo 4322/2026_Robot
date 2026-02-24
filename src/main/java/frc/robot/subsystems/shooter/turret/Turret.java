@@ -65,6 +65,7 @@ public class Turret {
         minInclusive = true;
       }
       desiredDeg = angleDistance(desiredDeg, inputs.turretDegs, minInclusive);
+      state = turretState.SET_TURRET_ANGLE;
     } else if (desiredDeg == null || this.safeToUnwind && (state != turretState.UNWIND)) {
       state = turretState.UNWIND;
       if (desiredDeg == null) {

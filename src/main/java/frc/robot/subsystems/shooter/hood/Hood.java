@@ -97,6 +97,10 @@ public class Hood {
   }
 
   public boolean isAtGoal() {
+    // TODO temporary until we get hood sim working
+    if (Constants.simMode == Constants.Mode.SIM) {
+      return true;
+    }
     return pidController.atSetpoint();
   }
 

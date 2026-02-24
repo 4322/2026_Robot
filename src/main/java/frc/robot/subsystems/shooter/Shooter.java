@@ -172,8 +172,8 @@ public class Shooter extends SubsystemBase {
     Logger.recordOutput(
         "Shooter/currentZone", AreaManager.getZoneOfPosition(drive.getPose().getTranslation()));
     Logger.recordOutput("Shooter/flywheelAtSpeed", flywheel.atTargetVelocity());
-    
-
+    Logger.recordOutput("Shooter/hoodAtPosition", hood.isAtGoal());
+    Logger.recordOutput("Shooter/turretAtPosition", turret.isAtGoal());
   }
 
   private void calculateFiringSolution() {
@@ -216,7 +216,9 @@ public class Shooter extends SubsystemBase {
       }
 
     } else {
-      if (state == ShooterState.IDLE || (state == ShooterState.UNWIND && unwindComplete)) {
+      if (state == ShooterState.PRESHOOT
+          || state == ShooterState.IDLE
+          || (state == ShooterState.UNWIND && unwindComplete)) {
         unwindComplete = false;
         state = ShooterState.PRESHOOT;
         calculateFiringSolution();

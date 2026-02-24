@@ -1,7 +1,6 @@
 package frc.robot.subsystems.shooter.turret;
 
 import edu.wpi.first.wpilibj.DriverStation;
-import frc.robot.constants.Constants;
 
 public class TurretIOSim implements TurretIO {
   private double requestedVoltage = 0;
@@ -39,20 +38,22 @@ public class TurretIOSim implements TurretIO {
       } else {
         voltage -= (voltage - requestedVoltage) * fastRate;
       }
-      currentAngle += Constants.Turret.statorCurrentLimit * voltage / 12.0 / 50.0;
     }
   }
 
   private void simPos() {
     if (DriverStation.isEnabled()) {
-      if (requestedAngle == undefinedAngle) {
-        return;
-      }
+
       if (currentAngle < requestedAngle) {
-        currentAngle += (requestedAngle - currentAngle) * rate;
+        currentAngle += (requestedAngle - currentAngle) * fastRate;
       } else {
-        currentAngle -= (currentAngle - requestedAngle) * rate;
+        currentAngle -= (currentAngle - requestedAngle) * fastRate;
       }
     }
+  }
+
+  @Override
+  public void setAngle(double angleDeg) {
+    this.requestedAngle = angleDeg;
   }
 }
