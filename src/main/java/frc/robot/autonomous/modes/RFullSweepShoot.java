@@ -10,12 +10,14 @@ import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.led.LED;
 import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetection;
+import org.littletonrobotics.junction.Logger;
 
 public class RFullSweepShoot extends SequentialCommandGroup {
   public RFullSweepShoot(
       Drive drive, VisionObjectDetection visionObjectDetection, LED led, Intake intake) {
     setName("R_FULL_SWEEP_SHOOT");
     addCommands(
+        new InstantCommand(() -> Logger.recordOutput("Autonomous/autoStarted", true)),
         new InstantCommand(
             () -> {
               if (Robot.alliance == Alliance.Blue) {

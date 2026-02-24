@@ -220,6 +220,7 @@ public class Simulator extends SubsystemBase {
           new RegressionTest("Controller Test 1", TeleopScenario.CONTROLLER_TEST1, Alliance.Blue),
           new RegressionTest("Controller Test 2", TeleopScenario.CONTROLLER_TEST2, Alliance.Blue));
       case SUBSYSTEM_TEST -> List.of(
+          new RegressionTest("Auto test", AutoName.R_FULL_SWEEP_SHOOT, Alliance.Blue),
           new RegressionTest("Subsystem Test", TeleopScenario.SUBSYSTEM_TEST, Alliance.Blue));
       default -> List.of();
     };
@@ -279,6 +280,14 @@ public class Simulator extends SubsystemBase {
     double t = 0.0;
     // TODO
     return switch (autoScenario) {
+      case R_FULL_SWEEP_SHOOT -> List.of(
+          new SimEvent(
+              t,
+              "Start Pose",
+              EventType.SET_POSE,
+              new Pose2d(1.34, 5.55, Rotation2d.kZero)), // starting pose for blue
+          new SimEvent(t += 20.0, "Final Movement", EventType.END_OF_SCENARIO));
+
       default -> List.of();
     };
   }

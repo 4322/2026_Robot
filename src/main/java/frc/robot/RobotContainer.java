@@ -441,7 +441,7 @@ public class RobotContainer {
 
   public void configureAutonomousSelector() {
     autonomousSelector =
-        new AutonomousSelector(drive, hood, turret, shooter, visionObjectDetection, led);
+        new AutonomousSelector(drive, hood, turret, shooter, visionObjectDetection, led, intake);
   }
 
   public void setBrakeMode(boolean brake) {

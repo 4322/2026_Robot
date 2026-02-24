@@ -2,10 +2,12 @@ package frc.robot.autonomous;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.autonomous.modes.DoNothing;
+import frc.robot.autonomous.modes.RFullSweepShoot;
 import frc.robot.constants.Constants;
 import frc.robot.constants.Constants.Mode;
 import frc.robot.subsystems.Simulator;
 import frc.robot.subsystems.drive.Drive;
+import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.led.LED;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.shooter.hood.Hood;
@@ -21,7 +23,9 @@ public class AutonomousSelector {
       new LoggedDashboardChooser<SequentialCommandGroup>("Autonomous");
 
   public enum AutoName {
-    DO_NOTHING
+    DO_NOTHING,
+    R_FULL_SWEEP_SHOOT,
+    R_HALF_SWEEP_SHOOT
   }
 
   private class Auto {
@@ -43,8 +47,14 @@ public class AutonomousSelector {
       Turret turret,
       Shooter shooter,
       VisionObjectDetection visionObjectDetection,
-      LED led) {
-    autos = List.of(new Auto(AutoName.DO_NOTHING, new DoNothing(hood)));
+      LED led,
+      Intake intake) {
+    autos =
+        List.of(
+            new Auto(AutoName.DO_NOTHING, new DoNothing(hood)),
+            new Auto(
+                AutoName.R_FULL_SWEEP_SHOOT,
+                new RFullSweepShoot(drive, visionObjectDetection, led, intake)));
 
     for (Auto nextAuto : autos) {
       if (nextAuto.name == defaultAuto) {
