@@ -411,7 +411,6 @@ public class Simulator extends SubsystemBase {
               "Drive 8",
               EventType.MOVE_JOYSTICK_DRIVE,
               new Pose2d(0, 0, Rotation2d.k180deg)),
-              
           new SimEvent(t += 999.0, "Final Movement", EventType.END_OF_SCENARIO));
 
       default -> List.of();

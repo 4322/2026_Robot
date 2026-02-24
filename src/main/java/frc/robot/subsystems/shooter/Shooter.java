@@ -171,6 +171,9 @@ public class Shooter extends SubsystemBase {
     Logger.recordOutput("Shooter/tunnelStopped", tunnel.isStopped());
     Logger.recordOutput(
         "Shooter/currentZone", AreaManager.getZoneOfPosition(drive.getPose().getTranslation()));
+    Logger.recordOutput("Shooter/flywheelAtSpeed", flywheel.atTargetVelocity());
+    
+
   }
 
   private void calculateFiringSolution() {
