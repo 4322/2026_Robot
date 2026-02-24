@@ -24,8 +24,6 @@ public class AreaManager {
     UNKNOWN
   }
 
-  private static Zone zone = Zone.ALLIANCE_ZONE;
-
   public static boolean isShootingArea(Translation2d position) {
     if (Robot.alliance == Alliance.Blue) {
       return !(FieldConstants.Neutral.backBlueHub.contains(position)

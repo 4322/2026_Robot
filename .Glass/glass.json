@@ -32,6 +32,102 @@
             255.0
           ]
         },
+        "Blue.allianceZone": {
+          "arrows": false,
+          "color": [
+            0.0,
+            0.0,
+            1.0,
+            255.0
+          ],
+          "style": "Line (Closed)"
+        },
+        "Blue.bumpLeft": {
+          "arrows": false,
+          "color": [
+            0.15189886093139648,
+            1.0,
+            0.0,
+            255.0
+          ],
+          "style": "Line (Closed)"
+        },
+        "Blue.bumpRight": {
+          "arrows": false,
+          "color": [
+            0.15294118225574493,
+            1.0,
+            0.0,
+            255.0
+          ],
+          "style": "Line (Closed)"
+        },
+        "Blue.frontOfHub": {
+          "arrows": false,
+          "color": [
+            1.0,
+            1.0,
+            0.0,
+            255.0
+          ],
+          "style": "Line (Closed)"
+        },
+        "Blue.hubTranslation": {
+          "color": [
+            0.0,
+            1.0,
+            0.9607843160629272,
+            255.0
+          ]
+        },
+        "Blue.leftAllianceZone": {
+          "arrows": false,
+          "color": [
+            0.6313725709915161,
+            0.0,
+            1.0,
+            255.0
+          ],
+          "style": "Line (Closed)"
+        },
+        "Blue.rightAllianceZone": {
+          "arrows": false,
+          "color": [
+            0.6313725709915161,
+            0.0,
+            1.0,
+            255.0
+          ],
+          "style": "Line (Closed)"
+        },
+        "Blue.stopShootLeft": {
+          "arrows": false,
+          "color": [
+            1.0,
+            1.0,
+            0.0,
+            255.0
+          ],
+          "style": "Line (Closed)"
+        },
+        "Blue.stopShootRight": {
+          "arrows": false,
+          "color": [
+            1.0,
+            1.0,
+            0.0,
+            255.0
+          ],
+          "style": "Line (Closed)"
+        },
+        "Blue.trenchLeft": {
+          "arrows": false,
+          "style": "Line (Closed)"
+        },
+        "Blue.trenchRight": {
+          "arrows": false,
+          "style": "Line (Closed)"
+        },
         "BlueHoodDangerZones": {
           "color": [
             1.0,
@@ -73,6 +169,26 @@
             255.0
           ]
         },
+        "Neutral.leftNeutral": {
+          "arrows": false,
+          "color": [
+            1.0,
+            1.0,
+            1.0,
+            255.0
+          ],
+          "style": "Line (Closed)"
+        },
+        "Neutral.rightNeutral": {
+          "arrows": false,
+          "color": [
+            1.0,
+            1.0,
+            1.0,
+            255.0
+          ],
+          "style": "Line (Closed)"
+        },
         "NeutralZones": {
           "arrows": false,
           "color": [
@@ -81,6 +197,96 @@
             0.9423169493675232,
             255.0
           ]
+        },
+        "Red.allianceZone": {
+          "arrows": false,
+          "style": "Line (Closed)"
+        },
+        "Red.bumpLeft": {
+          "arrows": false,
+          "color": [
+            0.15294118225574493,
+            1.0,
+            0.0,
+            255.0
+          ],
+          "style": "Line (Closed)"
+        },
+        "Red.bumpRight": {
+          "arrows": false,
+          "color": [
+            0.15294118225574493,
+            1.0,
+            0.0,
+            255.0
+          ],
+          "style": "Line (Closed)"
+        },
+        "Red.frontOfHub": {
+          "arrows": false,
+          "color": [
+            1.0,
+            1.0,
+            0.0,
+            255.0
+          ],
+          "style": "Line (Closed)"
+        },
+        "Red.hubTranslation": {
+          "color": [
+            0.0,
+            1.0,
+            0.9620251655578613,
+            255.0
+          ]
+        },
+        "Red.leftAllianceZone": {
+          "arrows": false,
+          "color": [
+            0.632911205291748,
+            0.0,
+            1.0,
+            255.0
+          ],
+          "style": "Line (Closed)"
+        },
+        "Red.rightAllianceZone": {
+          "arrows": false,
+          "color": [
+            0.6313725709915161,
+            0.0,
+            1.0,
+            255.0
+          ],
+          "style": "Line (Closed)"
+        },
+        "Red.stopShootLeft": {
+          "arrows": false,
+          "color": [
+            1.0,
+            1.0,
+            0.0,
+            255.0
+          ],
+          "style": "Line (Closed)"
+        },
+        "Red.stopShootRight": {
+          "arrows": false,
+          "color": [
+            255.0,
+            245.3164520263672,
+            0.0,
+            255.0
+          ],
+          "style": "Line (Closed)"
+        },
+        "Red.trenchLeft": {
+          "arrows": false,
+          "style": "Line (Closed)"
+        },
+        "Red.trenchRight": {
+          "arrows": false,
+          "style": "Line (Closed)"
         },
         "RedHoodDangerZones": {
           "color": [

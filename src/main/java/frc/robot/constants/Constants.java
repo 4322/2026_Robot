@@ -334,7 +334,7 @@ public final class Constants {
     // Right/left are determined as view from blue alliance driver station
     // TODO get exact values
     public static class Red {
-      public static final Translation2d hubTranslation = new Translation2d(11.915, 4.032);
+      public static final Translation2d hubTranslation = FieldConstants.Red.hubTranslation;
       public static final Translation2d allianceRightTranslation = new Translation2d(14.5, 1.75);
       public static final Translation2d allianceLeftTranslation = new Translation2d(14.5, 6.25);
       public static final Translation2d neutralRightTranslation = new Translation2d(8.25, 1.75);
@@ -342,7 +342,7 @@ public final class Constants {
     }
 
     public static class Blue {
-      public static final Translation2d hubTranslation = new Translation2d(4.625, 4.032);
+      public static final Translation2d hubTranslation = FieldConstants.Blue.hubTranslation;
       public static final Translation2d allianceRightTranslation = new Translation2d(2, 1.75);
       public static final Translation2d allianceLeftTranslation = new Translation2d(2, 6.25);
       public static final Translation2d neutralRightTranslation = new Translation2d(8.25, 1.75);
@@ -381,8 +381,7 @@ public final class Constants {
     // TODO
     public static Transform3d frontRightTransform =
         new Transform3d(
-            new Translation3d(14.199859, 12.199859, 21.455136),
-            new Rotation3d(0, 0, 0)); // x: 14.199859 y: 12.199859 z: 21.455136 | angle
+            new Translation3d(14.199859, 12.199859, 21.455136), new Rotation3d(0, 0, 0));
     public static Transform3d frontLeftTransform = new Transform3d();
     public static Transform3d backRightTransform = new Transform3d();
     public static Transform3d backLeftTransform = new Transform3d();

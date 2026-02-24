@@ -24,6 +24,7 @@ import frc.robot.commands.DriveCommands;
 import frc.robot.commands.IntakeCommands;
 import frc.robot.commands.ShooterCommands;
 import frc.robot.constants.Constants;
+import frc.robot.constants.FieldConstants;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Simulator;
 import frc.robot.subsystems.drive.Drive;
@@ -382,6 +383,7 @@ public class RobotContainer {
 
     field = new Field2d();
     SmartDashboard.putData("Field", field);
+    FieldConstants.plotZones();
   }
 
   public static Field2d getField() {
