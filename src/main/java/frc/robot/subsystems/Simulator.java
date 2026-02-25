@@ -497,7 +497,18 @@ public class Simulator extends SubsystemBase {
       disabledTimer.reset();
       DriverStationSim.setEnabled(true);
       matchTimer.restart();
-      currentEvent = eventIterator.next();
+      if (eventIterator.hasNext()) {
+        currentEvent = eventIterator.next();
+      } else {
+        currentEvent = null;
+        if (events == autoEvents && !teleopEvents.isEmpty()) {
+          events = teleopEvents;
+          resetScenario();
+        } else {
+          setNextRegressTest();
+        }
+        return;
+      }
     }
 
     Logger.recordOutput("Sim/MatchTime", matchTimer.get());
