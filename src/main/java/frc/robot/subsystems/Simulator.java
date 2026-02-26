@@ -21,7 +21,7 @@ import java.util.Map;
 import org.littletonrobotics.junction.Logger;
 
 public class Simulator extends SubsystemBase {
-  private static final RegressTests regressTest = RegressTests.SUBSYSTEM_TEST;
+  private static final RegressTests regressTest = RegressTests.SUBSYSTEM_TEST_TELE;
   public static AutoName autoScenario;
   private TeleopScenario teleopScenario;
   private List<TeleAnomaly> teleAnomalies;
@@ -36,7 +36,8 @@ public class Simulator extends SubsystemBase {
     DO_NOTHING,
     SHOOT,
     CONTROLLER_TEST,
-    SUBSYSTEM_TEST
+    SUBSYSTEM_TEST_BOTH,
+    SUBSYSTEM_TEST_TELE
   }
 
   private enum TeleAnomaly {
@@ -219,8 +220,10 @@ public class Simulator extends SubsystemBase {
       case CONTROLLER_TEST -> List.of(
           new RegressionTest("Controller Test 1", TeleopScenario.CONTROLLER_TEST1, Alliance.Blue),
           new RegressionTest("Controller Test 2", TeleopScenario.CONTROLLER_TEST2, Alliance.Blue));
-      case SUBSYSTEM_TEST -> List.of(
+      case SUBSYSTEM_TEST_BOTH -> List.of(
           new RegressionTest("Auto test", AutoName.R_FULL_SWEEP_SHOOT, Alliance.Blue),
+          new RegressionTest("Subsystem Test", TeleopScenario.SUBSYSTEM_TEST, Alliance.Blue));
+      case SUBSYSTEM_TEST_TELE -> List.of(
           new RegressionTest("Subsystem Test", TeleopScenario.SUBSYSTEM_TEST, Alliance.Blue));
       default -> List.of();
     };
@@ -420,7 +423,7 @@ public class Simulator extends SubsystemBase {
               "Drive 8",
               EventType.MOVE_JOYSTICK_DRIVE,
               new Pose2d(0, 0, Rotation2d.k180deg)),
-          new SimEvent(t += 999.0, "Final Movement", EventType.END_OF_SCENARIO));
+          new SimEvent(t += 3.0, "Final Movement", EventType.END_OF_SCENARIO));
 
       default -> List.of();
     };
