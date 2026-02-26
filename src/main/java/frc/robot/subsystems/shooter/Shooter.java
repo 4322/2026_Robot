@@ -97,10 +97,10 @@ public class Shooter extends SubsystemBase {
       case IDLE -> {
         spindexer.requestIdle();
         turret.setAngle(targetTurretAngleDeg, true);
-
         if (AreaManager.isHoodDangerZone(drive.getPose().getTranslation())) {
           Logger.recordOutput("Shooter/isHoodDangerZone", true);
           hood.requestGoal(Constants.Hood.idleAngleDeg);
+          targetHoodAngleDeg = Constants.Hood.idleAngleDeg;
         } else {
           Logger.recordOutput("Shooter/isHoodDangerZone", false);
           hood.requestGoal(targetHoodAngleDeg);
