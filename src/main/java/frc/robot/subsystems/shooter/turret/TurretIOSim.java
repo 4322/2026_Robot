@@ -12,7 +12,7 @@ public class TurretIOSim implements TurretIO {
   private double undefinedAngle = -1;
 
   private double slowRate = 0.02;
-  private double fastRate = 0.2;
+  private double fastRate = 1;
   private double rate;
 
   @Override

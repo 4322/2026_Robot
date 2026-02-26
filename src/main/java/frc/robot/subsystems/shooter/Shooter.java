@@ -1,5 +1,7 @@
 package frc.robot.subsystems.shooter;
 
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
@@ -177,6 +179,9 @@ public class Shooter extends SubsystemBase {
     Logger.recordOutput("Shooter/TargetHoodAngleDeg", targetHoodAngleDeg);
     Logger.recordOutput("Shooter/TargetFlywheelSpeedRPS", targetFlywheelSpeedRPM / 60);
     Logger.recordOutput("Shooter/TargetTurretAngleDeg", targetTurretAngleDeg);
+    Logger.recordOutput(
+        "Shooter/TurretPose",
+        new Pose3d[] {new Pose3d(0, 0, 0, new Rotation3d(0, turret.getAngle(), 0))});
   }
 
   private void calculateFiringSolution() {

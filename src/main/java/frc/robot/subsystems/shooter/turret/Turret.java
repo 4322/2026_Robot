@@ -108,6 +108,10 @@ public class Turret {
     desiredDeg = Constants.Turret.midPointPhysicalDeg;
   }
 
+  public double getAngle() {
+    return inputs.turretDegs;
+  }
+
   public void setBrakeMode(Boolean mode) {
     io.setBrakeMode(mode);
   }
