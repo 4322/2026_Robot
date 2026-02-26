@@ -69,9 +69,6 @@ public class Shooter extends SubsystemBase {
   @Override
   public void periodic() {
     calculateFiringSolution();
-    Logger.recordOutput("Shooter/TargetHoodAngleDeg", targetHoodAngleDeg);
-    Logger.recordOutput("Shooter/TargetFlywheelSpeedRPS", targetFlywheelSpeedRPM / 60);
-    Logger.recordOutput("Shooter/TargetTurretAngleDeg", targetTurretAngleDeg);
 
     if (Constants.firingManager == Constants.SubsystemMode.TUNING) {
       flywheel.requestGoal(targetFlywheelSpeedRPM);
@@ -101,6 +98,7 @@ public class Shooter extends SubsystemBase {
         if (AreaManager.isHoodDangerZone(drive.getPose().getTranslation())) {
           Logger.recordOutput("Shooter/isHoodDangerZone", true);
           hood.requestGoal(Constants.Hood.idleAngleDeg);
+          targetHoodAngleDeg = Constants.Hood.idleAngleDeg;
         } else {
           Logger.recordOutput("Shooter/isHoodDangerZone", false);
           hood.requestGoal(targetHoodAngleDeg);
@@ -110,6 +108,7 @@ public class Shooter extends SubsystemBase {
           tunnel.requestIdle();
           if (tunnel.isStopped()) {
             flywheel.requestGoal(Constants.Flywheel.idleRPS);
+            targetFlywheelSpeedRPM = Constants.Flywheel.idleRPS * 60;
           }
         }
       }
@@ -119,6 +118,7 @@ public class Shooter extends SubsystemBase {
 
         if (AreaManager.isHoodDangerZone(drive.getPose().getTranslation())) {
           hood.requestGoal(Constants.Hood.idleAngleDeg);
+          targetHoodAngleDeg = Constants.Hood.idleAngleDeg;
         } else {
           hood.requestGoal(targetHoodAngleDeg);
         }
@@ -128,6 +128,7 @@ public class Shooter extends SubsystemBase {
           if (tunnel.isStopped()) {
             turret.unwind();
             flywheel.requestGoal(Constants.Flywheel.idleRPS);
+            targetFlywheelSpeedRPM = Constants.Flywheel.idleRPS * 60;
           }
         }
         if (turret.isAtGoal()) {
@@ -174,6 +175,9 @@ public class Shooter extends SubsystemBase {
     Logger.recordOutput("Shooter/flywheelAtSpeed", flywheel.atTargetVelocity());
     Logger.recordOutput("Shooter/hoodAtPosition", hood.isAtGoal());
     Logger.recordOutput("Shooter/turretAtPosition", turret.isAtGoal());
+    Logger.recordOutput("Shooter/TargetHoodAngleDeg", targetHoodAngleDeg);
+    Logger.recordOutput("Shooter/TargetFlywheelSpeedRPS", targetFlywheelSpeedRPM / 60);
+    Logger.recordOutput("Shooter/TargetTurretAngleDeg", targetTurretAngleDeg);
   }
 
   private void calculateFiringSolution() {
