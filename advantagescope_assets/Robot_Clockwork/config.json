@@ -1,0 +1,36 @@
+{
+  "name": "Clockwork",
+  "rotations": [
+    {
+      "axis": "x",
+      "degrees": 90
+    },
+    {
+      "axis": "z",
+      "degrees": -90
+    }
+  ],
+  "position": [
+    0,
+    0,
+    0
+  ],
+  "components": [
+    {
+      "zeroedRotations": [
+	  {
+      "axis": "x",
+      "degrees": 13
+    },
+    {
+      "axis": "z",
+      "degrees": -90
+    }],
+      "zeroedPosition": [
+        0,
+        0,
+        0
+      ]
+    }
+  ]
+}
