@@ -42,6 +42,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.RobotContainer;
 import frc.robot.constants.Constants;
 import frc.robot.constants.Constants.Mode;
+import frc.robot.constants.Constants.SubsystemMode;
 import frc.robot.generated.TunerConstants;
 import frc.robot.util.LocalADStarAK;
 import java.util.concurrent.locks.Lock;
@@ -226,9 +227,11 @@ public class Drive extends SubsystemBase {
     Logger.recordOutput("SwerveStates/Setpoints", setpointStates);
     Logger.recordOutput("SwerveChassisSpeeds/Setpoints", discreteSpeeds);
 
-    // Send setpoints to modules
-    for (int i = 0; i < 4; i++) {
-      modules[i].runSetpoint(setpointStates[i]);
+    if (Constants.driveMode == SubsystemMode.NORMAL) {
+      // Send setpoints to modules
+      for (int i = 0; i < 4; i++) {
+        modules[i].runSetpoint(setpointStates[i]);
+      }
     }
 
     // Log optimized setpoints (runSetpoint mutates each state)
