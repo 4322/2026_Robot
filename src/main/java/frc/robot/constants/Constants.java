@@ -81,7 +81,7 @@ public final class Constants {
     public static final double supplyCurrentLimit = 40; // TODO
     public static final double statorCurrentLimit = 60;
     public static final InvertedValue motorInvert =
-        InvertedValue.Clockwise_Positive; // TODO set these
+        InvertedValue.CounterClockwise_Positive; // TODO set these
     public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
     public static final double kS = 0;
     public static final double kV = 0;
