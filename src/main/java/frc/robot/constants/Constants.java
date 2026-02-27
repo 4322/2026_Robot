@@ -53,20 +53,20 @@ public final class Constants {
     TUNING
   }
 
-  public static final SubsystemMode driveMode = SubsystemMode.NORMAL;
-  public static final SubsystemMode flywheelMode = SubsystemMode.NORMAL;
-  public static final SubsystemMode hoodMode = SubsystemMode.NORMAL;
-  public static final SubsystemMode spindexerMode = SubsystemMode.NORMAL;
-  public static final SubsystemMode tunnelMode = SubsystemMode.NORMAL;
-  public static final SubsystemMode turretMode = SubsystemMode.NORMAL;
-  public static final SubsystemMode deployerMode = SubsystemMode.NORMAL;
-  public static final SubsystemMode rollerMode = SubsystemMode.NORMAL;
-  public static final SubsystemMode intakeMode = SubsystemMode.NORMAL;
+  public static final SubsystemMode driveMode = SubsystemMode.DISABLED;
+  public static final SubsystemMode flywheelMode = SubsystemMode.DISABLED;
+  public static final SubsystemMode hoodMode = SubsystemMode.DISABLED;
+  public static final SubsystemMode spindexerMode = SubsystemMode.DISABLED;
+  public static final SubsystemMode tunnelMode = SubsystemMode.TUNING;
+  public static final SubsystemMode turretMode = SubsystemMode.DISABLED;
+  public static final SubsystemMode deployerMode = SubsystemMode.DISABLED;
+  public static final SubsystemMode rollerMode = SubsystemMode.DISABLED;
+  public static final SubsystemMode intakeMode = SubsystemMode.DISABLED;
   public static final SubsystemMode climberMode = SubsystemMode.DISABLED;
-  public static final SubsystemMode ledMode = SubsystemMode.NORMAL;
-  public static final SubsystemMode visionGlobalPose = SubsystemMode.NORMAL;
-  public static final SubsystemMode visionObjectDetection = SubsystemMode.NORMAL;
-  public static final SubsystemMode firingManager = SubsystemMode.NORMAL;
+  public static final SubsystemMode ledMode = SubsystemMode.DISABLED;
+  public static final SubsystemMode visionGlobalPose = SubsystemMode.DISABLED;
+  public static final SubsystemMode visionObjectDetection = SubsystemMode.DISABLED;
+  public static final SubsystemMode firingManager = SubsystemMode.DISABLED;
 
   public static class Drive {
 
@@ -80,12 +80,11 @@ public final class Constants {
     public static final int spindexerMotorId = 4;
     public static final double supplyCurrentLimit = 40; // TODO
     public static final double statorCurrentLimit = 60;
-    public static final InvertedValue motorInvert =
-        InvertedValue.CounterClockwise_Positive; // TODO set these
+    public static final InvertedValue motorInvert = InvertedValue.CounterClockwise_Positive;
     public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
-    public static final double kS = 0;
-    public static final double kV = 0;
-    public static final double kP = 1;
+    public static final double kS = 0.34;
+    public static final double kV = 1.47;
+    public static final double kP = 30.0;
     public static final double kI = 0;
     public static final double kD = 0;
     public static final double stoppedMechanismRotationsPerSec = 0.1; // TODO
