@@ -70,14 +70,14 @@ public final class Constants {
 
   public static class Drive {
 
-    public static final int gyroID = 12; // TODO
+    public static final int gyroID = 0;
   }
 
   public static class Spindexer {
     public static final boolean dynamicVelocity = true;
     public static final double dynamicVelocityPercent = 0.9; // TODO tune
 
-    public static final int spindexerMotorId = 1;
+    public static final int spindexerMotorId = 4;
     public static final double supplyCurrentLimit = 40; // TODO
     public static final double statorCurrentLimit = 60;
     public static final InvertedValue motorInvert =
@@ -96,7 +96,7 @@ public final class Constants {
   public static class Tunnel {
     public static final boolean dynamicVelocity = true;
 
-    public static final int tunnelMotorId = 0;
+    public static final int tunnelMotorId = 20;
     public static final double statorCurrentLimit = 60; // TODO
     public static final double supplyCurrentLimit = 40; // TODO
     public static final InvertedValue motorInvert =
@@ -114,8 +114,8 @@ public final class Constants {
   }
 
   public static class Flywheel {
-    public static final int motorId = 23;
-    public static final int followerMotorId = 24;
+    public static final int motorId = 2;
+    public static final int followerMotorId = 3;
     public static final double statorCurrentLimit = 60; // TODO
     public static final double supplyCurrentLimit = 40;
     public static final InvertedValue motorInvert = InvertedValue.Clockwise_Positive;
@@ -137,7 +137,7 @@ public final class Constants {
   }
 
   public static class Turret {
-    public static final int motorId = 13; // TODO
+    public static final int motorId = 22;
     public static final double kS = 0; // TODO
     public static final double kV = 0; // TODO
     public static final double kP = 1; // TODO
@@ -162,8 +162,8 @@ public final class Constants {
     public static final double unwindToleranceDeg = 10.0; // TODO
     public static final double minUnwindLimitDeg = minPhysicalLimitDeg + unwindToleranceDeg; // TODO
     public static final double maxUnwindLimitDeg = maxPhysicalLimitDeg - unwindToleranceDeg; // TODO
-    public static final int CANCoderOneId = 0;
-    public static final int CANCoderTwoId = 0;
+    public static final int CANCoderOneId = 1;
+    public static final int CANCoderTwoId = 4;
     public static final Translation2d originToTurret =
         new Translation2d(); // TODO transcribe to wpilib coordinates
     // x: 6.75 in
@@ -172,7 +172,7 @@ public final class Constants {
 
   public static class Hood {
     public static final int servoChannel = 12;
-    public static final int encoderId = 1;
+    public static final int encoderId = 3;
     public static final double gearRatio = 164 / 11.0;
     public static final double kS = 0;
     public static final double kV = 0;
@@ -202,7 +202,7 @@ public final class Constants {
   public class Rollers {
     public static final double voltageIntake = 50; // TODO
     public static final double voltageEject = -50; // TODO
-    public static final int motorId = 1; // TODO
+    public static final int motorId = 1;
     public static final double statorCurrentLimit = 60; // TODO
     public static final double supplyCurrentLimit = 40; // TODO
     public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
@@ -216,7 +216,7 @@ public final class Constants {
     public static final double retractDeg = 0; // TODO
     public static final double extendDeg = 95; // TODO
     public static final double maxGravityDegrees = 65; // TODO
-    public static final int motorId = 1; // TODO
+    public static final int motorId = 25;
     public static final double statorCurrentLimit = 60;
     public static final double supplyCurrentLimit = 40;
     public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
@@ -225,7 +225,7 @@ public final class Constants {
     public static final double kG = 2; // TODO
     public static final double kI = 0;
     public static final double kD = 0;
-    public static final int CANCoderID = 1; // TODO
+    public static final int CANCoderID = 2;
     public static final double sensorToMechanismRatio = 3.0; // TODO
     public static final double RotorToSensorRatio = 12.0; // TODO
     public static final double tolerance = 0.1;
