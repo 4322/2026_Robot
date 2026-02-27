@@ -37,6 +37,7 @@ import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.constants.Constants;
+import frc.robot.constants.Constants.SubsystemMode;
 import java.util.Queue;
 
 /**
@@ -152,6 +153,23 @@ public class ModuleIOTalonFX implements ModuleIO {
               + turnEncoder.getAddress().getDeviceId()
               + " (Swerve turn encoder) failed to configure",
           false);
+    }
+    try {
+      // wait for encoder position to be received
+      Thread.sleep(100);
+    } catch (InterruptedException e) {
+    }
+
+    if (Constants.driveMode == SubsystemMode.TUNING) {
+      // separate if statement to avoid dead code warning
+      if (Constants.Drive.zeroTurnEncoders) {
+        if (turnEncoder.setAbsPosition(0)) {
+          DriverStation.reportWarning(
+              "Zero point set for turn encoder " + constants.EncoderId, false);
+        } else {
+          DriverStation.reportError("Failed to zero turn encoder " + constants.EncoderId, false);
+        }
+      }
     }
 
     StatusCode turnPositionSetStatus = turnTalon.setPosition(turnEncoder.getAbsPosition());
