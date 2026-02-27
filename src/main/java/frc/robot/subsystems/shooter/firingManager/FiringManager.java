@@ -90,7 +90,12 @@ public class FiringManager {
         new Pose2d(robotPosition.plus(shotVelocity), new Rotation2d()));
 
     // Get results
-    Rotation2d turretAngle = shotVelocity.getAngle();
+    Rotation2d turretAngle = new Rotation2d();
+    try {
+      turretAngle = shotVelocity.getAngle();
+    } catch (Exception e) {
+      
+    }
     double requiredVelocity = shotVelocity.getNorm();
     Logger.recordOutput("FiringManager/requiredVelocity", requiredVelocity);
 
