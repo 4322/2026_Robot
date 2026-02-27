@@ -94,7 +94,7 @@ public class FiringManager {
     try {
       turretAngle = shotVelocity.getAngle();
     } catch (Exception e) {
-      
+
     }
     double requiredVelocity = shotVelocity.getNorm();
     Logger.recordOutput("FiringManager/requiredVelocity", requiredVelocity);
