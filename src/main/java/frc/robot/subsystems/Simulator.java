@@ -21,7 +21,7 @@ import java.util.Map;
 import org.littletonrobotics.junction.Logger;
 
 public class Simulator extends SubsystemBase {
-  private static final RegressTests regressTest = RegressTests.SUBSYSTEM_TEST_TELE;
+  private static final RegressTests regressTest = RegressTests.SUBSYSTEM_TEST_BOTH;
   public static AutoName autoScenario;
   private TeleopScenario teleopScenario;
   private List<TeleAnomaly> teleAnomalies;
@@ -419,7 +419,7 @@ public class Simulator extends SubsystemBase {
               EventType.MOVE_JOYSTICK_DRIVE,
               new Pose2d(0, 0.75, Rotation2d.k180deg)),
           new SimEvent(
-              t += 1.5,
+              t += 1,
               "Drive 8",
               EventType.MOVE_JOYSTICK_DRIVE,
               new Pose2d(0, 0, Rotation2d.k180deg)),
