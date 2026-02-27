@@ -182,7 +182,10 @@ public class Shooter extends SubsystemBase {
     Logger.recordOutput("Shooter/TargetTurretAngleDeg", targetTurretAngleDeg);
     Logger.recordOutput(
         "Shooter/TurretPose",
-        new Pose3d[] {new Pose3d(-0.13, 0.17, 0.3, new Rotation3d(0, 0, Units.degreesToRadians(turret.getAngle())))});
+        new Pose3d[] {
+          new Pose3d(
+              -0.13, 0.17, 0.3, new Rotation3d(0, 0, Units.degreesToRadians(turret.getAngle())))
+        });
   }
 
   private void calculateFiringSolution() {

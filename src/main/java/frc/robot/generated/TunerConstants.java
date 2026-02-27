@@ -150,8 +150,8 @@ public class TunerConstants {
               .withDriveFrictionVoltage(kDriveFrictionVoltage);
 
   // Front Left
-  private static final int kFrontLeftDriveMotorId = 3;
-  private static final int kFrontLeftSteerMotorId = 2;
+  private static final int kFrontLeftDriveMotorId = 28;
+  private static final int kFrontLeftSteerMotorId = 31;
   private static final int kFrontLeftEncoderId = 1;
   // TODO ALL ID
   private static final Angle kFrontLeftEncoderOffset = Rotations.of(0.0);
@@ -163,9 +163,9 @@ public class TunerConstants {
   // TODO ALL POS
 
   // Front Right
-  private static final int kFrontRightDriveMotorId = 1;
-  private static final int kFrontRightSteerMotorId = 0;
-  private static final int kFrontRightEncoderId = 0;
+  private static final int kFrontRightDriveMotorId = 17;
+  private static final int kFrontRightSteerMotorId = 23;
+  private static final int kFrontRightEncoderId = 2;
   // TODO ALL ID
 
   private static final Angle kFrontRightEncoderOffset = Rotations.of(0.0);
@@ -177,9 +177,9 @@ public class TunerConstants {
   // TODO ALL POS
 
   // Back Left
-  private static final int kBackLeftDriveMotorId = 7;
-  private static final int kBackLeftSteerMotorId = 6;
-  private static final int kBackLeftEncoderId = 3;
+  private static final int kBackLeftDriveMotorId = 18;
+  private static final int kBackLeftSteerMotorId = 26;
+  private static final int kBackLeftEncoderId = 4;
   // TODO ALL ID
 
   private static final Angle kBackLeftEncoderOffset = Rotations.of(0.0);
@@ -191,9 +191,9 @@ public class TunerConstants {
   // TODO ALL POS
 
   // Back Right
-  private static final int kBackRightDriveMotorId = 5;
-  private static final int kBackRightSteerMotorId = 4;
-  private static final int kBackRightEncoderId = 2;
+  private static final int kBackRightDriveMotorId = 29;
+  private static final int kBackRightSteerMotorId = 30;
+  private static final int kBackRightEncoderId = 7;
   // TODO ALL ID
 
   private static final Angle kBackRightEncoderOffset = Rotations.of(0.0);
