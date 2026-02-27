@@ -171,7 +171,7 @@ public final class Constants {
   }
 
   public static class Hood {
-    public static final int servoChannel = 12;
+    public static final int servoChannel = 3;
     public static final int encoderId = 3;
     public static final double gearRatio = 164 / 11.0;
     public static final double kS = 0;
@@ -179,17 +179,11 @@ public final class Constants {
     public static final double kP = 1;
     public static final double kI = 0;
     public static final double kD = 0;
-    public static final double statorCurrentLimit = 60; // TODO
-    public static final double supplyCurrentLimit = 40;
-    public static final InvertedValue motorInvert = InvertedValue.Clockwise_Positive;
-    public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
     public static final int idleVelocity = 0;
     public static final double toleranceDeg = 0.1;
     public static final double homingVelocityThresholdRPS = 1;
     public static final double homingVelocity = -0.2;
-    public static final double idleAngleDeg = 0; // TODO
-    public static final double iSat = 0; // TODO
-    public static final double iZone = 0; // TODO
+    public static final double idleAngleDeg = 0;
   }
 
   public static class Control {
@@ -200,8 +194,8 @@ public final class Constants {
   }
 
   public class Rollers {
-    public static final double voltageIntake = 50; // TODO
-    public static final double voltageEject = -50; // TODO
+    public static final double voltageIntake = 2; // TODO
+    public static final double voltageEject = -2; // TODO
     public static final int motorId = 1;
     public static final double statorCurrentLimit = 60; // TODO
     public static final double supplyCurrentLimit = 40; // TODO
