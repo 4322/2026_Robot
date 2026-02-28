@@ -169,6 +169,12 @@ public class RobotContainer {
             Constants.visionGlobalPose == Constants.SubsystemMode.DISABLED
                 ? new VisionGlobalPose(
                     drive,
+                    new VisionGlobalPoseIO() {},
+                    new VisionGlobalPoseIO() {},
+                    new VisionGlobalPoseIO() {},
+                    new VisionGlobalPoseIO() {})
+                : new VisionGlobalPose(
+                    drive,
                     new VisionGlobalPoseIOPhoton(
                         Constants.VisionGlobalPose.frontRightName,
                         Constants.VisionGlobalPose.frontRightTransform),
@@ -180,13 +186,7 @@ public class RobotContainer {
                         Constants.VisionGlobalPose.backRightTransform),
                     new VisionGlobalPoseIOPhoton(
                         Constants.VisionGlobalPose.backLeftName,
-                        Constants.VisionGlobalPose.backLeftTransform))
-                : new VisionGlobalPose(
-                    drive,
-                    new VisionGlobalPoseIO() {},
-                    new VisionGlobalPoseIO() {},
-                    new VisionGlobalPoseIO() {},
-                    new VisionGlobalPoseIO() {});
+                        Constants.VisionGlobalPose.backLeftTransform));
 
         visionObjectDetection =
             Constants.visionObjectDetection == Constants.SubsystemMode.DISABLED
