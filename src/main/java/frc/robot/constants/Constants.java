@@ -53,20 +53,20 @@ public final class Constants {
     TUNING
   }
 
-  public static final SubsystemMode driveMode = SubsystemMode.NORMAL;
-  public static final SubsystemMode flywheelMode = SubsystemMode.NORMAL;
-  public static final SubsystemMode hoodMode = SubsystemMode.NORMAL;
-  public static final SubsystemMode spindexerMode = SubsystemMode.NORMAL;
-  public static final SubsystemMode tunnelMode = SubsystemMode.NORMAL;
-  public static final SubsystemMode turretMode = SubsystemMode.NORMAL;
-  public static final SubsystemMode deployerMode = SubsystemMode.NORMAL;
-  public static final SubsystemMode rollerMode = SubsystemMode.NORMAL;
-  public static final SubsystemMode intakeMode = SubsystemMode.NORMAL;
-  public static final SubsystemMode climberMode = SubsystemMode.NORMAL;
-  public static final SubsystemMode ledMode = SubsystemMode.NORMAL;
-  public static final SubsystemMode visionGlobalPose = SubsystemMode.NORMAL;
-  public static final SubsystemMode visionObjectDetection = SubsystemMode.NORMAL;
-  public static final SubsystemMode firingManager = SubsystemMode.NORMAL;
+  public static final SubsystemMode driveMode = SubsystemMode.DISABLED;
+  public static final SubsystemMode flywheelMode = SubsystemMode.DISABLED;
+  public static final SubsystemMode hoodMode = SubsystemMode.TUNING;
+  public static final SubsystemMode spindexerMode = SubsystemMode.DISABLED;
+  public static final SubsystemMode tunnelMode = SubsystemMode.DISABLED;
+  public static final SubsystemMode turretMode = SubsystemMode.DISABLED;
+  public static final SubsystemMode deployerMode = SubsystemMode.DISABLED;
+  public static final SubsystemMode rollerMode = SubsystemMode.DISABLED;
+  public static final SubsystemMode intakeMode = SubsystemMode.DISABLED;
+  public static final SubsystemMode climberMode = SubsystemMode.DISABLED;
+  public static final SubsystemMode ledMode = SubsystemMode.DISABLED;
+  public static final SubsystemMode visionGlobalPose = SubsystemMode.DISABLED;
+  public static final SubsystemMode visionObjectDetection = SubsystemMode.DISABLED;
+  public static final SubsystemMode firingManager = SubsystemMode.DISABLED;
 
   public static class Drive {
     public static final int gyroID = 0;
@@ -172,9 +172,9 @@ public final class Constants {
     public static final int servoChannel = 3;
     public static final int encoderId = 3;
     public static final double gearRatio = 164 / 11.0;
-    public static final double kS = 0;
+    public static final double kSPulsewidth = 55;
     public static final double kV = 0;
-    public static final double kP = 1;
+    public static final double kP = 0.05;
     public static final double kI = 0;
     public static final double kD = 0;
     public static final int idleVelocity = 0;
