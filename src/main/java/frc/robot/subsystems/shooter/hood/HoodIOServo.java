@@ -50,7 +50,8 @@ public class HoodIOServo implements HoodIO {
   public void updateInputs(HoodIOInputs inputs) {
     inputs.encoderConnected = encoder.isConnected();
     inputs.currentPulseWidth = currentRequested;
-    inputs.encoderRotations = encoder.getPosition().getValueAsDouble(); // Convert degrees to rotations
+    inputs.encoderRotations =
+        encoder.getPosition().getValueAsDouble(); // Convert degrees to rotations
     inputs.degrees =
         inputs.encoderRotations * 360.0 / Constants.Hood.gearRatio; // Convert rotations to degrees
     inputs.encoderRPS = encoder.getVelocity().getValueAsDouble();
@@ -65,7 +66,9 @@ public class HoodIOServo implements HoodIO {
 
   @Override
   public void setServoVelocity(double velocity) {
-    this.currentRequested = (1500 + ((int) MathUtil.clamp(velocity, -1, 1) * 500));
+    double range =  (500 - Constants.Hood.kSPulsewidth);
+    double pulseVelocity = -(MathUtil.clamp(velocity, -1, 1) * range);
+    this.currentRequested = (int) (1500 + (Constants.Hood.kSPulsewidth * Math.signum(pulseVelocity)) + pulseVelocity);
     servo.setPulseWidth(currentRequested);
   }
 

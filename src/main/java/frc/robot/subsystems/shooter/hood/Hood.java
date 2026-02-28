@@ -43,6 +43,10 @@ public class Hood {
         homed = true;
       }
       case TUNING -> {
+        if (!homed) {
+          io.setEncoderHomed();
+          homed = true;
+        }
         LoggedTunableNumber.ifChanged(
             hashCode(), () -> pidController.setPID(kP.get(), kI.get(), kD.get()), kP, kI, kD);
         LoggedTunableNumber.ifChanged(
@@ -50,9 +54,9 @@ public class Hood {
         requestGoal(tuningGoalDeg.get());
 
         pidVelocity = pidController.calculate(inputs.degrees, requestedAngleDeg);
-        if (pidController.atSetpoint()) {
-          pidVelocity = 0;
-        }
+        // if (pidController.atSetpoint()) {
+        //   pidVelocity = 0;
+        // }
         io.setServoVelocity(pidVelocity);
         Logger.recordOutput("Hood/requestedServoVelocity", pidVelocity);
       }
