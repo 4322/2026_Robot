@@ -6,12 +6,11 @@ import frc.robot.constants.Constants;
 
 public class DeployerIOSim implements DeployerIO {
   private double requestedVoltage = 0;
-  private double requestedAngle = 0;
-
   private double voltage = 0;
   private double currentAngle =
       Constants.Deployer.maxGravityDegrees
-          + Units.radiansToDegrees(Constants.Deployer.CANCoderStowed);
+          + Units.rotationsToDegrees(Constants.Deployer.CANCoderStowed);
+  private double requestedAngle = currentAngle;
   private double undefinedVoltage = -20;
 
   private double slowRate = 0.02;
@@ -24,8 +23,9 @@ public class DeployerIOSim implements DeployerIO {
     double prevPos = currentAngle;
     simPos();
     simVolts();
-    double velocity = (currentAngle - prevPos) * 50;
-
+    double velocity = Units.degreesToRotations(currentAngle - prevPos) * 50;
+    inputs.motorRotations =
+        Units.degreesToRotations(currentAngle - Constants.Deployer.maxGravityDegrees);
     inputs.angleDeg = currentAngle;
     inputs.appliedVolts = voltage;
     inputs.motorRotationsPerSec = velocity;
