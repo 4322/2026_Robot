@@ -54,10 +54,10 @@ public final class Constants {
   }
 
   public static final SubsystemMode driveMode = SubsystemMode.DISABLED;
-  public static final SubsystemMode flywheelMode = SubsystemMode.DISABLED;
-  public static final SubsystemMode hoodMode = SubsystemMode.TUNING;
-  public static final SubsystemMode spindexerMode = SubsystemMode.DISABLED;
-  public static final SubsystemMode tunnelMode = SubsystemMode.DISABLED;
+  public static final SubsystemMode flywheelMode = SubsystemMode.NORMAL;
+  public static final SubsystemMode hoodMode = SubsystemMode.NORMAL;
+  public static final SubsystemMode spindexerMode = SubsystemMode.NORMAL;
+  public static final SubsystemMode tunnelMode = SubsystemMode.NORMAL;
   public static final SubsystemMode turretMode = SubsystemMode.DISABLED;
   public static final SubsystemMode deployerMode = SubsystemMode.DISABLED;
   public static final SubsystemMode rollerMode = SubsystemMode.DISABLED;
@@ -66,7 +66,7 @@ public final class Constants {
   public static final SubsystemMode ledMode = SubsystemMode.DISABLED;
   public static final SubsystemMode visionGlobalPose = SubsystemMode.DISABLED;
   public static final SubsystemMode visionObjectDetection = SubsystemMode.DISABLED;
-  public static final SubsystemMode firingManager = SubsystemMode.DISABLED;
+  public static final SubsystemMode firingManager = SubsystemMode.TUNING;
 
   public static class Drive {
     public static final int gyroID = 0;
@@ -84,7 +84,7 @@ public final class Constants {
     public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
     public static final double kS = 0.34;
     public static final double kV = 1.47;
-    public static final double kP = 30.0;
+    public static final double kP = 0;
     public static final double kI = 0;
     public static final double kD = 0;
     public static final double stoppedMechanismRotationsPerSec = 0.1; // TODO
@@ -102,7 +102,7 @@ public final class Constants {
     public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
     public static final double kS = 0.31;
     public static final double kV = 0.19;
-    public static final double kP = 1.4;
+    public static final double kP = 0;
     public static final double kI = 0;
     public static final double kD = 0;
 

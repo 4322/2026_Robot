@@ -93,6 +93,9 @@ public class Turret {
   }
 
   public boolean isAtGoal() {
+    if (Constants.turretMode == Constants.SubsystemMode.DISABLED) {
+      return true;
+    }
     return MathUtil.isNear(desiredDeg, inputs.turretDegs, Constants.Turret.goalToleranceDeg);
   }
 
