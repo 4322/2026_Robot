@@ -18,22 +18,26 @@ public class Flywheel {
     io.updateInputs(inputs);
     Logger.processInputs("Flywheel", inputs);
     Logger.recordOutput("Flywheel/BallsShot", ballsShot);
-    switch (Constants.flywheelMode) {
-      case TUNING -> {}
-      case NORMAL -> {
+    
         if (inputs.fuelDetected && !fuelDetected) {
           ballsShot++;
           fuelDetected = true;
         } else if (!inputs.fuelDetected) {
           fuelDetected = false;
         }
-      }
-    }
+      
+    
   }
 
   public void requestGoal(double velocity) {
+        switch (Constants.flywheelMode) {
+      case TUNING -> {}
+      case NORMAL -> {
     io.setTargetMechanismRPS(velocity);
     inputs.requestedMechanismRPS = velocity;
+      }
+    }
+   
   }
 
   public void enableBrakeMode(boolean enable) {
