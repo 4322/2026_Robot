@@ -63,7 +63,7 @@ public class DeployerIOTalonFX implements DeployerIO {
         canCoder.getAbsolutePosition().getValueAsDouble()
             - Units.rotationsToDegrees(Constants.Deployer.CANCoderStowed);
     deployerMotor.setPosition(
-        Units.degreesToRotations(Constants.Deployer.maxGravityDegrees) - posRot);
+        Units.degreesToRotations(Constants.Deployer.maxGravityDegrees - posRot));
   }
 
   @Override
