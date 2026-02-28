@@ -3,6 +3,7 @@ package frc.robot.subsystems.shooter.hood;
 import org.littletonrobotics.junction.AutoLog;
 
 public interface HoodIO {
+
   @AutoLog
   public static class HoodIOInputs {
     public double rawRotations = 0.0;
@@ -25,8 +26,6 @@ public interface HoodIO {
 
   // velocity range: -1 to 1
   public default void setServoVelocity(double velocity) {}
-
-  public default void simEstimatedPosition() {}
 
   public default void setBrakeMode(boolean brake) {}
 }

@@ -50,9 +50,12 @@ public class HoodIOServo implements HoodIO {
   public void updateInputs(HoodIOInputs inputs) {
     inputs.encoderConnected = encoder.isConnected();
     inputs.currentPulseWidth = currentRequested;
-    inputs.rawRotations = encoder.getPosition().getValueAsDouble(); // Convert degrees to rotations
-    inputs.degrees =
-        inputs.rawRotations * 360.0 * Constants.Hood.gearRatio; // Convert rotations to degrees
+    if (Hood.isHomed() && Constants.simMode != Constants.Mode.SIM) {
+      inputs.rawRotations =
+          encoder.getPosition().getValueAsDouble(); // Convert degrees to rotations
+      inputs.degrees =
+          inputs.rawRotations * 360.0 * Constants.Hood.gearRatio; // Convert rotations to degrees
+    }
     inputs.encoderRPS = encoder.getVelocity().getValueAsDouble();
     inputs.servoEnabled =
         servo.isEnabled(); // Assuming a threshold of 0.1A to determine if the servo is powered

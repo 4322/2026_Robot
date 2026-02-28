@@ -1,5 +1,6 @@
 package frc.robot.subsystems.shooter.hood;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
@@ -24,13 +25,14 @@ public class Hood {
   private double requestedAngleDeg;
   private Timer homingTimer = new Timer();
   private double pidVelocity;
-  private boolean homed = false;
+  private static boolean homed = false;
   private PIDController pidController = new PIDController(kP.get(), kI.get(), kD.get());
 
   public Hood(HoodIO io) {
     this.io = io;
     pidController.disableContinuousInput();
     pidController.setTolerance(toleranceDeg.get());
+    pidController.setIntegratorRange(-1, 1);
   }
 
   public void periodic() {
@@ -57,7 +59,7 @@ public class Hood {
         Logger.recordOutput("Hood/requestedServoVelocity", pidVelocity);
       }
       case NORMAL -> {
-        if (!homed && DriverStation.isEnabled()) {
+        if (!homed && DriverStation.isEnabled() && Constants.simMode == Constants.Mode.REAL) {
           io.setServoVelocity(Constants.Hood.homingVelocity);
           homingTimer.start();
           if (Math.abs(inputs.encoderRPS) > Constants.Hood.homingVelocityThresholdRPS) {
@@ -69,14 +71,16 @@ public class Hood {
             homingTimer.stop();
             homingTimer.reset();
           }
-        } else if (DriverStation.isEnabled()) {
-          pidVelocity = pidController.calculate(inputs.degrees, requestedAngleDeg);
-          if (pidController.atSetpoint()) {
-            pidVelocity = 0;
+        } else if (DriverStation.isEnabled() || (Constants.simMode == Constants.Mode.SIM)) {
+          if (Constants.simMode == Constants.Mode.SIM) {
+            homed = true;
+            inputs.degrees = 20;
           }
-          io.setServoVelocity(pidVelocity);
+          pidVelocity = MathUtil.clamp(pidController.calculate(inputs.degrees, requestedAngleDeg), -1, 1);
           Logger.recordOutput("Hood/requestedServoVelocity", pidVelocity);
-        } else {
+          Logger.recordOutput("Hood/requestedDegree", requestedAngleDeg);
+
+        } else if (DriverStation.isDisabled()) {
           io.setServoVelocity(Constants.Hood.idleVelocity);
           homingTimer.stop();
           homingTimer.reset();
@@ -88,7 +92,15 @@ public class Hood {
 
   public void requestGoal(double angle) {
     pidController.setSetpoint(angle);
+
     this.requestedAngleDeg = angle;
+    pidVelocity = MathUtil.clamp(pidController.calculate(inputs.degrees, requestedAngleDeg), -1, 1);
+    io.setServoVelocity(pidVelocity);
+    if (pidController.atSetpoint() && !(Constants.simMode == Constants.Mode.SIM)) {
+      pidVelocity = 0;
+    }
+
+    Logger.recordOutput("Hood/requestedServoVelocity", pidVelocity);
     Logger.recordOutput("Hood/requestedDegree", requestedAngleDeg);
   }
 
@@ -104,7 +116,7 @@ public class Hood {
     return pidController.atSetpoint();
   }
 
-  public boolean isHomed() {
+  public static boolean isHomed() {
     return homed;
   }
 
