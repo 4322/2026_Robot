@@ -66,9 +66,10 @@ public class HoodIOServo implements HoodIO {
 
   @Override
   public void setServoVelocity(double velocity) {
-    double range =  (500 - Constants.Hood.kSPulsewidth);
+    double range = (500 - Constants.Hood.kSPulsewidth);
     double pulseVelocity = -(MathUtil.clamp(velocity, -1, 1) * range);
-    this.currentRequested = (int) (1500 + (Constants.Hood.kSPulsewidth * Math.signum(pulseVelocity)) + pulseVelocity);
+    this.currentRequested =
+        (int) (1500 + (Constants.Hood.kSPulsewidth * Math.signum(pulseVelocity)) + pulseVelocity);
     servo.setPulseWidth(currentRequested);
   }
 

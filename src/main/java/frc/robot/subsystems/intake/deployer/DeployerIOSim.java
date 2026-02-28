@@ -5,41 +5,44 @@ import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.constants.Constants;
 
 public class DeployerIOSim implements DeployerIO {
-    private double requestedVoltage = 0;
-    private double requestedAngle = 0;
+  private double requestedVoltage = 0;
+  private double requestedAngle = 0;
 
-    private double voltage = 0;
-    private double currentAngle = Constants.Deployer.maxGravityDegrees+ Units.radiansToDegrees(Constants.Deployer.CANCoderStowed);
-    private double undefinedVoltage = -20;
+  private double voltage = 0;
+  private double currentAngle =
+      Constants.Deployer.maxGravityDegrees
+          + Units.radiansToDegrees(Constants.Deployer.CANCoderStowed);
+  private double undefinedVoltage = -20;
 
-    private double slowRate = 0.02;
-    private double fastRate = 1;
-    @Override
-    public void updateInputs(DeployerIOInputs inputs) {
-        inputs.connected = true;
+  private double slowRate = 0.02;
+  private double fastRate = 1;
 
-        double prevPos = currentAngle;
-        simPos();
-        simVolts();
-        double velocity = (currentAngle - prevPos) * 50;
+  @Override
+  public void updateInputs(DeployerIOInputs inputs) {
+    inputs.connected = true;
 
-        inputs.angleDeg = currentAngle;
-        inputs.appliedVolts = voltage;
-        inputs.motorRotationsPerSec = velocity;
-    
-    }
+    double prevPos = currentAngle;
+    simPos();
+    simVolts();
+    double velocity = (currentAngle - prevPos) * 50;
 
-    @Override
-    public void setPosition(double requestedPosDeg) {
-        this.requestedAngle = requestedPosDeg;
-    }
+    inputs.angleDeg = currentAngle;
+    inputs.appliedVolts = voltage;
+    inputs.motorRotationsPerSec = velocity;
+  }
 
-    @Override
-    public void enableBrakeMode(boolean mode) {}
+  @Override
+  public void setPosition(double requestedPosDeg) {
+    this.requestedAngle = requestedPosDeg;
+  }
 
-    @Override
-    public void stop() {}
-    private void simVolts() {
+  @Override
+  public void enableBrakeMode(boolean mode) {}
+
+  @Override
+  public void stop() {}
+
+  private void simVolts() {
     if (DriverStation.isEnabled()) {
       if (requestedVoltage == undefinedVoltage) {
         voltage = 0;
@@ -51,7 +54,7 @@ public class DeployerIOSim implements DeployerIO {
     }
   }
 
-    private void simPos() {
+  private void simPos() {
     if (DriverStation.isEnabled()) {
       if (currentAngle < requestedAngle) {
         currentAngle += (requestedAngle - currentAngle) * fastRate;
