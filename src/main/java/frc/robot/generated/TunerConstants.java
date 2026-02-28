@@ -17,6 +17,7 @@ import com.ctre.phoenix6.swerve.SwerveModuleConstants.*;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.*;
 import frc.robot.constants.Constants;
 
@@ -28,20 +29,52 @@ public class TunerConstants {
   // The steer motor uses any SwerveModule.SteerRequestType control request with
   // the
   // output type specified by SwerveModuleConstants.SteerMotorClosedLoopOutput
+
+  private static final double driveGearRatio = 6.75; // SDS MK4i L2 drive gear ratio
+  private static final double turnGearRatio = 150.0 / 7.0;
+  private static final double turnCoupleRatio = 3.8181818181818183; // TODO
+
+  private static final boolean turnMotorInverted = false;
+  private static final boolean turnEncoderInverted = true;
+  private static final boolean invertLeftSideDrive = false;
+  private static final boolean invertRightSideDrive = true;
+
+  public static final double driveSupplyCurrentLimit = 40.0;
+  public static final double driveSupplyCurrentTime = 0.0;
+  public static final double driveStatorCurrentLimit = 100;
+
+  public static final double turnSupplyCurrentLimit = 40.0;
+  public static final double turnSupplyCurrentTime = 0.0;
+  public static final double turnStatorCurrentLimit = 100;
+
+  private static final double drivekP = 1.0;
+  private static final double drivekD = 0;
+  private static final double drivekS = 0.2;
+  private static final double drivekV = 0.95;
+
+  private static final double turnkP = 150;
+  private static final double turnkD = 0.2;
+  private static final double turnAccelerationLimit = 1000;
+  private static final double turnDeaccelerationLimit = 1000;
+  private static final double turnVelocityLimit = 1000;
+
+  private static final double simTurnInertia = 0.00001;
+  private static final double simDriveInertia = 0.001;
+
+  // drive slew rate not working
   private static final Slot0Configs steerGains =
       new Slot0Configs()
-          .withKP(100)
+          .withKP(turnkP)
           .withKI(0)
-          .withKD(0.5)
-          .withKS(0.1)
-          .withKV(1.91)
+          .withKD(turnkD)
+          .withKS(0)
+          .withKV(0)
           .withKA(0)
           .withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign);
   // When using closed-loop control, the drive motor uses the control
   // output type specified by SwerveModuleConstants.DriveMotorClosedLoopOutput
   private static final Slot0Configs driveGains =
-      new Slot0Configs().withKP(0.1).withKI(0).withKD(0).withKS(0).withKV(0.124);
-
+      new Slot0Configs().withKP(drivekP).withKI(0).withKD(drivekD).withKS(drivekS).withKV(drivekV);
   // The closed-loop output type to use for the steer motors;
   // This affects the PID/FF gains for the steer motors
   private static final ClosedLoopOutputType kSteerClosedLoopOutput = ClosedLoopOutputType.Voltage;
