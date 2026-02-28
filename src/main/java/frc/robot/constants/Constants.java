@@ -4,6 +4,8 @@ import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.StripTypeValue;
+
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -294,29 +296,32 @@ public final class Constants {
     public static final double latencyCompensationPassing = 0;
 
     // Add entry to both maps
-    public static void putFiringMapEntryScoring(double distance, FiringParameters params) {
-      firingMapScoring.put(distance, params);
-      double velocity = distance / params.getTimeOfFlightSec();
-      velocityToDistanceMapScoring.put(velocity, distance);
+    public static void putFiringMapEntryScoring(double meters, FiringParameters params) {
+      firingMapScoring.put(meters, params); 
+      double velocity = meters / params.getTimeOfFlightSec();
+      velocityToDistanceMapScoring.put(velocity, meters);
     }
 
-    public static void putFiringMapEntryPassing(double distance, FiringParameters params) {
-      firingMapPassing.put(distance, params);
-      double velocity = distance / params.getTimeOfFlightSec();
-      velocityToDistanceMapPassing.put(velocity, distance);
+    public static void putFiringMapEntryPassing(double meters, FiringParameters params) {
+      firingMapPassing.put(meters, params);
+      double velocity = meters / params.getTimeOfFlightSec();
+      velocityToDistanceMapPassing.put(velocity, meters);
     }
 
     static { // TODO tuning points will go here
-      putFiringMapEntryScoring(0.5, new FiringParameters(30, 0, 1, 5, 5)); // TODO temp values
-      putFiringMapEntryScoring(1, new FiringParameters(35, 10, 1.1, 5, 5));
-      putFiringMapEntryScoring(5, new FiringParameters(100, 20, 5, 5, 5));
-      putFiringMapEntryScoring(10, new FiringParameters(200, 40, 10, 5, 5));
-      putFiringMapEntryScoring(20, new FiringParameters(400, 60, 20, 5, 5));
-      putFiringMapEntryPassing(0.5, new FiringParameters(30, 0, 1, 5, 5)); // TODO temp values
-      putFiringMapEntryPassing(1, new FiringParameters(35, 10, 1.1, 5, 5));
-      putFiringMapEntryPassing(5, new FiringParameters(100, 20, 5, 5, 5));
-      putFiringMapEntryPassing(10, new FiringParameters(200, 40, 10, 5, 5));
-      putFiringMapEntryPassing(20, new FiringParameters(400, 60, 20, 5, 5));
+      //Meters is center of hub to 3 inches behind center from hub
+      
+      //Shooting
+      //TODO fix the flywheel recovery
+      putFiringMapEntryScoring(Units.inchesToMeters(48), new FiringParameters(45, 2.5, 1, 20, 7)); 
+      putFiringMapEntryScoring(Units.inchesToMeters(210), new FiringParameters(55, 23, 1, 20, 7)); //Low lob
+      // High Lob, putFiringMapEntryScoring(Units.inchesToMeters(210), new FiringParameters(60, 18, 1, 20, 7));  
+      putFiringMapEntryScoring(Units.inchesToMeters(129), new FiringParameters(45, 15, 1, 20, 7));
+      
+      //Passing
+      putFiringMapEntryPassing(Units.inchesToMeters( 144.5), new FiringParameters(39, 18, 1, 20, 7));
+      putFiringMapEntryPassing(Units.inchesToMeters( 302), new FiringParameters(70, 37, 1, 20, 7)); 
+     
     }
 
     public static final boolean alwaysTargetAllianceZone =
