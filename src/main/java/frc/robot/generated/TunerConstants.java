@@ -29,7 +29,6 @@ public class TunerConstants {
   // the
   // output type specified by SwerveModuleConstants.SteerMotorClosedLoopOutput
 
-
   public static final double driveSupplyCurrentLimit = 40.0;
   public static final double driveSupplyCurrentTime = 0.0;
   public static final double driveStatorCurrentLimit = 100;
