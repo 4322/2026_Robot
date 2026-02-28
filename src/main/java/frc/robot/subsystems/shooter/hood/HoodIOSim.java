@@ -3,7 +3,6 @@ package frc.robot.subsystems.shooter.hood;
 import edu.wpi.first.math.MathUtil;
 
 public class HoodIOSim implements HoodIO {
-
   private double velocity = 0;
   private double rotations = 0;
   private int currentRequested = 1500;
@@ -18,7 +17,7 @@ public class HoodIOSim implements HoodIO {
     setServoVelocity(velocity);
     inputs.encoderConnected = true;
     inputs.currentPulseWidth = currentRequested;
-    inputs.rawRotations = rotations; // Convert degrees to rotations
+    inputs.encoderRotations = rotations; // Convert degrees to rotations
     inputs.degrees = position; // Convert rotations to degrees
     inputs.encoderRPS = velocity;
     inputs.servoEnabled = true; // Assuming a threshold of 0.1A to determine if the servo is powered
