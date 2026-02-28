@@ -66,6 +66,10 @@ public class Hood {
         Logger.recordOutput("Hood/requestedServoVelocity", pidVelocity);
       }
       case NORMAL -> {
+        if (Constants.currentMode == Constants.Mode.SIM && !homed) {
+          io.simEstimatedPosition();
+          homed = true;
+        }
         if (!homed && DriverStation.isEnabled()) {
           io.setServoVelocity(Constants.Hood.homingVelocity);
           homingTimer.start();
