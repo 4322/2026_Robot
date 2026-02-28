@@ -43,7 +43,6 @@ public class TurretIOSim implements TurretIO {
 
   private void simPos() {
     if (DriverStation.isEnabled()) {
-
       if (currentAngle < requestedAngle) {
         currentAngle += (requestedAngle - currentAngle) * fastRate;
       } else {
