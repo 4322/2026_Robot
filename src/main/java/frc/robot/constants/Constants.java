@@ -21,8 +21,7 @@ import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetection.O
  * (log replay from a file).
  */
 public final class Constants {
-  public static final Mode simMode = Mode.SIM;
-  public static final Mode currentMode = RobotBase.isReal() ? Mode.REAL : simMode;
+  public static final Mode currentMode = RobotBase.isReal() ? Mode.REAL : Mode.SIM;
 
   public static final boolean buzz = false;
   public static final boolean wantDriveTestAutos = false;
@@ -172,15 +171,17 @@ public final class Constants {
     public static final int servoChannel = 3;
     public static final int encoderId = 3;
     public static final double gearRatio = 164 / 11.0;
-    public static final double kSPulsewidth = 55;
+    public static final double kSPulsewidthUp = 80;
+    public static final double kSPulsewidthDown = 45;
     public static final double kV = 0;
-    public static final double kP = 0.05;
-    public static final double kI = 0;
-    public static final double kD = 0;
+    public static final double kP = 0.04;
+    public static final double kI = 0.03;
+    public static final double kIZone = 1.0;
+    public static final double kD = 0.0;
     public static final int idleVelocity = 0;
     public static final double toleranceDeg = 0.1;
-    public static final double homingVelocityThresholdRPS = 1;
-    public static final double homingVelocity = -0.2;
+    public static final double homingVelocityThresholdRPS = 0.01;
+    public static final double homingVelocity = -0.4;
     public static final double idleAngleDeg = 0;
   }
 

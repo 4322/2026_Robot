@@ -38,7 +38,8 @@ public class HoodIOServo implements HoodIO {
     channelConfig.pulseRange(1000, 1500, 2000); // Default PWM pulses recommended by REV
     config.apply(ChannelId.fromInt(Constants.Hood.servoChannel), channelConfig);
 
-    servoHub.setBankPulsePeriod(Bank.kBank0_2, 20000); // TODO set this
+    servoHub.setBankPulsePeriod(Bank.kBank0_2, 20000);
+    servoHub.setBankPulsePeriod(Bank.kBank3_5, 20000);
 
     servo.setPowered(true);
 
@@ -66,13 +67,16 @@ public class HoodIOServo implements HoodIO {
 
   @Override
   public void setServoVelocity(double velocity) {
-    if (velocity == 0) {
-      this.currentRequested = 1500;
+    // negative velocity raises hood
+    double adjustedVelocity = -MathUtil.clamp(velocity, -1, 1);
+    if (adjustedVelocity == 0) {
+      currentRequested = 1500;
+    } else if (adjustedVelocity < 0) {
+      double range = 500 - Constants.Hood.kSPulsewidthUp;
+      currentRequested = (int) (1500 - Constants.Hood.kSPulsewidthUp + adjustedVelocity * range);
     } else {
-      double range = (500 - Constants.Hood.kSPulsewidth);
-      double pulseVelocity = -(MathUtil.clamp(velocity, -1, 1) * range);
-      this.currentRequested =
-          (int) (1500 + (Constants.Hood.kSPulsewidth * Math.signum(pulseVelocity)) + pulseVelocity);
+      double range = 500 - Constants.Hood.kSPulsewidthDown;
+      currentRequested = (int) (1500 + Constants.Hood.kSPulsewidthDown + adjustedVelocity * range);
     }
     servo.setPulseWidth(currentRequested);
   }

@@ -12,6 +12,8 @@ public class Hood {
       new LoggedTunableNumber("Hood/kP", Constants.Hood.kP);
   private static final LoggedTunableNumber kI =
       new LoggedTunableNumber("Hood/kI", Constants.Hood.kI);
+  private static final LoggedTunableNumber kIZone =
+      new LoggedTunableNumber("Hood/kIZone", Constants.Hood.kIZone);
   private static final LoggedTunableNumber kD =
       new LoggedTunableNumber("Hood/kD", Constants.Hood.kD);
   private static final LoggedTunableNumber toleranceDeg =
@@ -30,6 +32,7 @@ public class Hood {
   public Hood(HoodIO io) {
     this.io = io;
     pidController.disableContinuousInput();
+    pidController.setIZone(kIZone.get());
     pidController.setTolerance(toleranceDeg.get());
   }
 
@@ -50,13 +53,15 @@ public class Hood {
         LoggedTunableNumber.ifChanged(
             hashCode(), () -> pidController.setPID(kP.get(), kI.get(), kD.get()), kP, kI, kD);
         LoggedTunableNumber.ifChanged(
+            hashCode(), () -> pidController.setIZone(kIZone.get()), kIZone);
+        LoggedTunableNumber.ifChanged(
             hashCode(), () -> pidController.setTolerance(toleranceDeg.get()), toleranceDeg);
         requestGoal(tuningGoalDeg.get());
 
         pidVelocity = pidController.calculate(inputs.degrees, requestedAngleDeg);
-        // if (pidController.atSetpoint()) {
-        //   pidVelocity = 0;
-        // }
+        if (pidController.atSetpoint()) {
+          pidVelocity = 0;
+        }
         io.setServoVelocity(pidVelocity);
         Logger.recordOutput("Hood/requestedServoVelocity", pidVelocity);
       }
@@ -66,7 +71,7 @@ public class Hood {
           homingTimer.start();
           if (Math.abs(inputs.encoderRPS) > Constants.Hood.homingVelocityThresholdRPS) {
             homingTimer.reset();
-          } else if (homingTimer.hasElapsed(0.04)) {
+          } else if (homingTimer.hasElapsed(0.1)) {
             io.setEncoderHomed();
             io.setServoVelocity(Constants.Hood.idleVelocity);
             homed = true;
@@ -88,6 +93,7 @@ public class Hood {
       }
     }
     Logger.recordOutput("Hood/homed", homed);
+    Logger.recordOutput("Hood/isAtGoal", isAtGoal());
   }
 
   public void requestGoal(double angle) {
@@ -102,7 +108,7 @@ public class Hood {
 
   public boolean isAtGoal() {
     // TODO temporary until we get hood sim working
-    if (Constants.simMode == Constants.Mode.SIM) {
+    if (Constants.currentMode == Constants.Mode.SIM) {
       return true;
     }
     return pidController.atSetpoint();

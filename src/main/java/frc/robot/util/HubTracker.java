@@ -182,7 +182,7 @@ public class HubTracker {
    */
   public static double getMatchTime() {
     // TODO get match time working for sim
-    if (Constants.simMode == Mode.SIM) {
+    if (Constants.currentMode == Mode.SIM) {
       return 10;
     }
     if (DriverStation.isAutonomous()) {
