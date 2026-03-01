@@ -8,7 +8,6 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.constants.Constants;
 import frc.robot.constants.Constants.Mode;
 import java.util.Optional;
-import org.littletonrobotics.junction.Logger;
 
 // TODO check if in practice mode
 
@@ -106,38 +105,38 @@ public class HubTracker {
   }
 
   /** Returns whether the robot is able to shoot, including buffer time around hub windows. */
-  /* 
-  public static boolean isAbleToShoot() {
-    Optional<Alliance> allianceOpt = DriverStation.getAlliance();
-    if (allianceOpt.isEmpty()) {
-      Logger.recordOutput("HubTracker/isAbleToShoot", "Alliance Empty");
-      return false;
-    }
-
-    Alliance alliance = allianceOpt.get();
-    double matchTime = getMatchTime();
-    if (matchTime < 0) {
-      Logger.recordOutput("HubTracker/isAbleToShoot", "Match Time Negative");
-      return false;
-    }
-
-    for (Shift shift : Shift.values()) {
-      if (!isActive(alliance, shift)) {
-        continue;
+  /*
+    public static boolean isAbleToShoot() {
+      Optional<Alliance> allianceOpt = DriverStation.getAlliance();
+      if (allianceOpt.isEmpty()) {
+        Logger.recordOutput("HubTracker/isAbleToShoot", "Alliance Empty");
+        return false;
       }
 
-      double bufferedStart = shift.startTime - Constants.HubTracker.preBuffer;
-      double bufferedEnd = shift.endTime + Constants.HubTracker.postBuffer;
-
-      if (matchTime >= bufferedStart && matchTime <= bufferedEnd) {
-        Logger.recordOutput("HubTracker/isAbleToShoot", "True");
-        return true;
+      Alliance alliance = allianceOpt.get();
+      double matchTime = getMatchTime();
+      if (matchTime < 0) {
+        Logger.recordOutput("HubTracker/isAbleToShoot", "Match Time Negative");
+        return false;
       }
+
+      for (Shift shift : Shift.values()) {
+        if (!isActive(alliance, shift)) {
+          continue;
+        }
+
+        double bufferedStart = shift.startTime - Constants.HubTracker.preBuffer;
+        double bufferedEnd = shift.endTime + Constants.HubTracker.postBuffer;
+
+        if (matchTime >= bufferedStart && matchTime <= bufferedEnd) {
+          Logger.recordOutput("HubTracker/isAbleToShoot", "True");
+          return true;
+        }
+      }
+      Logger.recordOutput("HubTracker/isAbleToShoot", "False");
+      return false;
     }
-    Logger.recordOutput("HubTracker/isAbleToShoot", "False");
-    return false;
-  }
-*/
+  */
   /**
    * Returns whether the hub is active for the next {@link Shift} for the specified {@link
    * Alliance}. Will return {@code false} if disabled or in between auto and teleop.

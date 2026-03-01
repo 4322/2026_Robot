@@ -26,7 +26,6 @@ public class Intake extends SubsystemBase {
   }
 
   public IntakeState state = IntakeState.DISABLED;
-  public IntakeState prevState;
 
   @Override
   public void periodic() {
@@ -57,7 +56,6 @@ public class Intake extends SubsystemBase {
   }
 
   public void setState(IntakeState desiredState) {
-    prevState = state;
     state = desiredState;
   }
 

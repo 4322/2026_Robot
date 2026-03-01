@@ -2,8 +2,10 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.Intake.IntakeState;
+import org.littletonrobotics.junction.Logger;
 
 public class IntakeCommands {
 
@@ -24,8 +26,9 @@ public class IntakeCommands {
   }
 
   public static Command setIdle(Intake intake) {
-    return Commands.runOnce(
+    return Commands.run(
         () -> {
+          Logger.recordOutput("Intake/Commands/setIdle", true);
           intake.setState(IntakeState.IDLE);
         },
         intake);
@@ -33,9 +36,12 @@ public class IntakeCommands {
 
   public static Command setIntaking(Intake intake) {
     return Commands.run(
-        () -> {
-          intake.setState(IntakeState.INTAKING);
-        },
-        intake);
+            () -> {
+              intake.setState(IntakeState.INTAKING);
+              Logger.recordOutput("Intake/Commands/setIntaking", true);
+            },
+            intake)
+        .andThen(
+            new InstantCommand(() -> Logger.recordOutput("Intake/Commands/setIntaking", false)));
   }
 }

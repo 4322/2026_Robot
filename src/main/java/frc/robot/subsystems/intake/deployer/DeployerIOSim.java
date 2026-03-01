@@ -29,6 +29,7 @@ public class DeployerIOSim implements DeployerIO {
     inputs.angleDeg = currentAngle;
     inputs.appliedVolts = voltage;
     inputs.motorRotationsPerSec = velocity;
+    inputs.requestedPosDeg = requestedAngle;
   }
 
   @Override
