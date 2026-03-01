@@ -7,7 +7,7 @@ public class HoodIOSim implements HoodIO {
   private double rotations = 0;
   private int currentRequested = 1500;
   private double position = 0;
-  private double maxRPM = 0.2; 
+  private double maxRPM = 0.2;
   private double degreePerSecond = 37;
 
   @Override
