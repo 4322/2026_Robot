@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.shooter.areaManager.AreaManager;
+import frc.robot.util.HubShiftUtil;
 import frc.robot.util.HubTracker;
 import org.littletonrobotics.junction.Logger;
 
@@ -56,7 +57,7 @@ public class LED extends SubsystemBase {
     } else if (turretUnwinding) {
       setLEDState(LEDState.TURRET_UNWINDING);
     } else if (AreaManager.isShootingArea(drive.getPose().getTranslation())) {
-      if (HubTracker.isAbleToShoot()) {
+      if (HubShiftUtil.getShiftedShiftInfo().active()) {
         setLEDState(LEDState.SHOOTING_AREA_ACTIVE);
       } else {
         setLEDState(LEDState.SHOOTING_AREA_INACTIVE);

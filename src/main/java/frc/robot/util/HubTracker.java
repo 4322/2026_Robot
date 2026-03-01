@@ -106,6 +106,7 @@ public class HubTracker {
   }
 
   /** Returns whether the robot is able to shoot, including buffer time around hub windows. */
+  /* 
   public static boolean isAbleToShoot() {
     Optional<Alliance> allianceOpt = DriverStation.getAlliance();
     if (allianceOpt.isEmpty()) {
@@ -136,7 +137,7 @@ public class HubTracker {
     Logger.recordOutput("HubTracker/isAbleToShoot", "False");
     return false;
   }
-
+*/
   /**
    * Returns whether the hub is active for the next {@link Shift} for the specified {@link
    * Alliance}. Will return {@code false} if disabled or in between auto and teleop.

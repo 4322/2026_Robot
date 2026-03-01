@@ -276,6 +276,9 @@ public final class Constants {
   }
 
   public static class FiringManager {
+    public static final double minTimeOfFlight = 0; // TODO
+    public static final double maxTimeOfFlight = 4; // TODO
+
     public static final InterpolatingTreeMap<Double, FiringParameters> firingMapScoring =
         new InterpolatingTreeMap<Double, FiringParameters>(
             InverseInterpolator.forDouble(), FiringParameters::interpolate);
