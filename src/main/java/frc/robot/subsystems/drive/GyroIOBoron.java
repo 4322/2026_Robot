@@ -26,7 +26,8 @@ public class GyroIOBoron implements GyroIO {
       DriverStation.reportError("Gyro failed to configure", false);
     }
     yawTimestampQueue = PhoenixOdometryThread.getInstance().makeTimestampQueue();
-    yawPositionQueue = PhoenixOdometryThread.getInstance().registerSignal(() -> gyro.getMultiturnYaw());
+    yawPositionQueue =
+        PhoenixOdometryThread.getInstance().registerSignal(() -> gyro.getMultiturnYaw());
   }
 
   @Override
