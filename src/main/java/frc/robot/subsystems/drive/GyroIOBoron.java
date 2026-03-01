@@ -2,6 +2,8 @@ package frc.robot.subsystems.drive;
 
 import com.reduxrobotics.sensors.canandgyro.Canandgyro;
 import com.reduxrobotics.sensors.canandgyro.CanandgyroSettings;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.constants.Constants;
 
@@ -24,6 +26,9 @@ public class GyroIOBoron implements GyroIO {
   public void updateInputs(GyroIOInputs inputs) {
     // check connection with 60ms timeout instead of 2s default due to frequency of gyro reporting
     // failure
+    inputs.connected = gyro.isConnected(0.06);
+    inputs.yawPosition = Rotation2d.fromRotations(gyro.getMultiturnYaw());
+    inputs.yawVelocityRadPerSec = Units.rotationsToDegrees(gyro.getAngularVelocityYaw());
   }
 
   public Canandgyro getGyro() {
