@@ -207,5 +207,4 @@ public class HubShiftUtil {
   public static void setWinOverride(boolean win) {
     allianceWinOverride = () -> Optional.of(win);
   }
-  
 }
