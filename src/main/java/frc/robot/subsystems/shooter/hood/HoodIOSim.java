@@ -7,8 +7,8 @@ public class HoodIOSim implements HoodIO {
   private double rotations = 0;
   private int currentRequested = 1500;
   private double position = 0;
-  private double maxRPM = 290; // At 7.4V
-  private double degreePerSecond = 180 / 60;
+  private double maxRPM = 0.2; 
+  private double degreePerSecond = 37;
 
   @Override
   public void updateInputs(HoodIOInputs inputs) {
@@ -31,7 +31,7 @@ public class HoodIOSim implements HoodIO {
 
   @Override
   public void simEstimatedPosition() {
-    this.position = (this.maxRPM * this.degreePerSecond * this.velocity);
+    this.position = MathUtil.clamp((this.maxRPM * this.degreePerSecond * this.velocity), 0, 37);
   }
 
   @Override
