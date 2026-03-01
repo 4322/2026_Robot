@@ -15,6 +15,8 @@ public class GyroIOBoron implements GyroIO {
   private final Queue<Double> yawTimestampQueue;
 
   public GyroIOBoron() {
+    gyro.getPitch();
+    gyro.getRoll();
     CanandgyroSettings settings = new CanandgyroSettings();
     settings.setYawFramePeriod(1 / Drive.ODOMETRY_FREQUENCY);
     settings.setAngularVelocityFramePeriod(1 / Drive.ODOMETRY_FREQUENCY);
@@ -24,7 +26,7 @@ public class GyroIOBoron implements GyroIO {
       DriverStation.reportError("Gyro failed to configure", false);
     }
     yawTimestampQueue = PhoenixOdometryThread.getInstance().makeTimestampQueue();
-    yawPositionQueue = PhoenixOdometryThread.getInstance().registerSignal(() -> gyro.getYaw());
+    yawPositionQueue = PhoenixOdometryThread.getInstance().registerSignal(() -> gyro.getMultiturnYaw());
   }
 
   @Override
@@ -33,13 +35,13 @@ public class GyroIOBoron implements GyroIO {
     // failure
     inputs.connected = gyro.isConnected(0.06);
     inputs.yawPosition = Rotation2d.fromRotations(gyro.getMultiturnYaw());
-    inputs.yawVelocityRadPerSec = Units.rotationsToDegrees(gyro.getAngularVelocityYaw());
+    inputs.yawVelocityRadPerSec = Units.rotationsToRadians(gyro.getAngularVelocityYaw());
 
     inputs.odometryYawTimestamps =
-        yawPositionQueue.stream().mapToDouble((Double value) -> value).toArray();
+        yawTimestampQueue.stream().mapToDouble((Double value) -> value).toArray();
     inputs.odometryYawPositions =
         yawPositionQueue.stream()
-            .map((Double value) -> Rotation2d.fromDegrees(value))
+            .map((Double value) -> Rotation2d.fromRotations(value))
             .toArray(Rotation2d[]::new);
     yawTimestampQueue.clear();
     yawPositionQueue.clear();
