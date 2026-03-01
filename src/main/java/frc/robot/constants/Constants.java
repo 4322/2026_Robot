@@ -4,8 +4,6 @@ import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.StripTypeValue;
-
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -54,11 +52,11 @@ public final class Constants {
     TUNING
   }
 
-  public static final SubsystemMode driveMode = SubsystemMode.DISABLED;
-  public static final SubsystemMode flywheelMode = SubsystemMode.NORMAL;
-  public static final SubsystemMode hoodMode = SubsystemMode.NORMAL;
-  public static final SubsystemMode spindexerMode = SubsystemMode.NORMAL;
-  public static final SubsystemMode tunnelMode = SubsystemMode.NORMAL;
+  public static final SubsystemMode driveMode = SubsystemMode.NORMAL;
+  public static final SubsystemMode flywheelMode = SubsystemMode.DISABLED;
+  public static final SubsystemMode hoodMode = SubsystemMode.DISABLED;
+  public static final SubsystemMode spindexerMode = SubsystemMode.DISABLED;
+  public static final SubsystemMode tunnelMode = SubsystemMode.DISABLED;
   public static final SubsystemMode turretMode = SubsystemMode.DISABLED;
   public static final SubsystemMode deployerMode = SubsystemMode.DISABLED;
   public static final SubsystemMode rollerMode = SubsystemMode.DISABLED;
@@ -297,7 +295,7 @@ public final class Constants {
 
     // Add entry to both maps
     public static void putFiringMapEntryScoring(double meters, FiringParameters params) {
-      firingMapScoring.put(meters, params); 
+      firingMapScoring.put(meters, params);
       double velocity = meters / params.getTimeOfFlightSec();
       velocityToDistanceMapScoring.put(velocity, meters);
     }
@@ -309,19 +307,20 @@ public final class Constants {
     }
 
     static { // TODO tuning points will go here
-      //Meters is center of hub to 3 inches behind center from hub
-      
-      //Shooting
-      //TODO fix the flywheel recovery
-      putFiringMapEntryScoring(Units.inchesToMeters(48), new FiringParameters(45, 2.5, 1, 20, 7)); 
-      putFiringMapEntryScoring(Units.inchesToMeters(210), new FiringParameters(55, 23, 1, 20, 7)); //Low lob
-      // High Lob, putFiringMapEntryScoring(Units.inchesToMeters(210), new FiringParameters(60, 18, 1, 20, 7));  
+      // Meters is center of hub to 3 inches behind center from hub
+
+      // Shooting
+      // TODO fix the flywheel recovery
+      putFiringMapEntryScoring(Units.inchesToMeters(48), new FiringParameters(45, 2.5, 1, 20, 7));
+      putFiringMapEntryScoring(
+          Units.inchesToMeters(210), new FiringParameters(55, 23, 1, 20, 7)); // Low lob
+      // High Lob, putFiringMapEntryScoring(Units.inchesToMeters(210), new FiringParameters(60, 18,
+      // 1, 20, 7));
       putFiringMapEntryScoring(Units.inchesToMeters(129), new FiringParameters(45, 15, 1, 20, 7));
-      
-      //Passing
-      putFiringMapEntryPassing(Units.inchesToMeters( 144.5), new FiringParameters(39, 18, 1, 20, 7));
-      putFiringMapEntryPassing(Units.inchesToMeters( 302), new FiringParameters(70, 37, 1, 20, 7)); 
-     
+
+      // Passing
+      putFiringMapEntryPassing(Units.inchesToMeters(144.5), new FiringParameters(39, 18, 1, 20, 7));
+      putFiringMapEntryPassing(Units.inchesToMeters(302), new FiringParameters(70, 37, 1, 20, 7));
     }
 
     public static final boolean alwaysTargetAllianceZone =
