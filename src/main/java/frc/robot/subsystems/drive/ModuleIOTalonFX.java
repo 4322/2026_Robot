@@ -124,6 +124,7 @@ public class ModuleIOTalonFX implements ModuleIO {
     turnConfig.Feedback.FeedbackRemoteSensorID = constants.EncoderId;
     turnConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
     turnConfig.Feedback.SensorToMechanismRatio = constants.SteerMotorGearRatio;
+    turnConfig.Feedback.RotorToSensorRatio = 1;
     turnConfig.MotionMagic.MotionMagicCruiseVelocity = 100.0 / constants.SteerMotorGearRatio;
     turnConfig.MotionMagic.MotionMagicAcceleration =
         turnConfig.MotionMagic.MotionMagicCruiseVelocity / 0.100;
