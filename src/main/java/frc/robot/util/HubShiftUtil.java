@@ -51,12 +51,19 @@ public class HubShiftUtil {
 
   private static Supplier<Optional<Boolean>> allianceWinOverride = () -> Optional.empty();
 
+  private static Optional<Alliance> winningAllianceOverride = Optional.empty();
+
   public static Optional<Boolean> getAllianceWinOverride() {
     return allianceWinOverride.get();
   }
 
   public static Alliance getFirstActiveAlliance() {
     var alliance = DriverStation.getAlliance().orElse(Alliance.Blue);
+
+    // Be able to manually set alliance to win
+    if (!winningAllianceOverride.isEmpty()) {
+      return winningAllianceOverride.get();
+    }
 
     // Return override value
     var winOverride = getAllianceWinOverride();
@@ -191,5 +198,13 @@ public class HubShiftUtil {
     };
     return getShiftInfo(shiftSchedule, shiftedShiftStartTimes, shiftedShiftEndTimes);
     // }
+  }
+
+  public static void setOverrideAlliance(Alliance alliance) {
+    winningAllianceOverride = Optional.of(alliance);
+  }
+
+  public static void setWinOverride(boolean win) {
+    allianceWinOverride = () -> Optional.of(win);
   }
 }
