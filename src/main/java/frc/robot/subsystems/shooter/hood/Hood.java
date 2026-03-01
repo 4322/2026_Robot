@@ -96,6 +96,7 @@ public class Hood {
         }
       }
     }
+    Logger.recordOutput("Hood/Timer", homingTimer.get());
     Logger.recordOutput("Hood/homed", homed);
     Logger.recordOutput("Hood/isAtGoal", isAtGoal());
   }
