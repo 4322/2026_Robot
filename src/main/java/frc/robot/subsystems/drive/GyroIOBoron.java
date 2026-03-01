@@ -1,24 +1,23 @@
 package frc.robot.subsystems.drive;
 
-import java.util.Queue;
-
-import com.ctre.phoenix6.StatusSignal;
 import com.reduxrobotics.sensors.canandgyro.Canandgyro;
 import com.reduxrobotics.sensors.canandgyro.CanandgyroSettings;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.constants.Constants;
+import java.util.Queue;
 
 public class GyroIOBoron implements GyroIO {
   private final Canandgyro gyro = new Canandgyro(Constants.Drive.gyroID);
   public double yaw = gyro.getYaw();
   private final Queue<Double> yawPositionQueue;
   private final Queue<Double> yawTimestampQueue;
+
   public GyroIOBoron() {
     CanandgyroSettings settings = new CanandgyroSettings();
-    settings.setYawFramePeriod(1/Drive.ODOMETRY_FREQUENCY);
-    settings.setAngularVelocityFramePeriod(1/Drive.ODOMETRY_FREQUENCY);
+    settings.setYawFramePeriod(1 / Drive.ODOMETRY_FREQUENCY);
+    settings.setAngularVelocityFramePeriod(1 / Drive.ODOMETRY_FREQUENCY);
     CanandgyroSettings gyroConfigStatus = gyro.setSettings(settings, 0.02, 5);
 
     if (!gyroConfigStatus.isEmpty()) {
