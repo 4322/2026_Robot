@@ -135,37 +135,35 @@ public final class Constants {
 
   public static class Turret {
     public static final int motorId = 22;
-    //TODO set PID
-    public static final double kS = 0; 
-    public static final double kV = 0; 
-    public static final double kP = 1; 
-    public static final double kI = 0; 
-    public static final double kD = 0; 
+    // TODO set PID
+    public static final double kS = 0;
+    public static final double kV = 0;
+    public static final double kP = 1;
+    public static final double kI = 0;
+    public static final double kD = 0;
     public static final double statorCurrentLimit = 60; // HACK set limits
     public static final double supplyCurrentLimit = 40; // set limits
     public static final InvertedValue motorInvert = InvertedValue.Clockwise_Positive;
     public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
-    public static final double goalToleranceDeg = 1.0; 
-    public static final double CANCoderOneRatio = 9.0; 
-    public static final double CANCoderTwoRatio = 5.0; 
+    public static final double goalToleranceDeg = 1.0;
+    public static final double CANCoderOneRatio = 9.0;
+    public static final double CANCoderTwoRatio = 5.0;
     public static final double CANCoderOneOffset = 0.0; // TODO find offsets
     public static final double CANCoderTwoOffset = 0.0; // find offsets
-    public static final double turretGearRatio = 27; 
+    public static final double turretGearRatio = 27;
     public static final double minPhysicalLimitDeg = -250.0; // HACK find limits
     public static final double maxPhysicalLimitDeg = 250.0; // HACK find limits
     public static final double midPointPhysicalDeg =
         (minPhysicalLimitDeg + maxPhysicalLimitDeg) / 2.0;
     public static final double maxMidPointPhysicalDeg = midPointPhysicalDeg + 180.0;
     public static final double minMidPointPhysicalDeg = midPointPhysicalDeg - 180.0;
-    public static final double unwindToleranceDeg = 10.0; //HACK need to find proper tolerance
+    public static final double unwindToleranceDeg = 10.0; // HACK need to find proper tolerance
     public static final double minUnwindLimitDeg = minPhysicalLimitDeg + unwindToleranceDeg;
     public static final double maxUnwindLimitDeg = maxPhysicalLimitDeg - unwindToleranceDeg;
     public static final int CANCoderOneId = 1;
     public static final int CANCoderTwoId = 4;
     public static final Translation2d originToTurret =
-        new Translation2d(); // TODO transcribe to wpilib coordinates
-    // x: 6.75 in
-    // y: 4.75 in
+        new Translation2d(Units.inchesToMeters(-4.6111), Units.inchesToMeters(5.8889));
   }
 
   public static class Hood {
