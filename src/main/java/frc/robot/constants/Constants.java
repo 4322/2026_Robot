@@ -63,7 +63,7 @@ public final class Constants {
   public static final SubsystemMode intakeMode = SubsystemMode.DISABLED;
   public static final SubsystemMode climberMode = SubsystemMode.DISABLED;
   public static final SubsystemMode ledMode = SubsystemMode.DISABLED;
-  public static final SubsystemMode visionGlobalPose = SubsystemMode.DISABLED;
+  public static final SubsystemMode visionGlobalPose = SubsystemMode.NORMAL;
   public static final SubsystemMode visionObjectDetection = SubsystemMode.DISABLED;
   public static final SubsystemMode firingManager = SubsystemMode.TUNING;
 
