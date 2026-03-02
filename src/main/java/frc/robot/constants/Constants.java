@@ -385,28 +385,28 @@ public final class Constants {
                 Units.inchesToMeters(14.199859),
                 Units.inchesToMeters(-12.199859),
                 Units.inchesToMeters(21.455136)),
-            new Rotation3d(0, 0, 0));
+            new Rotation3d(0, Units.degreesToRadians(-19.8534025106), Units.degreesToRadians(-45)));
     public static Transform3d frontLeftTransform =
         new Transform3d(
             new Translation3d(
                 Units.inchesToMeters(14.199859),
                 Units.inchesToMeters(12.199859),
                 Units.inchesToMeters(21.455136)),
-            new Rotation3d(0, 0, 0));
+            new Rotation3d(0, Units.degreesToRadians(-19.8534025106), Units.degreesToRadians(45)));
     public static Transform3d backRightTransform =
         new Transform3d(
             new Translation3d(
                 Units.inchesToMeters(-14.199859),
                 Units.inchesToMeters(-12.199859),
                 Units.inchesToMeters(21.455136)),
-            new Rotation3d(0, 0, 0));
+            new Rotation3d(0, Units.degreesToRadians(-19.8534025106), Units.degreesToRadians(-135)));
     public static Transform3d backLeftTransform =
         new Transform3d(
             new Translation3d(
                 Units.inchesToMeters(-14.199859),
                 Units.inchesToMeters(12.199859),
                 Units.inchesToMeters(21.455136)),
-            new Rotation3d(0, 0, 0));
+            new Rotation3d(0, Units.degreesToRadians(-19.8534025106), Units.degreesToRadians(135)));
 
     // Basic filtering thresholds
     // TODO
