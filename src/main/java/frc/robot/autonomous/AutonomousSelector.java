@@ -3,6 +3,7 @@ package frc.robot.autonomous;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.autonomous.modes.DoNothing;
 import frc.robot.autonomous.modes.RFullSweepShoot;
+import frc.robot.autonomous.modes.RHalfSweepShoot;
 import frc.robot.constants.Constants;
 import frc.robot.constants.Constants.Mode;
 import frc.robot.subsystems.Simulator;
@@ -24,8 +25,13 @@ public class AutonomousSelector {
 
   public enum AutoName {
     DO_NOTHING,
+    CENTER_DEPOT_OUTPOST,
     R_FULL_SWEEP_SHOOT,
-    R_HALF_SWEEP_SHOOT
+    R_HALF_SWEEP_SHOOT,
+    R_MIDLINE_SWEEP_SHOOT,
+    R_FULL_SWEEP_SHOOT_OD,
+    R_HALF_SWEEP_SHOOT_OD,
+    R_MIDLINE_SWEEP_SHOOT_OD
   }
 
   private class Auto {
@@ -54,7 +60,9 @@ public class AutonomousSelector {
             new Auto(AutoName.DO_NOTHING, new DoNothing(hood)),
             new Auto(
                 AutoName.R_FULL_SWEEP_SHOOT,
-                new RFullSweepShoot(drive, visionObjectDetection, led, intake)));
+                new RFullSweepShoot(drive, led, intake)),
+            new Auto(AutoName.R_HALF_SWEEP_SHOOT, new RHalfSweepShoot(drive, led, intake))
+              );
 
     for (Auto nextAuto : autos) {
       if (nextAuto.name == defaultAuto) {

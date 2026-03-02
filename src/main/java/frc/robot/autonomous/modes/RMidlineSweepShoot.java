@@ -15,16 +15,16 @@ import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.led.LED;
 import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetection;
 
-public class RHalfSweepShoot extends SequentialCommandGroup {
+public class RMidlineSweepShoot extends SequentialCommandGroup {
 
-  public RHalfSweepShoot(
+  public RMidlineSweepShoot(
       Drive drive, LED led, Intake intake) {
-    PathPlannerPath path = Robot.R_StartR_To_NeutralR_Intake;
+    PathPlannerPath path = Robot.R_StartR_To_NeutralR_Intake_Midline;
     Pose2d startPoseBlue = path.getStartingHolonomicPose().get();
     path.flipPath();
     Pose2d startPoseRed = path.getStartingHolonomicPose().get();
 
-    setName("R_HALF_SWEEP_SHOOT");
+    setName("R_MIDLINE_SWEEP_SHOOT");
     addCommands(
         new InstantCommand(
             () -> {
@@ -35,20 +35,20 @@ public class RHalfSweepShoot extends SequentialCommandGroup {
               }
             }),
         new ParallelCommandGroup(IntakeCommands.setIntaking(intake),
-        AutoBuilder.followPath(Robot.R_StartR_To_NeutralR_Intake).andThen(
-        AutoBuilder.followPath(Robot.R_NeutralR_Intake_To_Mid)).andThen(
-        AutoBuilder.followPath(Robot.R_NeutralR_Intake_Mid_Flip)).andThen(
+        AutoBuilder.followPath(Robot.R_StartR_To_NeutralR_Intake_Midline).andThen(
+        AutoBuilder.followPath(Robot.R_NeutralR_Intake_Full_Midline)).andThen(
+        AutoBuilder.followPath(Robot.R_NeutralR_Intake_Full_Midline_Flip)).andThen(
         AutoBuilder.followPath(Robot.R_NeutralRMid_To_ShootR))));
   }
 
-  public RHalfSweepShoot(
+  public RMidlineSweepShoot(
       Drive drive, LED led, Intake intake, VisionObjectDetection visionObjectDetection) {
-    PathPlannerPath path = Robot.R_StartR_To_NeutralR_Intake;
+    PathPlannerPath path = Robot.R_StartR_To_NeutralR_Intake_Midline;
     Pose2d startPoseBlue = path.getStartingHolonomicPose().get();
     path.flipPath();
     Pose2d startPoseRed = path.getStartingHolonomicPose().get();
 
-    setName("R_HALF_SWEEP_SHOOT_OD");
+    setName("R_MIDLINE_SWEEP_SHOOT_OD");
     addCommands(
         new InstantCommand(
             () -> {
@@ -58,10 +58,10 @@ public class RHalfSweepShoot extends SequentialCommandGroup {
                 drive.setPose(startPoseRed);
               }
             }),
-        new ParallelCommandGroup(IntakeCommands.setIntaking(intake)),
-        AutoBuilder.followPath(Robot.R_StartR_To_NeutralR_Intake).andThen(
-        AutoBuilder.followPath(Robot.R_NeutralR_Intake_To_Mid)).andThen(
-        AutoBuilder.followPath(Robot.R_NeutralR_Intake_Mid_Flip)).andThen(
+        new ParallelCommandGroup(IntakeCommands.setIntaking(intake)), 
+        AutoBuilder.followPath(Robot.R_StartR_To_NeutralR_Intake_Midline).andThen(
+        AutoBuilder.followPath(Robot.R_NeutralR_Intake_Full_Midline)).andThen(
+        AutoBuilder.followPath(Robot.R_NeutralR_Intake_Full_Midline_Flip)).andThen(
         new ParallelCommandGroup(new AutoIntake(drive, visionObjectDetection, led, intake, false),
         AutoBuilder.followPath(Robot.R_NeutralRMid_To_ShootR))));
   }
