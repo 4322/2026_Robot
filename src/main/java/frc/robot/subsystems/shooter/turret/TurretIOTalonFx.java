@@ -2,6 +2,7 @@ package frc.robot.subsystems.shooter.turret;
 
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
+import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
@@ -19,6 +20,8 @@ public class TurretIOTalonFx implements TurretIO {
   private CANcoderConfiguration CANconfigOne = new CANcoderConfiguration();
   private CANcoderConfiguration CANconfigTwo = new CANcoderConfiguration();
 
+  private MotionMagicConfigs motionMagicConfigs;
+
   public TurretIOTalonFx() {
     turretMotor = new TalonFX(Constants.Turret.motorId, Constants.CANivore.CANBus);
     CANcoderOne = new CANcoder(Constants.Turret.CANCoderOneId, Constants.CANivore.CANBus);
@@ -34,6 +37,12 @@ public class TurretIOTalonFx implements TurretIO {
     config.Slot0.kI = Constants.Turret.kI;
     config.Slot0.kD = Constants.Turret.kD;
 
+    config.Slot1.kS = Constants.Turret.kS;
+    config.Slot1.kV = Constants.Turret.kV;
+    config.Slot1.kP = Constants.Turret.mmkP;
+    config.Slot1.kI = Constants.Turret.kI;
+    config.Slot1.kD = Constants.Turret.kD;
+
     config.HardwareLimitSwitch.ForwardLimitEnable = true;
     config.HardwareLimitSwitch.ReverseLimitEnable = true;
 
@@ -41,6 +50,10 @@ public class TurretIOTalonFx implements TurretIO {
 
     CANconfigOne.MagnetSensor.MagnetOffset = Constants.Turret.CANCoderOneOffset;
     CANconfigTwo.MagnetSensor.MagnetOffset = Constants.Turret.CANCoderTwoOffset;
+
+    motionMagicConfigs = config.MotionMagic;
+    motionMagicConfigs.MotionMagicCruiseVelocity = Constants.Turret.motionMagicCruiseVelocity;
+    motionMagicConfigs.MotionMagicAcceleration = Constants.Turret.motionMagicAcceleration;
 
     StatusCode configStatus = turretMotor.getConfigurator().apply(config);
     StatusCode CANcoderStatus = CANcoderOne.getConfigurator().apply(CANconfigOne);
@@ -96,7 +109,8 @@ public class TurretIOTalonFx implements TurretIO {
     turretMotor.setControl(
         new MotionMagicVoltage(Units.degreesToRotations(degs) * Constants.Turret.turretGearRatio)
             .withEnableFOC(true)
-            .withSlot(0));
+            .withSlot(1)
+          );
   }
 
   @Override

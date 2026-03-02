@@ -136,14 +136,19 @@ public final class Constants {
   public static class Turret {
     public static final int motorId = 22;
     // TODO set PID
-    public static final double kS = 0;
+    public static final double kS = 0.28;
     public static final double kV = 0;
-    public static final double kP = 1;
+    public static final double kP = 150;
+    public static final double mmkP = 15;
     public static final double kI = 0;
     public static final double kD = 0;
+    
+    public static final double motionMagicCruiseVelocity = 3.5;
+    public static final double motionMagicAcceleration = 7.0;
+    
     public static final double statorCurrentLimit = 60; // HACK set limits
     public static final double supplyCurrentLimit = 40; // set limits
-    public static final InvertedValue motorInvert = InvertedValue.Clockwise_Positive;
+    public static final InvertedValue motorInvert = InvertedValue.CounterClockwise_Positive;
     public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
     public static final double goalToleranceDeg = 1.0;
     public static final double CANCoderOneRatio = 9.0;
@@ -164,6 +169,7 @@ public final class Constants {
     public static final int CANCoderTwoId = 4;
     public static final Translation2d originToTurret =
         new Translation2d(Units.inchesToMeters(-4.6111), Units.inchesToMeters(5.8889));
+    
   }
 
   public static class Hood {
