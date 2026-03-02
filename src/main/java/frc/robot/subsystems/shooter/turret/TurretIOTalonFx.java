@@ -19,7 +19,6 @@ public class TurretIOTalonFx implements TurretIO {
   private CANcoderConfiguration CANconfigOne = new CANcoderConfiguration();
   private CANcoderConfiguration CANconfigTwo = new CANcoderConfiguration();
 
-
   public TurretIOTalonFx() {
     turretMotor = new TalonFX(Constants.Turret.motorId, Constants.CANivore.CANBus);
     CANcoderOne = new CANcoder(Constants.Turret.CANCoderOneId, Constants.CANivore.CANBus);
@@ -71,7 +70,6 @@ public class TurretIOTalonFx implements TurretIO {
               + CANcoderStatusTwo.getDescription(),
           false);
     }
-   
   }
 
   @Override
@@ -103,6 +101,6 @@ public class TurretIOTalonFx implements TurretIO {
 
   @Override
   public void setPositon(double degs) {
-      turretMotor.setPosition(degs);
+    turretMotor.setPosition(degs);
   }
 }
