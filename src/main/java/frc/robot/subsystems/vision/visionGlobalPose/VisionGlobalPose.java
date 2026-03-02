@@ -249,7 +249,8 @@ public class VisionGlobalPose extends SubsystemBase {
 
     // Log summary data
     Logger.recordOutput(
-        "VisionGlobalPose/Summary/RobotPoses", allRobotPoses.toArray(new Pose2d[allRobotPoses.size()]));
+        "VisionGlobalPose/Summary/RobotPoses",
+        allRobotPoses.toArray(new Pose2d[allRobotPoses.size()]));
     Logger.recordOutput(
         "VisionGlobalPose/Summary/RobotPosesAccepted",
         allRobotPosesAccepted.toArray(new Pose2d[allRobotPosesAccepted.size()]));
