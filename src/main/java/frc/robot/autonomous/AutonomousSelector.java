@@ -58,11 +58,8 @@ public class AutonomousSelector {
     autos =
         List.of(
             new Auto(AutoName.DO_NOTHING, new DoNothing(hood)),
-            new Auto(
-                AutoName.R_FULL_SWEEP_SHOOT,
-                new RFullSweepShoot(drive, led, intake)),
-            new Auto(AutoName.R_HALF_SWEEP_SHOOT, new RHalfSweepShoot(drive, led, intake))
-              );
+            new Auto(AutoName.R_FULL_SWEEP_SHOOT, new RFullSweepShoot(drive, led, intake)),
+            new Auto(AutoName.R_HALF_SWEEP_SHOOT, new RHalfSweepShoot(drive, led, intake)));
 
     for (Auto nextAuto : autos) {
       if (nextAuto.name == defaultAuto) {

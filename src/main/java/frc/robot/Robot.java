@@ -185,9 +185,12 @@ public class Robot extends LoggedRobot {
       R_StartR_To_NeutralR_Intake = PathPlannerPath.fromPathFile("R_StartR_To_NeutralR_Intake");
       C_Depot_To_Outpost = PathPlannerPath.fromPathFile("C_Depot_To_Outpost");
       C_Start_To_Depot = PathPlannerPath.fromPathFile("C_Start_To_Depot");
-      R_NeutralR_Intake_Full_Midline = PathPlannerPath.fromPathFile("R_NeutralR_Intake_Full_Midline");
-      R_NeutralR_Intake_Full_Midline_Flip = PathPlannerPath.fromPathFile("R_NeutralR_Intake_Full_Midline_Flip");
-      R_StartR_To_NeutralR_Intake_Midline = PathPlannerPath.fromPathFile("R_StartR_To_NeutralR_Intake_Midline");
+      R_NeutralR_Intake_Full_Midline =
+          PathPlannerPath.fromPathFile("R_NeutralR_Intake_Full_Midline");
+      R_NeutralR_Intake_Full_Midline_Flip =
+          PathPlannerPath.fromPathFile("R_NeutralR_Intake_Full_Midline_Flip");
+      R_StartR_To_NeutralR_Intake_Midline =
+          PathPlannerPath.fromPathFile("R_StartR_To_NeutralR_Intake_Midline");
 
     } catch (Exception e) {
       DriverStation.reportError("Failed to load PathPlanner path - " + e.getMessage(), true);

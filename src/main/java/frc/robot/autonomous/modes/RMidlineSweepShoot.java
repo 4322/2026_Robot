@@ -17,8 +17,7 @@ import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetection;
 
 public class RMidlineSweepShoot extends SequentialCommandGroup {
 
-  public RMidlineSweepShoot(
-      Drive drive, LED led, Intake intake) {
+  public RMidlineSweepShoot(Drive drive, LED led, Intake intake) {
     PathPlannerPath path = Robot.R_StartR_To_NeutralR_Intake_Midline;
     Pose2d startPoseBlue = path.getStartingHolonomicPose().get();
     path.flipPath();
@@ -34,11 +33,12 @@ public class RMidlineSweepShoot extends SequentialCommandGroup {
                 drive.setPose(startPoseRed);
               }
             }),
-        new ParallelCommandGroup(IntakeCommands.setIntaking(intake),
-        AutoBuilder.followPath(Robot.R_StartR_To_NeutralR_Intake_Midline).andThen(
-        AutoBuilder.followPath(Robot.R_NeutralR_Intake_Full_Midline)).andThen(
-        AutoBuilder.followPath(Robot.R_NeutralR_Intake_Full_Midline_Flip)).andThen(
-        AutoBuilder.followPath(Robot.R_NeutralRMid_To_ShootR))));
+        new ParallelCommandGroup(
+            IntakeCommands.setIntaking(intake),
+            AutoBuilder.followPath(Robot.R_StartR_To_NeutralR_Intake_Midline)
+                .andThen(AutoBuilder.followPath(Robot.R_NeutralR_Intake_Full_Midline))
+                .andThen(AutoBuilder.followPath(Robot.R_NeutralR_Intake_Full_Midline_Flip))
+                .andThen(AutoBuilder.followPath(Robot.R_NeutralRMid_To_ShootR))));
   }
 
   public RMidlineSweepShoot(
@@ -58,11 +58,13 @@ public class RMidlineSweepShoot extends SequentialCommandGroup {
                 drive.setPose(startPoseRed);
               }
             }),
-        new ParallelCommandGroup(IntakeCommands.setIntaking(intake)), 
-        AutoBuilder.followPath(Robot.R_StartR_To_NeutralR_Intake_Midline).andThen(
-        AutoBuilder.followPath(Robot.R_NeutralR_Intake_Full_Midline)).andThen(
-        AutoBuilder.followPath(Robot.R_NeutralR_Intake_Full_Midline_Flip)).andThen(
-        new ParallelCommandGroup(new AutoIntake(drive, visionObjectDetection, led, intake, false),
-        AutoBuilder.followPath(Robot.R_NeutralRMid_To_ShootR))));
+        new ParallelCommandGroup(IntakeCommands.setIntaking(intake)),
+        AutoBuilder.followPath(Robot.R_StartR_To_NeutralR_Intake_Midline)
+            .andThen(AutoBuilder.followPath(Robot.R_NeutralR_Intake_Full_Midline))
+            .andThen(AutoBuilder.followPath(Robot.R_NeutralR_Intake_Full_Midline_Flip))
+            .andThen(
+                new ParallelCommandGroup(
+                    new AutoIntake(drive, visionObjectDetection, led, intake, false),
+                    AutoBuilder.followPath(Robot.R_NeutralRMid_To_ShootR))));
   }
 }

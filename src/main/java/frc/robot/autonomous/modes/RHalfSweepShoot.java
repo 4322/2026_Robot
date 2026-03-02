@@ -17,8 +17,7 @@ import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetection;
 
 public class RHalfSweepShoot extends SequentialCommandGroup {
 
-  public RHalfSweepShoot(
-      Drive drive, LED led, Intake intake) {
+  public RHalfSweepShoot(Drive drive, LED led, Intake intake) {
     PathPlannerPath path = Robot.R_StartR_To_NeutralR_Intake;
     Pose2d startPoseBlue = path.getStartingHolonomicPose().get();
     path.flipPath();
@@ -34,11 +33,12 @@ public class RHalfSweepShoot extends SequentialCommandGroup {
                 drive.setPose(startPoseRed);
               }
             }),
-        new ParallelCommandGroup(IntakeCommands.setIntaking(intake),
-        AutoBuilder.followPath(Robot.R_StartR_To_NeutralR_Intake).andThen(
-        AutoBuilder.followPath(Robot.R_NeutralR_Intake_To_Mid)).andThen(
-        AutoBuilder.followPath(Robot.R_NeutralR_Intake_Mid_Flip)).andThen(
-        AutoBuilder.followPath(Robot.R_NeutralRMid_To_ShootR))));
+        new ParallelCommandGroup(
+            IntakeCommands.setIntaking(intake),
+            AutoBuilder.followPath(Robot.R_StartR_To_NeutralR_Intake)
+                .andThen(AutoBuilder.followPath(Robot.R_NeutralR_Intake_To_Mid))
+                .andThen(AutoBuilder.followPath(Robot.R_NeutralR_Intake_Mid_Flip))
+                .andThen(AutoBuilder.followPath(Robot.R_NeutralRMid_To_ShootR))));
   }
 
   public RHalfSweepShoot(
@@ -59,10 +59,12 @@ public class RHalfSweepShoot extends SequentialCommandGroup {
               }
             }),
         new ParallelCommandGroup(IntakeCommands.setIntaking(intake)),
-        AutoBuilder.followPath(Robot.R_StartR_To_NeutralR_Intake).andThen(
-        AutoBuilder.followPath(Robot.R_NeutralR_Intake_To_Mid)).andThen(
-        AutoBuilder.followPath(Robot.R_NeutralR_Intake_Mid_Flip)).andThen(
-        new ParallelCommandGroup(new AutoIntake(drive, visionObjectDetection, led, intake, false),
-        AutoBuilder.followPath(Robot.R_NeutralRMid_To_ShootR))));
+        AutoBuilder.followPath(Robot.R_StartR_To_NeutralR_Intake)
+            .andThen(AutoBuilder.followPath(Robot.R_NeutralR_Intake_To_Mid))
+            .andThen(AutoBuilder.followPath(Robot.R_NeutralR_Intake_Mid_Flip))
+            .andThen(
+                new ParallelCommandGroup(
+                    new AutoIntake(drive, visionObjectDetection, led, intake, false),
+                    AutoBuilder.followPath(Robot.R_NeutralRMid_To_ShootR))));
   }
 }
