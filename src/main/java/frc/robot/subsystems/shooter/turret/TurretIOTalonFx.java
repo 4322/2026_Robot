@@ -18,14 +18,7 @@ public class TurretIOTalonFx implements TurretIO {
   private TalonFXConfiguration config = new TalonFXConfiguration();
   private CANcoderConfiguration CANconfigOne = new CANcoderConfiguration();
   private CANcoderConfiguration CANconfigTwo = new CANcoderConfiguration();
-  private int CANCoderOneMod;
-  private int CANCoderTwoMod;
-  private int resolution = 4096;
-  private int CANcoderOneRotations = 0;
-  private int CANcoderTwoRotations = 0;
-  private int prevRotationsOne = 0;
-  private int prevRotationsTwo = 0;
-  private double turretMod;
+
 
   public TurretIOTalonFx() {
     turretMotor = new TalonFX(Constants.Turret.motorId, Constants.CANivore.CANBus);
@@ -78,7 +71,7 @@ public class TurretIOTalonFx implements TurretIO {
               + CANcoderStatusTwo.getDescription(),
           false);
     }
-    turretMotor.setPosition(getRotation());
+   
   }
 
   @Override
@@ -100,40 +93,16 @@ public class TurretIOTalonFx implements TurretIO {
     turretMotor.setNeutralMode(mode ? NeutralModeValue.Brake : NeutralModeValue.Coast);
   }
 
-  private double getRotation() {
-    if (CANcoderOne.getPosition().getValueAsDouble() < prevRotationsOne - resolution / 2) {
-      CANcoderOneRotations++;
-    } else if (CANcoderOne.getPosition().getValueAsDouble() > prevRotationsOne + resolution / 2) {
-      CANcoderOneRotations--;
-    }
-    if (CANcoderTwo.getPosition().getValueAsDouble() < prevRotationsTwo - resolution / 2) {
-      CANcoderTwoRotations++;
-    } else if (CANcoderTwo.getPosition().getValueAsDouble() > prevRotationsTwo + resolution / 2) {
-      CANcoderTwoRotations--;
-    }
-
-    prevRotationsOne = (int) CANcoderOne.getPosition().getValueAsDouble();
-    prevRotationsTwo = (int) CANcoderTwo.getPosition().getValueAsDouble();
-
-    CANCoderOneMod = mod((int) CANcoderOneRotations, (int) Constants.Turret.CANCoderOneRatio);
-    CANCoderTwoMod = mod((int) CANcoderTwoRotations, (int) Constants.Turret.CANCoderTwoRatio);
-
-    turretMod = mod((10 * CANCoderOneMod) + (36 * CANCoderTwoMod), 45);
-
-    return turretMod
-        + (CANcoderOne.getPosition().getValueAsDouble()
-            / (double) resolution
-            / Constants.Turret.CANCoderTwoRatio);
-  }
-
-  private int mod(int a, int b) {
-    return ((a % b) + b) % b;
-  }
-
+  @Override
   public void setAngle(double degs) {
     turretMotor.setControl(
         new MotionMagicVoltage(Units.degreesToRotations(degs) * Constants.Turret.turretGearRatio)
             .withEnableFOC(true)
             .withSlot(0));
+  }
+
+  @Override
+  public void setPositon(double degs) {
+      turretMotor.setPosition(degs);
   }
 }

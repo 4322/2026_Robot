@@ -50,6 +50,7 @@ public class Turret {
             }
           }
           case SET_TURRET_ANGLE -> {
+              io.setPositon(getRotation());
             if (desiredDeg != null) {
               io.setAngle(desiredDeg);
             }
@@ -132,4 +133,44 @@ public class Turret {
             ? desiredDeg
             : Constants.Turret.midPointPhysicalDeg;
   }
+
+  
+  private double getRotation() {
+  int CANCoderOneMod;
+  int CANCoderTwoMod;
+  int resolution = 4096;
+  int CANcoderOneRotations = 0;
+  int CANcoderTwoRotations = 0;
+  int prevRotationsOne = 0;
+   int prevRotationsTwo = 0;
+   double turretMod;
+    if (inputs.encoderOneRotations < prevRotationsOne - resolution / 2) {
+      CANcoderOneRotations++;
+    } else if (inputs.encoderOneRotations > prevRotationsOne + resolution / 2) {
+      CANcoderOneRotations--;
+    }
+    if (inputs.encoderTwoRotations < prevRotationsTwo - resolution / 2) {
+      CANcoderTwoRotations++;
+    } else if (inputs.encoderTwoRotations > prevRotationsTwo + resolution / 2) {
+      CANcoderTwoRotations--;
+    }
+
+    prevRotationsOne = (int) inputs.encoderOneRotations;
+    prevRotationsTwo = (int) inputs.encoderTwoRotations;
+
+    CANCoderOneMod = mod((int) CANcoderOneRotations, (int) Constants.Turret.CANCoderOneRatio);
+    CANCoderTwoMod = mod((int) CANcoderTwoRotations, (int) Constants.Turret.CANCoderTwoRatio);
+
+    turretMod = mod((10 * CANCoderOneMod) + (36 * CANCoderTwoMod), 45);
+
+    return turretMod
+        + (inputs.encoderOneRotations
+            / (double) resolution
+            / Constants.Turret.CANCoderTwoRatio);
+  }
+
+  private int mod(int a, int b) {
+    return ((a % b) + b) % b;
+  }
+
 }
