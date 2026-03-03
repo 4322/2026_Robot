@@ -377,10 +377,10 @@ public final class Constants {
     // TODO
     public static final boolean enableGlobalPoseTrigEstimation = false;
     // Camera names, must match names configured on coprocessor
-    public static String frontRightName = "frontRight";
-    public static String frontLeftName = "frontLeft";
-    public static String backRightName = "backRight";
-    public static String backLeftName = "backLeft";
+    public static String frontRightName = "Front Right";
+    public static String frontLeftName = "Front Left";
+    public static String backRightName = "Back Right";
+    public static String backLeftName = "Back Left";
 
     // Robot to camera transforms
     // TODO
@@ -440,7 +440,7 @@ public final class Constants {
             0.98315,
             new Rotation3d(0, Units.degreesToRadians(40), Units.degreesToRadians(180)));
     public static final boolean enableObjectDetectionDebug = false;
-    public static final String hostname = "camera";
+    public static final String objectCamera = "objectCamera1";
 
     public static final double fuelIntakeOffset = Units.inchesToMeters(13); // TODO set this
     ; // TODO set this

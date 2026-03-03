@@ -14,7 +14,7 @@ public class VisionObjectDetectionIOPhoton implements VisionObjectDetectionIO {
 
   public VisionObjectDetectionIOPhoton() {
     PhotonCamera.setVersionCheckEnabled(false);
-    photonCamera = new PhotonCamera(Constants.VisionObjectDetection.hostname);
+    photonCamera = new PhotonCamera(Constants.VisionObjectDetection.objectCamera);
   }
 
   @Override

@@ -35,7 +35,7 @@ public class VisionObjectDetection extends SubsystemBase {
   @Override
   public void periodic() {
     io.updateInputs(inputs);
-    Logger.processInputs(Constants.VisionObjectDetection.hostname, inputs);
+    Logger.processInputs(Constants.VisionObjectDetection.objectCamera, inputs);
 
     if (Constants.VisionObjectDetection.enableObjectDetectionDebug) {
       bestFuelPosition = calculateBestObjectPositionOnField(true);
