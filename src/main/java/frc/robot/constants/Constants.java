@@ -377,10 +377,10 @@ public final class Constants {
     // TODO
     public static final boolean enableGlobalPoseTrigEstimation = false;
     // Camera names, must match names configured on coprocessor
-    public static String frontRightName = "Front Right";
-    public static String frontLeftName = "Front Left";
-    public static String backRightName = "Back Right";
-    public static String backLeftName = "Back Left";
+    public static String frontRightName = "FrontRight";
+    public static String frontLeftName = "FrontLeft";
+    public static String backRightName = "BackRight";
+    public static String backLeftName = "BackLeft";
 
     // Robot to camera transforms
     // TODO
