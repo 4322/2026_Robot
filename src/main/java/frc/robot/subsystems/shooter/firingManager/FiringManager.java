@@ -16,7 +16,7 @@ import org.littletonrobotics.junction.Logger;
 public class FiringManager {
 
   public record FiringSolution(
-      double flywheelSpeedRPM,
+      double flywheelSpeedRPS,
       double hoodAngle,
       double turretAngleDeg,
       double tunnelSpeedRPS,

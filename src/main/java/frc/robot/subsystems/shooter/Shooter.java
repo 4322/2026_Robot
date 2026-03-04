@@ -43,7 +43,7 @@ public class Shooter extends SubsystemBase {
   private LED led;
 
   private double targetHoodAngleDeg;
-  private double targetFlywheelSpeedRPM;
+  private double targetFlywheelSpeedRPS;
   private double targetTurretAngleDeg;
   private double targetTunnelSpeedRPS;
   private double targetIndexerSpeedRPS;
@@ -74,7 +74,7 @@ public class Shooter extends SubsystemBase {
     calculateFiringSolution();
 
     if (Constants.firingManager == Constants.SubsystemMode.TUNING) {
-      flywheel.requestGoal(targetFlywheelSpeedRPM);
+      flywheel.requestGoal(targetFlywheelSpeedRPS);
       hood.requestGoal(targetHoodAngleDeg);
       turret.setAngle(targetTurretAngleDeg, true);
       tunnel.requestIndex(targetTunnelSpeedRPS);
@@ -110,7 +110,7 @@ public class Shooter extends SubsystemBase {
           tunnel.requestIdle();
           if (tunnel.isStopped()) {
             flywheel.requestGoal(Constants.Flywheel.idleRPS);
-            targetFlywheelSpeedRPM = Constants.Flywheel.idleRPS * 60;
+            targetFlywheelSpeedRPS = Constants.Flywheel.idleRPS * 60;
           }
         }
       }
@@ -130,7 +130,7 @@ public class Shooter extends SubsystemBase {
           if (tunnel.isStopped()) {
             turret.unwind();
             flywheel.requestGoal(Constants.Flywheel.idleRPS);
-            targetFlywheelSpeedRPM = Constants.Flywheel.idleRPS * 60;
+            targetFlywheelSpeedRPS = Constants.Flywheel.idleRPS;
           }
         }
         if (turret.isAtGoal()) {
@@ -138,18 +138,18 @@ public class Shooter extends SubsystemBase {
         }
       }
       case PRESHOOT -> {
-        flywheel.requestGoal(targetFlywheelSpeedRPM / 60);
+        flywheel.requestGoal(targetFlywheelSpeedRPS);
         hood.requestGoal(targetHoodAngleDeg);
         turret.setAngle(targetTurretAngleDeg, true);
       }
       case SHOOT -> {
-        flywheel.requestGoal(targetFlywheelSpeedRPM / 60);
+        flywheel.requestGoal(targetFlywheelSpeedRPS);
         hood.requestGoal(targetHoodAngleDeg);
         turret.setAngle(targetTurretAngleDeg, false);
 
         tunnel.requestIndex(
             Constants.Tunnel.dynamicVelocity
-                ? (flywheel.getVelocity() / (targetFlywheelSpeedRPM / 60)) * targetTunnelSpeedRPS
+                ? (flywheel.getVelocity() / (targetFlywheelSpeedRPS / 60)) * targetTunnelSpeedRPS
                 : targetTunnelSpeedRPS);
         if (tunnel.getVelocity() > Constants.Tunnel.minPercentVelocity * targetTunnelSpeedRPS) {
           spindexer.requestIndex(
@@ -178,7 +178,7 @@ public class Shooter extends SubsystemBase {
     Logger.recordOutput("Shooter/hoodAtPosition", hood.isAtGoal());
     Logger.recordOutput("Shooter/turretAtPosition", turret.isAtGoal());
     Logger.recordOutput("Shooter/TargetHoodAngleDeg", targetHoodAngleDeg);
-    Logger.recordOutput("Shooter/TargetFlywheelSpeedRPS", targetFlywheelSpeedRPM / 60);
+    Logger.recordOutput("Shooter/TargetFlywheelSpeedRPS", targetFlywheelSpeedRPS / 60);
     Logger.recordOutput("Shooter/TargetTurretAngleDeg", targetTurretAngleDeg);
     Logger.recordOutput(
         "Shooter/TurretPose",
@@ -195,7 +195,7 @@ public class Shooter extends SubsystemBase {
             drive.getVelocity(),
             AreaManager.getZoneOfPosition(drive.getPose().getTranslation()) == Zone.ALLIANCE_ZONE);
     targetHoodAngleDeg = firingSolution.hoodAngle();
-    targetFlywheelSpeedRPM = firingSolution.flywheelSpeedRPM();
+    targetFlywheelSpeedRPS = firingSolution.flywheelSpeedRPS();
     targetTurretAngleDeg = firingSolution.turretAngleDeg();
     targetTunnelSpeedRPS = firingSolution.tunnelSpeedRPS();
     targetIndexerSpeedRPS = firingSolution.indexerSpeedRPS();
