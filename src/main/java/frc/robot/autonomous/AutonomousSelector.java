@@ -91,25 +91,25 @@ public class AutonomousSelector {
                 new SequentialCommandGroup(
                     Commands.race(
                         drive.sysIdQuasistatic(SysIdRoutine.Direction.kForward),
-                        Commands.waitSeconds(5)))),
+                        Commands.waitSeconds(6)))),
             new Auto(
                 AutoName.DRIVE_SYS_ID_QUASISTATIC_REVERSE,
                 new SequentialCommandGroup(
                     Commands.race(
                         drive.sysIdQuasistatic(SysIdRoutine.Direction.kReverse),
-                        Commands.waitSeconds(5)))),
+                        Commands.waitSeconds(6)))),
             new Auto(
                 AutoName.DRIVE_SYS_ID_DYNAMIC_FORWARD,
                 new SequentialCommandGroup(
                     Commands.race(
                         drive.sysIdDynamic(SysIdRoutine.Direction.kForward),
-                        Commands.waitSeconds(5)))),
+                        Commands.waitSeconds(6)))),
             new Auto(
                 AutoName.DRIVE_SYS_ID_DYNAMIC_REVERSE,
                 new SequentialCommandGroup(
                     Commands.race(
                         drive.sysIdDynamic(SysIdRoutine.Direction.kReverse),
-                        Commands.waitSeconds(5)))));
+                        Commands.waitSeconds(6)))));
 
     for (Auto nextAuto : autos) {
       if (nextAuto.name == defaultAuto) {
