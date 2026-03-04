@@ -127,6 +127,7 @@ public final class Constants {
     public static final double kI = 0;
     public static final double kD = 0;
     public static final double allowedVelocityErrorRPS = 5.0; // TODO
+    public static final boolean enableFlyWheelSensor = false;
 
     public static final double motorToMechanismRatio = 1; // Diameter 4
 

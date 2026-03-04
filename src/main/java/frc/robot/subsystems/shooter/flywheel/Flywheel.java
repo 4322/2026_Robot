@@ -19,12 +19,7 @@ public class Flywheel {
     Logger.processInputs("Flywheel", inputs);
     Logger.recordOutput("Flywheel/BallsShot", ballsShot);
 
-    if (inputs.fuelDetected && !fuelDetected) {
-      ballsShot++;
-      fuelDetected = true;
-    } else if (!inputs.fuelDetected) {
-      fuelDetected = false;
-    }
+   
   }
 
   public void requestGoal(double velocity) {
@@ -41,9 +36,7 @@ public class Flywheel {
     io.enableBrakeMode(enable);
   }
 
-  public boolean isFuelDetected() {
-    return inputs.fuelDetected;
-  }
+  
 
   public boolean atTargetVelocity() {
     return Math.abs(inputs.mechanismRPS - inputs.requestedMechanismRPS)
