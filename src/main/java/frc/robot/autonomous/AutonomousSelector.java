@@ -1,12 +1,14 @@
 package frc.robot.autonomous;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.autonomous.modes.CDepotOutpost;
 import frc.robot.autonomous.modes.DoNothing;
 import frc.robot.autonomous.modes.RDisruptSweepShoot;
 import frc.robot.autonomous.modes.RFullSweepShoot;
 import frc.robot.autonomous.modes.RHalfSweepShoot;
 import frc.robot.autonomous.modes.RMidlineSweepShoot;
+import frc.robot.commands.DriveCommands;
 import frc.robot.constants.Constants;
 import frc.robot.constants.Constants.Mode;
 import frc.robot.subsystems.Simulator;
@@ -36,7 +38,13 @@ public class AutonomousSelector {
     R_FULL_SWEEP_SHOOT_OD,
     R_HALF_SWEEP_SHOOT_OD,
     R_MIDLINE_SWEEP_SHOOT_OD,
-    R_DISRUPT_SWEEP_SHOOT_OD
+    R_DISRUPT_SWEEP_SHOOT_OD,
+    DRIVE_WHEEL_RADIUS_CHARACTERIZATION,
+    DRIVE_SIMPLE_FF_CHARACTERIZATION,
+    DRIVE_SYS_ID_QUASISTATIC_FORWARD,
+    DRIVE_SYS_ID_QUASISTATIC_REVERSE,
+    DRIVE_SYS_ID_DYNAMIC_FORWARD,
+    DRIVE_SYS_ID_DYNAMIC_REVERSE
   }
 
   private class Auto {
@@ -67,7 +75,27 @@ public class AutonomousSelector {
             new Auto(AutoName.R_HALF_SWEEP_SHOOT, new RHalfSweepShoot(drive, led, intake)),
             new Auto(AutoName.R_MIDLINE_SWEEP_SHOOT, new RMidlineSweepShoot(drive, led, intake)),
             new Auto(AutoName.R_DISRUPT_SWEEP_SHOOT, new RDisruptSweepShoot(drive, led, intake)),
-            new Auto(AutoName.C_DEPOT_OUTPOST, new CDepotOutpost(drive, led, intake)));
+            new Auto(AutoName.C_DEPOT_OUTPOST, new CDepotOutpost(drive, led, intake)),
+            new Auto(
+                AutoName.DRIVE_WHEEL_RADIUS_CHARACTERIZATION,
+                new SequentialCommandGroup(DriveCommands.wheelRadiusCharacterization(drive))),
+            new Auto(
+                AutoName.DRIVE_SIMPLE_FF_CHARACTERIZATION,
+                new SequentialCommandGroup(DriveCommands.feedforwardCharacterization(drive))),
+            new Auto(
+                AutoName.DRIVE_SYS_ID_QUASISTATIC_FORWARD,
+                new SequentialCommandGroup(
+                    drive.sysIdQuasistatic(SysIdRoutine.Direction.kForward))),
+            new Auto(
+                AutoName.DRIVE_SYS_ID_QUASISTATIC_REVERSE,
+                new SequentialCommandGroup(
+                    drive.sysIdQuasistatic(SysIdRoutine.Direction.kReverse))),
+            new Auto(
+                AutoName.DRIVE_SYS_ID_DYNAMIC_FORWARD,
+                new SequentialCommandGroup(drive.sysIdDynamic(SysIdRoutine.Direction.kForward))),
+            new Auto(
+                AutoName.DRIVE_SYS_ID_DYNAMIC_REVERSE,
+                new SequentialCommandGroup(drive.sysIdDynamic(SysIdRoutine.Direction.kReverse))));
 
     for (Auto nextAuto : autos) {
       if (nextAuto.name == defaultAuto) {
