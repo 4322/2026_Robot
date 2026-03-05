@@ -29,18 +29,10 @@ public class TunerConstants {
   // the
   // output type specified by SwerveModuleConstants.SteerMotorClosedLoopOutput
 
-  public static final double driveSupplyCurrentLimit = 40.0;
-  public static final double driveSupplyCurrentTime = 0.0;
-  public static final double driveStatorCurrentLimit = 100;
-
-  public static final double turnSupplyCurrentLimit = 40.0;
-  public static final double turnSupplyCurrentTime = 0.0;
-  public static final double turnStatorCurrentLimit = 100;
-
   private static final double drivekP = 1.0;
   private static final double drivekD = 0;
-  private static final double drivekS = 0.2;
-  private static final double drivekV = 0.95;
+  private static final double drivekS = 0.28;
+  private static final double drivekV = 2.103;
 
   private static final double turnkP = 150;
   private static final double turnkD = 0.2;
@@ -95,8 +87,7 @@ public class TunerConstants {
           .withCurrentLimits(
               new CurrentLimitsConfigs()
                   // Swerve azimuth does not require much torque output, so we can set a
-                  // relatively
-                  // low
+                  // relatively low
                   // stator current limit to help avoid brownouts without impacting performance.
                   .withStatorCurrentLimit(Amps.of(60))
                   .withStatorCurrentLimitEnable(true));
@@ -111,7 +102,7 @@ public class TunerConstants {
 
   // Theoretical free speed (m/s) at 12 V applied output;
   // This needs to be tuned to your individual robot
-  public static final LinearVelocity kSpeedAt12Volts = MetersPerSecond.of(4.69); // TODO
+  public static final LinearVelocity kSpeedAt12Volts = MetersPerSecond.of(5.7);
 
   // Every 1 rotation of the azimuth results in kCoupleRatio drive motor turns;
   // This may need to be tuned to your individual robot
