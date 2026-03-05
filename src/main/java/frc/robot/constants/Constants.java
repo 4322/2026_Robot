@@ -57,10 +57,10 @@ public final class Constants {
   }
 
   public static final SubsystemMode driveMode = SubsystemMode.NORMAL;
-  public static final SubsystemMode flywheelMode = SubsystemMode.DISABLED;
-  public static final SubsystemMode hoodMode = SubsystemMode.DISABLED;
-  public static final SubsystemMode spindexerMode = SubsystemMode.DISABLED;
-  public static final SubsystemMode tunnelMode = SubsystemMode.DISABLED;
+  public static final SubsystemMode flywheelMode = SubsystemMode.NORMAL;
+  public static final SubsystemMode hoodMode = SubsystemMode.NORMAL;
+  public static final SubsystemMode spindexerMode = SubsystemMode.NORMAL;
+  public static final SubsystemMode tunnelMode = SubsystemMode.NORMAL;
   public static final SubsystemMode turretMode = SubsystemMode.DISABLED;
   public static final SubsystemMode deployerMode = SubsystemMode.DISABLED;
   public static final SubsystemMode rollerMode = SubsystemMode.DISABLED;
@@ -69,7 +69,7 @@ public final class Constants {
   public static final SubsystemMode ledMode = SubsystemMode.DISABLED;
   public static final SubsystemMode visionGlobalPose = SubsystemMode.NORMAL;
   public static final SubsystemMode visionObjectDetection = SubsystemMode.DISABLED;
-  public static final SubsystemMode firingManager = SubsystemMode.DISABLED;
+  public static final SubsystemMode firingManager = SubsystemMode.NORMAL;
 
   public static class Drive {
     public static final int gyroID = 0;
@@ -325,16 +325,17 @@ public final class Constants {
       putFiringMapEntryScoring(Units.inchesToMeters(48), new FiringParameters(45, 3.5, 1, 30, 7));
       putFiringMapEntryScoring(
           Units.inchesToMeters(210), new FiringParameters(55, 24, 1, 30, 7)); // Low lob
-      // High Lob, putFiringMapEntryScoring(Units.inchesToMeters(210), new FiringParameters(60, 18, 1, 20, 7));
+      // High Lob, putFiringMapEntryScoring(Units.inchesToMeters(210), new FiringParameters(60, 18,
+      // 1, 20, 7));
       putFiringMapEntryScoring(Units.inchesToMeters(129), new FiringParameters(45, 16, 1, 30, 7));
 
       // Passing
       putFiringMapEntryPassing(Units.inchesToMeters(144.5), new FiringParameters(39, 19, 1, 30, 7));
       putFiringMapEntryPassing(Units.inchesToMeters(302), new FiringParameters(70, 38, 1, 30, 7));
+      putFiringMapEntryPassing(Units.inchesToMeters(539), new FiringParameters(90, 38, 1, 30, 7));
     }
 
-    public static final boolean alwaysTargetAllianceZone =
-        true; 
+    public static final boolean alwaysTargetAllianceZone = true;
   }
 
   public static class FiringTargetTranslations {

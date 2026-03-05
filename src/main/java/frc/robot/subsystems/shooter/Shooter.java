@@ -86,6 +86,10 @@ public class Shooter extends SubsystemBase {
       turret.periodic();
       return;
     }
+    if (DriverStation.isDisabled()) {
+
+      state = ShooterState.DISABLED;
+    }
 
     switch (state) {
       case DISABLED -> {
@@ -110,7 +114,7 @@ public class Shooter extends SubsystemBase {
           tunnel.requestIdle();
           if (tunnel.isStopped()) {
             flywheel.requestGoal(Constants.Flywheel.idleRPS);
-            targetFlywheelSpeedRPS = Constants.Flywheel.idleRPS * 60;
+            targetFlywheelSpeedRPS = Constants.Flywheel.idleRPS;
           }
         }
       }
@@ -149,7 +153,7 @@ public class Shooter extends SubsystemBase {
 
         tunnel.requestIndex(
             Constants.Tunnel.dynamicVelocity
-                ? (flywheel.getVelocity() / (targetFlywheelSpeedRPS / 60)) * targetTunnelSpeedRPS
+                ? (flywheel.getVelocity() / (targetFlywheelSpeedRPS)) * targetTunnelSpeedRPS
                 : targetTunnelSpeedRPS);
         if (tunnel.getVelocity() > Constants.Tunnel.minPercentVelocity * targetTunnelSpeedRPS) {
           spindexer.requestIndex(
