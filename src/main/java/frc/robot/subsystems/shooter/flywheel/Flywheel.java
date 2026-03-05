@@ -18,8 +18,6 @@ public class Flywheel {
     io.updateInputs(inputs);
     Logger.processInputs("Flywheel", inputs);
     Logger.recordOutput("Flywheel/BallsShot", ballsShot);
-
-   
   }
 
   public void requestGoal(double velocity) {
@@ -35,8 +33,6 @@ public class Flywheel {
   public void enableBrakeMode(boolean enable) {
     io.enableBrakeMode(enable);
   }
-
-  
 
   public boolean atTargetVelocity() {
     return Math.abs(inputs.mechanismRPS - inputs.requestedMechanismRPS)
