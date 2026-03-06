@@ -3,6 +3,7 @@ package frc.robot.autonomous.modes;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -10,14 +11,17 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Robot;
 import frc.robot.commands.AutoIntake;
 import frc.robot.commands.IntakeCommands;
+import frc.robot.commands.ShooterCommands;
+import frc.robot.constants.Constants;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.led.LED;
+import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetection;
 
 public class RDisruptSweepShoot extends SequentialCommandGroup {
 
-  public RDisruptSweepShoot(Drive drive, LED led, Intake intake) {
+  public RDisruptSweepShoot(Drive drive, LED led, Intake intake, Shooter shooter) {
     PathPlannerPath path = Robot.R_StartR_To_NeutralR_Intake_Disrupt;
     Pose2d startPoseBlue = path.getStartingHolonomicPose().get();
     path.flipPath();
@@ -38,11 +42,18 @@ public class RDisruptSweepShoot extends SequentialCommandGroup {
             AutoBuilder.followPath(Robot.R_StartR_To_NeutralR_Intake_Disrupt)
                 .andThen(AutoBuilder.followPath(Robot.R_NeutralR_Intake_Full_Disrupt))
                 .andThen(AutoBuilder.followPath(Robot.R_NeutralR_Intake_Full_Disrupt_Flip))
-                .andThen(AutoBuilder.followPath(Robot.R_NeutralRMid_To_ShootR))));
+                .andThen(AutoBuilder.followPath(Robot.R_NeutralRMid_To_ShootR))
+                .andThen(ShooterCommands.aimAndShoot(shooter, drive))
+                .onlyWhile(() -> DriverStation.isAutonomous())
+                .onlyIf(() -> Constants.turretLocked)));
   }
 
   public RDisruptSweepShoot(
-      Drive drive, LED led, Intake intake, VisionObjectDetection visionObjectDetection) {
+      Drive drive,
+      LED led,
+      Intake intake,
+      VisionObjectDetection visionObjectDetection,
+      Shooter shooter) {
     PathPlannerPath path = Robot.R_StartR_To_NeutralR_Intake_Disrupt;
     Pose2d startPoseBlue = path.getStartingHolonomicPose().get();
     path.flipPath();
