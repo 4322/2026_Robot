@@ -76,14 +76,18 @@ public class Shooter extends SubsystemBase {
     if (Constants.firingManager == Constants.SubsystemMode.TUNING) {
       flywheel.requestGoal(targetFlywheelSpeedRPS);
       hood.requestGoal(targetHoodAngleDeg);
-      turret.setAngle(targetTurretAngleDeg, true);
+      if (!Constants.turretLocked){
+        turret.setAngle(targetTurretAngleDeg, true);
+      }
       tunnel.requestIndex(targetTunnelSpeedRPS);
       spindexer.requestIndex(targetIndexerSpeedRPS);
       flywheel.periodic();
       spindexer.periodic();
       tunnel.periodic();
       hood.periodic();
+      if (!Constants.turretLocked){
       turret.periodic();
+      }
       return;
     }
     if (DriverStation.isDisabled()) {
@@ -100,7 +104,9 @@ public class Shooter extends SubsystemBase {
       }
       case IDLE -> {
         spindexer.requestIdle();
+        if (!Constants.turretLocked){
         turret.setAngle(targetTurretAngleDeg, true);
+        }
         if (AreaManager.isHoodDangerZone(drive.getPose().getTranslation())) {
           Logger.recordOutput("Shooter/isHoodDangerZone", true);
           hood.requestGoal(Constants.Hood.idleAngleDeg);
@@ -137,19 +143,28 @@ public class Shooter extends SubsystemBase {
             targetFlywheelSpeedRPS = Constants.Flywheel.idleRPS;
           }
         }
-        if (turret.isAtGoal()) {
+        // In case for some reason we end up in this state when turret is locked
+        if (turret.isAtGoal() || Constants.turretLocked) {
           unwindComplete = true;
         }
       }
       case PRESHOOT -> {
         flywheel.requestGoal(targetFlywheelSpeedRPS);
         hood.requestGoal(targetHoodAngleDeg);
+        if (!Constants.turretLocked){
         turret.setAngle(targetTurretAngleDeg, true);
+        } else {
+          drive.alignToTarget();
+        }
       }
       case SHOOT -> {
         flywheel.requestGoal(targetFlywheelSpeedRPS);
         hood.requestGoal(targetHoodAngleDeg);
+        if (!Constants.turretLocked){
         turret.setAngle(targetTurretAngleDeg, false);
+        } else {
+          drive.alignToTarget();
+        }
 
         tunnel.requestIndex(
             Constants.Tunnel.dynamicVelocity
@@ -168,7 +183,9 @@ public class Shooter extends SubsystemBase {
     spindexer.periodic();
     tunnel.periodic();
     hood.periodic();
+    if (!Constants.turretLocked){
     turret.periodic();
+    }
 
     led.requestTurretUnwinding(state == ShooterState.UNWIND);
 
@@ -221,6 +238,10 @@ public class Shooter extends SubsystemBase {
 
     } else if (AreaManager.getZoneOfPosition(drive.getPose().getTranslation()) == Zone.ALLIANCE_ZONE
         && !HubShiftUtil.getShiftedShiftInfo().active()) {
+      if (Constants.turretLocked) {
+        state = ShooterState.IDLE;
+        return;
+      }
       // Don't shoot if inactive
       if (turret.needsToUnwind()) {
         unwindComplete = false;
@@ -238,11 +259,11 @@ public class Shooter extends SubsystemBase {
         unwindComplete = false;
         state = ShooterState.PRESHOOT;
         calculateFiringSolution();
-        if (hood.isAtGoal() && turret.isAtGoal() && flywheel.atTargetVelocity()) {
+        if (hood.isAtGoal() && flywheel.atTargetVelocity() && ((turret.isAtGoal() && !Constants.turretLocked) || (Constants.turretLocked && drive.atRotationTarget()))) {
           state = ShooterState.SHOOT;
         }
       } else {
-        if (turret.needsToUnwind()) {
+        if (!Constants.turretLocked && turret.needsToUnwind()) {
           unwindComplete = false;
           state = ShooterState.UNWIND;
         }

@@ -371,4 +371,13 @@ public class Drive extends SubsystemBase {
   public Pose2d getPoseAtTimestamp(double timestampSeconds) {
     return poseEstimator.sampleAt(timestampSeconds).orElse(null);
   }
+
+  public void alignToTarget() {
+    // TODO implement
+  }
+
+  public boolean atRotationTarget() {
+    // TODO implement
+    return false;
+  }
 }
