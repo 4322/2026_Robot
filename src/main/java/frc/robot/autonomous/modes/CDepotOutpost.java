@@ -15,6 +15,7 @@ import org.littletonrobotics.junction.Logger;
 public class CDepotOutpost extends SequentialCommandGroup {
   public CDepotOutpost(Drive drive, LED led, Intake intake) {
     setName("C_DEPOT_OUTPOST");
+    
     addCommands(
         new InstantCommand(() -> Logger.recordOutput("Autonomous/autoStarted", true)),
         new InstantCommand(

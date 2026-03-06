@@ -71,6 +71,8 @@ public final class Constants {
   public static final SubsystemMode visionObjectDetection = SubsystemMode.DISABLED;
   public static final SubsystemMode firingManager = SubsystemMode.TUNING;
 
+  public static final boolean turretLocked = true;
+
   public static class Drive {
     public static final int gyroID = 0;
     public static final boolean zeroTurnEncoders = false; // requires drive to be in tuning mode
