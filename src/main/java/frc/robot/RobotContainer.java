@@ -419,15 +419,16 @@ public class RobotContainer {
 
     // Shooter command bindings
     if (Constants.turretLocked) {
-        shooter.setDefaultCommand(ShooterCommands.idle(shooter));
-        controller.b() // TODO set button
-            .whileTrue(ShooterCommands.aimAndShoot(shooter, drive));
+      shooter.setDefaultCommand(ShooterCommands.idle(shooter));
+      controller
+          .b() // TODO set button
+          .whileTrue(ShooterCommands.aimAndShoot(shooter, drive));
     } else {
-    shooter.setDefaultCommand(ShooterCommands.autoShoot(shooter));
+      shooter.setDefaultCommand(ShooterCommands.autoShoot(shooter));
 
-    new JoystickButton(operatorBoard.getLeftController(), Constants.Control.toggle1ButtonNumber)
-        .or(inNonShootingArea)
-        .whileTrue(ShooterCommands.inhibitAutoShoot(shooter));
+      new JoystickButton(operatorBoard.getLeftController(), Constants.Control.toggle1ButtonNumber)
+          .or(inNonShootingArea)
+          .whileTrue(ShooterCommands.inhibitAutoShoot(shooter));
     }
 
     // Toggle 4

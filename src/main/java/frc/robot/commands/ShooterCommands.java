@@ -30,9 +30,12 @@ public class ShooterCommands {
   }
 
   public static Command aimAndShoot(Shooter shooter, Drive drive) {
-    return Commands.run(() -> {
-      shooter.requestShoot();
-    }, drive, shooter);
+    return Commands.run(
+        () -> {
+          shooter.requestShoot();
+        },
+        drive,
+        shooter);
   }
 
   public static Command idle(Shooter shooter) {

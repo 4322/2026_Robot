@@ -55,6 +55,7 @@ public final class Constants {
     NORMAL,
     TUNING
   }
+
   public static final boolean turretLocked = true;
 
   public static final SubsystemMode driveMode = SubsystemMode.NORMAL;
@@ -62,7 +63,12 @@ public final class Constants {
   public static final SubsystemMode hoodMode = SubsystemMode.NORMAL;
   public static final SubsystemMode spindexerMode = SubsystemMode.NORMAL;
   public static final SubsystemMode tunnelMode = SubsystemMode.NORMAL;
-  public static final SubsystemMode turretMode = turretLocked ? SubsystemMode.DISABLED : SubsystemMode.DISABLED; // To prevent accidentally locking turret and having it enabled at the same time
+  public static final SubsystemMode turretMode =
+      turretLocked
+          ? SubsystemMode.DISABLED
+          : SubsystemMode
+              .DISABLED; // To prevent accidentally locking turret and having it enabled at the same
+  // time
   public static final SubsystemMode deployerMode = SubsystemMode.DISABLED;
   public static final SubsystemMode rollerMode = SubsystemMode.DISABLED;
   public static final SubsystemMode intakeMode = SubsystemMode.DISABLED;
@@ -71,8 +77,6 @@ public final class Constants {
   public static final SubsystemMode visionGlobalPose = SubsystemMode.NORMAL;
   public static final SubsystemMode visionObjectDetection = SubsystemMode.DISABLED;
   public static final SubsystemMode firingManager = SubsystemMode.TUNING;
-
-  
 
   public static class Drive {
     public static final int gyroID = 0;
@@ -331,7 +335,7 @@ public final class Constants {
       // High Lob, putFiringMapEntryScoring(Units.inchesToMeters(210), new FiringParameters(60, 18,
       // 1, 20, 7));
       putFiringMapEntryScoring(Units.inchesToMeters(129), new FiringParameters(45, 16, 1, 30, 7));
-       putFiringMapEntryScoring(Units.inchesToMeters(164), new FiringParameters(49, 20, 1, 30, 7));
+      putFiringMapEntryScoring(Units.inchesToMeters(164), new FiringParameters(49, 20, 1, 30, 7));
 
       // Passing
       putFiringMapEntryPassing(Units.inchesToMeters(144.5), new FiringParameters(39, 19, 1, 30, 7));
