@@ -391,7 +391,6 @@ public class RobotContainer {
         new Trigger(() -> !AreaManager.isShootingArea(drive.getPose().getTranslation()));
 
     // Configure the button bindings
-    configureButtonBindings();
 
     field = new Field2d();
     SmartDashboard.putData("Field", field);

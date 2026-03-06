@@ -8,7 +8,6 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
-import frc.robot.constants.Constants.VisionObjectDetection.ObjectDetectionTarget;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.shooter.areaManager.AreaManager;
 import org.littletonrobotics.junction.Logger;
@@ -156,16 +155,6 @@ public class VisionObjectDetection extends SubsystemBase {
 
   // Attempts to get average fuel position, but if that fails, returns closest fuel
   public Translation2d getBestFuelPose(boolean sameZone) {
-    if (Constants.VisionObjectDetection.mode == ObjectDetectionTarget.CENTROID) {
-      final Translation2d bestFuelPosition = getCentroidOfVisibleObjects(sameZone);
-      if (bestFuelPosition == null) {
-        return calculateBestObjectPositionOnField(sameZone);
-      }
-      return bestFuelPosition;
-    } else if (Constants.VisionObjectDetection.mode == ObjectDetectionTarget.CLOSEST) {
-      return calculateBestObjectPositionOnField(sameZone);
-    } else {
-      return null;
-    }
+    return new Translation2d();
   }
 }

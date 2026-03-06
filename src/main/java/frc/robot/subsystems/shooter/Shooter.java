@@ -1,9 +1,5 @@
 package frc.robot.subsystems.shooter;
 
-import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
 import frc.robot.subsystems.drive.Drive;
@@ -70,127 +66,7 @@ public class Shooter extends SubsystemBase {
   }
 
   @Override
-  public void periodic() {
-    calculateFiringSolution();
-
-    if (Constants.firingManager == Constants.SubsystemMode.TUNING) {
-      flywheel.requestGoal(targetFlywheelSpeedRPS);
-      hood.requestGoal(targetHoodAngleDeg);
-      turret.setAngle(targetTurretAngleDeg, true);
-      tunnel.requestIndex(targetTunnelSpeedRPS);
-      spindexer.requestIndex(targetIndexerSpeedRPS);
-      flywheel.periodic();
-      spindexer.periodic();
-      tunnel.periodic();
-      hood.periodic();
-      turret.periodic();
-      return;
-    }
-    if (DriverStation.isDisabled()) {
-
-      state = ShooterState.DISABLED;
-    }
-
-    switch (state) {
-      case DISABLED -> {
-        if (DriverStation.isEnabled()) {
-
-          state = ShooterState.IDLE;
-        }
-      }
-      case IDLE -> {
-        spindexer.requestIdle();
-        turret.setAngle(targetTurretAngleDeg, true);
-        if (AreaManager.isHoodDangerZone(drive.getPose().getTranslation())) {
-          Logger.recordOutput("Shooter/isHoodDangerZone", true);
-          hood.requestGoal(Constants.Hood.idleAngleDeg);
-          targetHoodAngleDeg = Constants.Hood.idleAngleDeg;
-        } else {
-          Logger.recordOutput("Shooter/isHoodDangerZone", false);
-          hood.requestGoal(targetHoodAngleDeg);
-        }
-
-        if (spindexer.isStopped()) {
-          tunnel.requestIdle();
-          if (tunnel.isStopped()) {
-            flywheel.requestGoal(Constants.Flywheel.idleRPS);
-            targetFlywheelSpeedRPS = Constants.Flywheel.idleRPS;
-          }
-        }
-      }
-      case UNWIND -> {
-        spindexer.requestIdle();
-        turret.setAngle(targetTurretAngleDeg, false);
-
-        if (AreaManager.isHoodDangerZone(drive.getPose().getTranslation())) {
-          hood.requestGoal(Constants.Hood.idleAngleDeg);
-          targetHoodAngleDeg = Constants.Hood.idleAngleDeg;
-        } else {
-          hood.requestGoal(targetHoodAngleDeg);
-        }
-
-        if (spindexer.isStopped()) {
-          tunnel.requestIdle();
-          if (tunnel.isStopped()) {
-            turret.unwind();
-            flywheel.requestGoal(Constants.Flywheel.idleRPS);
-            targetFlywheelSpeedRPS = Constants.Flywheel.idleRPS;
-          }
-        }
-        if (turret.isAtGoal()) {
-          unwindComplete = true;
-        }
-      }
-      case PRESHOOT -> {
-        flywheel.requestGoal(targetFlywheelSpeedRPS);
-        hood.requestGoal(targetHoodAngleDeg);
-        turret.setAngle(targetTurretAngleDeg, true);
-      }
-      case SHOOT -> {
-        flywheel.requestGoal(targetFlywheelSpeedRPS);
-        hood.requestGoal(targetHoodAngleDeg);
-        turret.setAngle(targetTurretAngleDeg, false);
-
-        tunnel.requestIndex(
-            Constants.Tunnel.dynamicVelocity
-                ? (flywheel.getVelocity() / (targetFlywheelSpeedRPS)) * targetTunnelSpeedRPS
-                : targetTunnelSpeedRPS);
-        if (tunnel.getVelocity() > Constants.Tunnel.minPercentVelocity * targetTunnelSpeedRPS) {
-          spindexer.requestIndex(
-              Constants.Spindexer.dynamicVelocity
-                  ? (tunnel.getVelocity() / targetTunnelSpeedRPS) * targetIndexerSpeedRPS
-                  : targetIndexerSpeedRPS);
-        }
-      }
-    }
-
-    flywheel.periodic();
-    spindexer.periodic();
-    tunnel.periodic();
-    hood.periodic();
-    turret.periodic();
-
-    led.requestTurretUnwinding(state == ShooterState.UNWIND);
-
-    Logger.recordOutput("Shooter/State", state.toString());
-    Logger.recordOutput("Shooter/unwindComplete", unwindComplete);
-    Logger.recordOutput("Shooter/spindexerStopped", spindexer.isStopped());
-    Logger.recordOutput("Shooter/tunnelStopped", tunnel.isStopped());
-    Logger.recordOutput(
-        "Shooter/currentZone", AreaManager.getZoneOfPosition(drive.getPose().getTranslation()));
-    Logger.recordOutput("Shooter/flywheelAtSpeed", flywheel.atTargetVelocity());
-    Logger.recordOutput("Shooter/hoodAtPosition", hood.isAtGoal());
-    Logger.recordOutput("Shooter/turretAtPosition", turret.isAtGoal());
-    Logger.recordOutput("Shooter/TargetHoodAngleDeg", targetHoodAngleDeg);
-    Logger.recordOutput("Shooter/TargetFlywheelSpeedRPS", targetFlywheelSpeedRPS / 60);
-    Logger.recordOutput("Shooter/TargetTurretAngleDeg", targetTurretAngleDeg);
-    Logger.recordOutput(
-        "Shooter/TurretPose",
-        new Pose3d[] {
-          new Pose3d(
-              -0.13, 0.17, 0.3, new Rotation3d(0, 0, Units.degreesToRadians(turret.getAngle())))
-        });
-  }
+  public void periodic() {}
 
   private void calculateFiringSolution() {
     FiringSolution firingSolution =

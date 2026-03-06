@@ -2,10 +2,7 @@ package frc.robot.subsystems.intake;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.intake.deployer.Deployer;
-import frc.robot.subsystems.intake.deployer.Deployer.DeployerState;
 import frc.robot.subsystems.intake.rollers.Rollers;
-import frc.robot.subsystems.intake.rollers.Rollers.RollersState;
-import org.littletonrobotics.junction.Logger;
 
 public class Intake extends SubsystemBase {
   private final Deployer deployer;
@@ -28,32 +25,7 @@ public class Intake extends SubsystemBase {
   public IntakeState state = IntakeState.DISABLED;
 
   @Override
-  public void periodic() {
-    Logger.recordOutput("Intake/State", state);
-    switch (state) {
-      case DISABLED -> {
-        break;
-      }
-      case RETRACT -> {
-        deployer.setGoal(DeployerState.RETRACT);
-        rollers.setState(RollersState.IDLE);
-      }
-      case EJECT -> {
-        deployer.setGoal(DeployerState.EXTEND);
-        rollers.setState(RollersState.EJECT);
-      }
-      case IDLE -> {
-        deployer.setGoal(DeployerState.EXTEND);
-        rollers.setState(RollersState.IDLE);
-      }
-      case INTAKING -> {
-        deployer.setGoal(DeployerState.EXTEND);
-        rollers.setState(RollersState.INTAKE);
-      }
-    }
-    deployer.periodic();
-    rollers.periodic();
-  }
+  public void periodic() {}
 
   public void setState(IntakeState desiredState) {
     state = desiredState;

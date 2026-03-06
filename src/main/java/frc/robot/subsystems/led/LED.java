@@ -1,11 +1,7 @@
 package frc.robot.subsystems.led;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.drive.Drive;
-import frc.robot.subsystems.shooter.areaManager.AreaManager;
-import frc.robot.util.HubShiftUtil;
-import org.littletonrobotics.junction.Logger;
 
 public class LED extends SubsystemBase {
   private LEDState state = LEDState.DISABLED;
@@ -45,27 +41,7 @@ public class LED extends SubsystemBase {
   }
 
   @Override
-  public void periodic() {
-    Logger.recordOutput("LED/State", state.toString());
-    if (DriverStation.isDisabled()) {
-      setLEDState(LEDState.DISABLED);
-    } else if (climberDeployed) {
-      setLEDState(LEDState.CLIMBER_DEPLOYED);
-    } else if (autoFuelPickup) {
-      setLEDState(LEDState.AUTO_FUEL_PICKUP);
-    } else if (turretUnwinding) {
-      setLEDState(LEDState.TURRET_UNWINDING);
-    } else if (AreaManager.isShootingArea(drive.getPose().getTranslation())) {
-      if (HubShiftUtil.getShiftedShiftInfo().active()) {
-        setLEDState(LEDState.SHOOTING_AREA_ACTIVE);
-      } else {
-        setLEDState(LEDState.SHOOTING_AREA_INACTIVE);
-      }
-
-    } else {
-      setLEDState(LEDState.NON_SHOOTING_AREA);
-    }
-  }
+  public void periodic() {}
 
   private void setLEDState(LEDState newState) {
     if (state != newState) {
