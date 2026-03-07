@@ -159,7 +159,7 @@ public class FiringManager {
     Zone zone = AreaManager.getZoneOfPosition(robotPosition);
 
     if (Robot.alliance == Alliance.Blue) {
-      
+
       switch (zone) {
         case ALLIANCE_ZONE:
           Logger.recordOutput("FiringManager/targetZone", "Hub");
