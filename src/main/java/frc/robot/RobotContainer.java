@@ -442,9 +442,9 @@ public class RobotContainer {
 
     intake.setDefaultCommand(IntakeCommands.setIdle(intake));
 
-    controller
-        .y() // TODO driver button 11 whatever that is
-        .toggleOnTrue(IntakeCommands.setIntaking(intake));
+    controller.y().toggleOnTrue(IntakeCommands.setIntaking(intake));
+
+    controller.x().toggleOnTrue(IntakeCommands.setRetract(intake));
 
     new JoystickButton(operatorBoard.getLeftController(), Constants.Control.toggle3ButtonNumber)
         .whileTrue(IntakeCommands.setRetract(intake));
