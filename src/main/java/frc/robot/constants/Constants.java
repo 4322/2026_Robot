@@ -3,6 +3,7 @@ package frc.robot.constants;
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.ctre.phoenix6.signals.StripTypeValue;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
@@ -59,22 +60,22 @@ public final class Constants {
   public static final boolean turretLocked = true;
 
   public static final SubsystemMode driveMode = SubsystemMode.NORMAL;
-  public static final SubsystemMode flywheelMode = SubsystemMode.NORMAL;
-  public static final SubsystemMode hoodMode = SubsystemMode.NORMAL;
-  public static final SubsystemMode spindexerMode = SubsystemMode.NORMAL;
-  public static final SubsystemMode tunnelMode = SubsystemMode.NORMAL;
+  public static final SubsystemMode flywheelMode = SubsystemMode.DISABLED;
+  public static final SubsystemMode hoodMode = SubsystemMode.DISABLED;
+  public static final SubsystemMode spindexerMode = SubsystemMode.DISABLED;
+  public static final SubsystemMode tunnelMode = SubsystemMode.DISABLED;
   public static final SubsystemMode turretMode =
       turretLocked
           ? SubsystemMode.DISABLED
           : SubsystemMode
               .DISABLED; // To prevent accidentally locking turret and having it enabled at the same
   // time
-  public static final SubsystemMode deployerMode = SubsystemMode.DISABLED;
+  public static final SubsystemMode deployerMode = SubsystemMode.TUNING;
   public static final SubsystemMode rollerMode = SubsystemMode.DISABLED;
-  public static final SubsystemMode intakeMode = SubsystemMode.DISABLED;
+  public static final SubsystemMode intakeMode = SubsystemMode.NORMAL;
   public static final SubsystemMode climberMode = SubsystemMode.DISABLED;
   public static final SubsystemMode ledMode = SubsystemMode.DISABLED;
-  public static final SubsystemMode visionGlobalPose = SubsystemMode.NORMAL;
+  public static final SubsystemMode visionGlobalPose = SubsystemMode.DISABLED;
   public static final SubsystemMode visionObjectDetection = SubsystemMode.DISABLED;
   public static final SubsystemMode firingManager = SubsystemMode.TUNING;
 
@@ -222,23 +223,25 @@ public final class Constants {
   public class Deployer {
     // 0 degrees is stowed postion
     // postive degrees when extending
-    public static final double retractDeg = 0; // TODO
-    public static final double extendDeg = 95; // TODO
-    public static final double maxGravityDegrees = 65; // TODO
+    public static final double retractDeg = 0;
+    public static final double extendDeg = 128.2;
+    public static final double maxGravityDegrees = 110;
     public static final int motorId = 25;
     public static final double statorCurrentLimit = 60;
     public static final double supplyCurrentLimit = 40;
     public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
     public static final InvertedValue motorInvert = InvertedValue.Clockwise_Positive;
-    public static final double kP = 1; // TODO
-    public static final double kG = 2; // TODO
+    public static final SensorDirectionValue sensorDirection =
+        SensorDirectionValue.Clockwise_Positive;
+    public static final double kP = 1;
+    public static final double kG = 0;
     public static final double kI = 0;
     public static final double kD = 0;
     public static final int CANCoderID = 2;
-    public static final double sensorToMechanismRatio = 3.0; // TODO
-    public static final double RotorToSensorRatio = 12.0; // TODO
-    public static final double tolerance = 0.1;
-    public static final double CANCoderStowed = 0.5; // TODO
+    public static final double sensorToMechanismRatio = 3.0;
+    public static final double RotorToSensorRatio = 12.0;
+    public static final double tolerance = 0.2;
+    public static final double SesnorOffsetRotations = 0.57;
   }
 
   public static class FiringParameters {
