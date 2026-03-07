@@ -98,16 +98,8 @@ public class DriveCommands {
                           ? drive.getRotation().plus(new Rotation2d(Math.PI))
                           : drive.getRotation()));
             },
-            drive)
-        .until(
-            () ->
-                ((RobotContainer.controller.rightBumper().getAsBoolean()
-                            && AreaManager.isShootingArea(drive.getPose().getTranslation()))
-                        || (HubTracker.isActive()
-                            && AreaManager.getZoneOfPosition(drive.getPose().getTranslation())
-                                == AreaManager.Zone.ALLIANCE_ZONE))
-                    && Constants.turretLocked)
-        .andThen(driveAzimuthRotate(drive));
+            drive);
+       
   }
 
   /**
