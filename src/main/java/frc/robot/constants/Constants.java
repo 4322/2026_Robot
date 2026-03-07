@@ -225,7 +225,7 @@ public final class Constants {
     // postive degrees when extending
     public static final double retractDeg = 0;
     public static final double extendDeg = 128.2;
-    public static final double maxGravityDegrees = 110;
+    public static final double maxGravityDegrees = -110;
     public static final int motorId = 25;
     public static final double statorCurrentLimit = 60;
     public static final double supplyCurrentLimit = 40;

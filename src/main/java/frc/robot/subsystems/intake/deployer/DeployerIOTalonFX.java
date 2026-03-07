@@ -47,22 +47,24 @@ public class DeployerIOTalonFX implements DeployerIO {
     canCoderConfigs.MagnetSensor.MagnetOffset = -Constants.Deployer.SesnorOffsetRotations;
     canCoderConfigs.MagnetSensor.SensorDirection = Constants.Deployer.sensorDirection;
     canCoderConfigs.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 1; // range 0 to 1.0
-    StatusCode deployerConfigStatus = deployerMotor.getConfigurator().apply(motorConfigs);
+
+    // Must configure CANcoder before TalonFX since TalonFX is using CANcoder as feedback device
     StatusCode CANcoderStatus = canCoder.getConfigurator().apply(canCoderConfigs);
-    if (deployerConfigStatus != StatusCode.OK) {
-      DriverStation.reportError(
-          "Talon "
-              + deployerMotor.getDeviceID()
-              + " error (Deployer): "
-              + deployerConfigStatus.getDescription(),
-          false);
-    }
     if (CANcoderStatus != StatusCode.OK) {
       DriverStation.reportError(
           "Talon "
               + canCoder.getDeviceID()
               + " error (CANCoder): "
               + CANcoderStatus.getDescription(),
+          false);
+    }
+    StatusCode deployerConfigStatus = deployerMotor.getConfigurator().apply(motorConfigs);
+    if (deployerConfigStatus != StatusCode.OK) {
+      DriverStation.reportError(
+          "Talon "
+              + deployerMotor.getDeviceID()
+              + " error (Deployer): "
+              + deployerConfigStatus.getDescription(),
           false);
     }
   }
@@ -73,12 +75,12 @@ public class DeployerIOTalonFX implements DeployerIO {
 
     inputs.connected = deployerMotor.isConnected();
 
-    inputs.angleDeg = Units.rotationsToDegrees(deployerMotor.getPosition().getValueAsDouble());
+    inputs.angleDeg = -Units.rotationsToDegrees(deployerMotor.getPosition().getValueAsDouble());
 
     inputs.requestedPosDeg = requestedPosDeg;
 
     inputs.motorDegreesPerSec =
-        Units.rotationsToDegrees(deployerMotor.getVelocity().getValueAsDouble());
+        -Units.rotationsToDegrees(deployerMotor.getVelocity().getValueAsDouble());
 
     inputs.busCurrentAmps = deployerMotor.getSupplyCurrent().getValueAsDouble();
 
@@ -90,7 +92,7 @@ public class DeployerIOTalonFX implements DeployerIO {
 
     inputs.encoderRotations = canCoder.getAbsolutePosition().getValueAsDouble();
 
-    inputs.motorRotations = deployerMotor.getPosition().getValueAsDouble();
+    inputs.motorRotations = -deployerMotor.getPosition().getValueAsDouble();
   }
 
   @Override
