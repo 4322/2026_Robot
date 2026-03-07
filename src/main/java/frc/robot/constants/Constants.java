@@ -225,14 +225,14 @@ public final class Constants {
     // postive degrees when extending
     public static final double retractDeg = 0;
     public static final double extendDeg = 128.2;
-    public static final double maxGravityDegrees = -110;
+    public static final double maxGravityDegrees = 110;
     public static final int motorId = 25;
     public static final double statorCurrentLimit = 60;
     public static final double supplyCurrentLimit = 40;
     public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
     public static final InvertedValue motorInvert = InvertedValue.Clockwise_Positive;
     public static final SensorDirectionValue sensorDirection =
-        SensorDirectionValue.Clockwise_Positive;
+        SensorDirectionValue.CounterClockwise_Positive;
     public static final double kP = 1;
     public static final double kG = 0;
     public static final double kI = 0;
@@ -241,7 +241,7 @@ public final class Constants {
     public static final double sensorToMechanismRatio = 3.0;
     public static final double RotorToSensorRatio = 12.0;
     public static final double tolerance = 0.2;
-    public static final double SesnorOffsetRotations = 0.57;
+    public static final double SesnorOffsetRotations = 0.42;
   }
 
   public static class FiringParameters {

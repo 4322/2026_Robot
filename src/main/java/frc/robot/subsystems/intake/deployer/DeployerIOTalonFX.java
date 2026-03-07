@@ -75,12 +75,12 @@ public class DeployerIOTalonFX implements DeployerIO {
 
     inputs.connected = deployerMotor.isConnected();
 
-    inputs.angleDeg = -Units.rotationsToDegrees(deployerMotor.getPosition().getValueAsDouble());
+    inputs.angleDeg = Units.rotationsToDegrees(deployerMotor.getPosition().getValueAsDouble());
 
     inputs.requestedPosDeg = requestedPosDeg;
 
     inputs.motorDegreesPerSec =
-        -Units.rotationsToDegrees(deployerMotor.getVelocity().getValueAsDouble());
+        Units.rotationsToDegrees(deployerMotor.getVelocity().getValueAsDouble());
 
     inputs.busCurrentAmps = deployerMotor.getSupplyCurrent().getValueAsDouble();
 
@@ -92,7 +92,7 @@ public class DeployerIOTalonFX implements DeployerIO {
 
     inputs.encoderRotations = canCoder.getAbsolutePosition().getValueAsDouble();
 
-    inputs.motorRotations = -deployerMotor.getPosition().getValueAsDouble();
+    inputs.motorRotations = deployerMotor.getPosition().getValueAsDouble();
   }
 
   @Override
