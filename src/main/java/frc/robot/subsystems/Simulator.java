@@ -432,22 +432,22 @@ public class Simulator extends SubsystemBase {
           new SimEvent(
               t += 1.0, "Start pose", EventType.SET_POSE, new Pose2d(3, 0.650, Rotation2d.kZero)),
           new SimEvent(
-              t += 5,
+              t += 1,
               "Drive 5",
               EventType.MOVE_JOYSTICK_DRIVE,
               new Pose2d(0.5, 0.5, Rotation2d.k180deg)),
           new SimEvent(
-              t += 5,
+              t += 1,
               "Drive 6",
               EventType.MOVE_JOYSTICK_DRIVE,
               new Pose2d(-0.5, -0.5, Rotation2d.k180deg)),
           new SimEvent(
-              t += 3,
+              t += 1,
               "Drive 7",
               EventType.MOVE_JOYSTICK_DRIVE,
               new Pose2d(0.5, 0.5, Rotation2d.k180deg)),
           new SimEvent(
-              t += 3,
+              t += 1,
               "Drive 8",
               EventType.MOVE_JOYSTICK_DRIVE,
               new Pose2d(0, -0.5, Rotation2d.k180deg)),
@@ -456,7 +456,8 @@ public class Simulator extends SubsystemBase {
               t += 1,
               "Drive 9",
               EventType.MOVE_JOYSTICK_DRIVE,
-              new Pose2d(0, 0.5, Rotation2d.k180deg)));
+              new Pose2d(0, 0.5, Rotation2d.k180deg)),
+          new SimEvent(t += 5.0, "Final Movement", EventType.END_OF_SCENARIO));
 
       default -> List.of();
     };

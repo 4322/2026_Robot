@@ -108,13 +108,7 @@ public class RobotContainer {
 
   // Controller
   public static final CommandXboxController controller = new CommandXboxController(0);
-  public static ScoringManager operatorBoard = new ScoringManager(1, 1);
-
-  private enum ShootingCommands {
-    AUTO_SHOOT,
-    INHIBIT_AUTO_SHOOT,
-    AREA_INHIBIT_AUTO_SHOOT
-  }
+  public static ScoringManager operatorBoard = new ScoringManager(1, 2);
 
   private final Trigger inNonShootingArea;
 
@@ -122,17 +116,6 @@ public class RobotContainer {
   private final LoggedDashboardChooser<Command> autoChooser;
 
   boolean inhibitAutoShoot = false;
-
-  // Command variables
-  private enum IntakeCommandTypes {
-    EXTEND,
-    RETRACT,
-    EJECT,
-    IDLE,
-    INTAKING
-  }
-
-  private IntakeCommandTypes currentIntakeCommand = IntakeCommandTypes.EXTEND;
 
   // Boolean suppliers
   private final BooleanSupplier toggle1 =
