@@ -7,6 +7,7 @@ import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
+import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -38,6 +39,8 @@ public class DeployerIOTalonFX implements DeployerIO {
     motorConfigs.Slot0.kI = Constants.Deployer.kI;
     motorConfigs.Slot0.kD = Constants.Deployer.kD;
     motorConfigs.Slot0.kG = Constants.Deployer.kG;
+    motorConfigs.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
+    motorConfigs.Slot0.GravityArmPositionOffset = Constants.Deployer.maxGravityDegrees;
 
     motorConfigs.HardwareLimitSwitch.ForwardLimitEnable = false;
     motorConfigs.HardwareLimitSwitch.ReverseLimitEnable = false;
@@ -61,9 +64,8 @@ public class DeployerIOTalonFX implements DeployerIO {
     }
     posRot =
         canCoder.getAbsolutePosition().getValueAsDouble()
-            - Units.rotationsToDegrees(Constants.Deployer.CANCoderStowed);
-    deployerMotor.setPosition(
-        Units.degreesToRotations(Constants.Deployer.maxGravityDegrees - posRot));
+            - Units.degreesToRotations(Constants.Deployer.CANCoderOffsetDegrees);
+    deployerMotor.setPosition(posRot);
   }
 
   @Override
@@ -72,13 +74,12 @@ public class DeployerIOTalonFX implements DeployerIO {
 
     inputs.connected = deployerMotor.isConnected();
 
-    inputs.angleDeg =
-        toCodeCoords(Units.rotationsToDegrees(deployerMotor.getPosition().getValueAsDouble()));
+    inputs.angleDeg = Units.rotationsToDegrees(deployerMotor.getPosition().getValueAsDouble());
 
     inputs.requestedPosDeg = requestedPosDeg;
 
-    inputs.motorRotationsPerSec =
-        Units.degreesToRotations(deployerMotor.getVelocity().getValueAsDouble());
+    inputs.motorDegreesPerSec =
+        Units.rotationsToDegrees(deployerMotor.getVelocity().getValueAsDouble());
 
     inputs.busCurrentAmps = deployerMotor.getSupplyCurrent().getValueAsDouble();
 
@@ -97,7 +98,7 @@ public class DeployerIOTalonFX implements DeployerIO {
   public void setPosition(double requestedPosDeg) {
     this.requestedPosDeg = requestedPosDeg;
     deployerMotor.setControl(
-        new MotionMagicVoltage(Units.degreesToRotations(toMotorCoords(requestedPosDeg)))
+        new MotionMagicVoltage(Units.degreesToRotations(requestedPosDeg))
             .withSlot(0)
             .withEnableFOC(true));
   }
@@ -115,13 +116,5 @@ public class DeployerIOTalonFX implements DeployerIO {
   @Override
   public void enableBrakeMode(boolean mode) {
     deployerMotor.setNeutralMode(mode ? NeutralModeValue.Brake : NeutralModeValue.Coast);
-  }
-
-  private double toCodeCoords(double position) {
-    return position + Constants.Deployer.maxGravityDegrees;
-  }
-
-  private double toMotorCoords(double position) {
-    return position - Constants.Deployer.maxGravityDegrees;
   }
 }

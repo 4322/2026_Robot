@@ -11,7 +11,7 @@ public interface DeployerIO {
     public double statorCurrentAmps = 0.0;
     public double busCurrentAmps = 0.0;
     public double motorTempCelcius = 0.0;
-    public double motorRotationsPerSec = 0.0;
+    public double motorDegreesPerSec = 0.0;
     public double appliedVolts = 0.0;
     public double angleDeg = 0.0;
     public double encoderRotations = 0.0;

@@ -9,7 +9,7 @@ public class DeployerIOSim implements DeployerIO {
   private double voltage = 0;
   private double currentAngle =
       Constants.Deployer.maxGravityDegrees
-          + Units.rotationsToDegrees(Constants.Deployer.CANCoderStowed);
+          + Units.rotationsToDegrees(Constants.Deployer.CANCoderOffsetDegrees);
   private double requestedAngle = currentAngle;
   private double undefinedVoltage = -20;
 
@@ -28,7 +28,7 @@ public class DeployerIOSim implements DeployerIO {
         Units.degreesToRotations(currentAngle - Constants.Deployer.maxGravityDegrees);
     inputs.angleDeg = currentAngle;
     inputs.appliedVolts = voltage;
-    inputs.motorRotationsPerSec = velocity;
+    inputs.motorDegreesPerSec = velocity;
     inputs.requestedPosDeg = requestedAngle;
   }
 
