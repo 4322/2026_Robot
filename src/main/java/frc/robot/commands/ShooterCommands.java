@@ -39,6 +39,6 @@ public class ShooterCommands {
   }
 
   public static Command idle(Shooter shooter) {
-    return Commands.run(() -> shooter.requestIdle());
+    return Commands.run(() -> shooter.requestIdle(), shooter);
   }
 }
