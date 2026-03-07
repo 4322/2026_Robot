@@ -265,8 +265,7 @@ public class Shooter extends SubsystemBase {
         calculateFiringSolution();
         if (hood.isAtGoal()
             && flywheel.atTargetVelocity()
-            && ((turret.isAtGoal() && !Constants.turretLocked)
-                || (Constants.turretLocked))) {
+            && ((turret.isAtGoal() && !Constants.turretLocked) || (Constants.turretLocked))) {
           state = ShooterState.SHOOT;
         }
       } else {
