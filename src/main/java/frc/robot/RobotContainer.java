@@ -88,7 +88,7 @@ public class RobotContainer {
 
   private static VisionGlobalPose visionGlobalPose;
   private static VisionObjectDetection visionObjectDetection;
-  private static Shooter shooter;
+  public static Shooter shooter;
   private static Flywheel flywheel;
   private static Hood hood;
   private static Spindexer spindexer;

@@ -69,6 +69,10 @@ public class Shooter extends SubsystemBase {
     this.drive = drive;
   }
 
+  public double getTargetTurretAngleDeg() {
+    return targetTurretAngleDeg;
+  }
+
   @Override
   public void periodic() {
     calculateFiringSolution();

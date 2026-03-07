@@ -22,8 +22,8 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.RobotContainer;
 import frc.robot.subsystems.drive.Drive;
-import frc.robot.subsystems.shooter.firingManager.FiringManager;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.LinkedList;
@@ -33,11 +33,11 @@ import java.util.function.Supplier;
 
 public class DriveCommands {
   private static final double DEADBAND = 0.0;
-  private static final double ANGLE_KP = 20.0;
+  private static final double ANGLE_KP = 5.0;
   private static final double ANGLE_KD = 0.4;
-  private static final double ANGLE_MAX_VELOCITY = 1000.0;
-  private static final double ANGLE_MAX_ACCELERATION = 1000.0;
-  private static final double FF_START_DELAY = 0.0; // Secs
+  private static final double ANGLE_MAX_VELOCITY = 8.0;
+  private static final double ANGLE_MAX_ACCELERATION = 30.0;
+  private static final double FF_START_DELAY = 2.0; // Secs
   private static final double FF_RAMP_RATE = 0.1; // Volts/Sec
   private static final double WHEEL_RADIUS_MAX_VELOCITY = 0.25; // Rad/Sec
   private static final double WHEEL_RADIUS_RAMP_RATE = 0.05; // Rad/Sec^2
@@ -170,9 +170,8 @@ public class DriveCommands {
               double omega =
                   angleController.calculate(
                       drive.getPose().getRotation().getRotations(),
-                      FiringManager.getShootingTarget(drive.getPose().getTranslation())
-                          .getAngle()
-                          .getRotations());
+                      Units.degreesToRotations(
+                          RobotContainer.shooter.getTargetTurretAngleDeg() - 90));
               // Convert to field relative speeds & send command
               ChassisSpeeds speeds =
                   new ChassisSpeeds(
