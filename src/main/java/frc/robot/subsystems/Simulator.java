@@ -452,12 +452,13 @@ public class Simulator extends SubsystemBase {
               EventType.MOVE_JOYSTICK_DRIVE,
               new Pose2d(0, -0.5, Rotation2d.k180deg)),
           new SimEvent(t += 1, "Hold Right Bumper", EventType.HOLD_RIGHT_BUMPER),
+          new SimEvent(t += 5, "Release Right Bumper", EventType.RELEASE_RIGHT_BUMPER),
           new SimEvent(
               t += 1,
               "Drive 9",
               EventType.MOVE_JOYSTICK_DRIVE,
               new Pose2d(0, 0.5, Rotation2d.k180deg)),
-          new SimEvent(t += 5.0, "Final Movement", EventType.END_OF_SCENARIO));
+          new SimEvent(t += 1.0, "Final Movement", EventType.END_OF_SCENARIO));
 
       default -> List.of();
     };
