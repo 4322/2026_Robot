@@ -124,17 +124,6 @@ public class RobotContainer {
 
   boolean inhibitAutoShoot = false;
 
-  // Command variables
-  private enum IntakeCommandTypes {
-    EXTEND,
-    RETRACT,
-    EJECT,
-    IDLE,
-    INTAKING
-  }
-
-  private IntakeCommandTypes currentIntakeCommand = IntakeCommandTypes.EXTEND;
-
   // Boolean suppliers
   private final BooleanSupplier toggle1 =
       () -> operatorBoard.getLeftController().getRawButton(Constants.Control.toggle1ButtonNumber);
