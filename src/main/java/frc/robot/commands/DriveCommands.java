@@ -30,7 +30,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
-import org.littletonrobotics.junction.Logger;
 
 public class DriveCommands {
   private static final double DEADBAND = 0.0;
@@ -173,8 +172,7 @@ public class DriveCommands {
                       drive.getPose().getRotation().getRotations(),
                       FiringManager.getShootingTarget(drive.getPose().getTranslation())
                           .getAngle()
-                          .getRotations()
-                          );
+                          .getRotations());
               // Convert to field relative speeds & send command
               ChassisSpeeds speeds =
                   new ChassisSpeeds(

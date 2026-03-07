@@ -80,9 +80,18 @@ public class FiringManager {
         isScoring
             ? Constants.FiringManager.firingMapScoring.get(distance)
             : Constants.FiringManager.firingMapPassing.get(distance);
-    double baselineVelocity = distance / baseline.getTimeOfFlightSec();
+
+    if (!Constants.shootOnTheMoveEnabled) {
+      return new FiringSolution(
+          baseline.getFlywheelRPM(),
+          baseline.getHoodAngleDeg(),
+          targetDirection.getAngle().getDegrees(),
+          baseline.getTunnelRPS(),
+          baseline.getIndexerRPS());
+    }
 
     // Build target velocity vector
+    double baselineVelocity = distance / baseline.getTimeOfFlightSec();
     Translation2d targetVelocity = targetDirection.times(baselineVelocity);
 
     // Compensate for robot velocity
