@@ -110,7 +110,11 @@ public class Turret {
   }
 
   public double getAngle() {
-    return inputs.turretDegs;
+    if (Constants.turretLocked) {
+      return 90;
+    } else {
+      return inputs.turretDegs;
+    }
   }
 
   public void setBrakeMode(Boolean mode) {
