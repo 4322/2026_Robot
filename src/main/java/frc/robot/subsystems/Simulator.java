@@ -430,7 +430,7 @@ public class Simulator extends SubsystemBase {
           new SimEvent(t += 3.0, "Final Movement", EventType.END_OF_SCENARIO));
       case AUTO_ROTATE -> List.of(
           new SimEvent(
-              t += 1.0, "Start pose", EventType.SET_POSE, new Pose2d(3, 0.650, Rotation2d.kZero)),
+              t += 1.0, "Start pose", EventType.SET_POSE, new Pose2d(3, 0.650, Rotation2d.k180deg)),
           new SimEvent(
               t += 5,
               "Drive 5",

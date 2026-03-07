@@ -51,8 +51,8 @@ public class Spindexer {
   }
 
   public void requestIdle() {
-    state = SpindexerStates.IDLE;
-    requestedSpeed = 0;
+    this.state = SpindexerStates.IDLE;
+    this.requestedSpeed = 0;
   }
 
   public void requestIndex(double speed) {
