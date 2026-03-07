@@ -2,7 +2,6 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.shooter.Shooter;
 
@@ -31,14 +30,8 @@ public class ShooterCommands {
   }
 
   public static Command aimAndShoot(Shooter shooter, Drive drive) {
-    return Commands.run(
-        () -> {
-         Commands.parallel (
-            DriveCommands.driveAzimuthRotate(drive),
-            Commands.run(() -> shooter.requestShoot())
-          );
-        },
-        shooter);
+    return Commands.parallel(
+        DriveCommands.driveAzimuthRotate(drive), Commands.run(() -> shoot(shooter), shooter));
   }
 
   public static Command idle(Shooter shooter) {
