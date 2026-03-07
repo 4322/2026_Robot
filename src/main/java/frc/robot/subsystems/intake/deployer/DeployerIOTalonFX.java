@@ -26,8 +26,10 @@ public class DeployerIOTalonFX implements DeployerIO {
 
     motorConfigs.Feedback.FeedbackRemoteSensorID = canCoder.getDeviceID();
 
-    motorConfigs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
-    motorConfigs.Feedback.SensorToMechanismRatio = Constants.Deployer.sensorToMechanismRatio;
+    // encoder is not absolute, only start in retracted position and can't use FusedCandoer!
+    motorConfigs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
+    motorConfigs.Feedback.SensorToMechanismRatio =
+        Constants.Deployer.sensorToMechanismRatio * Constants.Deployer.RotorToSensorRatio;
     motorConfigs.Feedback.RotorToSensorRatio = Constants.Deployer.RotorToSensorRatio;
     motorConfigs.CurrentLimits.StatorCurrentLimit = Constants.Deployer.statorCurrentLimit;
     motorConfigs.CurrentLimits.SupplyCurrentLimit = Constants.Deployer.supplyCurrentLimit;
@@ -39,10 +41,15 @@ public class DeployerIOTalonFX implements DeployerIO {
     motorConfigs.Slot0.kD = Constants.Deployer.kD;
     motorConfigs.Slot0.kG = Constants.Deployer.kG;
     motorConfigs.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
-    motorConfigs.Slot0.GravityArmPositionOffset = Constants.Deployer.maxGravityDegrees;
+    motorConfigs.Slot0.GravityArmPositionOffset =
+        -Units.degreesToRadians(Constants.Deployer.maxGravityDegrees);
 
-    motorConfigs.HardwareLimitSwitch.ForwardLimitEnable = false;
+    motorConfigs.MotionMagic.MotionMagicCruiseVelocity =
+        Constants.Deployer.motionMagicCruiseVelocity;
+    motorConfigs.MotionMagic.MotionMagicAcceleration = Constants.Deployer.motionMagicAcceleration;
+
     motorConfigs.HardwareLimitSwitch.ReverseLimitEnable = false;
+    motorConfigs.HardwareLimitSwitch.ForwardLimitEnable = false;
 
     canCoderConfigs.MagnetSensor.MagnetOffset = -Constants.Deployer.SesnorOffsetRotations;
     canCoderConfigs.MagnetSensor.SensorDirection = Constants.Deployer.sensorDirection;
@@ -67,6 +74,15 @@ public class DeployerIOTalonFX implements DeployerIO {
               + deployerConfigStatus.getDescription(),
           false);
     }
+
+    try {
+      // wait for encoder position to be received
+      Thread.sleep(100);
+    } catch (InterruptedException e) {
+    }
+    deployerMotor.setPosition(
+        canCoder.getAbsolutePosition().getValueAsDouble()
+            / Constants.Deployer.sensorToMechanismRatio);
   }
 
   @Override
@@ -92,7 +108,7 @@ public class DeployerIOTalonFX implements DeployerIO {
 
     inputs.encoderRotations = canCoder.getAbsolutePosition().getValueAsDouble();
 
-    inputs.motorRotations = deployerMotor.getPosition().getValueAsDouble();
+    inputs.motorRotations = deployerMotor.getRotorPosition().getValueAsDouble();
   }
 
   @Override

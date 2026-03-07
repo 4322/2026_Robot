@@ -2,7 +2,6 @@ package frc.robot.subsystems.shooter.turret;
 
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
-import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
@@ -19,8 +18,6 @@ public class TurretIOTalonFx implements TurretIO {
   private TalonFXConfiguration config = new TalonFXConfiguration();
   private CANcoderConfiguration CANconfigOne = new CANcoderConfiguration();
   private CANcoderConfiguration CANconfigTwo = new CANcoderConfiguration();
-
-  private MotionMagicConfigs motionMagicConfigs;
 
   public TurretIOTalonFx() {
     turretMotor = new TalonFX(Constants.Turret.motorId, Constants.CANivore.CANBus);
@@ -51,9 +48,8 @@ public class TurretIOTalonFx implements TurretIO {
     CANconfigOne.MagnetSensor.MagnetOffset = Constants.Turret.CANCoderOneOffset;
     CANconfigTwo.MagnetSensor.MagnetOffset = Constants.Turret.CANCoderTwoOffset;
 
-    motionMagicConfigs = config.MotionMagic;
-    motionMagicConfigs.MotionMagicCruiseVelocity = Constants.Turret.motionMagicCruiseVelocity;
-    motionMagicConfigs.MotionMagicAcceleration = Constants.Turret.motionMagicAcceleration;
+    config.MotionMagic.MotionMagicCruiseVelocity = Constants.Turret.motionMagicCruiseVelocity;
+    config.MotionMagic.MotionMagicAcceleration = Constants.Turret.motionMagicAcceleration;
 
     StatusCode configStatus = turretMotor.getConfigurator().apply(config);
     StatusCode CANcoderStatus = CANcoderOne.getConfigurator().apply(CANconfigOne);

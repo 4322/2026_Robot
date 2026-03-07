@@ -224,8 +224,8 @@ public final class Constants {
     // 0 degrees is stowed postion
     // postive degrees when extending
     public static final double retractDeg = 0;
-    public static final double extendDeg = 128.2;
-    public static final double maxGravityDegrees = 110;
+    public static final double extendDeg = 126.1;
+    public static final double maxGravityDegrees = 110 - 180; // range is +/- 90 degrees
     public static final int motorId = 25;
     public static final double statorCurrentLimit = 60;
     public static final double supplyCurrentLimit = 40;
@@ -233,15 +233,17 @@ public final class Constants {
     public static final InvertedValue motorInvert = InvertedValue.Clockwise_Positive;
     public static final SensorDirectionValue sensorDirection =
         SensorDirectionValue.CounterClockwise_Positive;
-    public static final double kP = 1;
-    public static final double kG = 0;
+    public static final double kP = 1000;
+    public static final double kG = 0.55;
     public static final double kI = 0;
     public static final double kD = 0;
+    public static final double motionMagicCruiseVelocity = 0.3;
+    public static final double motionMagicAcceleration = 1.2;
     public static final int CANCoderID = 2;
     public static final double sensorToMechanismRatio = 3.0;
     public static final double RotorToSensorRatio = 12.0;
     public static final double tolerance = 0.2;
-    public static final double SesnorOffsetRotations = 0.42;
+    public static final double SesnorOffsetRotations = 0.428;
   }
 
   public static class FiringParameters {
