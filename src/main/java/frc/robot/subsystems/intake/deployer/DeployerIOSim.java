@@ -9,7 +9,7 @@ public class DeployerIOSim implements DeployerIO {
   private double voltage = 0;
   private double currentAngle =
       Constants.Deployer.maxGravityDegrees
-          + Units.rotationsToDegrees(Constants.Deployer.CANCoderOffsetDegrees);
+          + Units.rotationsToDegrees(Constants.Deployer.SesnorOffsetRotations);
   private double requestedAngle = currentAngle;
   private double undefinedVoltage = -20;
 

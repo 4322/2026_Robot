@@ -3,6 +3,7 @@ package frc.robot.constants;
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.ctre.phoenix6.signals.StripTypeValue;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
@@ -223,6 +224,8 @@ public final class Constants {
     public static final double supplyCurrentLimit = 40;
     public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
     public static final InvertedValue motorInvert = InvertedValue.Clockwise_Positive;
+    public static final SensorDirectionValue sensorDirection =
+        SensorDirectionValue.Clockwise_Positive;
     public static final double kP = 1;
     public static final double kG = 0;
     public static final double kI = 0;
@@ -231,7 +234,7 @@ public final class Constants {
     public static final double sensorToMechanismRatio = 3.0;
     public static final double RotorToSensorRatio = 12.0;
     public static final double tolerance = 0.2;
-    public static final double CANCoderOffsetDegrees = -183.55;
+    public static final double SesnorOffsetRotations = 0.57;
   }
 
   public static class FiringParameters {

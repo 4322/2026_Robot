@@ -19,7 +19,6 @@ public class DeployerIOTalonFX implements DeployerIO {
   private TalonFXConfiguration motorConfigs = new TalonFXConfiguration();
   private CANcoderConfiguration canCoderConfigs = new CANcoderConfiguration();
   public double requestedPosDeg;
-  private double posRot;
 
   public DeployerIOTalonFX() {
     deployerMotor = new TalonFX(Constants.Deployer.motorId, Constants.CANivore.CANBus);
@@ -44,6 +43,10 @@ public class DeployerIOTalonFX implements DeployerIO {
 
     motorConfigs.HardwareLimitSwitch.ForwardLimitEnable = false;
     motorConfigs.HardwareLimitSwitch.ReverseLimitEnable = false;
+
+    canCoderConfigs.MagnetSensor.MagnetOffset = -Constants.Deployer.SesnorOffsetRotations;
+    canCoderConfigs.MagnetSensor.SensorDirection = Constants.Deployer.sensorDirection;
+    canCoderConfigs.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 1; // range 0 to 1.0
     StatusCode deployerConfigStatus = deployerMotor.getConfigurator().apply(motorConfigs);
     StatusCode CANcoderStatus = canCoder.getConfigurator().apply(canCoderConfigs);
     if (deployerConfigStatus != StatusCode.OK) {
@@ -62,10 +65,6 @@ public class DeployerIOTalonFX implements DeployerIO {
               + CANcoderStatus.getDescription(),
           false);
     }
-    posRot =
-        canCoder.getAbsolutePosition().getValueAsDouble()
-            - Units.degreesToRotations(Constants.Deployer.CANCoderOffsetDegrees);
-    deployerMotor.setPosition(posRot);
   }
 
   @Override
