@@ -74,6 +74,7 @@ import frc.robot.subsystems.vision.visionGlobalPose.VisionGlobalPoseIOSim;
 import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetection;
 import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetectionIO;
 import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetectionIOPhoton;
+import frc.robot.util.HubTracker;
 import java.util.function.BooleanSupplier;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
@@ -109,6 +110,12 @@ public class RobotContainer {
   // Controller
   public static final CommandXboxController controller = new CommandXboxController(0);
   public static ScoringManager operatorBoard = new ScoringManager(1, 2);
+
+  private enum ShootingCommands {
+    AUTO_SHOOT,
+    INHIBIT_AUTO_SHOOT,
+    AREA_INHIBIT_AUTO_SHOOT
+  }
 
   private final Trigger inNonShootingArea;
 
@@ -402,9 +409,22 @@ public class RobotContainer {
 
     // Shooter command bindings
     if (Constants.turretLocked) {
-      shooter.setDefaultCommand(ShooterCommands.idle(shooter));
-      controller.rightBumper().whileTrue(ShooterCommands.aimAndShoot(shooter, drive));
+      if (AreaManager.getZoneOfPosition(drive.getPose().getTranslation())
+          == AreaManager.Zone.ALLIANCE_ZONE) {
+        if (HubTracker.isActive()) shooter.setDefaultCommand(ShooterCommands.idle(shooter));
+        controller.rightBumper().whileTrue(ShooterCommands.aimAndShoot(shooter, drive));
+        DriveCommands.driveAzimuthRotate(drive).execute();
+      } else {
+        controller.rightBumper().whileTrue(ShooterCommands.aimAndShoot(shooter, drive));
+        DriveCommands.driveAzimuthRotate(drive).execute();
+      }
+
+      if (!controller.rightBumper().getAsBoolean()) {
+        DriveCommands.driveAzimuthRotate(drive).cancel();
+        ShooterCommands.inhibitAutoShoot(shooter);
+      }
     } else {
+      shooter.setDefaultCommand(ShooterCommands.idle(shooter));
       shooter.setDefaultCommand(ShooterCommands.autoShoot(shooter));
 
       new JoystickButton(operatorBoard.getLeftController(), Constants.Control.toggle1ButtonNumber)

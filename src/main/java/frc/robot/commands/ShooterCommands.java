@@ -32,7 +32,6 @@ public class ShooterCommands {
   public static Command aimAndShoot(Shooter shooter, Drive drive) {
     return Commands.run(
         () -> {
-          DriveCommands.driveAzimuthRotate(drive).execute();
           shooter.requestShoot();
         },
         drive,
