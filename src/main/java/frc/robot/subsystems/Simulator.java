@@ -21,7 +21,7 @@ import java.util.Map;
 import org.littletonrobotics.junction.Logger;
 
 public class Simulator extends SubsystemBase {
-  private static final RegressTests regressTest = RegressTests.SUBSYSTEM_TEST_TELE;
+  private static final RegressTests regressTest = RegressTests.TEST_AUTOROTATE;
   public static AutoName autoScenario;
   private TeleopScenario teleopScenario;
   private List<TeleAnomaly> teleAnomalies;
@@ -37,7 +37,8 @@ public class Simulator extends SubsystemBase {
     SHOOT,
     CONTROLLER_TEST,
     SUBSYSTEM_TEST_BOTH,
-    SUBSYSTEM_TEST_TELE
+    SUBSYSTEM_TEST_TELE,
+    TEST_AUTOROTATE
   }
 
   private enum TeleAnomaly {
@@ -53,7 +54,8 @@ public class Simulator extends SubsystemBase {
     SHOOT,
     CONTROLLER_TEST1,
     CONTROLLER_TEST2,
-    SUBSYSTEM_TEST
+    SUBSYSTEM_TEST,
+    AUTO_ROTATE
   }
 
   private enum EventType {
@@ -225,6 +227,8 @@ public class Simulator extends SubsystemBase {
           new RegressionTest("Subsystem Test", TeleopScenario.SUBSYSTEM_TEST, Alliance.Blue));
       case SUBSYSTEM_TEST_TELE -> List.of(
           new RegressionTest("Subsystem Test", TeleopScenario.SUBSYSTEM_TEST, Alliance.Blue));
+      case TEST_AUTOROTATE -> List.of(
+          new RegressionTest("Subsystem Test", TeleopScenario.AUTO_ROTATE, Alliance.Blue));
       default -> List.of();
     };
   }
@@ -424,6 +428,35 @@ public class Simulator extends SubsystemBase {
               EventType.MOVE_JOYSTICK_DRIVE,
               new Pose2d(0, 0, Rotation2d.k180deg)),
           new SimEvent(t += 3.0, "Final Movement", EventType.END_OF_SCENARIO));
+      case AUTO_ROTATE -> List.of(
+          new SimEvent(
+              t += 1.0, "Start pose", EventType.SET_POSE, new Pose2d(3, 0.650, Rotation2d.kZero)),
+          new SimEvent(
+              t += 5,
+              "Drive 5",
+              EventType.MOVE_JOYSTICK_DRIVE,
+              new Pose2d(0.5, 0.5, Rotation2d.k180deg)),
+          new SimEvent(
+              t += 5,
+              "Drive 6",
+              EventType.MOVE_JOYSTICK_DRIVE,
+              new Pose2d(-0.5, -0.5, Rotation2d.k180deg)),
+          new SimEvent(
+              t += 3,
+              "Drive 7",
+              EventType.MOVE_JOYSTICK_DRIVE,
+              new Pose2d(0.5, 0.5, Rotation2d.k180deg)),
+          new SimEvent(
+              t += 3,
+              "Drive 8",
+              EventType.MOVE_JOYSTICK_DRIVE,
+              new Pose2d(0, -0.5, Rotation2d.k180deg)),
+          new SimEvent(t += 1, "Hold Right Bumper", EventType.HOLD_RIGHT_BUMPER),
+          new SimEvent(
+              t += 1,
+              "Drive 9",
+              EventType.MOVE_JOYSTICK_DRIVE,
+              new Pose2d(0, 0.5, Rotation2d.k180deg)));
 
       default -> List.of();
     };

@@ -155,7 +155,7 @@ public class FiringManager {
         : Constants.FiringManager.velocityToDistanceMapPassing.get(velocity);
   }
 
-  private static Translation2d getShootingTarget(Translation2d robotPosition) {
+  public static Translation2d getShootingTarget(Translation2d robotPosition) {
     Zone zone = AreaManager.getZoneOfPosition(robotPosition);
 
     if (Robot.alliance == Alliance.Blue) {

@@ -108,7 +108,7 @@ public class RobotContainer {
 
   // Controller
   public static final CommandXboxController controller = new CommandXboxController(0);
-  public static ScoringManager operatorBoard = new ScoringManager(1, 2);
+  public static ScoringManager operatorBoard = new ScoringManager(1, 1);
 
   private enum ShootingCommands {
     AUTO_SHOOT,
@@ -420,9 +420,7 @@ public class RobotContainer {
     // Shooter command bindings
     if (Constants.turretLocked) {
       shooter.setDefaultCommand(ShooterCommands.idle(shooter));
-      controller
-          .b() // TODO set button
-          .whileTrue(ShooterCommands.aimAndShoot(shooter, drive));
+      controller.rightBumper().whileTrue(ShooterCommands.aimAndShoot(shooter, drive));
     } else {
       shooter.setDefaultCommand(ShooterCommands.autoShoot(shooter));
 
