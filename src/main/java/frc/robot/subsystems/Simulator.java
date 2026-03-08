@@ -246,16 +246,14 @@ public class Simulator extends SubsystemBase {
           new RegressionTest(
               "Controller Test 2", TeleopScenario.CONTROLLER_TEST2, alliance.getAlliance()));
       case SUBSYSTEM_TEST_BOTH -> List.of(
-          new RegressionTest(
-              "Auto test", AutoName.R_FULL_SWEEP_SHOOT, alliance.getAlliance()),
+          new RegressionTest("Auto test", AutoName.R_FULL_SWEEP_SHOOT, alliance.getAlliance()),
           new RegressionTest(
               "Subsystem Test", TeleopScenario.SUBSYSTEM_TEST, alliance.getAlliance()));
       case SUBSYSTEM_TEST_TELE -> List.of(
           new RegressionTest(
               "Subsystem Test", TeleopScenario.SUBSYSTEM_TEST, alliance.getAlliance()));
       case TEST_AUTOROTATE -> List.of(
-          new RegressionTest(
-              "Subsystem Test", TeleopScenario.AUTO_ROTATE, alliance.getAlliance()));
+          new RegressionTest("Subsystem Test", TeleopScenario.AUTO_ROTATE, alliance.getAlliance()));
       default -> List.of();
     };
   }
@@ -327,36 +325,12 @@ public class Simulator extends SubsystemBase {
     // TODO
     return switch (autoScenario) {
       case R_FULL_SWEEP_SHOOT -> List.of(
-          new SimEvent(
-              t,
-              "Start Pose",
-              EventType.SET_POSE,
-              new Pose2d(1.34, 5.55, Rotation2d.kZero) 
-              ),
           new SimEvent(t += 20.0, "Final Movement", EventType.END_OF_SCENARIO));
       case R_HALF_SWEEP_SHOOT -> List.of(
-          new SimEvent(
-              t,
-              "Start Pose",
-              EventType.SET_POSE,
-              new Pose2d(1.34, 5.55, Rotation2d.kZero)
-              ),
           new SimEvent(t += 20.0, "Final Movement", EventType.END_OF_SCENARIO));
       case R_MIDLINE_SWEEP_SHOOT -> List.of(
-          new SimEvent(
-              t,
-              "Start Pose",
-              EventType.SET_POSE,
-              new Pose2d(1.34, 5.55, Rotation2d.kZero)
-              ),
           new SimEvent(t += 10.0, "Final Movement", EventType.END_OF_SCENARIO));
       case R_DISRUPT_SWEEP_SHOOT -> List.of(
-          new SimEvent(
-              t,
-              "Start Pose",
-              EventType.SET_POSE,
-              new Pose2d(1.34, 5.55, Rotation2d.kZero) 
-              ),
           new SimEvent(t += 20.0, "Final Movement", EventType.END_OF_SCENARIO));
       default -> List.of();
     };
