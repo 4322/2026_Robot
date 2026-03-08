@@ -332,6 +332,8 @@ public class Simulator extends SubsystemBase {
           new SimEvent(t += 10.0, "Final Movement", EventType.END_OF_SCENARIO));
       case R_DISRUPT_SWEEP_SHOOT -> List.of(
           new SimEvent(t += 20.0, "Final Movement", EventType.END_OF_SCENARIO));
+      case C_DEPOT_OUTPOST -> List.of(
+          new SimEvent(t += 20.0, "Final Movement", EventType.END_OF_SCENARIO));
       default -> List.of();
     };
   }
