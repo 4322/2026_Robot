@@ -52,8 +52,8 @@ public class RHalfSweepShoot extends SequentialCommandGroup {
       Drive drive, LED led, Intake intake, VisionObjectDetection visionObjectDetection) {
     PathPlannerPath path = Robot.R_StartR_To_NeutralR_Intake;
     Pose2d startPoseBlue = path.getStartingHolonomicPose().get();
-    path.flipPath();
-    Pose2d startPoseRed = path.getStartingHolonomicPose().get();
+
+    Pose2d startPoseRed = path.flipPath().getStartingHolonomicPose().get();
 
     setName("R_HALF_SWEEP_SHOOT_OD");
     addCommands(

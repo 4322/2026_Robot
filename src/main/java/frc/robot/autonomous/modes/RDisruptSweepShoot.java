@@ -24,8 +24,7 @@ public class RDisruptSweepShoot extends SequentialCommandGroup {
   public RDisruptSweepShoot(Drive drive, LED led, Intake intake, Shooter shooter) {
     PathPlannerPath path = Robot.R_StartR_To_NeutralR_Intake_Disrupt;
     Pose2d startPoseBlue = path.getStartingHolonomicPose().get();
-    path.flipPath();
-    Pose2d startPoseRed = path.getStartingHolonomicPose().get();
+    Pose2d startPoseRed = path.flipPath().getStartingHolonomicPose().get();
 
     setName("R_DISRUPT_SWEEP_SHOOT");
     addCommands(
