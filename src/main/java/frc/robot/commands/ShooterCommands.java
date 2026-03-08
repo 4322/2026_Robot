@@ -30,8 +30,7 @@ public class ShooterCommands {
   }
 
   public static Command aimAndShoot(Shooter shooter, Drive drive) {
-    return Commands.parallel(
-        DriveCommands.driveAzimuthRotate(drive), Commands.run(() -> shoot(shooter), shooter));
+    return Commands.parallel(DriveCommands.driveAzimuthRotate(drive), autoShoot(shooter));
   }
 
   public static Command idle(Shooter shooter) {
