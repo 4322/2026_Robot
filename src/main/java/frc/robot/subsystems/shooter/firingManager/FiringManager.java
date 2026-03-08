@@ -70,7 +70,7 @@ public class FiringManager {
     Translation2d futurePos = turretPosition.plus(robotVelocity.times(latencyCompensation));
 
     Logger.recordOutput("FiringManager/futurePos", new Pose2d(futurePos, new Rotation2d()));
-    
+
     // Get target vector
     Translation2d goalPosition = getShootingTarget(robotPosition);
     Logger.recordOutput("FiringManager/targetPosition", new Pose2d(goalPosition, new Rotation2d()));
@@ -79,14 +79,13 @@ public class FiringManager {
     Logger.recordOutput("FiringManager/distance", distance);
     Translation2d targetDirection = toGoal.div(distance);
 
-
     // Get FiringParameters based on distance
-  FiringParameters baseline =
+    FiringParameters baseline =
         isScoring
             ? Constants.FiringManager.firingMapScoring.get(distance)
             : Constants.FiringManager.firingMapPassing.get(distance);
 
-if (!Constants.shootOnTheMoveEnabled) {
+    if (!Constants.shootOnTheMoveEnabled) {
       return new FiringSolution(
           baseline.getFlywheelRPM(),
           baseline.getHoodAngleDeg(),
@@ -115,7 +114,7 @@ if (!Constants.shootOnTheMoveEnabled) {
     double requiredVelocity = shotVelocity.getNorm();
     Logger.recordOutput("FiringManager/requiredVelocity", requiredVelocity);
 
-    // Use table in reverse: get effective distance from required velocity 
+    // Use table in reverse: get effective distance from required velocity
     double effectiveDistance = velocityToEffectiveDistance(requiredVelocity, isScoring);
     Logger.recordOutput("FiringManager/effectiveDistance", effectiveDistance);
 
@@ -129,7 +128,10 @@ if (!Constants.shootOnTheMoveEnabled) {
         isScoring);
   }
 
-  /** Achieve target horizontal velocity by adjusting both flywheel RPM and hood angle (Equal combination of both) */
+  /**
+   * Achieve target horizontal velocity by adjusting both flywheel RPM and hood angle (Equal
+   * combination of both)
+   */
   private static FiringSolution getHybridFiringSolution(
       double distance,
       double requiredVelocity,

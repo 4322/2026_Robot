@@ -319,8 +319,6 @@ public class Simulator extends SubsystemBase {
     }
   }
 
-
-
   private List<SimEvent> buildAutoScenario() {
     if (autoScenario == null) {
       return List.of();
