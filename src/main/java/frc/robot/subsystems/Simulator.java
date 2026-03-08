@@ -290,7 +290,12 @@ public class Simulator extends SubsystemBase {
     }
 
     SimEvent(double eventTime, String eventName, EventType eventType, Pose2d pose) {
-      this(eventTime, eventName, eventType, pose, EventStatus.ACTIVE);
+      this(
+          eventTime,
+          eventName,
+          eventType,
+          alliance == Ally.Blue ? pose : flipPose(pose.getX(), pose.getY(), pose.getRotation()),
+          EventStatus.ACTIVE);
     }
 
     SimEvent(
@@ -307,9 +312,9 @@ public class Simulator extends SubsystemBase {
     }
   }
 
-  private Pose2d makePoseFlipped(double x, double y, Rotation2d rotation) {
+  private Pose2d flipPose(double x, double y, Rotation2d rotation) {
     double xaxis = Units.inchesToMeters(651.22) - x;
-    double yaxis = y;
+    double yaxis = Units.inchesToMeters(317.69) - y;
 
     return new Pose2d(xaxis, yaxis, rotation.plus(Rotation2d.fromDegrees(180)));
   }
@@ -322,60 +327,36 @@ public class Simulator extends SubsystemBase {
     // TODO
     return switch (autoScenario) {
       case R_FULL_SWEEP_SHOOT -> List.of(
-          alliance == Ally.Blue
-              ? new SimEvent(
-                  t,
-                  "Start Pose",
-                  EventType.SET_POSE,
-                  new Pose2d(1.34, 5.55, Rotation2d.kZero) // starting pose for blue
-                  )
-              : new SimEvent(
-                  t,
-                  "Start Pose",
-                  EventType.SET_POSE,
-                  makePoseFlipped(1.34, 5.55, Rotation2d.kZero)),
+          new SimEvent(
+              t,
+              "Start Pose",
+              EventType.SET_POSE,
+              new Pose2d(1.34, 5.55, Rotation2d.kZero) // starting pose for blue
+              ),
           new SimEvent(t += 20.0, "Final Movement", EventType.END_OF_SCENARIO));
       case R_HALF_SWEEP_SHOOT -> List.of(
-          alliance == Ally.Blue
-              ? new SimEvent(
-                  t,
-                  "Start Pose",
-                  EventType.SET_POSE,
-                  new Pose2d(4.440, 0.650, Rotation2d.kZero) // starting pose for blue
-                  )
-              : new SimEvent(
-                  t,
-                  "Start Pose",
-                  EventType.SET_POSE,
-                  makePoseFlipped(4.440, 0.650, Rotation2d.kZero)),
+          new SimEvent(
+              t,
+              "Start Pose",
+              EventType.SET_POSE,
+              new Pose2d(1.34, 5.55, Rotation2d.kZero) // starting pose for blue
+              ),
           new SimEvent(t += 20.0, "Final Movement", EventType.END_OF_SCENARIO));
       case R_MIDLINE_SWEEP_SHOOT -> List.of(
-          alliance == Ally.Blue
-              ? new SimEvent(
-                  t,
-                  "Start Pose",
-                  EventType.SET_POSE,
-                  new Pose2d(4.440, 0.650, Rotation2d.kZero) // starting pose for blue
-                  )
-              : new SimEvent(
-                  t,
-                  "Start Pose",
-                  EventType.SET_POSE,
-                  makePoseFlipped(4.440, 0.650, Rotation2d.kZero)),
+          new SimEvent(
+              t,
+              "Start Pose",
+              EventType.SET_POSE,
+              new Pose2d(1.34, 5.55, Rotation2d.kZero) // starting pose for blue
+              ),
           new SimEvent(t += 10.0, "Final Movement", EventType.END_OF_SCENARIO));
       case R_DISRUPT_SWEEP_SHOOT -> List.of(
-          alliance == Ally.Blue
-              ? new SimEvent(
-                  t,
-                  "Start Pose",
-                  EventType.SET_POSE,
-                  new Pose2d(4.440, 0.650, Rotation2d.kZero) // starting pose for blue
-                  )
-              : new SimEvent(
-                  t,
-                  "Start Pose",
-                  EventType.SET_POSE,
-                  makePoseFlipped(4.440, 0.650, Rotation2d.kZero)),
+          new SimEvent(
+              t,
+              "Start Pose",
+              EventType.SET_POSE,
+              new Pose2d(1.34, 5.55, Rotation2d.kZero) // starting pose for blue
+              ),
           new SimEvent(t += 20.0, "Final Movement", EventType.END_OF_SCENARIO));
       default -> List.of();
     };
