@@ -437,12 +437,19 @@ public class Simulator extends SubsystemBase {
               EventType.MOVE_JOYSTICK_DRIVE,
               new Pose2d(0.5, 0.5, Rotation2d.k180deg)),
           new SimEvent(
-              t += 1,
+              t += 1.5,
+              "Drive 7",
+              EventType.MOVE_JOYSTICK_DRIVE,
+              new Pose2d(0.0, 0.0, Rotation2d.k180deg)),
+          new SimEvent(t += 0.1, "Hold Right Bumper", EventType.HOLD_RIGHT_BUMPER),
+          new SimEvent(t += 12, "Release Right Bumper", EventType.RELEASE_RIGHT_BUMPER),
+          new SimEvent(
+              t += 0.1,
               "Drive 6",
               EventType.MOVE_JOYSTICK_DRIVE,
               new Pose2d(-0.5, -0.5, Rotation2d.k180deg)),
           new SimEvent(
-              t += 1,
+              t += 1.5,
               "Drive 7",
               EventType.MOVE_JOYSTICK_DRIVE,
               new Pose2d(0.67, 0.0, Rotation2d.k180deg)),
