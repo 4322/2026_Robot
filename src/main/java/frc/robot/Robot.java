@@ -57,9 +57,6 @@ public class Robot extends LoggedRobot {
   public static PathPlannerPath R_NeutralR_Intake_Full_Disrupt_Flip;
 
   public Robot() {
-    StatusLogger.disableAutoLogging(); // disable REV logging
-    SignalLogger.stop(); // disable CTRE logging
-
     Logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME); // Set a metadata value
     Logger.recordMetadata("BuildDate", BuildConstants.BUILD_DATE);
     Logger.recordMetadata("GitSHA", BuildConstants.GIT_SHA);
@@ -224,6 +221,12 @@ public class Robot extends LoggedRobot {
         || Constants.currentMode == Constants.Mode.REPLAY) {
       // enable subsystems in sim mode
     }
+  }
+
+  @Override
+  public void robotInit() {
+    StatusLogger.disableAutoLogging(); // disable REV logging
+    SignalLogger.stop(); // disable CTRE logging
   }
 
   /** This function is called periodically during all modes. */
