@@ -1,8 +1,5 @@
 package frc.robot.subsystems.shooter;
 
-import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
@@ -76,16 +73,16 @@ public class Shooter extends SubsystemBase {
   public void periodic() {
     calculateFiringSolution();
     if (AreaManager.isHoodDangerZone(drive.getPose().getTranslation())) {
-       state = ShooterState.TRENCH;
+      state = ShooterState.TRENCH;
     }
     if (AreaManager.isTrench(drive.getPose().getTranslation())) {
-       state = ShooterState.IDLE;
+      state = ShooterState.IDLE;
     }
-    
+
     if (Constants.firingManager == Constants.SubsystemMode.TUNING) {
       flywheel.requestGoal(targetFlywheelSpeedRPS);
       hood.requestGoal(targetHoodAngleDeg);
-      
+
       if (!Constants.turretLocked) {
         turret.setAngle(targetTurretAngleDeg, true);
       }
@@ -113,14 +110,15 @@ public class Shooter extends SubsystemBase {
           state = ShooterState.IDLE;
         }
       }
-      case TRENCH ->{
+      case TRENCH -> {
         hood.requestGoal(Constants.Hood.safeAngleDeg);
         spindexer.requestIdle();
         tunnel.requestIdle();
         flywheel.requestGoal(Constants.Flywheel.idleRPS);
         targetFlywheelSpeedRPS = Constants.Flywheel.idleRPS;
-        if (!AreaManager.isTrench(drive.getPose().getTranslation()) && !AreaManager.isHoodDangerZone(drive.getPose().getTranslation())) {
-            state = ShooterState.IDLE;
+        if (!AreaManager.isTrench(drive.getPose().getTranslation())
+            && !AreaManager.isHoodDangerZone(drive.getPose().getTranslation())) {
+          state = ShooterState.IDLE;
         }
       }
       case IDLE -> {
@@ -129,7 +127,7 @@ public class Shooter extends SubsystemBase {
           turret.setAngle(targetTurretAngleDeg, true);
         }
         if (AreaManager.isTrench(drive.getPose().getTranslation())) {
-           hood.requestGoal(Constants.Hood.safeAngleDeg);
+          hood.requestGoal(Constants.Hood.safeAngleDeg);
         } else {
           Logger.recordOutput("Shooter/isHoodDangerZone", false);
           hood.requestGoal(targetHoodAngleDeg);
@@ -147,7 +145,6 @@ public class Shooter extends SubsystemBase {
         spindexer.requestIdle();
         turret.setAngle(targetTurretAngleDeg, false);
         hood.requestGoal(targetHoodAngleDeg);
-        
 
         if (spindexer.isStopped()) {
           tunnel.requestIdle();
@@ -167,14 +164,14 @@ public class Shooter extends SubsystemBase {
         hood.requestGoal(targetHoodAngleDeg);
         if (!Constants.turretLocked) {
           turret.setAngle(targetTurretAngleDeg, true);
-        } 
+        }
       }
       case SHOOT -> {
         flywheel.requestGoal(targetFlywheelSpeedRPS);
         hood.requestGoal(targetHoodAngleDeg);
         if (!Constants.turretLocked) {
           turret.setAngle(targetTurretAngleDeg, false);
-        } 
+        }
         tunnel.requestGoal(targetTunnelSpeedRPS);
         if (tunnel.getVelocity() > Constants.Tunnel.minPercentVelocity * targetTunnelSpeedRPS) {
           spindexer.requestGoal(targetIndexerSpeedRPS);
@@ -231,7 +228,7 @@ public class Shooter extends SubsystemBase {
     if (Constants.firingManager == Constants.SubsystemMode.TUNING) {
       return;
     }
-     if (AreaManager.getZoneOfPosition(drive.getPose().getTranslation()) == Zone.ALLIANCE_ZONE
+    if (AreaManager.getZoneOfPosition(drive.getPose().getTranslation()) == Zone.ALLIANCE_ZONE
         && !HubShiftUtil.getShiftedShiftInfo().active()) {
       if (Constants.turretLocked) {
         state = ShooterState.IDLE;
@@ -260,11 +257,11 @@ public class Shooter extends SubsystemBase {
           state = ShooterState.SHOOT;
         }
       } else {
-        //Seperate if to prevent warnings DO NOT COMBINE
+        // Seperate if to prevent warnings DO NOT COMBINE
         if (!Constants.turretLocked) {
-          if(turret.needsToUnwind()){
-          unwindComplete = false;
-          state = ShooterState.UNWIND;
+          if (turret.needsToUnwind()) {
+            unwindComplete = false;
+            state = ShooterState.UNWIND;
           }
         }
       }

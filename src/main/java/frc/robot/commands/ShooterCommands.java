@@ -13,7 +13,6 @@ public class ShooterCommands {
   }
 
   // Main commands
-  
 
   public static Command aimAndShoot(Shooter shooter, Drive drive) {
     return Commands.parallel(DriveCommands.driveAzimuthRotate(drive), shoot(shooter));

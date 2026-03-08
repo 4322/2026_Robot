@@ -371,5 +371,4 @@ public class Drive extends SubsystemBase {
   public Pose2d getPoseAtTimestamp(double timestampSeconds) {
     return poseEstimator.sampleAt(timestampSeconds).orElse(null);
   }
-
-  }
+}

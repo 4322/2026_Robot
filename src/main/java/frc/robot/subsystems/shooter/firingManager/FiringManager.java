@@ -58,7 +58,7 @@ public class FiringManager {
     }
 
     Translation2d turretPosition = robotPosition.plus(Constants.Turret.originToTurret);
-        Logger.recordOutput("Shooter/TurretPose", turretPosition);
+    Logger.recordOutput("Shooter/TurretPose", turretPosition);
 
     // Project future position
     double latencyCompensation =
