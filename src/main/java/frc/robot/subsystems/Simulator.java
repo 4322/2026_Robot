@@ -235,7 +235,9 @@ public class Simulator extends SubsystemBase {
   private List<RegressionTest> regressionTestCases() {
     return switch (regressTest) {
       case AUTO -> List.of(
-          new RegressionTest("AUTO", AutoName.R_FULL_SWEEP_SHOOT, alliance.getAlliance())); //Useable Autos are R_FULL_SWEEP_SHOOT, R_HALF_SWEEP_SHOOT, R_MIDLINE_SWEEP_SHOOT, R_DISRUPT_SWEEP_SHOOT, & C_DEPOT_OUTPOST
+          new RegressionTest("AUTO", AutoName.R_FULL_SWEEP_SHOOT, alliance.getAlliance()));
+        // Useable Autos are R_FULL_SWEEP_SHOOT, R_HALF_SWEEP_SHOOT, R_MIDLINE_SWEEP_SHOOT,
+        // R_DISRUPT_SWEEP_SHOOT, & C_DEPOT_OUTPOST
       case SHOOT -> List.of(
           new RegressionTest("Shoot", TeleopScenario.SHOOT, alliance.getAlliance()));
       case DO_NOTHING -> List.of(
