@@ -142,7 +142,7 @@ public final class Constants {
     public static final int canandcolorId = 0;
     public static final double minFuelDetectionProximity = 0.2;
     public static final double allowedVelocityErrorMechanismRPS = 0.2;
-    public static final int idleRPS = 30;
+    public static final int idleRPS = 25;
   }
 
   public static class Turret {
