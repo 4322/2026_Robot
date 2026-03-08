@@ -21,7 +21,7 @@ import java.util.Map;
 import org.littletonrobotics.junction.Logger;
 
 public class Simulator extends SubsystemBase {
-  private static final RegressTests regressTest = RegressTests.TEST_AUTOROTATE;
+  private static final RegressTests regressTest = RegressTests.AUTO;
   public static AutoName autoScenario;
   private TeleopScenario teleopScenario;
   private List<TeleAnomaly> teleAnomalies;
@@ -38,7 +38,8 @@ public class Simulator extends SubsystemBase {
     CONTROLLER_TEST,
     SUBSYSTEM_TEST_BOTH,
     SUBSYSTEM_TEST_TELE,
-    TEST_AUTOROTATE
+    TEST_AUTOROTATE,
+    AUTO
   }
 
   private enum TeleAnomaly {
@@ -55,7 +56,8 @@ public class Simulator extends SubsystemBase {
     CONTROLLER_TEST1,
     CONTROLLER_TEST2,
     SUBSYSTEM_TEST,
-    AUTO_ROTATE
+    AUTO_ROTATE,
+    AUTO
   }
 
   private enum EventType {
@@ -216,9 +218,10 @@ public class Simulator extends SubsystemBase {
 
   private List<RegressionTest> regressionTestCases() {
     return switch (regressTest) {
+      case AUTO -> List.of(new RegressionTest("AUTO", AutoName.R_FULL_SWEEP_SHOOT, Alliance.Blue));
+      case SHOOT -> List.of(new RegressionTest("Shoot", TeleopScenario.SHOOT, Alliance.Blue));
       case DO_NOTHING -> List.of(
           new RegressionTest("Do nothing", AutoName.DO_NOTHING, Alliance.Blue));
-      case SHOOT -> List.of(new RegressionTest("Shoot", TeleopScenario.SHOOT, Alliance.Blue));
       case CONTROLLER_TEST -> List.of(
           new RegressionTest("Controller Test 1", TeleopScenario.CONTROLLER_TEST1, Alliance.Blue),
           new RegressionTest("Controller Test 2", TeleopScenario.CONTROLLER_TEST2, Alliance.Blue));
@@ -280,6 +283,13 @@ public class Simulator extends SubsystemBase {
     }
   }
 
+  private Pose2d makePoseFlipped(double x, double y, Rotation2d rotation2d) {
+    double xaxis = 651.22 - x;
+    double yaxis = 317.69 - y;
+    Rotation2d flippedRotation = rotation2d.k180deg;
+    return new Pose2d(xaxis, yaxis, flippedRotation);
+  }
+
   private List<SimEvent> buildAutoScenario() {
     if (autoScenario == null) {
       return List.of();
@@ -288,13 +298,95 @@ public class Simulator extends SubsystemBase {
     // TODO
     return switch (autoScenario) {
       case R_FULL_SWEEP_SHOOT -> List.of(
-          new SimEvent(
-              t,
-              "Start Pose",
-              EventType.SET_POSE,
-              new Pose2d(1.34, 5.55, Rotation2d.kZero)), // starting pose for blue
+          DriverStation.getAlliance().get() == Alliance.Blue
+              ? new SimEvent(
+                  t,
+                  "Start Pose",
+                  EventType.SET_POSE,
+                  new Pose2d(1.34, 5.55, Rotation2d.kZero) // starting pose for blue
+                )
+              : new SimEvent(
+                  t,
+                  "Start Pose",
+                  EventType.SET_POSE,
+                  makePoseFlipped(1.34, 5.55, Rotation2d.kZero)
+                ),
           new SimEvent(t += 20.0, "Final Movement", EventType.END_OF_SCENARIO));
-
+      case R_HALF_SWEEP_SHOOT -> List.of(
+                 DriverStation.getAlliance().get() == Alliance.Blue
+              ? new SimEvent(
+                  t,
+                  "Start Pose",
+                  EventType.SET_POSE,
+                  new Pose2d(1.34, 5.55, Rotation2d.kZero) // starting pose for blue
+                )
+              : new SimEvent(
+                  t,
+                  "Start Pose",
+                  EventType.SET_POSE,
+                  makePoseFlipped(1.34, 5.55, Rotation2d.kZero)
+                ),
+          new SimEvent(t += 20.0, "Final Movement", EventType.END_OF_SCENARIO));
+      case R_MIDLINE_SWEEP_SHOOT_OD -> List.of(
+                   DriverStation.getAlliance().get() == Alliance.Blue
+              ? new SimEvent(
+                  t,
+                  "Start Pose",
+                  EventType.SET_POSE,
+                  new Pose2d(1.34, 5.55, Rotation2d.kZero) // starting pose for blue
+                )
+              : new SimEvent(
+                  t,
+                  "Start Pose",
+                  EventType.SET_POSE,
+                  makePoseFlipped(1.34, 5.55, Rotation2d.kZero)
+                ),
+          new SimEvent(t += 10.0, "Final Movement", EventType.END_OF_SCENARIO));
+      case R_DISRUPT_SWEEP_SHOOT -> List.of(
+                 DriverStation.getAlliance().get() == Alliance.Blue
+              ? new SimEvent(
+                  t,
+                  "Start Pose",
+                  EventType.SET_POSE,
+                  new Pose2d(1.34, 5.55, Rotation2d.kZero) // starting pose for blue
+                )
+              : new SimEvent(
+                  t,
+                  "Start Pose",
+                  EventType.SET_POSE,
+                  makePoseFlipped(1.34, 5.55, Rotation2d.kZero)
+                ),
+          new SimEvent(t += 20.0, "Final Movement", EventType.END_OF_SCENARIO));
+      case R_DISRUPT_SWEEP_SHOOT_OD -> List.of(
+                   DriverStation.getAlliance().get() == Alliance.Blue
+              ? new SimEvent(
+                  t,
+                  "Start Pose",
+                  EventType.SET_POSE,
+                  new Pose2d(1.34, 5.55, Rotation2d.kZero) // starting pose for blue
+                )
+              : new SimEvent(
+                  t,
+                  "Start Pose",
+                  EventType.SET_POSE,
+                  makePoseFlipped(1.34, 5.55, Rotation2d.kZero)
+                ),
+          new SimEvent(t += 10.0, "Final Movement", EventType.END_OF_SCENARIO));
+      case R_FULL_SWEEP_SHOOT_OD -> List.of(
+                  DriverStation.getAlliance().get() == Alliance.Blue
+              ? new SimEvent(
+                  t,
+                  "Start Pose",
+                  EventType.SET_POSE,
+                  new Pose2d(1.34, 5.55, Rotation2d.kZero) // starting pose for blue
+                )
+              : new SimEvent(
+                  t,
+                  "Start Pose",
+                  EventType.SET_POSE,
+                  makePoseFlipped(1.34, 5.55, Rotation2d.kZero)
+                ),
+          new SimEvent(t += 10.0, "Final Movement", EventType.END_OF_SCENARIO));
       default -> List.of();
     };
   }
