@@ -23,6 +23,7 @@ import org.littletonrobotics.junction.Logger;
 
 public class Simulator extends SubsystemBase {
   private static final RegressTests regressTest = RegressTests.AUTO;
+  private static final Ally alliance = Ally.Red;
   public static AutoName autoScenario;
   private TeleopScenario teleopScenario;
   private List<TeleAnomaly> teleAnomalies;
@@ -49,6 +50,11 @@ public class Simulator extends SubsystemBase {
 
   private enum AutoAnomaly {
     NONE
+  }
+
+  private enum Ally {
+    Red,
+    Blue
   }
 
   private enum TeleopScenario {
@@ -287,7 +293,7 @@ public class Simulator extends SubsystemBase {
   private Pose2d makePoseFlipped(double x, double y, Rotation2d rotation) {
     double xaxis = Units.inchesToMeters(651.22) - x;
     double yaxis = y;
-  
+
     return new Pose2d(xaxis, yaxis, rotation.plus(Rotation2d.fromDegrees(180)));
   }
 
@@ -299,64 +305,60 @@ public class Simulator extends SubsystemBase {
     // TODO
     return switch (autoScenario) {
       case R_FULL_SWEEP_SHOOT -> List.of(
-          DriverStation.getAlliance().get() == Alliance.Blue
+          alliance == Ally.Blue
               ? new SimEvent(
                   t,
                   "Start Pose",
                   EventType.SET_POSE,
                   new Pose2d(1.34, 5.55, Rotation2d.kZero) // starting pose for blue
-                )
+                  )
               : new SimEvent(
                   t,
                   "Start Pose",
                   EventType.SET_POSE,
-                  makePoseFlipped(1.34, 5.55, Rotation2d.kZero)
-                ),
+                  makePoseFlipped(1.34, 5.55, Rotation2d.kZero)),
           new SimEvent(t += 20.0, "Final Movement", EventType.END_OF_SCENARIO));
       case R_HALF_SWEEP_SHOOT -> List.of(
-                 DriverStation.getAlliance().get() == Alliance.Blue
+          alliance == Ally.Blue
               ? new SimEvent(
                   t,
                   "Start Pose",
                   EventType.SET_POSE,
                   new Pose2d(4.440, 0.650, Rotation2d.kZero) // starting pose for blue
-                )
+                  )
               : new SimEvent(
                   t,
                   "Start Pose",
                   EventType.SET_POSE,
-                  makePoseFlipped(4.440, 0.650, Rotation2d.kZero)
-                ),
+                  makePoseFlipped(4.440, 0.650, Rotation2d.kZero)),
           new SimEvent(t += 20.0, "Final Movement", EventType.END_OF_SCENARIO));
       case R_MIDLINE_SWEEP_SHOOT -> List.of(
-                   DriverStation.getAlliance().get() == Alliance.Blue
+          alliance == Ally.Blue
               ? new SimEvent(
                   t,
                   "Start Pose",
                   EventType.SET_POSE,
                   new Pose2d(4.440, 0.650, Rotation2d.kZero) // starting pose for blue
-                )
+                  )
               : new SimEvent(
                   t,
                   "Start Pose",
                   EventType.SET_POSE,
-                  makePoseFlipped(4.440, 0.650, Rotation2d.kZero)
-                ),
+                  makePoseFlipped(4.440, 0.650, Rotation2d.kZero)),
           new SimEvent(t += 10.0, "Final Movement", EventType.END_OF_SCENARIO));
       case R_DISRUPT_SWEEP_SHOOT -> List.of(
-                 DriverStation.getAlliance().get() == Alliance.Blue
+          alliance == Ally.Blue
               ? new SimEvent(
                   t,
                   "Start Pose",
                   EventType.SET_POSE,
                   new Pose2d(4.440, 0.650, Rotation2d.kZero) // starting pose for blue
-                )
+                  )
               : new SimEvent(
                   t,
                   "Start Pose",
                   EventType.SET_POSE,
-                  makePoseFlipped(4.440, 0.650, Rotation2d.kZero)
-                ),
+                  makePoseFlipped(4.440, 0.650, Rotation2d.kZero)),
           new SimEvent(t += 20.0, "Final Movement", EventType.END_OF_SCENARIO));
       default -> List.of();
     };
