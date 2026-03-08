@@ -66,6 +66,13 @@ public class Simulator extends SubsystemBase {
     }
   }
 
+  private Pose2d flipPose(double x, double y, Rotation2d rotation) {
+    double xaxis = Units.inchesToMeters(651.22) - x;
+    double yaxis = Units.inchesToMeters(317.69) - y;
+
+    return new Pose2d(xaxis, yaxis, rotation.plus(Rotation2d.fromDegrees(180)));
+  }
+
   private enum TeleopScenario {
     NONE,
     SHOOT,
@@ -312,12 +319,7 @@ public class Simulator extends SubsystemBase {
     }
   }
 
-  private Pose2d flipPose(double x, double y, Rotation2d rotation) {
-    double xaxis = Units.inchesToMeters(651.22) - x;
-    double yaxis = Units.inchesToMeters(317.69) - y;
 
-    return new Pose2d(xaxis, yaxis, rotation.plus(Rotation2d.fromDegrees(180)));
-  }
 
   private List<SimEvent> buildAutoScenario() {
     if (autoScenario == null) {
