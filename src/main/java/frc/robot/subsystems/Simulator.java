@@ -448,18 +448,25 @@ public class Simulator extends SubsystemBase {
               new Pose2d(0.67, 0.0, Rotation2d.k180deg)),
           new SimEvent(
               t += 4,
+              "Drive 7",
+              EventType.MOVE_JOYSTICK_DRIVE,
+              new Pose2d(0.0, 0.0, Rotation2d.k180deg)),
+          new SimEvent(t += 0.1, "Hold Right Bumper", EventType.HOLD_RIGHT_BUMPER),
+          new SimEvent(t += 6, "Release Right Bumper", EventType.RELEASE_RIGHT_BUMPER),
+          new SimEvent(
+              t += 0.1,
               "Drive 8",
               EventType.MOVE_JOYSTICK_DRIVE,
               new Pose2d(-0.67, 0, Rotation2d.k180deg)),
           new SimEvent(t += 4, "Hold Right Bumper", EventType.HOLD_RIGHT_BUMPER),
-          new SimEvent(t += 5, "Release Right Bumper", EventType.RELEASE_RIGHT_BUMPER),
+          new SimEvent(t += 6, "Release Right Bumper", EventType.RELEASE_RIGHT_BUMPER),
           new SimEvent(
               t += 0,
               "Drive 9",
               EventType.MOVE_JOYSTICK_DRIVE,
               new Pose2d(0, 0.5, Rotation2d.k180deg)),
           new SimEvent(t += 1, "Hold Right Bumper", EventType.HOLD_RIGHT_BUMPER),
-          new SimEvent(t += 5, "Release Right Bumper", EventType.RELEASE_RIGHT_BUMPER),
+          new SimEvent(t += 6, "Release Right Bumper", EventType.RELEASE_RIGHT_BUMPER),
           new SimEvent(t += 1.0, "Final Movement", EventType.END_OF_SCENARIO));
 
       default -> List.of();
