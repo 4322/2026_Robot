@@ -4,7 +4,6 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.constants.Constants;
-import frc.robot.subsystems.shooter.areaManager.AreaManager;
 import frc.robot.util.LoggedTunableNumber;
 import org.littletonrobotics.junction.Logger;
 
@@ -67,7 +66,6 @@ public class Hood {
         Logger.recordOutput("Hood/requestedServoVelocity", pidVelocity);
       }
       case NORMAL -> {
-       
         if (Constants.currentMode == Constants.Mode.SIM && !homed) {
           io.simEstimatedPosition();
           homed = true;

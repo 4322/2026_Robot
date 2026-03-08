@@ -76,9 +76,9 @@ public class Shooter extends SubsystemBase {
   @Override
   public void periodic() {
     calculateFiringSolution();
- if (AreaManager.isHoodDangerZone(drive.getPose().getTranslation())) {
-  hood.requestGoal(0);
-        }
+    if (AreaManager.isHoodDangerZone(drive.getPose().getTranslation())) {
+      hood.requestGoal(0);
+    }
     if (Constants.firingManager == Constants.SubsystemMode.TUNING) {
       flywheel.requestGoal(targetFlywheelSpeedRPS);
       hood.requestGoal(targetHoodAngleDeg);
