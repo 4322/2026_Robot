@@ -26,7 +26,7 @@ public class TurretIOSim implements TurretIO {
 
     inputs.turretDegs = currentAngle;
     inputs.statorVolts = voltage;
-    inputs.speedMotorRotations = velocity;
+    inputs.motorRPS = velocity;
   }
 
   private void simVolts() {

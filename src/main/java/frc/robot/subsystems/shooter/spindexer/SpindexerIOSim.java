@@ -10,7 +10,7 @@ public class SpindexerIOSim implements SpindexerIO {
   public void updateInputs(SpindexerIOInputs inputs) {
     inputs.motorConnected = true;
     simVelocity();
-    inputs.mechanismRotationsPerSec = mechanismRotationsPerSec;
+    inputs.mechanismRPS = mechanismRotationsPerSec;
   }
 
   @Override

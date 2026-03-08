@@ -47,7 +47,7 @@ public class TunnelIOTalonFx implements TunnelIO {
   public void updateInputs(TunnelIOInputs inputs) {
     inputs.motorConnected = motor.isConnected();
     inputs.voltage = motor.getMotorVoltage().getValueAsDouble();
-    inputs.mechanismRotationsPerSec = motor.getVelocity().getValueAsDouble();
+    inputs.mechanismRPS = motor.getVelocity().getValueAsDouble();
     inputs.supplyCurrentAmps = motor.getSupplyCurrent().getValueAsDouble();
     inputs.statorCurrentAmps = motor.getStatorCurrent().getValueAsDouble();
     inputs.motorTempC = motor.getDeviceTemp().getValueAsDouble();

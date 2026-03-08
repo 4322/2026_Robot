@@ -89,7 +89,7 @@ public class TurretIOTalonFx implements TurretIO {
     inputs.encoderOneRotations = CANcoderOne.getPosition().getValueAsDouble();
     inputs.encoderTwoRotations = CANcoderTwo.getPosition().getValueAsDouble();
     inputs.motorConnected = turretMotor.isConnected();
-    inputs.speedMotorRotations = turretMotor.getVelocity().getValueAsDouble();
+    inputs.motorRPS = turretMotor.getVelocity().getValueAsDouble();
     inputs.appliedVolts = turretMotor.getSupplyVoltage().getValueAsDouble();
     inputs.motorTempCelsius = turretMotor.getDeviceTemp().getValueAsDouble();
     inputs.statorVolts = turretMotor.getMotorVoltage().getValueAsDouble();

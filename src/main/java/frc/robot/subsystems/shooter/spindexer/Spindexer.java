@@ -65,10 +65,10 @@ public class Spindexer {
   }
 
   public boolean isStopped() {
-    return inputs.mechanismRotationsPerSec < Constants.Spindexer.stoppedMechanismRotationsPerSec;
+    return inputs.mechanismRPS < Constants.Spindexer.stoppedMechanismRotationsPerSec;
   }
 
   public double getVelocity() {
-    return inputs.mechanismRotationsPerSec;
+    return inputs.mechanismRPS;
   }
 }

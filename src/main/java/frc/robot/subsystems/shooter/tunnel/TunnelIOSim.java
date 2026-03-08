@@ -10,7 +10,7 @@ public class TunnelIOSim implements TunnelIO {
   public void updateInputs(TunnelIOInputs inputs) {
     inputs.motorConnected = true;
     simVelocity();
-    inputs.mechanismRotationsPerSec = mechanismRotationsPerSec;
+    inputs.mechanismRPS = mechanismRotationsPerSec;
   }
 
   @Override
