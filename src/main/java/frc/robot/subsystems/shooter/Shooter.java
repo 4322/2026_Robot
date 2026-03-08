@@ -78,6 +78,9 @@ public class Shooter extends SubsystemBase {
     if (AreaManager.isHoodDangerZone(drive.getPose().getTranslation())) {
        state = ShooterState.TRENCH;
     }
+    if (AreaManager.isTrench(drive.getPose().getTranslation())) {
+       state = ShooterState.IDLE;
+    }
     
     if (Constants.firingManager == Constants.SubsystemMode.TUNING) {
       flywheel.requestGoal(targetFlywheelSpeedRPS);
@@ -111,12 +114,12 @@ public class Shooter extends SubsystemBase {
         }
       }
       case TRENCH ->{
-        spindexer.requestIdle();
         hood.requestGoal(Constants.Hood.safeAngleDeg);
+        spindexer.requestIdle();
         tunnel.requestIdle();
         flywheel.requestGoal(Constants.Flywheel.idleRPS);
         targetFlywheelSpeedRPS = Constants.Flywheel.idleRPS;
-        if (!AreaManager.isTrench(drive.getPose().getTranslation())&&!AreaManager.isHoodDangerZone(drive.getPose().getTranslation())) {
+        if (!AreaManager.isTrench(drive.getPose().getTranslation()) && !AreaManager.isHoodDangerZone(drive.getPose().getTranslation())) {
             state = ShooterState.IDLE;
         }
       }
@@ -144,12 +147,9 @@ public class Shooter extends SubsystemBase {
         spindexer.requestIdle();
         turret.setAngle(targetTurretAngleDeg, false);
 
-        if (AreaManager.isHoodDangerZone(drive.getPose().getTranslation())) {
-          hood.requestGoal(Constants.Hood.safeAngleDeg);
-          targetHoodAngleDeg = Constants.Hood.safeAngleDeg;
-        } else {
-          hood.requestGoal(targetHoodAngleDeg);
-        }
+   
+        hood.requestGoal(targetHoodAngleDeg);
+        
 
         if (spindexer.isStopped()) {
           tunnel.requestIdle();
