@@ -52,9 +52,18 @@ public class Simulator extends SubsystemBase {
     NONE
   }
 
-  private enum Ally {
-    Red,
-    Blue
+  public enum Ally {
+    Red(Alliance.Red),
+    Blue(Alliance.Blue);
+    private Alliance allianceChoice;
+
+    Ally(Alliance alliance) {
+      this.allianceChoice = alliance;
+    }
+
+    public Alliance getAllianceChoice() {
+      return allianceChoice;
+    }
   }
 
   private enum TeleopScenario {
@@ -225,20 +234,28 @@ public class Simulator extends SubsystemBase {
 
   private List<RegressionTest> regressionTestCases() {
     return switch (regressTest) {
-      case AUTO -> List.of(new RegressionTest("AUTO", AutoName.R_FULL_SWEEP_SHOOT, Alliance.Red));
-      case SHOOT -> List.of(new RegressionTest("Shoot", TeleopScenario.SHOOT, Alliance.Blue));
+      case AUTO -> List.of(
+          new RegressionTest("AUTO", AutoName.R_FULL_SWEEP_SHOOT, alliance.getAllianceChoice()));
+      case SHOOT -> List.of(
+          new RegressionTest("Shoot", TeleopScenario.SHOOT, alliance.getAllianceChoice()));
       case DO_NOTHING -> List.of(
-          new RegressionTest("Do nothing", AutoName.DO_NOTHING, Alliance.Blue));
+          new RegressionTest("Do nothing", AutoName.DO_NOTHING, alliance.getAllianceChoice()));
       case CONTROLLER_TEST -> List.of(
-          new RegressionTest("Controller Test 1", TeleopScenario.CONTROLLER_TEST1, Alliance.Blue),
-          new RegressionTest("Controller Test 2", TeleopScenario.CONTROLLER_TEST2, Alliance.Blue));
+          new RegressionTest(
+              "Controller Test 1", TeleopScenario.CONTROLLER_TEST1, alliance.getAllianceChoice()),
+          new RegressionTest(
+              "Controller Test 2", TeleopScenario.CONTROLLER_TEST2, alliance.getAllianceChoice()));
       case SUBSYSTEM_TEST_BOTH -> List.of(
-          new RegressionTest("Auto test", AutoName.R_FULL_SWEEP_SHOOT, Alliance.Blue),
-          new RegressionTest("Subsystem Test", TeleopScenario.SUBSYSTEM_TEST, Alliance.Blue));
+          new RegressionTest(
+              "Auto test", AutoName.R_FULL_SWEEP_SHOOT, alliance.getAllianceChoice()),
+          new RegressionTest(
+              "Subsystem Test", TeleopScenario.SUBSYSTEM_TEST, alliance.getAllianceChoice()));
       case SUBSYSTEM_TEST_TELE -> List.of(
-          new RegressionTest("Subsystem Test", TeleopScenario.SUBSYSTEM_TEST, Alliance.Blue));
+          new RegressionTest(
+              "Subsystem Test", TeleopScenario.SUBSYSTEM_TEST, alliance.getAllianceChoice()));
       case TEST_AUTOROTATE -> List.of(
-          new RegressionTest("Subsystem Test", TeleopScenario.AUTO_ROTATE, Alliance.Blue));
+          new RegressionTest(
+              "Subsystem Test", TeleopScenario.AUTO_ROTATE, alliance.getAllianceChoice()));
       default -> List.of();
     };
   }
