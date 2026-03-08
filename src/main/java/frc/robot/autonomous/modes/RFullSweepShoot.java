@@ -1,6 +1,8 @@
 package frc.robot.autonomous.modes;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.path.PathPlannerPath;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -20,16 +22,18 @@ import org.littletonrobotics.junction.Logger;
 
 public class RFullSweepShoot extends SequentialCommandGroup {
   public RFullSweepShoot(Drive drive, LED led, Intake intake, Shooter shooter) {
+    PathPlannerPath path = Robot.R_StartR_To_NeutralR_Intake;
+    Pose2d startPoseBlue = path.getStartingHolonomicPose().get();
+    Pose2d startPoseRed = path.flipPath().getStartingHolonomicPose().get();
     setName("R_FULL_SWEEP_SHOOT");
     addCommands(
         new InstantCommand(() -> Logger.recordOutput("Autonomous/autoStarted", true)),
         new InstantCommand(
             () -> {
               if (Robot.alliance == Alliance.Blue) {
-                drive.setPose(Robot.R_StartR_To_NeutralR_Intake.getStartingHolonomicPose().get());
+                drive.setPose(startPoseBlue);
               } else {
-                drive.setPose(
-                    Robot.R_StartR_To_NeutralR_Intake.flipPath().getStartingHolonomicPose().get());
+                drive.setPose(startPoseRed);
               }
             }),
         new ParallelCommandGroup(
@@ -45,16 +49,20 @@ public class RFullSweepShoot extends SequentialCommandGroup {
 
   public RFullSweepShoot(
       Drive drive, LED led, Intake intake, VisionObjectDetection visionObjectDetection) {
+
+    PathPlannerPath path = Robot.R_StartR_To_NeutralR_Intake;
+    Pose2d startPoseBlue = path.getStartingHolonomicPose().get();
+    Pose2d startPoseRed = path.flipPath().getStartingHolonomicPose().get();
+
     setName("R_FULL_SWEEP_SHOOT_OD");
     addCommands(
         new InstantCommand(() -> Logger.recordOutput("Autonomous/autoStarted", true)),
         new InstantCommand(
             () -> {
               if (Robot.alliance == Alliance.Blue) {
-                drive.setPose(Robot.R_StartR_To_NeutralR_Intake.getStartingHolonomicPose().get());
+                drive.setPose(startPoseBlue);
               } else {
-                drive.setPose(
-                    Robot.R_StartR_To_NeutralR_Intake.flipPath().getStartingHolonomicPose().get());
+                drive.setPose(startPoseRed);
               }
             }),
         new ParallelCommandGroup(IntakeCommands.setIntaking(intake)),

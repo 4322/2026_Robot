@@ -1,6 +1,8 @@
 package frc.robot.autonomous.modes;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.path.PathPlannerPath;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -14,6 +16,9 @@ import org.littletonrobotics.junction.Logger;
 
 public class CDepotOutpost extends SequentialCommandGroup {
   public CDepotOutpost(Drive drive, LED led, Intake intake) {
+    PathPlannerPath path = Robot.C_Start_To_Depot;
+    Pose2d startPoseBlue = path.getStartingHolonomicPose().get();
+    Pose2d startPoseRed = path.flipPath().getStartingHolonomicPose().get();
     setName("C_DEPOT_OUTPOST");
 
     addCommands(
@@ -21,9 +26,9 @@ public class CDepotOutpost extends SequentialCommandGroup {
         new InstantCommand(
             () -> {
               if (Robot.alliance == Alliance.Blue) {
-                drive.setPose(Robot.C_Start_To_Depot.getStartingHolonomicPose().get());
+                drive.setPose(startPoseBlue);
               } else {
-                drive.setPose(Robot.C_Start_To_Depot.flipPath().getStartingHolonomicPose().get());
+                drive.setPose(startPoseRed);
               }
             }),
         new ParallelCommandGroup(
