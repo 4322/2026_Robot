@@ -55,7 +55,7 @@ public class Spindexer {
     requestedSpeed = 0;
   }
 
-  public void requestIndex(double speed) {
+  public void requestGoal(double speed) {
     state = SpindexerStates.INDEXING;
     requestedSpeed = speed;
   }

@@ -52,7 +52,7 @@ public class Tunnel {
     requestedSpeed = 0;
   }
 
-  public void requestIndex(double speed) {
+  public void requestGoal(double speed) {
     state = TunnelStates.INDEXING;
     requestedSpeed = speed;
   }

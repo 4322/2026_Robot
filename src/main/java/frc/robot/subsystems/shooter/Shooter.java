@@ -90,8 +90,8 @@ public class Shooter extends SubsystemBase {
         turret.setAngle(targetTurretAngleDeg, true);
       }
 
-      tunnel.requestIndex(targetTunnelSpeedRPS);
-      spindexer.requestIndex(targetIndexerSpeedRPS);
+      tunnel.requestGoal(targetTunnelSpeedRPS);
+      spindexer.requestGoal(targetIndexerSpeedRPS);
       flywheel.periodic();
       spindexer.periodic();
       tunnel.periodic();
@@ -146,8 +146,6 @@ public class Shooter extends SubsystemBase {
       case UNWIND -> {
         spindexer.requestIdle();
         turret.setAngle(targetTurretAngleDeg, false);
-
-   
         hood.requestGoal(targetHoodAngleDeg);
         
 
@@ -169,28 +167,17 @@ public class Shooter extends SubsystemBase {
         hood.requestGoal(targetHoodAngleDeg);
         if (!Constants.turretLocked) {
           turret.setAngle(targetTurretAngleDeg, true);
-        } else {
-          drive.alignToTarget();
-        }
+        } 
       }
       case SHOOT -> {
         flywheel.requestGoal(targetFlywheelSpeedRPS);
         hood.requestGoal(targetHoodAngleDeg);
         if (!Constants.turretLocked) {
           turret.setAngle(targetTurretAngleDeg, false);
-        } else {
-          drive.alignToTarget();
-        }
-
-        tunnel.requestIndex(
-            Constants.Tunnel.dynamicVelocity
-                ? (flywheel.getVelocity() / (targetFlywheelSpeedRPS)) * targetTunnelSpeedRPS
-                : targetTunnelSpeedRPS);
+        } 
+        tunnel.requestGoal(targetTunnelSpeedRPS);
         if (tunnel.getVelocity() > Constants.Tunnel.minPercentVelocity * targetTunnelSpeedRPS) {
-          spindexer.requestIndex(
-              Constants.Spindexer.dynamicVelocity
-                  ? (tunnel.getVelocity() / targetTunnelSpeedRPS) * targetIndexerSpeedRPS
-                  : targetIndexerSpeedRPS);
+          spindexer.requestGoal(targetIndexerSpeedRPS);
         }
       }
     }
@@ -199,6 +186,7 @@ public class Shooter extends SubsystemBase {
     spindexer.periodic();
     tunnel.periodic();
     hood.periodic();
+
     if (!Constants.turretLocked) {
       turret.periodic();
     }
@@ -219,12 +207,6 @@ public class Shooter extends SubsystemBase {
     Logger.recordOutput("Shooter/TargetTurretAngleDeg", targetTurretAngleDeg);
     Logger.recordOutput("Shooter/TargetTunnelSpeedRPS", targetTunnelSpeedRPS);
     Logger.recordOutput("Shooter/TargetIndexerSpeedRPS", targetIndexerSpeedRPS);
-    Logger.recordOutput(
-        "Shooter/TurretPose",
-        new Pose3d[] {
-          new Pose3d(
-              -0.13, 0.17, 0.3, new Rotation3d(0, 0, Units.degreesToRadians(turret.getAngle())))
-        });
   }
 
   private void calculateFiringSolution() {
@@ -249,12 +231,7 @@ public class Shooter extends SubsystemBase {
     if (Constants.firingManager == Constants.SubsystemMode.TUNING) {
       return;
     }
-
-    if ((AreaManager.isTrench(drive.getPose().getTranslation()))) {
-      // Emergency hood lower
-      state = ShooterState.IDLE;
-
-    } else if (AreaManager.getZoneOfPosition(drive.getPose().getTranslation()) == Zone.ALLIANCE_ZONE
+     if (AreaManager.getZoneOfPosition(drive.getPose().getTranslation()) == Zone.ALLIANCE_ZONE
         && !HubShiftUtil.getShiftedShiftInfo().active()) {
       if (Constants.turretLocked) {
         state = ShooterState.IDLE;

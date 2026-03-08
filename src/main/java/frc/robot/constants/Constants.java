@@ -87,8 +87,6 @@ public final class Constants {
   }
 
   public static class Spindexer {
-    public static final boolean dynamicVelocity = false;
-    public static final double dynamicVelocityPercent = 0.9; // TODO tune
 
     public static final int spindexerMotorId = 4;
     public static final double supplyCurrentLimit = 40; // TODO
@@ -106,7 +104,6 @@ public final class Constants {
   }
 
   public static class Tunnel {
-    public static final boolean dynamicVelocity = false;
 
     public static final int tunnelMotorId = 20;
     public static final double statorCurrentLimit = 60; // TODO
