@@ -58,10 +58,11 @@ public class FiringManager {
           indexerSpeedRPS.get());
     }
 
+    // Get turret position
     Translation2d turretPosition = robotPosition.plus(Constants.Turret.originToTurret);
     Logger.recordOutput("Shooter/TurretPose", turretPosition);
 
-    // Project future position
+    // Project future position based on velocity and latency compensation
     double latencyCompensation =
         isScoring
             ? Constants.FiringManager.latencyCompensationScoring
@@ -69,6 +70,7 @@ public class FiringManager {
     Translation2d futurePos = turretPosition.plus(robotVelocity.times(latencyCompensation));
 
     Logger.recordOutput("FiringManager/futurePos", new Pose2d(futurePos, new Rotation2d()));
+    
     // Get target vector
     Translation2d goalPosition = getShootingTarget(robotPosition);
     Logger.recordOutput("FiringManager/targetPosition", new Pose2d(goalPosition, new Rotation2d()));
@@ -77,13 +79,14 @@ public class FiringManager {
     Logger.recordOutput("FiringManager/distance", distance);
     Translation2d targetDirection = toGoal.div(distance);
 
-    // Get velocity
-    FiringParameters baseline =
+
+    // Get FiringParameters based on distance
+  FiringParameters baseline =
         isScoring
             ? Constants.FiringManager.firingMapScoring.get(distance)
             : Constants.FiringManager.firingMapPassing.get(distance);
 
-    if (!Constants.shootOnTheMoveEnabled) {
+if (!Constants.shootOnTheMoveEnabled) {
       return new FiringSolution(
           baseline.getFlywheelRPM(),
           baseline.getHoodAngleDeg(),
@@ -102,7 +105,7 @@ public class FiringManager {
         "FiringManager/calculatedShootingTarget",
         new Pose2d(turretPosition.plus(shotVelocity), new Rotation2d()));
 
-    // Get results
+    // Get turret angle based on angle of target velocity vector
     Rotation2d turretAngle = new Rotation2d();
     try {
       turretAngle = shotVelocity.getAngle();
@@ -112,7 +115,7 @@ public class FiringManager {
     double requiredVelocity = shotVelocity.getNorm();
     Logger.recordOutput("FiringManager/requiredVelocity", requiredVelocity);
 
-    // Use table in reverse: velocity -> effective distance → RPM
+    // Use table in reverse: get effective distance from required velocity 
     double effectiveDistance = velocityToEffectiveDistance(requiredVelocity, isScoring);
     Logger.recordOutput("FiringManager/effectiveDistance", effectiveDistance);
 
@@ -126,6 +129,7 @@ public class FiringManager {
         isScoring);
   }
 
+  /** Achieve target horizontal velocity by adjusting both flywheel RPM and hood angle (Equal combination of both) */
   private static FiringSolution getHybridFiringSolution(
       double distance,
       double requiredVelocity,
@@ -140,15 +144,19 @@ public class FiringManager {
     double baselineVelocity = distance / baseline.getTimeOfFlightSec();
     double velocityRatio = requiredVelocity / baselineVelocity;
 
+    // Split correction; sqrt gives equal contribution from both RPM and hood change
     double rpmFactor = Math.sqrt(velocityRatio);
-    Logger.recordOutput("FiringManager/rpmFactor", rpmFactor);
     double hoodFactor = Math.sqrt(velocityRatio);
+
+    Logger.recordOutput("FiringManager/rpmFactor", rpmFactor);
     Logger.recordOutput("FiringManager/hoodFactor", hoodFactor);
 
+    // Apply RPM scaling
     double adjustedRPM = baseline.getFlywheelRPM() * rpmFactor;
 
     double totalVelocity = baselineVelocity / Math.cos(Math.toRadians(baseline.getHoodAngleDeg()));
 
+    // Apply hood adjustment
     double targetHorizFromHood = baselineVelocity * hoodFactor;
     double ratio = MathUtil.clamp(targetHorizFromHood / totalVelocity, 0.0, 1.0);
     double adjustedHood = Math.toDegrees(Math.acos(ratio));
