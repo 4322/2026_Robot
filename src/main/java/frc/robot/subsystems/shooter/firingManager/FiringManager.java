@@ -43,6 +43,7 @@ public class FiringManager {
 
   public static FiringSolution getFiringSolution(
       Translation2d robotPosition, Translation2d robotVelocity, boolean isScoring) {
+    Logger.recordOutput("FiringManager/isScoring", isScoring);
     if (Constants.firingManager == Constants.SubsystemMode.TUNING) {
       Logger.recordOutput("FiringManager/requestedTuning/flywheelSpeedRPM", flywheelSpeedRPM.get());
       Logger.recordOutput("FiringManager/requestedTuning/hoodAngle", hoodAngle.get());
