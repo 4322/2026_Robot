@@ -61,9 +61,16 @@ public class Simulator extends SubsystemBase {
       this.allianceChoice = alliance;
     }
 
-    public Alliance getAllianceChoice() {
+    public Alliance getAlliance() {
       return allianceChoice;
     }
+  }
+
+  private Pose2d flipPose(double x, double y, Rotation2d rotation) {
+    double xaxis = Units.inchesToMeters(651.22) - x;
+    double yaxis = Units.inchesToMeters(317.69) - y;
+
+    return new Pose2d(xaxis, yaxis, rotation.plus(Rotation2d.fromDegrees(180)));
   }
 
   private enum TeleopScenario {
@@ -235,27 +242,27 @@ public class Simulator extends SubsystemBase {
   private List<RegressionTest> regressionTestCases() {
     return switch (regressTest) {
       case AUTO -> List.of(
-          new RegressionTest("AUTO", AutoName.R_FULL_SWEEP_SHOOT, alliance.getAllianceChoice()));
+          new RegressionTest("AUTO", AutoName.R_FULL_SWEEP_SHOOT, alliance.getAlliance()));
+        // Useable Autos are R_FULL_SWEEP_SHOOT, R_HALF_SWEEP_SHOOT, R_MIDLINE_SWEEP_SHOOT,
+        // R_DISRUPT_SWEEP_SHOOT, & C_DEPOT_OUTPOST
       case SHOOT -> List.of(
-          new RegressionTest("Shoot", TeleopScenario.SHOOT, alliance.getAllianceChoice()));
+          new RegressionTest("Shoot", TeleopScenario.SHOOT, alliance.getAlliance()));
       case DO_NOTHING -> List.of(
-          new RegressionTest("Do nothing", AutoName.DO_NOTHING, alliance.getAllianceChoice()));
+          new RegressionTest("Do nothing", AutoName.DO_NOTHING, alliance.getAlliance()));
       case CONTROLLER_TEST -> List.of(
           new RegressionTest(
-              "Controller Test 1", TeleopScenario.CONTROLLER_TEST1, alliance.getAllianceChoice()),
+              "Controller Test 1", TeleopScenario.CONTROLLER_TEST1, alliance.getAlliance()),
           new RegressionTest(
-              "Controller Test 2", TeleopScenario.CONTROLLER_TEST2, alliance.getAllianceChoice()));
+              "Controller Test 2", TeleopScenario.CONTROLLER_TEST2, alliance.getAlliance()));
       case SUBSYSTEM_TEST_BOTH -> List.of(
+          new RegressionTest("Auto test", AutoName.R_FULL_SWEEP_SHOOT, alliance.getAlliance()),
           new RegressionTest(
-              "Auto test", AutoName.R_FULL_SWEEP_SHOOT, alliance.getAllianceChoice()),
-          new RegressionTest(
-              "Subsystem Test", TeleopScenario.SUBSYSTEM_TEST, alliance.getAllianceChoice()));
+              "Subsystem Test", TeleopScenario.SUBSYSTEM_TEST, alliance.getAlliance()));
       case SUBSYSTEM_TEST_TELE -> List.of(
           new RegressionTest(
-              "Subsystem Test", TeleopScenario.SUBSYSTEM_TEST, alliance.getAllianceChoice()));
+              "Subsystem Test", TeleopScenario.SUBSYSTEM_TEST, alliance.getAlliance()));
       case TEST_AUTOROTATE -> List.of(
-          new RegressionTest(
-              "Subsystem Test", TeleopScenario.AUTO_ROTATE, alliance.getAllianceChoice()));
+          new RegressionTest("Subsystem Test", TeleopScenario.AUTO_ROTATE, alliance.getAlliance()));
       default -> List.of();
     };
   }
@@ -312,12 +319,7 @@ public class Simulator extends SubsystemBase {
     }
   }
 
-  private Pose2d flipPose(double x, double y, Rotation2d rotation) {
-    double xaxis = Units.inchesToMeters(651.22) - x;
-    double yaxis = Units.inchesToMeters(317.69) - y;
 
-    return new Pose2d(xaxis, yaxis, rotation.plus(Rotation2d.fromDegrees(180)));
-  }
 
   private List<SimEvent> buildAutoScenario() {
     if (autoScenario == null) {
@@ -327,36 +329,14 @@ public class Simulator extends SubsystemBase {
     // TODO
     return switch (autoScenario) {
       case R_FULL_SWEEP_SHOOT -> List.of(
-          new SimEvent(
-              t,
-              "Start Pose",
-              EventType.SET_POSE,
-              new Pose2d(1.34, 5.55, Rotation2d.kZero) // starting pose for blue
-              ),
           new SimEvent(t += 20.0, "Final Movement", EventType.END_OF_SCENARIO));
       case R_HALF_SWEEP_SHOOT -> List.of(
-          new SimEvent(
-              t,
-              "Start Pose",
-              EventType.SET_POSE,
-              new Pose2d(1.34, 5.55, Rotation2d.kZero) // starting pose for blue
-              ),
           new SimEvent(t += 20.0, "Final Movement", EventType.END_OF_SCENARIO));
       case R_MIDLINE_SWEEP_SHOOT -> List.of(
-          new SimEvent(
-              t,
-              "Start Pose",
-              EventType.SET_POSE,
-              new Pose2d(1.34, 5.55, Rotation2d.kZero) // starting pose for blue
-              ),
           new SimEvent(t += 10.0, "Final Movement", EventType.END_OF_SCENARIO));
       case R_DISRUPT_SWEEP_SHOOT -> List.of(
-          new SimEvent(
-              t,
-              "Start Pose",
-              EventType.SET_POSE,
-              new Pose2d(1.34, 5.55, Rotation2d.kZero) // starting pose for blue
-              ),
+          new SimEvent(t += 20.0, "Final Movement", EventType.END_OF_SCENARIO));
+      case C_DEPOT_OUTPOST -> List.of(
           new SimEvent(t += 20.0, "Final Movement", EventType.END_OF_SCENARIO));
       default -> List.of();
     };
