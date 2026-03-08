@@ -171,7 +171,7 @@ public class DriveCommands {
                   angleController.calculate(
                       drive.getPose().getRotation().getRotations(),
                       Units.degreesToRotations(
-                          RobotContainer.shooter.getTargetTurretAngleDeg() - 90));
+                          RobotContainer.shooter.getTargetTurretAngleDeg() + 22.5));
               // Convert to field relative speeds & send command
               ChassisSpeeds speeds =
                   new ChassisSpeeds(
