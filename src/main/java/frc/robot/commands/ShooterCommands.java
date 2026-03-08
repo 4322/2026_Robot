@@ -13,24 +13,10 @@ public class ShooterCommands {
   }
 
   // Main commands
-
-  public static Command inhibitAutoShoot(Shooter shooter) {
-
-    return Commands.run(
-        () -> {
-          shooter.requestIdle();
-        },
-        shooter);
-  }
-
-  // Default command
-  public static Command autoShoot(Shooter shooter) {
-
-    return shoot(shooter);
-  }
+  
 
   public static Command aimAndShoot(Shooter shooter, Drive drive) {
-    return Commands.parallel(DriveCommands.driveAzimuthRotate(drive), autoShoot(shooter));
+    return Commands.parallel(DriveCommands.driveAzimuthRotate(drive), shoot(shooter));
   }
 
   public static Command idle(Shooter shooter) {

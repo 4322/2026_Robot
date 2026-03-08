@@ -190,6 +190,7 @@ public final class Constants {
     public static final int servoChannel = 3;
     public static final int encoderId = 3;
     public static final double gearRatio = 164 / 11.0;
+    public static final double safeAngleDeg= 1;
     public static final double kSPulsewidthUp = 80;
     public static final double kSPulsewidthDown = 45;
     public static final double kV = 0;

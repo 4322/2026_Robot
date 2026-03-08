@@ -411,11 +411,11 @@ public class RobotContainer {
       shooter.setDefaultCommand(ShooterCommands.idle(shooter));
       controller.rightBumper().whileTrue(ShooterCommands.aimAndShoot(shooter, drive));
     } else {
-      shooter.setDefaultCommand(ShooterCommands.autoShoot(shooter));
+      shooter.setDefaultCommand(ShooterCommands.shoot(shooter));
 
       new JoystickButton(operatorBoard.getLeftController(), Constants.Control.toggle1ButtonNumber)
           .or(inNonShootingArea)
-          .whileTrue(ShooterCommands.inhibitAutoShoot(shooter));
+          .whileTrue(ShooterCommands.idle(shooter));
     }
 
     // Toggle 4
