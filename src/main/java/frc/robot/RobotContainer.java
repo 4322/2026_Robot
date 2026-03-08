@@ -433,6 +433,10 @@ public class RobotContainer {
 
     controller.x().toggleOnTrue(IntakeCommands.setRetract(intake));
 
+    controller.povDown().whileTrue(IntakeCommands.setEject(intake));
+
+    controller.a().onTrue(ShooterCommands.idle(shooter));
+6
     new JoystickButton(operatorBoard.getLeftController(), Constants.Control.toggle3ButtonNumber)
         .whileTrue(IntakeCommands.setRetract(intake));
   }
