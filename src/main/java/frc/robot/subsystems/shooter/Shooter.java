@@ -205,8 +205,10 @@ public class Shooter extends SubsystemBase {
     Logger.recordOutput("Shooter/hoodAtPosition", hood.isAtGoal());
     Logger.recordOutput("Shooter/turretAtPosition", turret.isAtGoal());
     Logger.recordOutput("Shooter/TargetHoodAngleDeg", targetHoodAngleDeg);
-    Logger.recordOutput("Shooter/TargetFlywheelSpeedRPS", targetFlywheelSpeedRPS / 60);
+    Logger.recordOutput("Shooter/TargetFlywheelSpeedRPS", targetFlywheelSpeedRPS);
     Logger.recordOutput("Shooter/TargetTurretAngleDeg", targetTurretAngleDeg);
+    Logger.recordOutput("Shooter/TargetTunnelSpeedRPS", targetTunnelSpeedRPS);
+    Logger.recordOutput("Shooter/TargetIndexerSpeedRPS", targetIndexerSpeedRPS);
     Logger.recordOutput(
         "Shooter/TurretPose",
         new Pose3d[] {
