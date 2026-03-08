@@ -42,7 +42,7 @@ public class FiringManager {
       new LoggedTunableNumber("FiringManager/indexerSpeedRPS", 0);
 
   public static FiringSolution getFiringSolution(
-      Translation2d robotPosition, Translation2d robotVelocity, boolean isScoring) {
+      Translation2d turretPosition, Translation2d robotVelocity, boolean isScoring) {
     Logger.recordOutput("FiringManager/isScoring", isScoring);
     if (Constants.firingManager == Constants.SubsystemMode.TUNING) {
       Logger.recordOutput("FiringManager/requestedTuning/flywheelSpeedRPM", flywheelSpeedRPM.get());
@@ -58,10 +58,6 @@ public class FiringManager {
           indexerSpeedRPS.get());
     }
 
-    // Get turret position
-    Translation2d turretPosition = robotPosition.plus(Constants.Turret.originToTurret);
-    Logger.recordOutput("Shooter/TurretPose", turretPosition);
-
     // Project future position based on velocity and latency compensation
     double latencyCompensation =
         isScoring
@@ -72,7 +68,7 @@ public class FiringManager {
     Logger.recordOutput("FiringManager/futurePos", new Pose2d(futurePos, new Rotation2d()));
 
     // Get target vector
-    Translation2d goalPosition = getShootingTarget(robotPosition);
+    Translation2d goalPosition = getShootingTarget(turretPosition);
     Logger.recordOutput("FiringManager/targetPosition", new Pose2d(goalPosition, new Rotation2d()));
     Translation2d toGoal = goalPosition.minus(futurePos);
     double distance = toGoal.getNorm();

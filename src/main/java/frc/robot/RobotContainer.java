@@ -108,6 +108,7 @@ public class RobotContainer {
 
   // Controller
   public static final CommandXboxController controller = new CommandXboxController(0);
+  public static final CommandXboxController controller2 = new CommandXboxController(1);
   public static ScoringManager operatorBoard = new ScoringManager(1, 1);
 
   private enum ShootingCommands {
@@ -258,19 +259,19 @@ public class RobotContainer {
                     drive,
                     new VisionGlobalPoseIOSim(
                         Constants.VisionGlobalPose.frontRightName,
-                        drive::getPose,
+                        drive::getRobotPose,
                         Constants.VisionGlobalPose.frontRightTransform),
                     new VisionGlobalPoseIOSim(
                         Constants.VisionGlobalPose.frontLeftName,
-                        drive::getPose,
+                        drive::getRobotPose,
                         Constants.VisionGlobalPose.frontLeftTransform),
                     new VisionGlobalPoseIOSim(
                         Constants.VisionGlobalPose.backRightName,
-                        drive::getPose,
+                        drive::getRobotPose,
                         Constants.VisionGlobalPose.backRightTransform),
                     new VisionGlobalPoseIOSim(
                         Constants.VisionGlobalPose.backLeftName,
-                        drive::getPose,
+                        drive::getRobotPose,
                         Constants.VisionGlobalPose.backLeftTransform));
 
         visionObjectDetection =
@@ -377,7 +378,7 @@ public class RobotContainer {
 
     // Triggers
     inNonShootingArea =
-        new Trigger(() -> !AreaManager.isShootingArea(drive.getPose().getTranslation()));
+        new Trigger(() -> !AreaManager.isShootingArea(drive.getRobotPose().getTranslation()));
 
     // Configure the button bindings
     configureButtonBindings();
@@ -412,11 +413,8 @@ public class RobotContainer {
       controller.rightBumper().whileTrue(ShooterCommands.aimAndShoot(shooter, drive));
     } else {
       shooter.setDefaultCommand(ShooterCommands.shoot(shooter));
-
-      new JoystickButton(operatorBoard.getLeftController(), Constants.Control.toggle1ButtonNumber)
-          .or(inNonShootingArea)
-          .whileTrue(ShooterCommands.idle(shooter));
     }
+    controller2.rightBumper().or(inNonShootingArea).whileTrue(ShooterCommands.idle(shooter));
 
     // Toggle 4
     new JoystickButton(operatorBoard.getLeftController(), Constants.Control.toggle4ButtonNumber)

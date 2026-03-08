@@ -120,7 +120,7 @@ public class Drive extends SubsystemBase {
 
     // Configure AutoBuilder for PathPlanner
     AutoBuilder.configure(
-        this::getPose,
+        this::getRobotPose,
         this::setPose,
         this::getChassisSpeeds,
         this::runVelocity,
@@ -209,7 +209,7 @@ public class Drive extends SubsystemBase {
     // Update gyro alert
     gyroDisconnectedAlert.set(!gyroInputs.connected && Constants.currentMode != Mode.SIM);
 
-    RobotContainer.getField().setRobotPose(getPose());
+    RobotContainer.getField().setRobotPose(getRobotPose());
   }
 
   /**
@@ -320,13 +320,22 @@ public class Drive extends SubsystemBase {
 
   /** Returns the current odometry pose. */
   @AutoLogOutput(key = "Odometry/Robot")
-  public Pose2d getPose() {
+  public Pose2d getRobotPose() {
     return poseEstimator.getEstimatedPosition();
+  }
+
+  /** Returns the current turret pose. */
+  @AutoLogOutput(key = "Odometry/Turret")
+  public Translation2d getTurretTranslation() {
+    return poseEstimator
+        .getEstimatedPosition()
+        .getTranslation()
+        .plus(Constants.Turret.originToTurret);
   }
 
   /** Returns the current odometry rotation. */
   public Rotation2d getRotation() {
-    return getPose().getRotation();
+    return getRobotPose().getRotation();
   }
 
   /** Resets the current odometry pose. */

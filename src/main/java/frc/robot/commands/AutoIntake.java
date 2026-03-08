@@ -54,7 +54,10 @@ public class AutoIntake extends Command {
       fuelPose = visionObjectDetection.getBestFuelPose(true);
       if (fuelPose != null) {
         targetAngle =
-            fuelPose.minus(drive.getPose().getTranslation()).getAngle().plus(Rotation2d.k180deg);
+            fuelPose
+                .minus(drive.getRobotPose().getTranslation())
+                .getAngle()
+                .plus(Rotation2d.k180deg);
       }
     }
 
@@ -62,8 +65,9 @@ public class AutoIntake extends Command {
       Logger.recordOutput("AutoIntake/fuelPosition", new Pose2d(fuelPose, Rotation2d.kZero));
       Logger.recordOutput(
           "AutoIntake/fuelAngleBotRelativeDeg",
-          fuelPose.minus(drive.getPose().getTranslation()).getAngle().getDegrees());
-      Logger.recordOutput("AutoIntake/driveHeadingDeg", drive.getPose().getRotation().getDegrees());
+          fuelPose.minus(drive.getRobotPose().getTranslation()).getAngle().getDegrees());
+      Logger.recordOutput(
+          "AutoIntake/driveHeadingDeg", drive.getRobotPose().getRotation().getDegrees());
       Logger.recordOutput("AutoIntake/targetAngleDeg", targetAngle.getDegrees());
       if (autodrive) {
         driveToPoseTarget =

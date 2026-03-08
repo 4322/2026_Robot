@@ -169,7 +169,7 @@ public class DriveCommands {
               // Calculate angular speed
               double omega =
                   angleController.calculate(
-                      drive.getPose().getRotation().getRotations(),
+                      drive.getRobotPose().getRotation().getRotations(),
                       Units.degreesToRotations(
                           RobotContainer.shooter.getTargetTurretAngleDeg() - 90));
               // Convert to field relative speeds & send command
