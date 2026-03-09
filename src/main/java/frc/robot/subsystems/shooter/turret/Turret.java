@@ -103,7 +103,7 @@ public class Turret {
       return MathUtil.isNear(
           desiredDeg,
           RobotContainer.drive.getRotation().getDegrees(),
-          Constants.Turret.goalToleranceDeg);
+          Constants.Turret.goalToleranceLockedDeg);
     } else if (Constants.turretMode == Constants.SubsystemMode.DISABLED) {
       return true;
     }

@@ -163,6 +163,7 @@ public final class Constants {
     public static final InvertedValue motorInvert = InvertedValue.CounterClockwise_Positive;
     public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
     public static final double goalToleranceDeg = 1.0;
+    public static final double goalToleranceLockedDeg = 2.0;
     public static final double CANCoderOneRatio = 9.0;
     public static final double CANCoderTwoRatio = 5.0;
     public static final double CANCoderOneOffset = 0.0; // TODO find offsets

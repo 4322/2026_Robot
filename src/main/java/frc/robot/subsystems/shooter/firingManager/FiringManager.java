@@ -85,7 +85,7 @@ public class FiringManager {
       return new FiringSolution(
           baseline.getFlywheelRPM(),
           baseline.getHoodAngleDeg(),
-          adjustForTurretLock(targetDirection.getAngle().getDegrees()),
+          adjustForTurretLock(targetDirection.getAngle().getDegrees(), distance),
           baseline.getTunnelRPS(),
           baseline.getIndexerRPS());
     }
@@ -165,16 +165,21 @@ public class FiringManager {
     return new FiringSolution(
         adjustedRPM,
         adjustedHood,
-        adjustForTurretLock(turretAngle.getDegrees()),
+        adjustForTurretLock(turretAngle.getDegrees(), distance),
         tunnelSpeedRPS,
         indexerSpeedRPS);
   }
 
-  private static double adjustForTurretLock(double turretDeg) {
+  private static double adjustForTurretLock(double turretDeg, double distance) {
     if (Constants.turretLocked) {
-      // TODO account for turret offset from center of robot
-      // TODO account for discontinuity at +/- 180
-      return Rotation2d.fromDegrees(turretDeg).rotateBy(Rotation2d.kCW_Pi_2).getDegrees();
+      // Angle of the turret to the target changes as the robot rotates.
+      // We haven't found a closed form solution to this geometry problem.
+      // Iteration will get us close, but we need to add a fudge factor
+      // to reduce rotational osscillations.
+      double fudgeFactor = 3;
+      return Rotation2d.fromDegrees(turretDeg + fudgeFactor / distance)
+          .rotateBy(Rotation2d.kCW_Pi_2)
+          .getDegrees();
     } else {
       return turretDeg;
     }
