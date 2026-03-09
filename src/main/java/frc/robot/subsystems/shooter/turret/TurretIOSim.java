@@ -9,11 +9,8 @@ public class TurretIOSim implements TurretIO {
   private double voltage = 0;
   private double currentAngle = 0;
   private double undefinedVoltage = -20;
-  private double undefinedAngle = -1;
 
-  private double slowRate = 0.02;
   private double fastRate = 1;
-  private double rate;
 
   @Override
   public void updateInputs(TurretIOInputs inputs) {
