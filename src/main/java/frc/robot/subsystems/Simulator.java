@@ -22,8 +22,7 @@ import java.util.Map;
 import org.littletonrobotics.junction.Logger;
 
 public class Simulator extends SubsystemBase {
-  private static final RegressTests regressTest = RegressTests.AUTO;
-  private static final Ally alliance = Ally.Red;
+  private static final RegressTests regressTest = RegressTests.TEST_AUTOROTATE;
   public static AutoName autoScenario;
   private TeleopScenario teleopScenario;
   private List<TeleAnomaly> teleAnomalies;
@@ -52,20 +51,6 @@ public class Simulator extends SubsystemBase {
     NONE
   }
 
-  public enum Ally {
-    Red(Alliance.Red),
-    Blue(Alliance.Blue);
-    private Alliance allianceChoice;
-
-    Ally(Alliance alliance) {
-      this.allianceChoice = alliance;
-    }
-
-    public Alliance getAlliance() {
-      return allianceChoice;
-    }
-  }
-
   private Pose2d flipPose(double x, double y, Rotation2d rotation) {
     double xaxis = Units.inchesToMeters(651.22) - x;
     double yaxis = Units.inchesToMeters(317.69) - y;
@@ -80,7 +65,6 @@ public class Simulator extends SubsystemBase {
     CONTROLLER_TEST2,
     SUBSYSTEM_TEST,
     AUTO_ROTATE,
-    AUTO
   }
 
   private enum EventType {
@@ -241,28 +225,22 @@ public class Simulator extends SubsystemBase {
 
   private List<RegressionTest> regressionTestCases() {
     return switch (regressTest) {
-      case AUTO -> List.of(
-          new RegressionTest("AUTO", AutoName.R_FULL_SWEEP_SHOOT, alliance.getAlliance()));
+      case AUTO -> List.of(new RegressionTest("AUTO", AutoName.R_FULL_SWEEP_SHOOT, Alliance.Red));
         // Useable Autos are R_FULL_SWEEP_SHOOT, R_HALF_SWEEP_SHOOT, R_MIDLINE_SWEEP_SHOOT,
         // R_DISRUPT_SWEEP_SHOOT, & C_DEPOT_OUTPOST
-      case SHOOT -> List.of(
-          new RegressionTest("Shoot", TeleopScenario.SHOOT, alliance.getAlliance()));
+      case SHOOT -> List.of(new RegressionTest("Shoot", TeleopScenario.SHOOT, Alliance.Blue));
       case DO_NOTHING -> List.of(
-          new RegressionTest("Do nothing", AutoName.DO_NOTHING, alliance.getAlliance()));
+          new RegressionTest("Do nothing", AutoName.DO_NOTHING, Alliance.Blue));
       case CONTROLLER_TEST -> List.of(
-          new RegressionTest(
-              "Controller Test 1", TeleopScenario.CONTROLLER_TEST1, alliance.getAlliance()),
-          new RegressionTest(
-              "Controller Test 2", TeleopScenario.CONTROLLER_TEST2, alliance.getAlliance()));
+          new RegressionTest("Controller Test 1", TeleopScenario.CONTROLLER_TEST1, Alliance.Blue),
+          new RegressionTest("Controller Test 2", TeleopScenario.CONTROLLER_TEST2, Alliance.Blue));
       case SUBSYSTEM_TEST_BOTH -> List.of(
-          new RegressionTest("Auto test", AutoName.R_FULL_SWEEP_SHOOT, alliance.getAlliance()),
-          new RegressionTest(
-              "Subsystem Test", TeleopScenario.SUBSYSTEM_TEST, alliance.getAlliance()));
+          new RegressionTest("Auto test", AutoName.R_FULL_SWEEP_SHOOT, Alliance.Blue),
+          new RegressionTest("Subsystem Test", TeleopScenario.SUBSYSTEM_TEST, Alliance.Blue));
       case SUBSYSTEM_TEST_TELE -> List.of(
-          new RegressionTest(
-              "Subsystem Test", TeleopScenario.SUBSYSTEM_TEST, alliance.getAlliance()));
+          new RegressionTest("Subsystem Test", TeleopScenario.SUBSYSTEM_TEST, Alliance.Blue));
       case TEST_AUTOROTATE -> List.of(
-          new RegressionTest("Subsystem Test", TeleopScenario.AUTO_ROTATE, alliance.getAlliance()));
+          new RegressionTest("Subsystem Test", TeleopScenario.AUTO_ROTATE, Alliance.Blue));
       default -> List.of();
     };
   }
@@ -301,7 +279,9 @@ public class Simulator extends SubsystemBase {
           eventTime,
           eventName,
           eventType,
-          alliance == Ally.Blue ? pose : flipPose(pose.getX(), pose.getY(), pose.getRotation()),
+          currentAlliance == Alliance.Blue
+              ? pose
+              : flipPose(pose.getX(), pose.getY(), pose.getRotation()),
           EventStatus.ACTIVE);
     }
 
@@ -324,19 +304,8 @@ public class Simulator extends SubsystemBase {
       return List.of();
     }
     double t = 0.0;
-    // TODO
     return switch (autoScenario) {
-      case R_FULL_SWEEP_SHOOT -> List.of(
-          new SimEvent(t += 20.0, "Final Movement", EventType.END_OF_SCENARIO));
-      case R_HALF_SWEEP_SHOOT -> List.of(
-          new SimEvent(t += 20.0, "Final Movement", EventType.END_OF_SCENARIO));
-      case R_MIDLINE_SWEEP_SHOOT -> List.of(
-          new SimEvent(t += 10.0, "Final Movement", EventType.END_OF_SCENARIO));
-      case R_DISRUPT_SWEEP_SHOOT -> List.of(
-          new SimEvent(t += 20.0, "Final Movement", EventType.END_OF_SCENARIO));
-      case C_DEPOT_OUTPOST -> List.of(
-          new SimEvent(t += 20.0, "Final Movement", EventType.END_OF_SCENARIO));
-      default -> List.of();
+      default -> List.of(new SimEvent(t += 20.0, "Final Movement", EventType.END_OF_SCENARIO));
     };
   }
 
@@ -419,9 +388,8 @@ public class Simulator extends SubsystemBase {
       case SUBSYSTEM_TEST -> List.of(
           new SimEvent(
               t, "Start Pose", EventType.SET_POSE, new Pose2d(4.44, 0.650, Rotation2d.kZero)),
-          new SimEvent(
-              t += 4.0, "Start Intake Press", EventType.PRESS_Y), // TODO figure out binding
-          new SimEvent(t += 1.0, "Start Intake Release", EventType.PRESS_Y),
+          new SimEvent(t += 4.0, "Start Intake", EventType.PRESS_Y),
+          new SimEvent(t += 1.0, "Stop Intake", EventType.PRESS_X),
           new SimEvent(
               t += 2.0,
               "Drive 1",
@@ -474,48 +442,53 @@ public class Simulator extends SubsystemBase {
               t += 1.0, "Start pose", EventType.SET_POSE, new Pose2d(2, 2, Rotation2d.kZero)),
           new SimEvent(
               t += 1,
-              "Drive 5",
+              "Drive to Neutral Zone",
               EventType.MOVE_JOYSTICK_DRIVE,
               new Pose2d(0.5, 0.5, Rotation2d.k180deg)),
           new SimEvent(
               t += 1.5,
-              "Drive 7",
+              "Stop Drive",
               EventType.MOVE_JOYSTICK_DRIVE,
               new Pose2d(0.0, 0.0, Rotation2d.k180deg)),
-          new SimEvent(t += 0.1, "Hold Right Bumper", EventType.HOLD_RIGHT_BUMPER),
-          new SimEvent(t += 16, "Release Right Bumper", EventType.RELEASE_RIGHT_BUMPER),
+          new SimEvent(t += 0.1, "Shoot", EventType.HOLD_RIGHT_BUMPER),
+          new SimEvent(t += 6, "Stop Shooting", EventType.RELEASE_RIGHT_BUMPER),
           new SimEvent(
               t += 0.1,
-              "Drive 6",
+              "Drive Back",
               EventType.MOVE_JOYSTICK_DRIVE,
               new Pose2d(-0.5, -0.5, Rotation2d.k180deg)),
           new SimEvent(
               t += 1.5,
-              "Drive 7",
+              "Drive to Opposing Zone",
               EventType.MOVE_JOYSTICK_DRIVE,
               new Pose2d(0.67, 0.0, Rotation2d.k180deg)),
           new SimEvent(
               t += 4,
-              "Drive 7",
+              "Stop Drive",
               EventType.MOVE_JOYSTICK_DRIVE,
               new Pose2d(0.0, 0.0, Rotation2d.k180deg)),
-          new SimEvent(t += 0.1, "Hold Right Bumper", EventType.HOLD_RIGHT_BUMPER),
-          new SimEvent(t += 16, "Release Right Bumper", EventType.RELEASE_RIGHT_BUMPER),
+          new SimEvent(t += 0.1, "Shoot", EventType.HOLD_RIGHT_BUMPER),
+          new SimEvent(t += 6, "Stop Shooting", EventType.RELEASE_RIGHT_BUMPER),
           new SimEvent(
               t += 0.1,
-              "Drive 8",
+              "Drive Back",
               EventType.MOVE_JOYSTICK_DRIVE,
               new Pose2d(-0.67, 0, Rotation2d.k180deg)),
-          new SimEvent(t += 4, "Hold Right Bumper", EventType.HOLD_RIGHT_BUMPER),
-          new SimEvent(t += 16, "Release Right Bumper", EventType.RELEASE_RIGHT_BUMPER),
+          new SimEvent(
+              t += 4,
+              "Stop Drive",
+              EventType.MOVE_JOYSTICK_DRIVE,
+              new Pose2d(0.0, 0.0, Rotation2d.k180deg)),
+          new SimEvent(t += 0.1, "Shoot", EventType.HOLD_RIGHT_BUMPER),
+          new SimEvent(t += 6, "Stop Shooting", EventType.RELEASE_RIGHT_BUMPER),
           new SimEvent(
               t += 0,
-              "Drive 9",
+              "Shoot on the move",
               EventType.MOVE_JOYSTICK_DRIVE,
-              new Pose2d(0, 0.5, Rotation2d.k180deg)),
-          new SimEvent(t += 1, "Hold Right Bumper", EventType.HOLD_RIGHT_BUMPER),
-          new SimEvent(t += 16, "Release Right Bumper", EventType.RELEASE_RIGHT_BUMPER),
-          new SimEvent(t += 1.0, "Final Movement", EventType.END_OF_SCENARIO));
+              new Pose2d(0, 0.3, Rotation2d.k180deg)),
+          new SimEvent(t += 0.1, "Shoot", EventType.HOLD_RIGHT_BUMPER),
+          new SimEvent(t += 6, "Stop Shooting", EventType.RELEASE_RIGHT_BUMPER),
+          new SimEvent(t += 0.1, "Final Movement", EventType.END_OF_SCENARIO));
 
       default -> List.of();
     };
