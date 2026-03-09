@@ -35,13 +35,12 @@ public class LHalfSweepShoot extends SequentialCommandGroup {
             }),
         new ParallelCommandGroup(
             IntakeCommands.setIntaking(intake),
-            AutoBuilder.followPath(Robot.L_StartL_To_NeutralL_Intake)
-                .andThen(AutoBuilder.followPath(Robot.L_NeutralL_Intake_To_Mid))
-                .andThen(AutoBuilder.followPath(Robot.L_NeutralL_Intake_Mid_Flip))
-                .andThen(AutoBuilder.followPath(Robot.L_NeutralLMid_To_ShootL))
-            /* .andThen(
-            ShooterCommands.aimAndShoot(shooter, drive)
-                .onlyIf(() -> Constants.turretLocked))*/ ));
+            new SequentialCommandGroup(
+                AutoBuilder.followPath(Robot.L_StartL_To_NeutralL_Intake),
+                AutoBuilder.followPath(Robot.L_NeutralL_Intake_To_Mid),
+                AutoBuilder.followPath(Robot.L_NeutralL_Intake_Mid_Flip),
+                AutoBuilder.followPath(Robot.L_NeutralLMid_To_ShootL) /* ,
+                ShooterCommands.aimAndShoot(shooter, drive).onlyIf(() -> Constants.turretLocked)*/)));
   }
 
   public LHalfSweepShoot(

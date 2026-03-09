@@ -463,7 +463,11 @@ public final class Constants {
     ; // TODO set this
   }
 
-  public static class Autonomous {}
+  public static class Autonomous {
+
+    public static final double pathPlannerDrivekP = 5; // TODO probably increase
+    public static final double pathPlannerRotationkP = 4;
+  }
 
   public static class LED {
     public static final int CANdleID = 99;
