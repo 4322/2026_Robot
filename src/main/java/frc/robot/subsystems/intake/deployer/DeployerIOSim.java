@@ -12,7 +12,7 @@ public class DeployerIOSim implements DeployerIO {
           + Units.rotationsToDegrees(Constants.Deployer.SesnorOffsetRotations);
   private double requestedAngle = currentAngle;
   private double undefinedVoltage = -20;
-  
+
   private double fastRate = 1;
 
   @Override
