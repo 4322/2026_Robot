@@ -13,7 +13,6 @@ public class DeployerIOSim implements DeployerIO {
   private double requestedAngle = currentAngle;
   private double undefinedVoltage = -20;
 
-  private double slowRate = 0.02;
   private double fastRate = 1;
 
   @Override

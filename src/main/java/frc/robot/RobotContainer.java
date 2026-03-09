@@ -111,12 +111,6 @@ public class RobotContainer {
   public static final CommandXboxController controller2 = new CommandXboxController(1);
   public static ScoringManager operatorBoard = new ScoringManager(1, 1);
 
-  private enum ShootingCommands {
-    AUTO_SHOOT,
-    INHIBIT_AUTO_SHOOT,
-    AREA_INHIBIT_AUTO_SHOOT
-  }
-
   private final Trigger inNonShootingArea;
 
   // Dashboard inputs
@@ -125,8 +119,6 @@ public class RobotContainer {
   boolean inhibitAutoShoot = false;
 
   // Boolean suppliers
-  private final BooleanSupplier toggle1 =
-      () -> operatorBoard.getLeftController().getRawButton(Constants.Control.toggle1ButtonNumber);
 
   private final BooleanSupplier toggle4 =
       () -> operatorBoard.getLeftController().getRawButton(Constants.Control.toggle4ButtonNumber);

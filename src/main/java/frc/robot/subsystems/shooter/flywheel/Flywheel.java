@@ -6,9 +6,7 @@ import org.littletonrobotics.junction.Logger;
 public class Flywheel {
   private FlywheelIO io;
   private FlywheelIOInputsAutoLogged inputs = new FlywheelIOInputsAutoLogged();
-  private double requestedMechanismRPS = 0.0;
   private double ballsShot = 0;
-  private boolean fuelDetected = false;
 
   public Flywheel(FlywheelIO io) {
     this.io = io;
@@ -27,6 +25,7 @@ public class Flywheel {
         io.setTargetMechanismRPS(velocity);
         inputs.requestedMechanismRPS = velocity;
       }
+      case DISABLED -> {}
     }
   }
 
