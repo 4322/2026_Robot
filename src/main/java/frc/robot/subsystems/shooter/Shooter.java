@@ -83,9 +83,7 @@ public class Shooter extends SubsystemBase {
       flywheel.requestGoal(targetFlywheelSpeedRPS);
       hood.requestGoal(targetHoodAngleDeg);
 
-      if (!Constants.turretLocked) {
-        turret.setAngle(targetTurretAngleDeg, true);
-      }
+      turret.setAngle(targetTurretAngleDeg, true);
 
       tunnel.requestGoal(targetTunnelSpeedRPS);
       spindexer.requestGoal(targetIndexerSpeedRPS);
@@ -123,9 +121,7 @@ public class Shooter extends SubsystemBase {
       }
       case IDLE -> {
         spindexer.requestIdle();
-        if (!Constants.turretLocked) {
-          turret.setAngle(targetTurretAngleDeg, true);
-        }
+        turret.setAngle(targetTurretAngleDeg, true);
         if (AreaManager.isTrench(drive.getTurretTranslation())) {
           hood.requestGoal(Constants.Hood.safeAngleDeg);
         } else {
@@ -162,16 +158,12 @@ public class Shooter extends SubsystemBase {
       case PRESHOOT -> {
         flywheel.requestGoal(targetFlywheelSpeedRPS);
         hood.requestGoal(targetHoodAngleDeg);
-        if (!Constants.turretLocked) {
-          turret.setAngle(targetTurretAngleDeg, true);
-        }
+        turret.setAngle(targetTurretAngleDeg, true);
       }
       case SHOOT -> {
         flywheel.requestGoal(targetFlywheelSpeedRPS);
         hood.requestGoal(targetHoodAngleDeg);
-        if (!Constants.turretLocked) {
-          turret.setAngle(targetTurretAngleDeg, false);
-        }
+        turret.setAngle(targetTurretAngleDeg, false);
         tunnel.requestGoal(targetTunnelSpeedRPS);
         if (tunnel.getVelocity() > Constants.Tunnel.minPercentVelocity * targetTunnelSpeedRPS) {
           spindexer.requestGoal(targetIndexerSpeedRPS);
@@ -251,9 +243,7 @@ public class Shooter extends SubsystemBase {
         unwindComplete = false;
         state = ShooterState.PRESHOOT;
         calculateFiringSolution();
-        if (hood.isAtGoal()
-            && flywheel.atTargetVelocity()
-            && ((turret.isAtGoal()) || (Constants.turretLocked))) {
+        if (hood.isAtGoal() && flywheel.atTargetVelocity() && turret.isAtGoal()) {
           state = ShooterState.SHOOT;
         }
       } else {
