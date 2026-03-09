@@ -8,20 +8,20 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.225691868758916,
-        "y": 0.3280741797432256
+        "x": 6.859686162624821,
+        "y": 0.3410128388017126
       },
       "isLocked": false,
       "linkedName": "R.Neutral.Intake.Full.Flip"
     },
     {
       "anchor": {
-        "x": 2.5,
-        "y": 1.0
+        "x": 2.2535235378031384,
+        "y": 0.7938659058487882
       },
       "prevControl": {
-        "x": 7.079637767112734,
-        "y": -0.073048149356433
+        "x": 7.791269614835947,
+        "y": 0.2504422253922973
       },
       "nextControl": null,
       "isLocked": false,
@@ -55,7 +55,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -36.829013187201866
+    "rotation": 140.76263288659848
   },
   "reversed": false,
   "folder": null,

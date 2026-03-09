@@ -3,7 +3,6 @@ package frc.robot.autonomous.modes;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -11,8 +10,6 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Robot;
 import frc.robot.commands.AutoIntake;
 import frc.robot.commands.IntakeCommands;
-import frc.robot.commands.ShooterCommands;
-import frc.robot.constants.Constants;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.led.LED;
@@ -42,9 +39,9 @@ public class LHalfSweepShoot extends SequentialCommandGroup {
                 .andThen(AutoBuilder.followPath(Robot.L_NeutralL_Intake_To_Mid))
                 .andThen(AutoBuilder.followPath(Robot.L_NeutralL_Intake_Mid_Flip))
                 .andThen(AutoBuilder.followPath(Robot.L_NeutralLMid_To_ShootL))
-                .andThen(ShooterCommands.aimAndShoot(shooter, drive))
-                .onlyWhile(() -> DriverStation.isAutonomous())
-                .onlyIf(() -> Constants.turretLocked)));
+            /* .andThen(
+            ShooterCommands.aimAndShoot(shooter, drive)
+                .onlyIf(() -> Constants.turretLocked))*/ ));
   }
 
   public LHalfSweepShoot(

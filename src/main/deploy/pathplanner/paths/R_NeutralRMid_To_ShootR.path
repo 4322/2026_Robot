@@ -8,20 +8,20 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.118459343794578,
-        "y": 0.1728102710413686
+        "x": 6.575035663338087,
+        "y": 0.19868758915834528
       },
       "isLocked": false,
       "linkedName": "R.Neutral.Intake.Mid.Flip"
     },
     {
       "anchor": {
-        "x": 2.5,
-        "y": 1.0
+        "x": 2.2535235378031384,
+        "y": 0.7938659058487882
       },
       "prevControl": {
-        "x": 3.8320399429386587,
-        "y": 0.19868758915834517
+        "x": 7.260784593437946,
+        "y": 0.37982881597717666
       },
       "nextControl": null,
       "isLocked": false,
@@ -34,7 +34,7 @@
       "rotationDegrees": 180.0
     },
     {
-      "waypointRelativePos": 0.7902208201892724,
+      "waypointRelativePos": 0.8974763406940063,
       "rotationDegrees": 180.0
     }
   ],
@@ -51,7 +51,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -36.829013187201866
+    "rotation": 140.76263288659848
   },
   "reversed": false,
   "folder": null,

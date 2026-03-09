@@ -244,8 +244,6 @@ public class Robot extends LoggedRobot {
     robotContainer = new RobotContainer();
     robotContainer.configureAutonomousSelector();
 
-    CommandScheduler.getInstance().schedule(FollowPathCommand.warmupCommand());
-
     allianceUpdateTimer.start();
 
     if (Constants.currentMode == Constants.Mode.SIM
@@ -258,6 +256,7 @@ public class Robot extends LoggedRobot {
   public void robotInit() {
     StatusLogger.disableAutoLogging(); // disable REV logging
     SignalLogger.stop(); // disable CTRE logging
+    CommandScheduler.getInstance().schedule(FollowPathCommand.warmupCommand());
   }
 
   /** This function is called periodically during all modes. */
@@ -349,7 +348,6 @@ public class Robot extends LoggedRobot {
   public void autonomousInit() {
     autonomousCommand = robotContainer.getAutonomousCommand();
 
-    // // schedule the autonomous command (example)
     if (autonomousCommand != null) {
       CommandScheduler.getInstance().schedule(autonomousCommand);
       Logger.recordOutput("AutoName", autonomousCommand.getName());
