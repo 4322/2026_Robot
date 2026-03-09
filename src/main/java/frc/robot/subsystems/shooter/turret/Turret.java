@@ -1,6 +1,7 @@
 package frc.robot.subsystems.shooter.turret;
 
 import edu.wpi.first.math.MathUtil;
+import frc.robot.RobotContainer;
 import frc.robot.constants.Constants;
 import frc.robot.util.ClockUtil;
 import org.littletonrobotics.junction.Logger;
@@ -62,6 +63,9 @@ public class Turret {
 
   public void setAngle(Double angle, boolean safeToUnwind) {
     this.desiredDeg = angle;
+    if (Constants.turretLocked) {
+      return;
+    }
     this.safeToUnwind = safeToUnwind;
     if (desiredDeg != null) {
       if (inputs.turretDegs + 180 >= Constants.Turret.maxPhysicalLimitDeg) {
@@ -94,7 +98,13 @@ public class Turret {
   }
 
   public boolean isAtGoal() {
-    if (Constants.turretMode == Constants.SubsystemMode.DISABLED) {
+    if (Constants.turretLocked) {
+      // desired turret angle is required robot heading when turret is locked
+      return MathUtil.isNear(
+          desiredDeg,
+          RobotContainer.drive.getRotation().getDegrees(),
+          Constants.Turret.goalToleranceDeg);
+    } else if (Constants.turretMode == Constants.SubsystemMode.DISABLED) {
       return true;
     }
     return MathUtil.isNear(desiredDeg, inputs.turretDegs, Constants.Turret.goalToleranceDeg);

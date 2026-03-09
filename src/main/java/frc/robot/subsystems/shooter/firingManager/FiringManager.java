@@ -85,7 +85,7 @@ public class FiringManager {
       return new FiringSolution(
           baseline.getFlywheelRPM(),
           baseline.getHoodAngleDeg(),
-          targetDirection.getAngle().getDegrees(),
+          adjustForTurretLock(targetDirection.getAngle().getDegrees()),
           baseline.getTunnelRPS(),
           baseline.getIndexerRPS());
     }
@@ -163,7 +163,21 @@ public class FiringManager {
     Logger.recordOutput("FiringManager/FiringSolution/adjustedHood", adjustedHood);
     Logger.recordOutput("FiringManager/FiringSolution/turretAngle", turretAngle.getDegrees());
     return new FiringSolution(
-        adjustedRPM, adjustedHood, turretAngle.getDegrees(), tunnelSpeedRPS, indexerSpeedRPS);
+        adjustedRPM,
+        adjustedHood,
+        adjustForTurretLock(turretAngle.getDegrees()),
+        tunnelSpeedRPS,
+        indexerSpeedRPS);
+  }
+
+  private static double adjustForTurretLock(double turretDeg) {
+    if (Constants.turretLocked) {
+      // TODO account for turret offset from center of robot
+      // TODO account for discontinuity at +/- 180
+      return Rotation2d.fromDegrees(turretDeg).rotateBy(Rotation2d.kCW_Pi_2).getDegrees();
+    } else {
+      return turretDeg;
+    }
   }
 
   public static double velocityToEffectiveDistance(double velocity, boolean isScoring) {

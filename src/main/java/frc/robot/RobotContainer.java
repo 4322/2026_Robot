@@ -100,7 +100,7 @@ public class RobotContainer {
   private static Rollers rollers;
   private static Deployer deployer;
 
-  private static Drive drive;
+  public static Drive drive;
 
   public static AutonomousSelector autonomousSelector;
 
