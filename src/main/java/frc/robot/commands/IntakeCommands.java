@@ -10,7 +10,7 @@ import org.littletonrobotics.junction.Logger;
 public class IntakeCommands {
 
   public static Command setRetract(Intake intake) {
-    return Commands.runOnce(
+    return Commands.run(
         () -> {
           intake.setState(IntakeState.RETRACT);
         },
@@ -18,7 +18,7 @@ public class IntakeCommands {
   }
 
   public static Command setEject(Intake intake) {
-    return Commands.runOnce(
+    return Commands.run(
         () -> {
           intake.setState(IntakeState.EJECT);
         },
