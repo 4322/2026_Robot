@@ -16,16 +16,16 @@
     },
     {
       "anchor": {
-        "x": 3.5991440798858774,
-        "y": 0.6774179743223976
+        "x": 1.8136091298145502,
+        "y": 0.832681883024252
       },
       "prevControl": {
-        "x": 8.891055634807415,
-        "y": 0.21162624821683385
+        "x": 7.1055206847360886,
+        "y": 0.3668901569186882
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "R.Shoot"
+      "linkedName": "R.Shoot.LT"
     }
   ],
   "rotationTargets": [
@@ -69,7 +69,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": -33.69006752597981
   },
   "reversed": false,
   "folder": null,
