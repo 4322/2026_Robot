@@ -45,15 +45,15 @@ public class FiringManager {
     Translation2d toGoal = goalPosition.minus(turretPosition);
     double distance = toGoal.getNorm();
     Translation2d targetDirection = toGoal.div(distance);
-
     Logger.recordOutput("FiringManager/targetPosition", new Pose2d(goalPosition, new Rotation2d()));
     Logger.recordOutput("FiringManager/isScoring", isScoring);
+    Logger.recordOutput("FiringManager/distance", distance);
+
     if (Constants.firingManager == Constants.SubsystemMode.TUNING) {
       Logger.recordOutput("FiringManager/requestedTuning/flywheelSpeedRPM", flywheelSpeedRPM.get());
       Logger.recordOutput("FiringManager/requestedTuning/hoodAngle", hoodAngle.get());
       Logger.recordOutput("FiringManager/requestedTuning/tunnelSpeedRPS", tunnelSpeedRPS.get());
       Logger.recordOutput("FiringManager/requestedTuning/indexerSpeedRPS", indexerSpeedRPS.get());
-      Logger.recordOutput("FiringManager/distance", distance);
       return new FiringSolution(
           flywheelSpeedRPM.get(),
           hoodAngle.get(),
@@ -63,17 +63,20 @@ public class FiringManager {
     }
 
     // Project future position based on velocity and latency compensation
-    double latencyCompensation =
-        isScoring
-            ? Constants.FiringManager.latencyCompensationScoring
-            : Constants.FiringManager.latencyCompensationPassing;
-    Translation2d latencyTranslation = robotVelocity.times(latencyCompensation);
-    toGoal = toGoal.minus(latencyTranslation);
+    double latencyCompensation = 0;
+    if (Constants.shootOnTheMoveEnabled) {
+      if (isScoring) {
+        latencyCompensation = Constants.FiringManager.latencyCompensationScoring;
+      } else {
+        latencyCompensation = Constants.FiringManager.latencyCompensationPassing;
+      }
+    }
+    Translation2d futurePos = turretPosition.plus(robotVelocity.times(latencyCompensation));
+    toGoal = goalPosition.minus(futurePos);
     distance = toGoal.getNorm();
     targetDirection = toGoal.div(distance);
-    Logger.recordOutput(
-        "FiringManager/futurePos", new Pose2d(latencyTranslation, new Rotation2d()));
-    Logger.recordOutput("FiringManager/distance", distance);
+    Logger.recordOutput("FiringManager/futurePos", new Pose2d(futurePos, new Rotation2d()));
+    Logger.recordOutput("FiringManager/adjustedDistance", distance);
 
     // Get FiringParameters based on distance
     FiringParameters baseline =
@@ -114,7 +117,6 @@ public class FiringManager {
     double effectiveDistance = velocityToEffectiveDistance(requiredVelocity, isScoring);
     Logger.recordOutput("FiringManager/effectiveDistance", effectiveDistance);
 
-    // TODO implement tunnel/indexer speed
     return getHybridFiringSolution(
         effectiveDistance,
         requiredVelocity,
