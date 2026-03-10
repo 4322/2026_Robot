@@ -106,8 +106,8 @@ public final class Constants {
   public static class Tunnel {
 
     public static final int tunnelMotorId = 20;
-    public static final double statorCurrentLimit = 60; // TODO
-    public static final double supplyCurrentLimit = 40; // TODO
+    public static final double statorCurrentLimit = 60;
+    public static final double supplyCurrentLimit = 40;
     public static final InvertedValue motorInvert = InvertedValue.CounterClockwise_Positive;
     public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
     public static final double kS = 0.31;
@@ -124,7 +124,7 @@ public final class Constants {
   public static class Flywheel {
     public static final int motorId = 2;
     public static final int followerMotorId = 3;
-    public static final double statorCurrentLimit = 60; // TODO
+    public static final double statorCurrentLimit = 60;
     public static final double supplyCurrentLimit = 40;
     public static final InvertedValue motorInvert = InvertedValue.Clockwise_Positive;
     public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
@@ -133,16 +133,14 @@ public final class Constants {
     public static final double kP = 0;
     public static final double kI = 0;
     public static final double kD = 0;
-    public static final double allowedVelocityErrorRPS = 5.0; // TODO
+    public static final double allowedVelocityErrorRPS = 2.0;
     public static final boolean canAndColorEnabled = false;
+    public static final double motorToMechanismRatio = 1;
 
-    public static final double motorToMechanismRatio = 1; // Diameter 4
-
-    public static final double idleMechanismRPS = 5;
     public static final int canandcolorId = 0;
     public static final double minFuelDetectionProximity = 0.2;
     public static final double allowedVelocityErrorMechanismRPS = 0.2;
-    public static final int idleRPS = 25;
+    public static final int idleRPS = 10;
   }
 
   public static class Turret {
