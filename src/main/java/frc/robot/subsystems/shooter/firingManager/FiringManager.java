@@ -43,6 +43,9 @@ public class FiringManager {
 
   public static FiringSolution getFiringSolution(
       Translation2d turretPosition, Translation2d robotVelocity, boolean isScoring) {
+    Translation2d goalPosition = getShootingTarget(turretPosition);
+    Logger.recordOutput("FiringManager/targetPosition", new Pose2d(goalPosition, new Rotation2d()));
+   
     Logger.recordOutput("FiringManager/isScoring", isScoring);
     if (Constants.firingManager == Constants.SubsystemMode.TUNING) {
       Logger.recordOutput("FiringManager/requestedTuning/flywheelSpeedRPM", flywheelSpeedRPM.get());
@@ -50,6 +53,8 @@ public class FiringManager {
       Logger.recordOutput("FiringManager/requestedTuning/turretAngleDeg", turretAngleDeg.get());
       Logger.recordOutput("FiringManager/requestedTuning/tunnelSpeedRPS", tunnelSpeedRPS.get());
       Logger.recordOutput("FiringManager/requestedTuning/indexerSpeedRPS", indexerSpeedRPS.get());
+      double goalDistance = goalPosition.getNorm();
+      Logger.recordOutput("FiringManager/distance", goalDistance);
       return new FiringSolution(
           flywheelSpeedRPM.get(),
           hoodAngle.get(),
@@ -68,8 +73,7 @@ public class FiringManager {
     Logger.recordOutput("FiringManager/futurePos", new Pose2d(futurePos, new Rotation2d()));
 
     // Get target vector
-    Translation2d goalPosition = getShootingTarget(turretPosition);
-    Logger.recordOutput("FiringManager/targetPosition", new Pose2d(goalPosition, new Rotation2d()));
+  
     Translation2d toGoal = goalPosition.minus(futurePos);
     double distance = toGoal.getNorm();
     Logger.recordOutput("FiringManager/distance", distance);
