@@ -14,7 +14,6 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.autonomous.AutonomousSelector;
@@ -119,11 +118,9 @@ public class RobotContainer {
 
   // Boolean suppliers
 
-  private final BooleanSupplier toggle4 =
-      () -> controller2.povLeft().getAsBoolean();
+  private final BooleanSupplier toggle4 = () -> controller2.povLeft().getAsBoolean();
 
-  private final BooleanSupplier button3 =
-      () -> controller2.povDown().getAsBoolean();
+  private final BooleanSupplier button3 = () -> controller2.povDown().getAsBoolean();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -400,7 +397,8 @@ public class RobotContainer {
             () -> -controller.getLeftX(),
             () -> -controller.getRightX()));
 
-    // Shooter command bindings
+    controller.leftBumper().whileTrue(ShooterCommands.trenchOverride(hood));
+
     if (Constants.turretLocked) {
       shooter.setDefaultCommand(ShooterCommands.idle(shooter));
       controller.rightBumper().whileTrue(ShooterCommands.aimAndShoot(shooter, drive));
@@ -409,7 +407,8 @@ public class RobotContainer {
     }
     controller2.rightBumper().or(inNonShootingArea).whileTrue(ShooterCommands.idle(shooter));
 
-    controller2.b()
+    controller2
+        .b()
         .onTrue(
             new AutoIntake(drive, visionObjectDetection, led, intake, false)
                 .until(() -> (!toggle4.getAsBoolean() || button3.getAsBoolean())));
@@ -426,8 +425,7 @@ public class RobotContainer {
 
     controller.povUp().onTrue(ShooterCommands.idle(shooter));
 
-    controller2.povRight()
-        .whileTrue(IntakeCommands.setRetract(intake));
+    controller2.povRight().whileTrue(IntakeCommands.setRetract(intake));
   }
 
   /**

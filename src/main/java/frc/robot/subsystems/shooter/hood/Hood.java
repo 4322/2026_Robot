@@ -27,6 +27,7 @@ public class Hood {
   private Timer homingTimer = new Timer();
   private double pidVelocity;
   private boolean homed = false;
+  private boolean trenchOverride = false;
   private PIDController pidController = new PIDController(kP.get(), kI.get(), kD.get());
 
   public Hood(HoodIO io) {
@@ -105,6 +106,11 @@ public class Hood {
     pidController.setSetpoint(angle);
     this.requestedAngleDeg = angle;
     Logger.recordOutput("Hood/requestedDegree", requestedAngleDeg);
+  }
+
+  public void trenchOverride(boolean override) {
+    requestGoal(Constants.Hood.safeAngleDeg);
+    trenchOverride = override;
   }
 
   public void rehome() {

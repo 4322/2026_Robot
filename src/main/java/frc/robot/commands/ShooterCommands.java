@@ -7,6 +7,7 @@ import frc.robot.RobotContainer;
 import frc.robot.constants.Constants;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.shooter.Shooter;
+import frc.robot.subsystems.shooter.hood.Hood;
 
 public class ShooterCommands {
 
@@ -30,5 +31,10 @@ public class ShooterCommands {
 
   public static Command idle(Shooter shooter) {
     return Commands.run(() -> shooter.requestIdle(), shooter);
+  }
+
+  public static Command trenchOverride(Hood hood) {
+    return Commands.run(() -> hood.trenchOverride(true))
+        .finallyDo(() -> hood.trenchOverride(false));
   }
 }

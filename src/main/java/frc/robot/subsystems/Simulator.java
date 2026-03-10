@@ -529,9 +529,9 @@ public class Simulator extends SubsystemBase {
 
   private final Drive drive;
 
-  // Operator board simulation
-  private final int operatorHidPort = RobotContainer.operatorBoard.getLeftController().getPort();
-  private int operatorButtonBitmask = 0;
+  // Controller2 simulation
+  private final int hid2Port = RobotContainer.controller2.getHID().getPort();
+  private int controller2ButtonBitmask = 0;
 
   public Simulator(Drive drive) {
     this.drive = drive;
@@ -691,7 +691,7 @@ public class Simulator extends SubsystemBase {
       DriverStationSim.setGameSpecificMessage(gameSpecificMessage);
       DriverStationSim.setJoystickPOV(hidPort, 0, activePOV);
       DriverStationSim.setJoystickButtons(hidPort, activeButtonBitmask);
-      DriverStationSim.setJoystickButtons(operatorHidPort, operatorButtonBitmask);
+      DriverStationSim.setJoystickButtons(hid2Port, controller2ButtonBitmask);
       // notifyNewData() fails 1 out of 5000 calls for unknown reasons
       DriverStationSim.notifyNewData();
     } while (DriverStation.getStickAxisCount(hidPort) != 6
@@ -716,8 +716,8 @@ public class Simulator extends SubsystemBase {
     DriverStationSim.setJoystickAxisCount(hidPort, 6);
     DriverStationSim.setJoystickButtonCount(hidPort, 10);
 
-    DriverStationSim.setJoystickButtonCount(operatorHidPort, 12);
-    DriverStationSim.setJoystickAxisCount(operatorHidPort, 0);
+    DriverStationSim.setJoystickButtonCount(hid2Port, 12);
+    DriverStationSim.setJoystickAxisCount(hid2Port, 0);
   }
 
   private void resetScenario() {
@@ -752,7 +752,7 @@ public class Simulator extends SubsystemBase {
     stopJoystick();
     activeButtonBitmask = 0;
     momentaryButtonBitmask = 0;
-    operatorButtonBitmask = 0;
+    controller2ButtonBitmask = 0;
     gameSpecificMessage = "";
     DriverStationSim.setEnabled(false);
 
@@ -826,9 +826,9 @@ public class Simulator extends SubsystemBase {
   // Operator board toggle control
   private void setOperatorToggle(int buttonNumber, boolean on) {
     if (on) {
-      operatorButtonBitmask |= 1 << (buttonNumber - 1);
+      controller2ButtonBitmask |= 1 << (buttonNumber - 1);
     } else {
-      operatorButtonBitmask &= ~(1 << (buttonNumber - 1));
+      controller2ButtonBitmask &= ~(1 << (buttonNumber - 1));
     }
   }
 
