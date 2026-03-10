@@ -106,6 +106,16 @@ public class DriveCommands {
       DoubleSupplier xSupplier,
       DoubleSupplier ySupplier,
       Supplier<Rotation2d> rotationSupplier) {
+    return joystickDriveAtAngleNonCenterRotation(
+        drive, xSupplier, ySupplier, rotationSupplier, Translation2d.kZero);
+  }
+
+  public static Command joystickDriveAtAngleNonCenterRotation(
+      Drive drive,
+      DoubleSupplier xSupplier,
+      DoubleSupplier ySupplier,
+      Supplier<Rotation2d> rotationSupplier,
+      Translation2d centerOfRotation) {
 
     // Create PID controller
     ProfiledPIDController angleController =
@@ -137,17 +147,42 @@ public class DriveCommands {
               boolean isFlipped =
                   DriverStation.getAlliance().isPresent()
                       && DriverStation.getAlliance().get() == Alliance.Red;
-              drive.runVelocity(
+              ChassisSpeeds robotRelative =
                   ChassisSpeeds.fromFieldRelativeSpeeds(
                       speeds,
                       isFlipped
                           ? drive.getRotation().plus(new Rotation2d(Math.PI))
-                          : drive.getRotation()));
+                          : drive.getRotation());
+              ChassisSpeeds corrected = rotateAboutShooter(robotRelative, centerOfRotation);
+              drive.runVelocity(corrected);
             },
             drive)
 
         // Reset PID controller when command starts
         .beforeStarting(() -> angleController.reset(drive.getRotation().getRadians()));
+  }
+
+  /**
+   * Rotates robot about shooter location instead of center. This works by adding a translational
+   * velocity that cancels the shooter movement due to rotation.
+   */
+  public static ChassisSpeeds rotateAboutShooter(
+      ChassisSpeeds robotRelativeSpeeds, Translation2d shooterOffset) {
+
+    // If we're rotating with omega, the shooter moves tangentially
+    // We need to add translation to keep shooter stationary
+    double omega = robotRelativeSpeeds.omegaRadiansPerSecond;
+
+    // Velocity of shooter due to rotation about center: v = omega x r
+    // In 2D: vx = -omega * y, vy = omega * x
+    double shooterVxFromRotation = -omega * shooterOffset.getY();
+    double shooterVyFromRotation = omega * shooterOffset.getX();
+
+    // Subtract this from robot velocity to make shooter the rotation center
+    return new ChassisSpeeds(
+        robotRelativeSpeeds.vxMetersPerSecond - shooterVxFromRotation,
+        robotRelativeSpeeds.vyMetersPerSecond - shooterVyFromRotation,
+        omega);
   }
 
   /**

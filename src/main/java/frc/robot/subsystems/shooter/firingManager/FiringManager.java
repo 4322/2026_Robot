@@ -172,14 +172,7 @@ public class FiringManager {
 
   private static double adjustForTurretLock(double turretDeg, double distance) {
     if (Constants.turretLocked) {
-      // Angle of the turret to the target changes as the robot rotates.
-      // We haven't found a closed form solution to this geometry problem.
-      // Iteration will get us close, but we need to add a fudge factor
-      // to reduce rotational osscillations.
-      double fudgeFactor = 3;
-      return Rotation2d.fromDegrees(turretDeg + fudgeFactor / distance)
-          .rotateBy(Rotation2d.kCW_Pi_2)
-          .getDegrees();
+      return Rotation2d.fromDegrees(turretDeg).rotateBy(Rotation2d.kCW_Pi_2).getDegrees();
     } else {
       return turretDeg;
     }
