@@ -124,11 +124,13 @@ public class Hood {
   }
 
   public boolean isAtGoal() {
-    // TODO temporary until we get hood sim working
-    if (Constants.currentMode == Constants.Mode.SIM) {
-      return true;
+    if (!homed || trenchOverride) {
+      return false;
+    } else if (Constants.currentMode == Constants.Mode.SIM) {
+      return true; // TODO temporary until we get hood sim working
+    } else {
+      return pidController.atSetpoint();
     }
-    return pidController.atSetpoint();
   }
 
   public boolean isHomed() {
