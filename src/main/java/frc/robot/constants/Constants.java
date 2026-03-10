@@ -24,22 +24,6 @@ import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetection.O
 public final class Constants {
   public static final Mode currentMode = RobotBase.isReal() ? Mode.REAL : Mode.SIM;
 
-  public static final boolean buzz = false;
-  public static final boolean wantDriveTestAutos = false;
-
-  public static final String logPath = "/home/lvuser/logs";
-  public static final long minFreeSpace = 1000000000; // 1 GB
-  public static final int dioCoastButton = 8;
-  public static final double coastButtonDelaySec = 10.0;
-  public static final boolean tuningWithLoggableNumbers = true;
-  public static final double brownoutVoltage = 5.75;
-
-  public static final double loopPeriodSecs = 0.02;
-
-  // only set this if loop cycles are significantly below 20 ms
-  // to avoid starvation of critical processes
-  public static final boolean realTimeCommandScheduler = false;
-
   public static enum Mode {
     /** Running on a real robot. */
     REAL,
@@ -57,19 +41,12 @@ public final class Constants {
     TUNING
   }
 
-  public static final boolean turretLocked = true;
-
-  public static final SubsystemMode driveMode = SubsystemMode.NORMAL;
+  public static SubsystemMode driveMode = SubsystemMode.NORMAL;
   public static final SubsystemMode flywheelMode = SubsystemMode.NORMAL;
   public static final SubsystemMode hoodMode = SubsystemMode.NORMAL;
   public static final SubsystemMode spindexerMode = SubsystemMode.NORMAL;
   public static final SubsystemMode tunnelMode = SubsystemMode.NORMAL;
-  public static final SubsystemMode turretMode =
-      turretLocked
-          ? SubsystemMode.DISABLED
-          : SubsystemMode
-              .DISABLED; // To prevent accidentally locking turret and having it enabled at the same
-  // time
+  public static SubsystemMode turretMode = SubsystemMode.DISABLED;
   public static final SubsystemMode deployerMode = SubsystemMode.NORMAL;
   public static final SubsystemMode rollerMode = SubsystemMode.NORMAL;
   public static final SubsystemMode intakeMode = SubsystemMode.NORMAL;
@@ -78,18 +55,41 @@ public final class Constants {
   public static final SubsystemMode visionGlobalPose = SubsystemMode.NORMAL;
   public static final SubsystemMode visionObjectDetection = SubsystemMode.DISABLED;
   public static final SubsystemMode firingManager = SubsystemMode.NORMAL;
+  public static final boolean turretLocked = true;
+  public static boolean shootOnTheMoveEnabled = false;
 
-  public static final boolean shootOnTheMoveEnabled = false;
+  { // set dependent operational modes
+    if (firingManager == SubsystemMode.TUNING) {
+      shootOnTheMoveEnabled = false;
+    }
+    if (turretLocked) {
+      turretMode = SubsystemMode.DISABLED;
+    }
+    if (Constants.Drive.zeroTurnEncoders) {
+      driveMode = SubsystemMode.TUNING;
+    }
+  }
+
+  public static final boolean buzz = false;
+  public static final String logPath = "/home/lvuser/logs";
+  public static final long minFreeSpace = 1000000000; // 1 GB
+  public static final int dioCoastButton = 8;
+  public static final double coastButtonDelaySec = 10.0;
+  public static final boolean tuningWithLoggableNumbers = true;
+  public static final double brownoutVoltage = 5.75;
+
+  // only set this if loop cycles are significantly below 20 ms
+  // to avoid starvation of critical processes
+  public static final boolean realTimeCommandScheduler = false;
 
   public static class Drive {
     public static final int gyroID = 0;
-    public static final boolean zeroTurnEncoders = false; // requires drive to be in tuning mode
+    public static boolean zeroTurnEncoders = false; // for initial swerve homing only
   }
 
   public static class Spindexer {
-
     public static final int spindexerMotorId = 4;
-    public static final double supplyCurrentLimit = 40; // TODO
+    public static final double supplyCurrentLimit = 40;
     public static final double statorCurrentLimit = 60;
     public static final InvertedValue motorInvert = InvertedValue.CounterClockwise_Positive;
     public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
@@ -104,7 +104,6 @@ public final class Constants {
   }
 
   public static class Tunnel {
-
     public static final int tunnelMotorId = 20;
     public static final double statorCurrentLimit = 60;
     public static final double supplyCurrentLimit = 40;
