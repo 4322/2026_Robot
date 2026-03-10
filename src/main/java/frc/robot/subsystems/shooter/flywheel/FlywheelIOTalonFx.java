@@ -17,7 +17,7 @@ public class FlywheelIOTalonFx implements FlywheelIO {
 
   private TalonFX motor;
   private TalonFX followerMotor;
-  private Canandcolor canandcolor = new Canandcolor(Constants.Flywheel.canandcolorId);
+  private Canandcolor canandcolor;
   private CanandcolorSettings canandcolorConfig = new CanandcolorSettings();
   private double lastRequestedVelocity = -1;
 
@@ -50,16 +50,18 @@ public class FlywheelIOTalonFx implements FlywheelIO {
 
     canandcolorConfig.setColorFramePeriod(10); // Set color frame period to 10ms
 
-    CanandcolorSettings canandcolorConfigStatus =
-        canandcolor.setSettings(canandcolorConfig, 1.0, 5);
-
-    if (!canandcolorConfigStatus.isEmpty()) {
-      DriverStation.reportError(
-          "Canandcolor "
-              + canandcolor.getAddress()
-              + " error (Flywheel Sensor): "
-              + canandcolorConfigStatus,
-          false);
+    if (Constants.Flywheel.canAndColorEnabled) {
+      canandcolor = new Canandcolor(Constants.Flywheel.canandcolorId);
+      CanandcolorSettings canandcolorConfigStatus =
+          canandcolor.setSettings(canandcolorConfig, 1.0, 5);
+      if (!canandcolorConfigStatus.isEmpty()) {
+        DriverStation.reportError(
+            "Canandcolor "
+                + canandcolor.getAddress()
+                + " error (Flywheel Sensor): "
+                + canandcolorConfigStatus,
+            false);
+      }
     }
 
     if (configStatus != StatusCode.OK) {
@@ -97,7 +99,7 @@ public class FlywheelIOTalonFx implements FlywheelIO {
     inputs.followerBusCurrentAmps = followerMotor.getSupplyCurrent().getValueAsDouble();
     inputs.followerAppliedVolts = followerMotor.getMotorVoltage().getValueAsDouble();
     inputs.busCurrentAmps = motor.getSupplyCurrent().getValueAsDouble();
-    if (Constants.Flywheel.enableFlyWheelSensor) {
+    if (Constants.Flywheel.canAndColorEnabled) {
       inputs.color = new Color(canandcolor.getRed(), canandcolor.getGreen(), canandcolor.getBlue());
       inputs.proximity = canandcolor.getProximity();
 
