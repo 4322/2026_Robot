@@ -22,7 +22,7 @@ import java.util.Map;
 import org.littletonrobotics.junction.Logger;
 
 public class Simulator extends SubsystemBase {
-  private static final RegressTests regressTest = RegressTests.TEST_AUTOROTATE;
+  private static final RegressTests regressTest = RegressTests.TURRET;
   public static AutoName autoScenario;
   private TeleopScenario teleopScenario;
   private List<TeleAnomaly> teleAnomalies;
@@ -40,7 +40,8 @@ public class Simulator extends SubsystemBase {
     SUBSYSTEM_TEST_BOTH,
     SUBSYSTEM_TEST_TELE,
     TEST_AUTOROTATE,
-    AUTO
+    AUTO,
+    TURRET
   }
 
   private enum TeleAnomaly {
@@ -65,6 +66,7 @@ public class Simulator extends SubsystemBase {
     CONTROLLER_TEST2,
     SUBSYSTEM_TEST,
     AUTO_ROTATE,
+    TURRET
   }
 
   private enum EventType {
@@ -122,7 +124,6 @@ public class Simulator extends SubsystemBase {
     TOGGLE_3_OFF,
     TOGGLE_4_ON,
     TOGGLE_4_OFF,
-
     END_OF_SCENARIO
   }
 
@@ -240,7 +241,9 @@ public class Simulator extends SubsystemBase {
       case SUBSYSTEM_TEST_TELE -> List.of(
           new RegressionTest("Subsystem Test", TeleopScenario.SUBSYSTEM_TEST, Alliance.Blue));
       case TEST_AUTOROTATE -> List.of(
-          new RegressionTest("Subsystem Test", TeleopScenario.AUTO_ROTATE, Alliance.Blue));
+          new RegressionTest("Auto Rotate", TeleopScenario.AUTO_ROTATE, Alliance.Blue));
+      case TURRET -> List.of(
+          new RegressionTest("Turret Test", TeleopScenario.TURRET, Alliance.Blue));
       default -> List.of();
     };
   }
@@ -385,6 +388,7 @@ public class Simulator extends SubsystemBase {
               EventType.MOVE_JOYSTICK_TURN,
               new Pose2d(0, -0.3, Rotation2d.kZero)),
           new SimEvent(t += 1.0, "Final Movement", EventType.END_OF_SCENARIO));
+
       case SUBSYSTEM_TEST -> List.of(
           new SimEvent(
               t, "Start Pose", EventType.SET_POSE, new Pose2d(4.44, 0.650, Rotation2d.kZero)),
@@ -437,6 +441,7 @@ public class Simulator extends SubsystemBase {
               EventType.MOVE_JOYSTICK_DRIVE,
               new Pose2d(0, 0, Rotation2d.k180deg)),
           new SimEvent(t += 3.0, "Final Movement", EventType.END_OF_SCENARIO));
+
       case AUTO_ROTATE -> List.of(
           new SimEvent(
               t += 1.0, "Start pose", EventType.SET_POSE, new Pose2d(2, 2, Rotation2d.kZero)),
@@ -489,6 +494,17 @@ public class Simulator extends SubsystemBase {
           new SimEvent(t += 0.1, "Shoot", EventType.HOLD_RIGHT_BUMPER),
           new SimEvent(t += 6, "Stop Shooting", EventType.RELEASE_RIGHT_BUMPER),
           new SimEvent(t += 0.1, "Final Movement", EventType.END_OF_SCENARIO));
+
+      case TURRET -> List.of(
+          // requires turret to be unlocked
+          new SimEvent(
+              t += 0.1, "Start pose", EventType.SET_POSE, new Pose2d(2, 2, Rotation2d.kZero)),
+          new SimEvent(
+              t += 0.1,
+              "Spin",
+              EventType.MOVE_JOYSTICK_TURN,
+              new Pose2d(0.0, 0.3, Rotation2d.kZero)),
+          new SimEvent(t += 20.0, "Final Movement", EventType.END_OF_SCENARIO));
 
       default -> List.of();
     };
