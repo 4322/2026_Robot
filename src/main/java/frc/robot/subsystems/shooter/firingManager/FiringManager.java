@@ -43,9 +43,6 @@ public class FiringManager {
 
   public static FiringSolution getFiringSolution(
       Translation2d turretPosition, Translation2d robotVelocity, boolean isScoring) {
-    Translation2d goalPosition = getShootingTarget(turretPosition);
-    Logger.recordOutput("FiringManager/targetPosition", new Pose2d(goalPosition, new Rotation2d()));
-   
     Logger.recordOutput("FiringManager/isScoring", isScoring);
     if (Constants.firingManager == Constants.SubsystemMode.TUNING) {
       Logger.recordOutput("FiringManager/requestedTuning/flywheelSpeedRPM", flywheelSpeedRPM.get());
@@ -53,8 +50,6 @@ public class FiringManager {
       Logger.recordOutput("FiringManager/requestedTuning/turretAngleDeg", turretAngleDeg.get());
       Logger.recordOutput("FiringManager/requestedTuning/tunnelSpeedRPS", tunnelSpeedRPS.get());
       Logger.recordOutput("FiringManager/requestedTuning/indexerSpeedRPS", indexerSpeedRPS.get());
-      double goalDistance = goalPosition.getNorm();
-      Logger.recordOutput("FiringManager/distance", goalDistance);
       return new FiringSolution(
           flywheelSpeedRPM.get(),
           hoodAngle.get(),
@@ -73,7 +68,8 @@ public class FiringManager {
     Logger.recordOutput("FiringManager/futurePos", new Pose2d(futurePos, new Rotation2d()));
 
     // Get target vector
-  
+    Translation2d goalPosition = getShootingTarget(futurePos);
+    Logger.recordOutput("FiringManager/targetPosition", new Pose2d(goalPosition, new Rotation2d()));
     Translation2d toGoal = goalPosition.minus(futurePos);
     double distance = toGoal.getNorm();
     Logger.recordOutput("FiringManager/distance", distance);
@@ -120,7 +116,7 @@ public class FiringManager {
 
     // TODO implement tunnel/indexer speed
     return getHybridFiringSolution(
-        effectiveDistance,
+        distance,
         requiredVelocity,
         turretAngle,
         baseline.getTunnelRPS(),
@@ -143,8 +139,8 @@ public class FiringManager {
         isScoring
             ? Constants.FiringManager.firingMapScoring.get(distance)
             : Constants.FiringManager.firingMapPassing.get(distance);
-    double baselineVelocity = distance / baseline.getTimeOfFlightSec();
-    double velocityRatio = requiredVelocity / baselineVelocity;
+    double baselineHorizVelocity = distance / baseline.getTimeOfFlightSec();
+    double velocityRatio = requiredVelocity / baselineHorizVelocity;
 
     // Split correction; sqrt gives equal contribution from both RPM and hood change
     double rpmFactor = Math.sqrt(velocityRatio);
@@ -156,11 +152,15 @@ public class FiringManager {
     // Apply RPM scaling
     double adjustedRPM = baseline.getFlywheelRPM() * rpmFactor;
 
-    double totalVelocity = baselineVelocity / Math.cos(Math.toRadians(baseline.getHoodAngleDeg()));
+    // Compute the adjusted total velocity (accounting for RPM change)
+    // Baseline total velocity = horizontal / cos(hood)
+    double baselineTotalVelocity =
+        baselineHorizVelocity / Math.cos(Math.toRadians(baseline.getHoodAngleDeg()));
+    double adjustedTotalVelocity = baselineTotalVelocity * rpmFactor;
 
-    // Apply hood adjustment
-    double targetHorizFromHood = baselineVelocity * hoodFactor;
-    double ratio = MathUtil.clamp(targetHorizFromHood / totalVelocity, 0.0, 1.0);
+    // Apply hood adjustment using the adjusted total velocity
+    double targetHorizFromHood = baselineHorizVelocity * hoodFactor;
+    double ratio = MathUtil.clamp(targetHorizFromHood / adjustedTotalVelocity, 0.0, 1.0);
     double adjustedHood = Math.toDegrees(Math.acos(ratio));
 
     Logger.recordOutput("FiringManager/FiringSolution/adjustedRPM", adjustedRPM);
