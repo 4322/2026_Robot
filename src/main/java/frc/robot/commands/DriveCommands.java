@@ -33,19 +33,19 @@ import java.util.function.Supplier;
 
 public class DriveCommands {
   private static final double DEADBAND = 0.0;
-  private static final double ANGLE_KP = 5.0;
-  private static final double ANGLE_KD = 0.4;
-  private static final double ANGLE_MAX_VELOCITY = 8.0;
-  private static final double ANGLE_MAX_ACCELERATION = 20.0;
   private static final double FF_START_DELAY = 2.0; // Secs
   private static final double FF_RAMP_RATE = 0.1; // Volts/Sec
   private static final double WHEEL_RADIUS_MAX_VELOCITY = 0.25; // Rad/Sec
   private static final double WHEEL_RADIUS_RAMP_RATE = 0.05; // Rad/Sec^2
 
-  private static final LoggedTunableNumber autoRotate_kP =
-      new LoggedTunableNumber("DriveCommands/autoRotate_kP", ANGLE_KP);
-  private static final LoggedTunableNumber autoRotate_kD =
-      new LoggedTunableNumber("DriveCommands/autoRotate_kD", ANGLE_KD);
+  private static final LoggedTunableNumber rotateKp =
+      new LoggedTunableNumber("DriveCommands/rotateKp", 5.0);
+  private static final LoggedTunableNumber rotateKd =
+      new LoggedTunableNumber("DriveCommands/rotateKd", 0.4);
+  private static final LoggedTunableNumber rotateMaxVelocity =
+      new LoggedTunableNumber("DriveCommands/rotateMaxVelocity", 8.0);
+  private static final LoggedTunableNumber rotateMaxAcceleration =
+      new LoggedTunableNumber("DriveCommands/rotateMaxAcceleration", 20.0);
 
   private DriveCommands() {}
 
@@ -112,11 +112,10 @@ public class DriveCommands {
       DoubleSupplier xSupplier,
       DoubleSupplier ySupplier,
       Supplier<Rotation2d> rotationSupplier) {
-    return joystickDriveAtAngleNonCenterRotation(
-        drive, xSupplier, ySupplier, rotationSupplier, Translation2d.kZero);
+    return joystickDriveAtAngle(drive, xSupplier, ySupplier, rotationSupplier, Translation2d.kZero);
   }
 
-  public static Command joystickDriveAtAngleNonCenterRotation(
+  public static Command joystickDriveAtAngle(
       Drive drive,
       DoubleSupplier xSupplier,
       DoubleSupplier ySupplier,
@@ -125,11 +124,7 @@ public class DriveCommands {
 
     // Create PID controller
     ProfiledPIDController angleController =
-        new ProfiledPIDController(
-            autoRotate_kP.get(),
-            0.0,
-            autoRotate_kD.get(),
-            new TrapezoidProfile.Constraints(ANGLE_MAX_VELOCITY, ANGLE_MAX_ACCELERATION));
+        new ProfiledPIDController(0, 0, 0, new TrapezoidProfile.Constraints(0, 0));
     angleController.enableContinuousInput(-Math.PI, Math.PI);
 
     // Construct command
@@ -165,7 +160,14 @@ public class DriveCommands {
             drive)
 
         // Reset PID controller when command starts
-        .beforeStarting(() -> angleController.reset(drive.getRotation().getRadians()));
+        .beforeStarting(
+            () -> {
+              angleController.reset(drive.getRotation().getRadians());
+              angleController.setPID(rotateKp.get(), 0.0, rotateKd.get());
+              angleController.setConstraints(
+                  new TrapezoidProfile.Constraints(
+                      rotateMaxVelocity.get(), rotateMaxAcceleration.get()));
+            });
   }
 
   /**
