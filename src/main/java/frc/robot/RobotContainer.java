@@ -109,7 +109,6 @@ public class RobotContainer {
   // Controller
   public static final CommandXboxController controller = new CommandXboxController(0);
   public static final CommandXboxController controller2 = new CommandXboxController(1);
-  public static ScoringManager operatorBoard = new ScoringManager(1, 1);
 
   private final Trigger inNonShootingArea;
 
@@ -121,10 +120,10 @@ public class RobotContainer {
   // Boolean suppliers
 
   private final BooleanSupplier toggle4 =
-      () -> operatorBoard.getLeftController().getRawButton(Constants.Control.toggle4ButtonNumber);
+      () -> controller2.povLeft().getAsBoolean();
 
   private final BooleanSupplier button3 =
-      () -> operatorBoard.getLeftController().getRawButton(Constants.Control.button3ButtonNumber);
+      () -> controller2.povDown().getAsBoolean();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -410,13 +409,11 @@ public class RobotContainer {
     }
     controller2.rightBumper().or(inNonShootingArea).whileTrue(ShooterCommands.idle(shooter));
 
-    // Toggle 4
-    new JoystickButton(operatorBoard.getLeftController(), Constants.Control.toggle4ButtonNumber)
+    controller2.b()
         .onTrue(
             new AutoIntake(drive, visionObjectDetection, led, intake, false)
                 .until(() -> (!toggle4.getAsBoolean() || button3.getAsBoolean())));
 
-    // TODO Button 3
     controller.a().onTrue(new AutoIntake(drive, visionObjectDetection, led, intake, true));
 
     intake.setDefaultCommand(IntakeCommands.setIdle(intake));
@@ -429,7 +426,7 @@ public class RobotContainer {
 
     controller.povUp().onTrue(ShooterCommands.idle(shooter));
 
-    new JoystickButton(operatorBoard.getLeftController(), Constants.Control.toggle3ButtonNumber)
+    controller2.povRight()
         .whileTrue(IntakeCommands.setRetract(intake));
   }
 
