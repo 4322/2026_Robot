@@ -109,7 +109,7 @@ public class TurretIOTalonFx implements TurretIO {
   }
 
   @Override
-  public void setPositon(double degs) {
+  public void setPosition(double degs) {
     turretMotor.setPosition(degs);
   }
 }

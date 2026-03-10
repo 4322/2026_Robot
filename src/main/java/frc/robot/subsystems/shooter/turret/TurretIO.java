@@ -21,5 +21,5 @@ public interface TurretIO {
 
   public default void setBrakeMode(boolean mode) {}
 
-  public default void setPositon(double degs) {}
+  public default void setPosition(double degs) {}
 }

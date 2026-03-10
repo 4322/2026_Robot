@@ -51,7 +51,7 @@ public class Turret {
             }
           }
           case SET_TURRET_ANGLE -> {
-            io.setPositon(getRotation());
+            io.setPosition(getRotation());
             if (desiredDeg != null) {
               io.setAngle(desiredDeg);
             }
