@@ -68,6 +68,12 @@ public class Robot extends LoggedRobot {
   public static PathPlannerPath L_NeutralL_Intake_Full_Disrupt;
   public static PathPlannerPath L_NeutralL_Intake_Full_Disrupt_Flip;
 
+  public static PathPlannerPath L_NeutralLMid_To_ShootL_LT;
+  public static PathPlannerPath L_Neutral_Mid_To_ShootL_LT;
+
+  public static PathPlannerPath R_NeutralRMid_To_ShootR_LT;
+  public static PathPlannerPath R_Neutral_Mid_To_ShootR_LT;
+
   public static PathPlannerPath C_Depot_To_Outpost;
   public static PathPlannerPath C_Start_To_Depot;
 
@@ -220,6 +226,9 @@ public class Robot extends LoggedRobot {
       R_NeutralR_Intake_Full_Disrupt_Flip =
           PathPlannerPath.fromPathFile("R_NeutralR_Intake_Full_Disrupt_Flip");
 
+      R_NeutralRMid_To_ShootR_LT = PathPlannerPath.fromPathFile("R_NeutralRMid_To_ShootR_LT");
+      R_Neutral_Mid_To_ShootR_LT = PathPlannerPath.fromPathFile("R_Neutral_Mid_To_ShootR_LT");
+
       L_NeutralL_Intake_Mid_Flip = R_NeutralR_Intake_Mid_Flip.mirrorPath();
       L_NeutralLMid_To_ShootL = R_NeutralRMid_To_ShootR.mirrorPath();
       L_NeutralL_Intake_To_Mid = R_NeutralR_Intake_To_Mid.mirrorPath();
@@ -233,6 +242,9 @@ public class Robot extends LoggedRobot {
       L_StartL_To_NeutralL_Intake_Disrupt = R_StartR_To_NeutralR_Intake_Disrupt.mirrorPath();
       L_NeutralL_Intake_Full_Disrupt = R_NeutralR_Intake_Full_Disrupt.mirrorPath();
       L_NeutralL_Intake_Full_Disrupt_Flip = R_NeutralR_Intake_Full_Disrupt_Flip.mirrorPath();
+
+      L_NeutralLMid_To_ShootL_LT = R_NeutralRMid_To_ShootR_LT.mirrorPath();
+      L_Neutral_Mid_To_ShootL_LT = R_Neutral_Mid_To_ShootR_LT.mirrorPath();
 
     } catch (Exception e) {
       DriverStation.reportError("Failed to load PathPlanner path - " + e.getMessage(), true);
