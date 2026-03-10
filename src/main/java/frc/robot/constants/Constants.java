@@ -334,15 +334,14 @@ public final class Constants {
 
       // Shooting
       putFiringMapEntryScoring(Units.inchesToMeters(48), new FiringParameters(41, 3.5, 1, 30, 7));
-      putFiringMapEntryScoring(
-          Units.inchesToMeters(210), new FiringParameters(53, 24, 1, 30, 7)); // Low lob
-      // High Lob, putFiringMapEntryScoring(Units.inchesToMeters(210), new FiringParameters(60, 18,
-      // 1, 20, 7));
       putFiringMapEntryScoring(Units.inchesToMeters(129), new FiringParameters(45, 16, 1, 30, 7));
       putFiringMapEntryScoring(Units.inchesToMeters(164), new FiringParameters(49, 20, 1, 30, 7));
+      putFiringMapEntryScoring(
+          Units.inchesToMeters(210), new FiringParameters(53, 24, 1, 30, 7)); // Low lob
 
       // Passing
       putFiringMapEntryPassing(Units.inchesToMeters(144.5), new FiringParameters(39, 19, 1, 30, 7));
+      putFiringMapEntryPassing(Units.inchesToMeters(283), new FiringParameters(57, 36, 1, 30, 7));
       putFiringMapEntryPassing(Units.inchesToMeters(302), new FiringParameters(70, 38, 1, 30, 7));
       putFiringMapEntryPassing(Units.inchesToMeters(539), new FiringParameters(90, 38, 1, 30, 7));
     }

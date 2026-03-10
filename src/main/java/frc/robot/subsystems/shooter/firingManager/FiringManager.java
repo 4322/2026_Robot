@@ -34,8 +34,6 @@ public class FiringManager {
       new LoggedTunableNumber("FiringManager/flywheelSpeedRPM", 0);
   private static final LoggedTunableNumber hoodAngle =
       new LoggedTunableNumber("FiringManager/hoodAngle", 0);
-  private static final LoggedTunableNumber turretAngleDeg =
-      new LoggedTunableNumber("FiringManager/turretAngleDeg", 0);
   private static final LoggedTunableNumber tunnelSpeedRPS =
       new LoggedTunableNumber("FiringManager/tunnelSpeedRPS", 0);
   private static final LoggedTunableNumber indexerSpeedRPS =
@@ -43,53 +41,55 @@ public class FiringManager {
 
   public static FiringSolution getFiringSolution(
       Translation2d turretPosition, Translation2d robotVelocity, boolean isScoring) {
+    Translation2d goalPosition = getShootingTarget(turretPosition);
+    Translation2d toGoal = goalPosition.minus(turretPosition);
+    double distance = toGoal.getNorm();
+    Translation2d targetDirection = toGoal.div(distance);
 
+    Logger.recordOutput("FiringManager/targetPosition", new Pose2d(goalPosition, new Rotation2d()));
     Logger.recordOutput("FiringManager/isScoring", isScoring);
+
+
+    // Get FiringParameters based on distance
+    Logger.recordOutput("FiringManager/targetPosition", new Pose2d(goalPosition, new Rotation2d()));
+    if (Constants.firingManager == Constants.SubsystemMode.TUNING) {
+      Logger.recordOutput("FiringManager/requestedTuning/flywheelSpeedRPM", flywheelSpeedRPM.get());
+      Logger.recordOutput("FiringManager/requestedTuning/hoodAngle", hoodAngle.get());
+      Logger.recordOutput("FiringManager/requestedTuning/tunnelSpeedRPS", tunnelSpeedRPS.get());
+      Logger.recordOutput("FiringManager/requestedTuning/indexerSpeedRPS", indexerSpeedRPS.get());
+      Logger.recordOutput("FiringManager/distance", distance);
+      return new FiringSolution(
+          flywheelSpeedRPM.get(),
+          hoodAngle.get(),
+          adjustForTurretLock(targetDirection.getAngle().getDegrees()),
+          tunnelSpeedRPS.get(),
+          indexerSpeedRPS.get());
+    }
 
     // Project future position based on velocity and latency compensation
     double latencyCompensation =
         isScoring
             ? Constants.FiringManager.latencyCompensationScoring
             : Constants.FiringManager.latencyCompensationPassing;
-    Translation2d futurePos = turretPosition.plus(robotVelocity.times(latencyCompensation));
-
-    Logger.recordOutput("FiringManager/futurePos", new Pose2d(futurePos, new Rotation2d()));
-
-    // Get target vector
-    Translation2d goalPosition = getShootingTarget(futurePos);
-    Logger.recordOutput("FiringManager/targetPosition", new Pose2d(goalPosition, new Rotation2d()));
-    Translation2d toGoal = goalPosition.minus(futurePos);
-    double distance = toGoal.getNorm();
+    Translation2d latencyTranslation = robotVelocity.times(latencyCompensation);
+    toGoal = toGoal.minus(latencyTranslation);
+    distance = toGoal.getNorm();
+    targetDirection = toGoal.div(distance);
+    Logger.recordOutput(
+        "FiringManager/futurePos", new Pose2d(latencyTranslation, new Rotation2d()));
     Logger.recordOutput("FiringManager/distance", distance);
-    Translation2d targetDirection = toGoal.div(distance);
 
     // Get FiringParameters based on distance
     FiringParameters baseline =
         isScoring
             ? Constants.FiringManager.firingMapScoring.get(distance)
             : Constants.FiringManager.firingMapPassing.get(distance);
-    Logger.recordOutput("FiringManager/targetPosition", new Pose2d(goalPosition, new Rotation2d()));
-    if (Constants.firingManager == Constants.SubsystemMode.TUNING) {
-      Logger.recordOutput("FiringManager/requestedTuning/flywheelSpeedRPM", flywheelSpeedRPM.get());
-      Logger.recordOutput("FiringManager/requestedTuning/hoodAngle", hoodAngle.get());
-      Logger.recordOutput("FiringManager/requestedTuning/turretAngleDeg", turretAngleDeg.get());
-      Logger.recordOutput("FiringManager/requestedTuning/tunnelSpeedRPS", tunnelSpeedRPS.get());
-      Logger.recordOutput("FiringManager/requestedTuning/indexerSpeedRPS", indexerSpeedRPS.get());
-      double goalDistance = goalPosition.getNorm();
-      Logger.recordOutput("FiringManager/distance", goalDistance);
-      return new FiringSolution(
-          flywheelSpeedRPM.get(),
-          hoodAngle.get(),
-          turretAngleDeg.get(),
-          tunnelSpeedRPS.get(),
-          indexerSpeedRPS.get());
-    }
 
     if (!Constants.shootOnTheMoveEnabled) {
       return new FiringSolution(
           baseline.getFlywheelRPM(),
           baseline.getHoodAngleDeg(),
-          adjustForTurretLock(targetDirection.getAngle().getDegrees(), distance),
+          adjustForTurretLock(targetDirection.getAngle().getDegrees()),
           baseline.getTunnelRPS(),
           baseline.getIndexerRPS());
     }
@@ -173,12 +173,12 @@ public class FiringManager {
     return new FiringSolution(
         adjustedRPM,
         adjustedHood,
-        adjustForTurretLock(turretAngle.getDegrees(), distance),
+        adjustForTurretLock(turretAngle.getDegrees()),
         tunnelSpeedRPS,
         indexerSpeedRPS);
   }
 
-  private static double adjustForTurretLock(double turretDeg, double distance) {
+  private static double adjustForTurretLock(double turretDeg) {
     if (Constants.turretLocked) {
       return Rotation2d.fromDegrees(turretDeg).rotateBy(Rotation2d.kCW_Pi_2).getDegrees();
     } else {
