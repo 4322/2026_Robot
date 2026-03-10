@@ -103,13 +103,19 @@ public class Hood {
   }
 
   public void requestGoal(double angle) {
+    if (!trenchOverride) {
+      setGoal(angle);
+    }
+  }
+
+  private void setGoal(double angle) {
     pidController.setSetpoint(angle);
     this.requestedAngleDeg = angle;
-    Logger.recordOutput("Hood/requestedDegree", requestedAngleDeg);
+    Logger.recordOutput("Hood/goalDegree", requestedAngleDeg);
   }
 
   public void trenchOverride(boolean override) {
-    requestGoal(Constants.Hood.safeAngleDeg);
+    setGoal(Constants.Hood.safeAngleDeg);
     trenchOverride = override;
   }
 
