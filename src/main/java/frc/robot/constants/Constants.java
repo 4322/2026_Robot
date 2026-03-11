@@ -54,7 +54,7 @@ public final class Constants {
   public static final SubsystemMode ledMode = SubsystemMode.DISABLED;
   public static final SubsystemMode visionGlobalPose = SubsystemMode.NORMAL;
   public static final SubsystemMode visionObjectDetection = SubsystemMode.DISABLED;
-  public static final SubsystemMode firingManager = SubsystemMode.TUNING;
+  public static final SubsystemMode firingManager = SubsystemMode.NORMAL;
   public static final boolean turretLocked = true;
   public static boolean shootOnTheMoveEnabled = false;
 
