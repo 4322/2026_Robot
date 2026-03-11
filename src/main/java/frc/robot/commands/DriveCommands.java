@@ -39,9 +39,9 @@ public class DriveCommands {
   private static final double WHEEL_RADIUS_RAMP_RATE = 0.05; // Rad/Sec^2
 
   private static final LoggedTunableNumber rotateKp =
-      new LoggedTunableNumber("DriveCommands/rotateKp", 5.0);
+      new LoggedTunableNumber("DriveCommands/rotateKp", 3.0);
   private static final LoggedTunableNumber rotateKd =
-      new LoggedTunableNumber("DriveCommands/rotateKd", 0.4);
+      new LoggedTunableNumber("DriveCommands/rotateKd", 0.0);
   private static final LoggedTunableNumber rotateMaxVelocity =
       new LoggedTunableNumber("DriveCommands/rotateMaxVelocity", 8.0);
   private static final LoggedTunableNumber rotateMaxAcceleration =
