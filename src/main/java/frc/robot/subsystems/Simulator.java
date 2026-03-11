@@ -52,13 +52,6 @@ public class Simulator extends SubsystemBase {
     NONE
   }
 
-  private Pose2d flipPose(double x, double y, Rotation2d rotation) {
-    double xaxis = Units.inchesToMeters(651.22) - x;
-    double yaxis = Units.inchesToMeters(317.69) - y;
-
-    return new Pose2d(xaxis, yaxis, rotation.plus(Rotation2d.fromDegrees(180)));
-  }
-
   private enum TeleopScenario {
     NONE,
     SHOOT,
@@ -158,6 +151,18 @@ public class Simulator extends SubsystemBase {
 
     private ControllerAxis(int value) {
       this.value = value;
+    }
+  }
+
+  public class FieldPose2D extends Pose2d {
+    public FieldPose2D(double x, double y, Rotation2d rotation) {
+      super(x, y, rotation);
+    }
+
+    public Pose2d flipPose() {
+      double flippedX = Units.inchesToMeters(651.22) - getX();
+      double flippedY = Units.inchesToMeters(317.69) - getY();
+      return new Pose2d(flippedX, flippedY, getRotation().plus(Rotation2d.kPi));
     }
   }
 
@@ -278,14 +283,7 @@ public class Simulator extends SubsystemBase {
     }
 
     SimEvent(double eventTime, String eventName, EventType eventType, Pose2d pose) {
-      this(
-          eventTime,
-          eventName,
-          eventType,
-          currentAlliance == Alliance.Blue
-              ? pose
-              : flipPose(pose.getX(), pose.getY(), pose.getRotation()),
-          EventStatus.ACTIVE);
+      this(eventTime, eventName, eventType, pose, EventStatus.ACTIVE);
     }
 
     SimEvent(
@@ -298,7 +296,10 @@ public class Simulator extends SubsystemBase {
       this.eventName = eventName;
       this.eventType = eventType;
       this.eventStatus = eventStatus;
-      this.pose = pose;
+      this.pose =
+          currentAlliance == Alliance.Blue || !(pose instanceof FieldPose2D)
+              ? pose
+              : ((FieldPose2D) pose).flipPose();
     }
   }
 
@@ -322,7 +323,10 @@ public class Simulator extends SubsystemBase {
     return switch (teleopScenario) {
       case CONTROLLER_TEST1 -> List.of(
           new SimEvent(
-              t += 1.0, "Start pose", EventType.SET_POSE, new Pose2d(12, 4, Rotation2d.k180deg)),
+              t += 1.0,
+              "Start pose",
+              EventType.SET_POSE,
+              new FieldPose2D(12.0, 4.0, Rotation2d.k180deg)),
           new SimEvent(t += 1.0, "Event " + eventNum++, EventType.PRESS_X),
           new SimEvent(t += 1.0, "Event " + eventNum++, EventType.PRESS_LEFT_POV),
           new SimEvent(t += 1.0, "Event " + eventNum++, EventType.PRESS_LEFT_BUMPER),
@@ -391,7 +395,7 @@ public class Simulator extends SubsystemBase {
 
       case SUBSYSTEM_TEST -> List.of(
           new SimEvent(
-              t, "Start Pose", EventType.SET_POSE, new Pose2d(4.44, 0.650, Rotation2d.kZero)),
+              t, "Start Pose", EventType.SET_POSE, new FieldPose2D(4.44, 0.650, Rotation2d.kZero)),
           new SimEvent(t += 4.0, "Start Intake", EventType.PRESS_Y),
           new SimEvent(t += 1.0, "Stop Intake", EventType.PRESS_X),
           new SimEvent(
@@ -444,7 +448,7 @@ public class Simulator extends SubsystemBase {
 
       case AUTO_ROTATE -> List.of(
           new SimEvent(
-              t += 1.0, "Start pose", EventType.SET_POSE, new Pose2d(2, 2, Rotation2d.kZero)),
+              t += 1.0, "Start pose", EventType.SET_POSE, new FieldPose2D(2, 2, Rotation2d.kZero)),
           new SimEvent(
               t += 1,
               "Drive to Neutral Zone",
@@ -498,7 +502,7 @@ public class Simulator extends SubsystemBase {
       case TURRET -> List.of(
           // requires turret to be unlocked
           new SimEvent(
-              t += 0.1, "Start pose", EventType.SET_POSE, new Pose2d(2, 2, Rotation2d.kZero)),
+              t += 0.1, "Start pose", EventType.SET_POSE, new FieldPose2D(2, 2, Rotation2d.kZero)),
           new SimEvent(
               t += 0.1,
               "Spin",
