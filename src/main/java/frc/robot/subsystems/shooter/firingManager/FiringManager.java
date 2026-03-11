@@ -4,6 +4,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.Robot;
 import frc.robot.constants.Constants;
@@ -43,8 +44,16 @@ public class FiringManager {
       Translation2d turretPosition, Translation2d robotVelocity, boolean isScoring) {
     Translation2d goalPosition = getShootingTarget(turretPosition);
     Translation2d toGoal = goalPosition.minus(turretPosition);
+
+    if (AreaManager.getZoneOfPosition(turretPosition) == Zone.ALLIANCE_ZONE) {
+      // aim slightly behind the center of the hub so we don't hit the front
+      goalPosition =
+          goalPosition.plus(
+              new Translation2d(Units.inchesToMeters(3), 0).rotateBy(toGoal.getAngle()));
+      toGoal = goalPosition.minus(turretPosition);
+    }
+
     double distance = toGoal.getNorm();
-    Translation2d targetDirection = toGoal.div(distance);
     Logger.recordOutput("FiringManager/targetPosition", new Pose2d(goalPosition, new Rotation2d()));
     Logger.recordOutput("FiringManager/isScoring", isScoring);
     Logger.recordOutput("FiringManager/distance", distance);
@@ -57,7 +66,7 @@ public class FiringManager {
       return new FiringSolution(
           flywheelSpeedRPM.get(),
           hoodAngle.get(),
-          adjustForTurretLock(targetDirection.getAngle().getDegrees()),
+          adjustForTurretLock(toGoal.getAngle().getDegrees()),
           tunnelSpeedRPS.get(),
           indexerSpeedRPS.get());
     }
@@ -74,7 +83,7 @@ public class FiringManager {
     Translation2d futurePos = turretPosition.plus(robotVelocity.times(latencyCompensation));
     toGoal = goalPosition.minus(futurePos);
     distance = toGoal.getNorm();
-    targetDirection = toGoal.div(distance);
+    Translation2d targetDirection = toGoal.div(distance);
     Logger.recordOutput("FiringManager/futurePos", new Pose2d(futurePos, new Rotation2d()));
     Logger.recordOutput("FiringManager/adjustedDistance", distance);
 
