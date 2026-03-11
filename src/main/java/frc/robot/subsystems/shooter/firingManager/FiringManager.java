@@ -58,7 +58,7 @@ public class FiringManager {
     Logger.recordOutput("FiringManager/isScoring", isScoring);
     Logger.recordOutput("FiringManager/distance", distance);
 
-    if (Constants.firingManager == Constants.SubsystemMode.TUNING) {
+    if (Constants.firingManagerMode == Constants.SubsystemMode.TUNING) {
       Logger.recordOutput("FiringManager/requestedTuning/flywheelSpeedRPM", flywheelSpeedRPM.get());
       Logger.recordOutput("FiringManager/requestedTuning/hoodAngle", hoodAngle.get());
       Logger.recordOutput("FiringManager/requestedTuning/tunnelSpeedRPS", tunnelSpeedRPS.get());

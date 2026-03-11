@@ -54,12 +54,12 @@ public final class Constants {
   public static final SubsystemMode ledMode = SubsystemMode.DISABLED;
   public static final SubsystemMode visionGlobalPose = SubsystemMode.NORMAL;
   public static final SubsystemMode visionObjectDetection = SubsystemMode.DISABLED;
-  public static final SubsystemMode firingManager = SubsystemMode.NORMAL;
+  public static final SubsystemMode firingManagerMode = SubsystemMode.NORMAL;
   public static final boolean turretLocked = true;
   public static boolean shootOnTheMoveEnabled = false;
 
   { // set dependent operational modes
-    if (firingManager == SubsystemMode.TUNING) {
+    if (firingManagerMode == SubsystemMode.TUNING) {
       shootOnTheMoveEnabled = false;
     }
     if (turretLocked) {
@@ -332,12 +332,12 @@ public final class Constants {
       // Meters is center of turret to 3 inches behind center from hub
 
       // Shooting
-      putFiringMapEntryScoring(5.133, new FiringParameters(53, 24, 1, 35, 7));
-      putFiringMapEntryScoring(4.538, new FiringParameters(53, 15, 1, 35, 7));
-      putFiringMapEntryScoring(3.546, new FiringParameters(52, 10, 1, 35, 7));
-      putFiringMapEntryScoring(2.741, new FiringParameters(45, 10, 1, 35, 7));
-      putFiringMapEntryScoring(2.129, new FiringParameters(44.7, 5, 1, 35, 7));
       putFiringMapEntryScoring(1.111, new FiringParameters(45, 3.5, 1, 35, 7));
+      putFiringMapEntryScoring(2.129, new FiringParameters(44.7, 5, 1, 35, 7));
+      putFiringMapEntryScoring(2.741, new FiringParameters(45, 10, 1, 35, 7));
+      putFiringMapEntryScoring(3.546, new FiringParameters(52, 10, 1, 35, 7));
+      putFiringMapEntryScoring(4.538, new FiringParameters(53, 15, 1, 35, 7));
+      putFiringMapEntryScoring(5.133, new FiringParameters(53, 24, 1, 35, 7));
 
       // Passing
       putFiringMapEntryPassing(Units.inchesToMeters(144.5), new FiringParameters(39, 19, 1, 30, 7));

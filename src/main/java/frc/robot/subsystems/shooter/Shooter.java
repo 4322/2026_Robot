@@ -79,7 +79,7 @@ public class Shooter extends SubsystemBase {
       state = ShooterState.IDLE;
     }
 
-    if (Constants.firingManager == Constants.SubsystemMode.TUNING) {
+    if (Constants.firingManagerMode == Constants.SubsystemMode.TUNING) {
       flywheel.requestGoal(targetFlywheelSpeedRPS);
       hood.requestGoal(targetHoodAngleDeg);
 
@@ -217,7 +217,7 @@ public class Shooter extends SubsystemBase {
 
   public void requestShoot() {
     Logger.recordOutput("Shooter/currentMethod", "requestShoot()");
-    if (Constants.firingManager == Constants.SubsystemMode.TUNING) {
+    if (Constants.firingManagerMode == Constants.SubsystemMode.TUNING) {
       return;
     }
     if (AreaManager.getZoneOfPosition(drive.getRobotPose().getTranslation()) == Zone.ALLIANCE_ZONE
