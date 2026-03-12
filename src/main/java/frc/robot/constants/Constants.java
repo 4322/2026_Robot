@@ -352,6 +352,7 @@ public final class Constants {
       putFiringMapEntryPassing(7.306, new FiringParameters(63, 20, 1, 35, 7));
       putFiringMapEntryPassing(7.750, new FiringParameters(65, 26, 1, 35, 7));
       putFiringMapEntryPassing(8.767, new FiringParameters(67, 28, 1, 35, 7));
+      putFiringMapEntryPassing(13.691, new FiringParameters(90, 38, 1, 35, 7));
     }
 
     public static final boolean alwaysTargetAllianceZone = true;
