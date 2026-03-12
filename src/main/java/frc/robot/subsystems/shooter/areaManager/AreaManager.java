@@ -26,15 +26,13 @@ public class AreaManager {
 
   public static boolean isShootingArea(Translation2d position) {
     if (Robot.alliance == Alliance.Blue) {
-      return !(FieldConstants.Neutral.backBlueHub.contains(position)
-          || FieldConstants.Red.frontOfHub.contains(position)
+      return !(FieldConstants.Red.frontOfHub.contains(position)
           || FieldConstants.Blue.stopShootLeft.contains(position)
           || FieldConstants.Blue.stopShootRight.contains(position)
           || FieldConstants.Red.stopShootLeft.contains(position)
           || FieldConstants.Red.stopShootRight.contains(position));
     } else {
-      return !(FieldConstants.Neutral.backRedHub.contains(position)
-          || FieldConstants.Blue.frontOfHub.contains(position)
+      return !(FieldConstants.Blue.frontOfHub.contains(position)
           || FieldConstants.Blue.stopShootLeft.contains(position)
           || FieldConstants.Blue.stopShootRight.contains(position)
           || FieldConstants.Red.stopShootLeft.contains(position)

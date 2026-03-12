@@ -162,22 +162,6 @@ public class FieldConstants {
     public static FieldRectangle2d leftNeutral =
         new FieldRectangle2d(
             new Translation2d(blueLineX, centerLineY), new Translation2d(redLineX, fieldWidth));
-    public static FieldRectangle2d backBlueHub =
-        new FieldRectangle2d(
-            new Translation2d(
-                blueLineX + Units.inchesToMeters(22.20),
-                centerLineY - Units.inchesToMeters(58.41 / 2)),
-            new Translation2d(
-                blueLineX + Units.inchesToMeters(80.00),
-                centerLineY + Units.inchesToMeters(58.41 / 2)));
-    public static FieldRectangle2d backRedHub =
-        new FieldRectangle2d(
-            new Translation2d(
-                redLineX - Units.inchesToMeters(22.20),
-                centerLineY - Units.inchesToMeters(58.41 / 2)),
-            new Translation2d(
-                redLineX - Units.inchesToMeters(80.00),
-                centerLineY + Units.inchesToMeters(58.41 / 2)));
   }
 
   public static void plotZones() {
