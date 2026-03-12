@@ -9,7 +9,7 @@ public interface TurretIO {
     public double motorRPS = 0.0;
     public double appliedVolts = 0.0;
     public double statorVolts = 0.0;
-    public double motorTempCelsius = 0.0;
+    public double TempCelsius = 0.0;
     public double encoderOneRotations = 0.0;
     public double encoderTwoRotations = 0.0;
     public double turretDegs = 0.0;
