@@ -41,8 +41,10 @@ public class Turret {
               desiredDeg = (desiredDeg - 360);
             } else if (desiredDeg <= Constants.Turret.minUnwindLimitDeg) {
               desiredDeg = (desiredDeg + 360);
+            } else {
+               desiredDeg = 0.0;
             }
-            if (!needsToUnwind()) {
+            if (!needsToUnwind() && (isAtGoal() || (inputs.turretDegs >=  -180 && inputs.turretDegs <=  180))){
               state = turretState.SET_TURRET_ANGLE;
             }
           }
@@ -51,6 +53,9 @@ public class Turret {
               io.setAngle(desiredDeg);
             } else {
               io.setPosition(getRotation());
+            }
+             if (needsToUnwind()) {
+           state = turretState.UNWIND;
             }
           }
         }
