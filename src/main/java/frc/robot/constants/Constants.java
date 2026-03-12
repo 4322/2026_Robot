@@ -54,7 +54,7 @@ public final class Constants {
   public static final SubsystemMode ledMode = SubsystemMode.DISABLED;
   public static final SubsystemMode visionGlobalPose = SubsystemMode.NORMAL;
   public static final SubsystemMode visionObjectDetection = SubsystemMode.DISABLED;
-  public static final SubsystemMode firingManagerMode = SubsystemMode.TUNING;
+  public static final SubsystemMode firingManagerMode = SubsystemMode.NORMAL;
   public static final boolean turretLocked = true;
   public static boolean shootOnTheMoveEnabled = false;
   public static final boolean frontRightCameraEnable = true;
@@ -344,15 +344,14 @@ public final class Constants {
       putFiringMapEntryScoring(5.133, new FiringParameters(53, 24, 1, 35, 7));
 
       // Passing
-      // need to 112 inches past the blue line to clear the net
+      // need to be 112 inches past the blue line to clear the net
       putFiringMapEntryPassing(3.750, new FiringParameters(43, 15, 1, 35, 7));
       putFiringMapEntryPassing(5.352, new FiringParameters(60, 5, 1, 35, 7));
       putFiringMapEntryPassing(5.873, new FiringParameters(60, 18, 1, 35, 7));
       putFiringMapEntryPassing(6.918, new FiringParameters(63, 24, 1, 35, 7));
-      putFiringMapEntryPassing(7.309, new FiringParameters(63, 20, 1, 35, 7));
-      putFiringMapEntryPassing(7.750, new FiringParameters(65, 24, 1, 35, 7));
-      putFiringMapEntryPassing(8.770, new FiringParameters(65, 24, 1, 35, 7));
-      putFiringMapEntryPassing(5.352, new FiringParameters(70, 0.5, 1, 35, 7));
+      putFiringMapEntryPassing(7.306, new FiringParameters(63, 20, 1, 35, 7));
+      putFiringMapEntryPassing(7.750, new FiringParameters(65, 26, 1, 35, 7));
+      putFiringMapEntryPassing(8.767, new FiringParameters(67, 28, 1, 35, 7));
     }
 
     public static final boolean alwaysTargetAllianceZone = true;
