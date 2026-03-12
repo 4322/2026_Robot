@@ -13,6 +13,7 @@ public interface TurretIO {
     public double encoderOneRotations = 0.0;
     public double encoderTwoRotations = 0.0;
     public double turretDegs = 0.0;
+    public double requestedTurretDegs = 0.0;
   }
 
   public default void updateInputs(TurretIOInputs inputs) {}
@@ -21,5 +22,5 @@ public interface TurretIO {
 
   public default void setBrakeMode(boolean mode) {}
 
-  public default void setPosition(double degs) {}
+  public default void setPosition(double rot) {}
 }

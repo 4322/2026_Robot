@@ -6,7 +6,6 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -76,19 +75,19 @@ public class TurretIOTalonFx implements TurretIO {
     }
   }
 
-  @Override
-  public void updateInputs(TurretIOInputs inputs) {
-    inputs.turretDegs =
-        Units.rotationsToDegrees(turretMotor.getPosition().getValueAsDouble())
-            / Constants.Turret.turretGearRatio;
-    inputs.encoderOneRotations = CANcoderOne.getPosition().getValueAsDouble();
-    inputs.encoderTwoRotations = CANcoderTwo.getPosition().getValueAsDouble();
-    inputs.motorConnected = turretMotor.isConnected();
-    inputs.motorRPS = turretMotor.getVelocity().getValueAsDouble();
-    inputs.appliedVolts = turretMotor.getSupplyVoltage().getValueAsDouble();
-    inputs.TempCelsius = turretMotor.getDeviceTemp().getValueAsDouble();
-    inputs.statorVolts = turretMotor.getMotorVoltage().getValueAsDouble();
-  }
+  // @Override
+  // public void updateInputs(TurretIOInputs inputs) {
+  //   inputs.turretDegs =
+  //       Units.rotationsToDegrees(turretMotor.getPosition().getValueAsDouble())
+  //           / Constants.Turret.turretGearRatio;
+  //   inputs.encoderOneRotations = CANcoderOne.getPosition().getValueAsDouble();
+  //   inputs.encoderTwoRotations = CANcoderTwo.getPosition().getValueAsDouble();
+  //   inputs.motorConnected = turretMotor.isConnected();
+  //   inputs.motorRPS = turretMotor.getVelocity().getValueAsDouble();
+  //   inputs.appliedVolts = turretMotor.getSupplyVoltage().getValueAsDouble();
+  //   inputs.TempCelsius = turretMotor.getDeviceTemp().getValueAsDouble();
+  //   inputs.statorVolts = turretMotor.getMotorVoltage().getValueAsDouble();
+  // }
 
   @Override
   public void setBrakeMode(boolean mode) {
@@ -104,7 +103,7 @@ public class TurretIOTalonFx implements TurretIO {
   }
 
   @Override
-  public void setPosition(double degs) {
-    turretMotor.setPosition(degs);
+  public void setPosition(double rot) {
+    turretMotor.setPosition(rot);
   }
 }

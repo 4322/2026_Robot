@@ -83,7 +83,7 @@ public class Shooter extends SubsystemBase {
       flywheel.requestGoal(targetFlywheelSpeedRPS);
       hood.requestGoal(targetHoodAngleDeg);
 
-      turret.setAngle(targetTurretAngleDeg, true);
+      turret.requestAngle(targetTurretAngleDeg, true);
 
       tunnel.requestGoal(targetTunnelSpeedRPS);
       spindexer.requestGoal(targetIndexerSpeedRPS);
@@ -121,7 +121,7 @@ public class Shooter extends SubsystemBase {
       }
       case IDLE -> {
         spindexer.requestIdle();
-        turret.setAngle(targetTurretAngleDeg, true);
+        turret.requestAngle(targetTurretAngleDeg, true);
         if (AreaManager.isTrench(drive.getTurretTranslation())) {
           hood.requestGoal(Constants.Hood.safeAngleDeg);
         } else {
@@ -139,7 +139,7 @@ public class Shooter extends SubsystemBase {
       }
       case UNWIND -> {
         spindexer.requestIdle();
-        turret.setAngle(targetTurretAngleDeg, false);
+        turret.requestAngle(targetTurretAngleDeg, false);
         hood.requestGoal(targetHoodAngleDeg);
 
         if (spindexer.isStopped()) {
@@ -158,12 +158,12 @@ public class Shooter extends SubsystemBase {
       case PRESHOOT -> {
         flywheel.requestGoal(targetFlywheelSpeedRPS);
         hood.requestGoal(targetHoodAngleDeg);
-        turret.setAngle(targetTurretAngleDeg, true);
+        turret.requestAngle(targetTurretAngleDeg, true);
       }
       case SHOOT -> {
         flywheel.requestGoal(targetFlywheelSpeedRPS);
         hood.requestGoal(targetHoodAngleDeg);
-        turret.setAngle(targetTurretAngleDeg, false);
+        turret.requestAngle(targetTurretAngleDeg, false);
         tunnel.requestGoal(targetTunnelSpeedRPS);
         if (tunnel.getVelocity() > Constants.Tunnel.minPercentVelocity * targetTunnelSpeedRPS) {
           spindexer.requestGoal(targetIndexerSpeedRPS);
