@@ -42,22 +42,22 @@ public class Turret {
             } else if (desiredDeg <= Constants.Turret.minUnwindLimitDeg) {
               desiredDeg = (desiredDeg + 360);
             } else {
-               desiredDeg = 0.0;
+              desiredDeg = 0.0;
             }
-            if (!needsToUnwind() && (isAtGoal() || (inputs.turretDegs >=  -180 && inputs.turretDegs <=  180))){
+            if (!needsToUnwind()
+                && (isAtGoal() || (inputs.turretDegs >= -180 && inputs.turretDegs <= 180))) {
               state = turretState.SET_TURRET_ANGLE;
             }
           }
           case SET_TURRET_ANGLE -> {
             if (needsToUnwind()) {
-           state = turretState.UNWIND;
+              state = turretState.UNWIND;
             }
             if (desiredDeg == null) {
               io.setAngle(desiredDeg);
             } else {
               io.setPosition(getRotation());
             }
-             
           }
         }
       }
