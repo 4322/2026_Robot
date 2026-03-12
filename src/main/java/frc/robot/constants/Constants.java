@@ -62,7 +62,6 @@ public final class Constants {
   public static final boolean backRightCameraEnable = true;
   public static final boolean backLeftCameraEnable = false;
 
-
   { // set dependent operational modes
     if (firingManagerMode == SubsystemMode.TUNING) {
       shootOnTheMoveEnabled = false;
