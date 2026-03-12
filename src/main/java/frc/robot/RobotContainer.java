@@ -154,18 +154,28 @@ public class RobotContainer {
                     new VisionGlobalPoseIO() {})
                 : new VisionGlobalPose(
                     drive,
+                    Constants.frontRightCameraEnable
+                    ?
                     new VisionGlobalPoseIOPhoton(
                         Constants.VisionGlobalPose.frontRightName,
-                        Constants.VisionGlobalPose.frontRightTransform),
+                        Constants.VisionGlobalPose.frontRightTransform): new VisionGlobalPoseIO() {},
+                     Constants.frontLeftCameraEnable
+                    ?
                     new VisionGlobalPoseIOPhoton(
                         Constants.VisionGlobalPose.frontLeftName,
-                        Constants.VisionGlobalPose.frontLeftTransform),
-                    new VisionGlobalPoseIOPhoton(
+                        Constants.VisionGlobalPose.frontLeftTransform) : new VisionGlobalPoseIO() {},
+                        
+                        Constants.backRightCameraEnable
+                    ?
+                        new VisionGlobalPoseIOPhoton(
                         Constants.VisionGlobalPose.backRightName,
-                        Constants.VisionGlobalPose.backRightTransform),
-                    new VisionGlobalPoseIOPhoton(
+                        Constants.VisionGlobalPose.backRightTransform) : new VisionGlobalPoseIO() {},
+                       
+                        Constants.backLeftCameraEnable
+                    ?
+                        new VisionGlobalPoseIOPhoton(
                         Constants.VisionGlobalPose.backLeftName,
-                        Constants.VisionGlobalPose.backLeftTransform));
+                        Constants.VisionGlobalPose.backLeftTransform): new VisionGlobalPoseIO() {});
 
         visionObjectDetection =
             Constants.visionObjectDetection == Constants.SubsystemMode.DISABLED

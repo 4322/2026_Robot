@@ -60,7 +60,7 @@ public final class Constants {
   public static final boolean frontRightCameraEnable = true;
   public static final boolean frontLeftCameraEnable = true;
   public static final boolean backRightCameraEnable = true;
-  public static final boolean backLeftCameraEnable = true;
+  public static final boolean backLeftCameraEnable = false;
 
 
   { // set dependent operational modes
