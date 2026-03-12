@@ -6,6 +6,7 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -34,14 +35,8 @@ public class TurretIOTalonFx implements TurretIO {
     config.Slot0.kI = Constants.Turret.kI;
     config.Slot0.kD = Constants.Turret.kD;
 
-    config.Slot1.kS = Constants.Turret.kS;
-    config.Slot1.kV = Constants.Turret.kV;
-    config.Slot1.kP = Constants.Turret.mmkP;
-    config.Slot1.kI = Constants.Turret.kI;
-    config.Slot1.kD = Constants.Turret.kD;
-
-    config.HardwareLimitSwitch.ForwardLimitEnable = true;
-    config.HardwareLimitSwitch.ReverseLimitEnable = true;
+    config.HardwareLimitSwitch.ReverseLimitEnable = false;
+    config.HardwareLimitSwitch.ForwardLimitEnable = false;
 
     config.Feedback.SensorToMechanismRatio = Constants.Turret.turretGearRatio;
 
@@ -91,7 +86,7 @@ public class TurretIOTalonFx implements TurretIO {
     inputs.motorConnected = turretMotor.isConnected();
     inputs.motorRPS = turretMotor.getVelocity().getValueAsDouble();
     inputs.appliedVolts = turretMotor.getSupplyVoltage().getValueAsDouble();
-    inputs.motorTempCelsius = turretMotor.getDeviceTemp().getValueAsDouble();
+    inputs.TempCelsius = turretMotor.getDeviceTemp().getValueAsDouble();
     inputs.statorVolts = turretMotor.getMotorVoltage().getValueAsDouble();
   }
 
@@ -105,7 +100,7 @@ public class TurretIOTalonFx implements TurretIO {
     turretMotor.setControl(
         new MotionMagicVoltage(Units.degreesToRotations(degs) * Constants.Turret.turretGearRatio)
             .withEnableFOC(true)
-            .withSlot(1));
+            .withSlot(0));
   }
 
   @Override
