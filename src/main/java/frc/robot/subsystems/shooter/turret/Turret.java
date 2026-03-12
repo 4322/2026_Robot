@@ -49,14 +49,15 @@ public class Turret {
             }
           }
           case SET_TURRET_ANGLE -> {
+            if (needsToUnwind()) {
+           state = turretState.UNWIND;
+            }
             if (desiredDeg == null) {
               io.setAngle(desiredDeg);
             } else {
               io.setPosition(getRotation());
             }
-             if (needsToUnwind()) {
-           state = turretState.UNWIND;
-            }
+             
           }
         }
       }
