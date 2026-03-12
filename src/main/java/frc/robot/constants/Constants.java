@@ -345,13 +345,15 @@ public final class Constants {
 
       // Passing
       // need to 112 inches past the blue line to clear the net
+      putFiringMapEntryPassing(3.750, new FiringParameters(43, 15, 1, 35, 7));
       putFiringMapEntryPassing(5.352, new FiringParameters(60, 5, 1, 35, 7));
       putFiringMapEntryPassing(5.873, new FiringParameters(60, 18, 1, 35, 7));
-      putFiringMapEntryPassing(6.916, new FiringParameters(63, 24, 1, 35, 7));
+      putFiringMapEntryPassing(6.918, new FiringParameters(63, 24, 1, 35, 7));
+      putFiringMapEntryPassing(7.309, new FiringParameters(63, 20, 1, 35, 7));
       putFiringMapEntryPassing(7.750, new FiringParameters(65, 24, 1, 35, 7));
       putFiringMapEntryPassing(8.770, new FiringParameters(65, 24, 1, 35, 7));
       putFiringMapEntryPassing(5.352, new FiringParameters(70, 0.5, 1, 35, 7));
-   }
+    }
 
     public static final boolean alwaysTargetAllianceZone = true;
   }
