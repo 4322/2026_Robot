@@ -141,4 +141,9 @@ public class GeomUtil {
   public static Translation2d translation3dTo2dXZ(Translation3d translation) {
     return new Translation2d(translation.getX(), translation.getZ());
   }
+
+  public static Translation2d[] vectorTranslationToTranslation2dList(
+      Translation2d origin, Translation2d vector) {
+    return new Translation2d[] {origin, origin.plus(vector)};
+  }
 }

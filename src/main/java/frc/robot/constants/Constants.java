@@ -316,8 +316,8 @@ public final class Constants {
     public static final InterpolatingDoubleTreeMap velocityToDistanceMapPassing =
         new InterpolatingDoubleTreeMap();
 
-    public static final double latencyCompensationScoring = 0.1;
-    public static final double latencyCompensationPassing = 0.1;
+    public static final double latencyCompensationScoring = 0.01;
+    public static final double latencyCompensationPassing = 0.01;
 
     // Add entry to both maps
     public static void putFiringMapEntryScoring(double meters, FiringParameters params) {

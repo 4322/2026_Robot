@@ -22,7 +22,7 @@ import java.util.Map;
 import org.littletonrobotics.junction.Logger;
 
 public class Simulator extends SubsystemBase {
-  private static final RegressTests regressTest = RegressTests.TURRET;
+  private static final RegressTests regressTest = RegressTests.SUBSYSTEM_TEST_TELE;
   public static AutoName autoScenario;
   private TeleopScenario teleopScenario;
   private List<TeleAnomaly> teleAnomalies;

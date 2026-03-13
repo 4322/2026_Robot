@@ -11,6 +11,7 @@ import frc.robot.constants.Constants;
 import frc.robot.constants.Constants.FiringParameters;
 import frc.robot.subsystems.shooter.areaManager.AreaManager;
 import frc.robot.subsystems.shooter.areaManager.AreaManager.Zone;
+import frc.robot.util.GeomUtil;
 import frc.robot.util.LoggedTunableNumber;
 import org.littletonrobotics.junction.Logger;
 
@@ -44,6 +45,8 @@ public class FiringManager {
       Pose2d turretPosition, Translation2d robotVelocity, boolean isScoring) {
 
     Translation2d givenTargetPosition = getShootingTarget(turretPosition.getTranslation());
+    Logger.recordOutput(
+        "FiringManager/givenTargetPosition", new Pose2d(givenTargetPosition, new Rotation2d()));
 
     // Project future position based on velocity and latency compensation
     double latencyCompensation = 0;
@@ -70,7 +73,10 @@ public class FiringManager {
       vectorToGoal = givenTargetPosition.minus(turretPosition.getTranslation());
     }
 
-    Logger.recordOutput("FiringManager/vectorToGoal", new Pose2d(vectorToGoal, new Rotation2d()));
+    Logger.recordOutput(
+        "FiringManager/vectorToGoal",
+        GeomUtil.vectorTranslationToTranslation2dList(
+            turretPosition.getTranslation(), vectorToGoal));
 
     double distanceToGivenTarget = vectorToGoal.getNorm();
     Translation2d targetDirection = vectorToGoal.div(distanceToGivenTarget);
@@ -92,6 +98,20 @@ public class FiringManager {
 
     // Compensate for robot velocity
     Translation2d shotVelocity = targetVelocity.minus(robotVelocity);
+    Logger.recordOutput(
+        "FiringManager/targetVelocity",
+        GeomUtil.vectorTranslationToTranslation2dList(
+            turretPosition.getTranslation(), targetVelocity));
+    Logger.recordOutput(
+        "FiringManager/shotVelocityAdd",
+        new Translation2d[] {
+          turretPosition.getTranslation().plus(targetVelocity),
+          turretPosition.getTranslation().plus(targetVelocity).minus(robotVelocity)
+        });
+    Logger.recordOutput(
+        "FiringManager/shotVelocity",
+        GeomUtil.vectorTranslationToTranslation2dList(
+            turretPosition.getTranslation(), shotVelocity));
 
     // Get turret angle based on angle of target velocity vector
     Rotation2d turretAngle = new Rotation2d();
