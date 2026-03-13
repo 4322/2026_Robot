@@ -92,16 +92,6 @@ public class FiringManager {
         isScoring
             ? Constants.FiringManager.firingMapScoring.get(distance)
             : Constants.FiringManager.firingMapPassing.get(distance);
-
-    if (!Constants.shootOnTheMoveEnabled) {
-      return new FiringSolution(
-          baseline.getFlywheelRPM(),
-          baseline.getHoodAngleDeg(),
-          adjustForTurretLock(targetDirection.getAngle().getDegrees()),
-          baseline.getTunnelRPS(),
-          baseline.getIndexerRPS());
-    }
-
     // Build target velocity vector
     double baselineVelocity = distance / baseline.getTimeOfFlightSec();
     Translation2d targetVelocity = targetDirection.times(baselineVelocity);
@@ -125,7 +115,25 @@ public class FiringManager {
     // Use table in reverse: get effective distance from required velocity
     double effectiveDistance = velocityToEffectiveDistance(requiredVelocity, isScoring);
     Logger.recordOutput("FiringManager/effectiveDistance", effectiveDistance);
+    Logger.recordOutput("FiringManager/FiringSolution/turretAngle", turretAngle.getDegrees());
 
+    if (!Constants.shootOnTheMoveEnabled) {
+      if (Constants.turretLocked) {
+        return new FiringSolution(
+            baseline.getFlywheelRPM(),
+            baseline.getHoodAngleDeg(),
+            adjustForTurretLock(targetDirection.getAngle().getDegrees()),
+            baseline.getTunnelRPS(),
+            baseline.getIndexerRPS());
+      } else {
+        return new FiringSolution(
+            baseline.getFlywheelRPM(),
+            baseline.getHoodAngleDeg(),
+            toGoal.getAngle().getDegrees(),
+            baseline.getTunnelRPS(),
+            baseline.getIndexerRPS());
+      }
+    }
     return getHybridFiringSolution(
         effectiveDistance,
         requiredVelocity,
@@ -170,9 +178,6 @@ public class FiringManager {
     double ratio = MathUtil.clamp(targetHorizFromHood / totalVelocity, 0.0, 1.0);
     double adjustedHood = Math.toDegrees(Math.acos(ratio));
 
-    Logger.recordOutput("FiringManager/FiringSolution/adjustedRPM", adjustedRPM);
-    Logger.recordOutput("FiringManager/FiringSolution/adjustedHood", adjustedHood);
-    Logger.recordOutput("FiringManager/FiringSolution/turretAngle", turretAngle.getDegrees());
     return new FiringSolution(
         adjustedRPM,
         adjustedHood,

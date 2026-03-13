@@ -75,19 +75,19 @@ public class TurretIOTalonFx implements TurretIO {
     }
   }
 
-  // @Override
-  // public void updateInputs(TurretIOInputs inputs) {
-  //   inputs.turretDegs =
-  //       Units.rotationsToDegrees(turretMotor.getPosition().getValueAsDouble())
-  //           / Constants.Turret.turretGearRatio;
-  //   inputs.encoderOneRotations = CANcoderOne.getPosition().getValueAsDouble();
-  //   inputs.encoderTwoRotations = CANcoderTwo.getPosition().getValueAsDouble();
-  //   inputs.motorConnected = turretMotor.isConnected();
-  //   inputs.motorRPS = turretMotor.getVelocity().getValueAsDouble();
-  //   inputs.appliedVolts = turretMotor.getSupplyVoltage().getValueAsDouble();
-  //   inputs.TempCelsius = turretMotor.getDeviceTemp().getValueAsDouble();
-  //   inputs.statorVolts = turretMotor.getMotorVoltage().getValueAsDouble();
-  // }
+  @Override
+  public void updateInputs(TurretIOInputs inputs) {
+    inputs.turretDegs =
+        Units.rotationsToDegrees(turretMotor.getPosition().getValueAsDouble())
+            / Constants.Turret.turretGearRatio;
+    inputs.encoderOneRotations = CANcoderOne.getPosition().getValueAsDouble();
+    inputs.encoderTwoRotations = CANcoderTwo.getPosition().getValueAsDouble();
+    inputs.motorConnected = turretMotor.isConnected();
+    inputs.motorRPS = turretMotor.getVelocity().getValueAsDouble();
+    inputs.appliedVolts = turretMotor.getSupplyVoltage().getValueAsDouble();
+    inputs.TempCelsius = turretMotor.getDeviceTemp().getValueAsDouble();
+    inputs.statorVolts = turretMotor.getMotorVoltage().getValueAsDouble();
+  }
 
   @Override
   public void setBrakeMode(boolean mode) {
