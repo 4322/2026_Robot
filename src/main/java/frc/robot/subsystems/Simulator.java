@@ -245,7 +245,7 @@ public class Simulator extends SubsystemBase {
           new RegressionTest("Auto test", AutoName.R_FULL_SWEEP_SHOOT, Alliance.Blue),
           new RegressionTest("Subsystem Test", TeleopScenario.SUBSYSTEM_TEST, Alliance.Blue));
       case SUBSYSTEM_TEST_TELE -> List.of(
-          new RegressionTest("Subsystem Test", TeleopScenario.Slowly_Up_down, Alliance.Blue));
+          new RegressionTest("Subsystem Test", TeleopScenario.SUBSYSTEM_TEST, Alliance.Blue));
       case TEST_AUTOROTATE -> List.of(
           new RegressionTest("Auto Rotate", TeleopScenario.AUTO_ROTATE, Alliance.Blue));
       case TURRET -> List.of(

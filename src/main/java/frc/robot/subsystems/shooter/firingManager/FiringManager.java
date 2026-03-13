@@ -7,6 +7,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.Robot;
+import frc.robot.RobotContainer;
 import frc.robot.constants.Constants;
 import frc.robot.constants.Constants.FiringParameters;
 import frc.robot.subsystems.shooter.areaManager.AreaManager;
@@ -152,7 +153,7 @@ public class FiringManager {
         return new FiringSolution(
             baseline.getFlywheelRPM(),
             baseline.getHoodAngleDeg(),
-            vectorToGoal.getAngle().getDegrees(),
+            adjustForTurretLock(givenTargetPosition.getAngle().getDegrees()),
             baseline.getTunnelRPS(),
             baseline.getIndexerRPS());
       }
