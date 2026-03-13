@@ -1,10 +1,10 @@
 package frc.robot.subsystems.shooter.firingManager;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.Robot;
 import frc.robot.constants.Constants;
@@ -42,34 +42,8 @@ public class FiringManager {
 
   public static FiringSolution getFiringSolution(
       Translation2d turretPosition, Translation2d robotVelocity, boolean isScoring) {
-    Translation2d goalPosition = getShootingTarget(turretPosition);
-    Translation2d toGoal = goalPosition.minus(turretPosition);
 
-    if (AreaManager.getZoneOfPosition(turretPosition) == Zone.ALLIANCE_ZONE) {
-      // aim slightly behind the center of the hub so we don't hit the front
-      goalPosition =
-          goalPosition.plus(
-              new Translation2d(Units.inchesToMeters(3), 0).rotateBy(toGoal.getAngle()));
-      toGoal = goalPosition.minus(turretPosition);
-    }
-
-    double distance = toGoal.getNorm();
-    Logger.recordOutput("FiringManager/targetPosition", new Pose2d(goalPosition, new Rotation2d()));
-    Logger.recordOutput("FiringManager/isScoring", isScoring);
-    Logger.recordOutput("FiringManager/distance", distance);
-
-    if (Constants.firingManagerMode == Constants.SubsystemMode.TUNING) {
-      Logger.recordOutput("FiringManager/requestedTuning/flywheelSpeedRPM", flywheelSpeedRPM.get());
-      Logger.recordOutput("FiringManager/requestedTuning/hoodAngle", hoodAngle.get());
-      Logger.recordOutput("FiringManager/requestedTuning/tunnelSpeedRPS", tunnelSpeedRPS.get());
-      Logger.recordOutput("FiringManager/requestedTuning/indexerSpeedRPS", indexerSpeedRPS.get());
-      return new FiringSolution(
-          flywheelSpeedRPM.get(),
-          hoodAngle.get(),
-          adjustForTurretLock(toGoal.getAngle().getDegrees()),
-          tunnelSpeedRPS.get(),
-          indexerSpeedRPS.get());
-    }
+    Translation2d givenTargetPosition = getShootingTarget(turretPosition);
 
     // Project future position based on velocity and latency compensation
     double latencyCompensation = 0;
@@ -80,44 +54,93 @@ public class FiringManager {
         latencyCompensation = Constants.FiringManager.latencyCompensationPassing;
       }
     }
+
     Translation2d futurePos = turretPosition.plus(robotVelocity.times(latencyCompensation));
-    toGoal = goalPosition.minus(futurePos);
-    distance = toGoal.getNorm();
-    Translation2d targetDirection = toGoal.div(distance);
     Logger.recordOutput("FiringManager/futurePos", new Pose2d(futurePos, new Rotation2d()));
-    Logger.recordOutput("FiringManager/adjustedDistance", distance);
+
+    // Get target vector
+    Translation2d vectorToGoal = givenTargetPosition.minus(futurePos);
+
+    // aim slightly behind the center of the hub so we don't hit the front
+    if (AreaManager.getZoneOfPosition(turretPosition) == Zone.ALLIANCE_ZONE) {
+      givenTargetPosition =
+          givenTargetPosition.plus(
+              new Translation2d(Units.inchesToMeters(3), 0).rotateBy(vectorToGoal.getAngle()));
+      vectorToGoal = givenTargetPosition.minus(turretPosition);
+    }
+
+    Logger.recordOutput("FiringManager/vectorToGoal", new Pose2d(vectorToGoal, new Rotation2d()));
+
+    double distanceToGivenTarget = vectorToGoal.getNorm();
+    Translation2d targetDirection = vectorToGoal.div(distanceToGivenTarget);
+
+    Logger.recordOutput("FiringManager/distanceToGivenTarget", distanceToGivenTarget);
+    Logger.recordOutput(
+        "FiringManager/targetDirection", new Pose2d(turretPosition, targetDirection.getAngle()));
 
     // Get FiringParameters based on distance
     FiringParameters baseline =
         isScoring
-            ? Constants.FiringManager.firingMapScoring.get(distance)
-            : Constants.FiringManager.firingMapPassing.get(distance);
+            ? Constants.FiringManager.firingMapScoring.get(distanceToGivenTarget)
+            : Constants.FiringManager.firingMapPassing.get(distanceToGivenTarget);
+
     // Build target velocity vector
-    double baselineVelocity = distance / baseline.getTimeOfFlightSec();
+    double baselineVelocity = distanceToGivenTarget / baseline.getTimeOfFlightSec();
     Translation2d targetVelocity = targetDirection.times(baselineVelocity);
 
     // Compensate for robot velocity
     Translation2d shotVelocity = targetVelocity.minus(robotVelocity);
-    Logger.recordOutput(
-        "FiringManager/calculatedShootingTarget",
-        new Pose2d(turretPosition.plus(shotVelocity), new Rotation2d()));
 
     // Get turret angle based on angle of target velocity vector
     Rotation2d turretAngle = new Rotation2d();
     try {
       turretAngle = shotVelocity.getAngle();
     } catch (Exception e) {
+      DriverStation.reportError(
+          "Error calculating turret angle in firingManager: " + e.getMessage(), false);
     }
+
+    Logger.recordOutput(
+        "FiringManager/calculatedShootingTarget",
+        new Pose2d(turretPosition.plus(shotVelocity), new Rotation2d()));
 
     double requiredVelocity = shotVelocity.getNorm();
     Logger.recordOutput("FiringManager/requiredVelocity", requiredVelocity);
 
     // Use table in reverse: get effective distance from required velocity
     double effectiveDistance = velocityToEffectiveDistance(requiredVelocity, isScoring);
-    Logger.recordOutput("FiringManager/effectiveDistance", effectiveDistance);
-    Logger.recordOutput("FiringManager/FiringSolution/turretAngle", turretAngle.getDegrees());
+    FiringParameters solutionParameters =
+        isScoring
+            ? Constants.FiringManager.firingMapScoring.get(effectiveDistance)
+            : Constants.FiringManager.firingMapPassing.get(effectiveDistance);
 
-    if (!Constants.shootOnTheMoveEnabled) {
+    FiringSolution solution =
+        new FiringSolution(
+            solutionParameters.getFlywheelRPM(),
+            solutionParameters.getHoodAngleDeg(),
+            turretAngle.getDegrees(),
+            solutionParameters.getTunnelRPS(),
+            solutionParameters.getIndexerRPS());
+
+    Logger.recordOutput("FiringManager/solution/flywheelRPM", solutionParameters.getFlywheelRPM());
+    Logger.recordOutput("FiringManager/solution/hoodAngle", solutionParameters.getHoodAngleDeg());
+    Logger.recordOutput("FiringManager/solution/tunnelRPS", solutionParameters.getTunnelRPS());
+    Logger.recordOutput("FiringManager/solution/indexerRPS", solutionParameters.getIndexerRPS());
+    Logger.recordOutput("FiringManager/solution/turretAngle", turretAngle.getDegrees());
+
+    if (Constants.firingManagerMode == Constants.SubsystemMode.TUNING) {
+      Logger.recordOutput("FiringManager/requestedTuning/flywheelSpeedRPM", flywheelSpeedRPM.get());
+      Logger.recordOutput("FiringManager/requestedTuning/hoodAngle", hoodAngle.get());
+      Logger.recordOutput("FiringManager/requestedTuning/tunnelSpeedRPS", tunnelSpeedRPS.get());
+      Logger.recordOutput("FiringManager/requestedTuning/indexerSpeedRPS", indexerSpeedRPS.get());
+      return new FiringSolution(
+          flywheelSpeedRPM.get(),
+          hoodAngle.get(),
+          adjustForTurretLock(vectorToGoal.getAngle().getDegrees()),
+          tunnelSpeedRPS.get(),
+          indexerSpeedRPS.get());
+
+    } else if (!Constants.shootOnTheMoveEnabled) {
       if (Constants.turretLocked) {
         return new FiringSolution(
             baseline.getFlywheelRPM(),
@@ -129,69 +152,17 @@ public class FiringManager {
         return new FiringSolution(
             baseline.getFlywheelRPM(),
             baseline.getHoodAngleDeg(),
-            toGoal.getAngle().getDegrees(),
+            vectorToGoal.getAngle().getDegrees(),
             baseline.getTunnelRPS(),
             baseline.getIndexerRPS());
       }
     }
-    return getHybridFiringSolution(
-        effectiveDistance,
-        requiredVelocity,
-        turretAngle,
-        baseline.getTunnelRPS(),
-        baseline.getIndexerRPS(),
-        isScoring);
-  }
 
-  /**
-   * Achieve target horizontal velocity by adjusting both flywheel RPM and hood angle (Equal
-   * combination of both)
-   */
-  private static FiringSolution getHybridFiringSolution(
-      double distance,
-      double requiredVelocity,
-      Rotation2d turretAngle,
-      double tunnelSpeedRPS,
-      double indexerSpeedRPS,
-      boolean isScoring) {
-    FiringParameters baseline =
-        isScoring
-            ? Constants.FiringManager.firingMapScoring.get(distance)
-            : Constants.FiringManager.firingMapPassing.get(distance);
-    double baselineVelocity = distance / baseline.getTimeOfFlightSec();
-    double velocityRatio = requiredVelocity / baselineVelocity;
-
-    // Split correction; sqrt gives equal contribution from both RPM and hood change
-    double rpmFactor = Math.sqrt(velocityRatio);
-    double hoodFactor = Math.sqrt(velocityRatio);
-
-    Logger.recordOutput("FiringManager/rpmFactor", rpmFactor);
-    Logger.recordOutput("FiringManager/hoodFactor", hoodFactor);
-
-    // Apply RPM scaling
-    double adjustedRPM = baseline.getFlywheelRPM() * rpmFactor;
-
-    double totalVelocity = baselineVelocity / Math.cos(Math.toRadians(baseline.getHoodAngleDeg()));
-
-    // Apply hood adjustment
-    double targetHorizFromHood = baselineVelocity * hoodFactor;
-    double ratio = MathUtil.clamp(targetHorizFromHood / totalVelocity, 0.0, 1.0);
-    double adjustedHood = Math.toDegrees(Math.acos(ratio));
-
-    return new FiringSolution(
-        adjustedRPM,
-        adjustedHood,
-        adjustForTurretLock(turretAngle.getDegrees()),
-        tunnelSpeedRPS,
-        indexerSpeedRPS);
+    return solution;
   }
 
   private static double adjustForTurretLock(double turretDeg) {
-    if (Constants.turretLocked) {
-      return Rotation2d.fromDegrees(turretDeg).rotateBy(Rotation2d.kCW_Pi_2).getDegrees();
-    } else {
-      return turretDeg;
-    }
+    return Rotation2d.fromDegrees(turretDeg).rotateBy(Rotation2d.kCW_Pi_2).getDegrees();
   }
 
   public static double velocityToEffectiveDistance(double velocity, boolean isScoring) {
