@@ -15,6 +15,7 @@ import edu.wpi.first.math.interpolation.InverseInterpolator;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotBase;
 import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetection.ObjectDetectionType;
+import frc.robot.util.firecontrol.ProjectileSimulator;
 
 /**
  * This class defines the runtime mode used by AdvantageKit. The mode is always "real" when running
@@ -86,6 +87,12 @@ public final class Constants {
   // to avoid starvation of critical processes
   public static final boolean realTimeCommandScheduler = false;
 
+  public static class Robot {
+    public static final double lengthMeters = 0.811;
+    public static final double widthMeters = 0.908;
+    public static final double bumperHeightMeters = 0.1152611106;
+  }
+
   public static class Drive {
     public static final int gyroID = 0;
     public static boolean zeroTurnEncoders = false; // for initial swerve homing only
@@ -105,6 +112,7 @@ public final class Constants {
     public static final double stoppedMechanismRotationsPerSec = 0.1; // TODO
 
     public static final double motorToMechanismRatio = 12.0; // 10 inch wheel
+    public static final double shootRPS = 7.0;
   }
 
   public static class Tunnel {
@@ -122,6 +130,7 @@ public final class Constants {
     public static final double stoppedMechanismRotationsPerSec = 0.1; // TODO
     public static final double motorToMechanismRatio = 1.5; // 2 inch diameter
     public static final double minPercentVelocity = 0.95;
+    public static final double shootRPS = 35;
   }
 
   public static class Flywheel {
@@ -358,23 +367,35 @@ public final class Constants {
     public static final boolean alwaysTargetAllianceZone = true;
   }
 
+  public record FiringTarget(Translation2d translation, Translation2d forward) {}
+
   public static class FiringTargetTranslations {
     // Right/left are determined as view from blue alliance driver station
     // TODO get exact values
     public static class Red {
-      public static final Translation2d hubTranslation = FieldConstants.Red.hubTranslation;
-      public static final Translation2d allianceRightTranslation = new Translation2d(14.5, 1.75);
-      public static final Translation2d allianceLeftTranslation = new Translation2d(14.5, 6.25);
-      public static final Translation2d neutralRightTranslation = new Translation2d(8.25, 1.75);
-      public static final Translation2d neutralLeftTranslation = new Translation2d(8.25, 6.25);
+      public static final FiringTarget hubTarget =
+          new FiringTarget(FieldConstants.Red.hubTranslation, new Translation2d(1, 0));
+      public static final FiringTarget allianceRightTarget =
+          new FiringTarget(new Translation2d(14.5, 1.75), new Translation2d(-1, 0));
+      public static final FiringTarget allianceLeftTarget =
+          new FiringTarget(new Translation2d(14.5, 6.25), new Translation2d(-1, 0));
+      public static final FiringTarget neutralRightTarget =
+          new FiringTarget(new Translation2d(8.25, 1.75), new Translation2d(-1, 0));
+      public static final FiringTarget neutralLeftTarget =
+          new FiringTarget(new Translation2d(8.25, 6.25), new Translation2d(-1, 0));
     }
 
     public static class Blue {
-      public static final Translation2d hubTranslation = FieldConstants.Blue.hubTranslation;
-      public static final Translation2d allianceRightTranslation = new Translation2d(2, 1.75);
-      public static final Translation2d allianceLeftTranslation = new Translation2d(2, 6.25);
-      public static final Translation2d neutralRightTranslation = new Translation2d(8.25, 1.75);
-      public static final Translation2d neutralLeftTranslation = new Translation2d(8.25, 6.25);
+      public static final FiringTarget hubTarget =
+          new FiringTarget(FieldConstants.Blue.hubTranslation, new Translation2d(-1, 0));
+      public static final FiringTarget allianceRightTarget =
+          new FiringTarget(new Translation2d(2, 1.75), new Translation2d(1, 0));
+      public static final FiringTarget allianceLeftTarget =
+          new FiringTarget(new Translation2d(2, 6.25), new Translation2d(1, 0));
+      public static final FiringTarget neutralRightTarget =
+          new FiringTarget(new Translation2d(8.25, 1.75), new Translation2d(1, 0));
+      public static final FiringTarget neutralLeftTarget =
+          new FiringTarget(new Translation2d(8.25, 6.25), new Translation2d(1, 0));
     }
   }
 
@@ -400,6 +421,7 @@ public final class Constants {
   public static final class VisionGlobalPose {
     // TODO
     public static final boolean enableGlobalPoseTrigEstimation = false;
+    public static final double phaseDelayMs = 30.0; // TODO your vision pipeline latency
     // Camera names, must match names configured on coprocessor
     public static String frontRightName = "FrontRight";
     public static String frontLeftName = "FrontLeft";
@@ -482,5 +504,40 @@ public final class Constants {
     public static final double brightnessScalar = 0.5;
     public static final int ledStart = 0;
     public static final int ledEnd = 0;
+  }
+
+  public static class Shooter {
+
+    public static final double mechLatencyMs = 20.0; // TODO how long the mechanism takes to respond
+    public static final double maxTiltDeg =
+        5.0; // TODO suppress firing when chassis tilts past this (bumps/ramps)
+    public static final double headingSpeedScalar =
+        0.5; // TODO heading tolerance tightens with robot speed (0 to disable)
+    public static final double headingReferenceDistance =
+        2.0; // TODO heading tolerance scales with distance from hub
+  }
+
+  public static class ShotCalculator {
+    public static final double hoodAngle = 45.0;
+    public static final boolean useSimulatedShotTuning = false;
+
+    public static final ProjectileSimulator.SimParameters params =
+        new ProjectileSimulator.SimParameters(
+            0.215, // ball mass kg
+            0.1501, // ball diameter m
+            0.47, // drag coeff (smooth sphere)
+            0.2, // Magnus coeff
+            1.225, // air density
+            0.43, // exit height (m), floor to where the ball leaves the shooter
+            0.1016, // flywheel diameter (m), measure with calipers
+            1.83, // target height (m), from game manual
+            0.6, // TODO slip factor (0=no grip, 1=perfect), tune this on the real robot
+            hoodAngle, // launch angle from horizontal, measure from CAD
+            0.001, // sim timestep
+            1500,
+            6000,
+            25,
+            5.0 // RPM search range, iterations, max sim time
+            );
   }
 }

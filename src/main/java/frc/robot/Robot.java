@@ -4,6 +4,11 @@ import com.ctre.phoenix6.SignalLogger;
 import com.pathplanner.lib.commands.FollowPathCommand;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.revrobotics.util.StatusLogger;
+
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -13,6 +18,8 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.constants.Constants;
+import frc.robot.util.GeomUtil;
+import frc.robot.util.firecontrol.FuelPhysicsSim;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -76,6 +83,10 @@ public class Robot extends LoggedRobot {
 
   public static PathPlannerPath C_Depot_To_Outpost;
   public static PathPlannerPath C_Start_To_Depot;
+
+  private FuelPhysicsSim ballSim;
+
+  private Timer shotTimer;
 
   public Robot() {
     Logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME); // Set a metadata value
@@ -399,9 +410,37 @@ public class Robot extends LoggedRobot {
 
   /** This function is called once when the robot is first started up. */
   @Override
-  public void simulationInit() {}
+  public void simulationInit() {
+    ballSim = new FuelPhysicsSim("Sim/Fuel");
+    ballSim.enable();
+    ballSim.placeFieldBalls(); // spawns all the game pieces
+
+    // tell it about your robot
+    ballSim.configureRobot(
+        Constants.Robot.widthMeters,
+        Constants.Robot.lengthMeters,
+        Constants.Robot.bumperHeightMeters,
+        () -> robotContainer.getDrive().getRobotPose(),
+        () -> robotContainer.getDrive().getChassisSpeeds());
+    
+        shotTimer = new Timer();
+        shotTimer.start();
+  }
 
   /** This function is called periodically whilst in simulation. */
   @Override
-  public void simulationPeriodic() {}
+  public void simulationPeriodic() {
+    if (robotContainer.getShooter().shouldSimShoot()) {
+      if (shotTimer.hasElapsed(0.2)) {
+        shotTimer.restart();
+        // TODO launchBall(, );
+      }
+    }
+    ballSim.tick(); // runs physics, publishes ball positions to NT
+    
+  }
+
+  public void launchBall(Translation3d launchVelocity,double spinRPM) {
+    ballSim.launchBall(GeomUtil.pose2dToPose3d(new Pose2d(Constants.Turret.originToTurret, new Rotation2d()), 0.5).getTranslation(), launchVelocity, spinRPM);
+  }
 }

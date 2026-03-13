@@ -298,7 +298,7 @@ public class Drive extends SubsystemBase {
 
   /** Returns the measured chassis speeds of the robot. */
   @AutoLogOutput(key = "SwerveChassisSpeeds/Measured")
-  private ChassisSpeeds getChassisSpeeds() {
+  public ChassisSpeeds getChassisSpeeds() {
     return kinematics.toChassisSpeeds(getModuleStates());
   }
 
@@ -383,9 +383,12 @@ public class Drive extends SubsystemBase {
     };
   }
 
-  public Translation2d getVelocity() {
-    return new Translation2d(
-        getChassisSpeeds().vxMetersPerSecond, getChassisSpeeds().vyMetersPerSecond);
+  public ChassisSpeeds getRobotVelocity() {
+    return getChassisSpeeds();
+  }
+
+  public ChassisSpeeds getFieldVelocity() {
+    return ChassisSpeeds.fromRobotRelativeSpeeds(getChassisSpeeds(), getRotation());
   }
 
   public Pose2d getPoseAtTimestamp(double timestampSeconds) {

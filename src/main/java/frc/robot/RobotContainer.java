@@ -463,4 +463,12 @@ public class RobotContainer {
     tunnel.enableBrakeMode(brake);
     turret.setBrakeMode(brake);
   }
+
+  public Drive getDrive() {
+    return drive;
+  }
+
+  public Shooter getShooter() {
+    return shooter;
+  }
 }

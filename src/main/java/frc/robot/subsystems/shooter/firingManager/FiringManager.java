@@ -5,8 +5,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import frc.robot.Robot;
 import frc.robot.constants.Constants;
 import frc.robot.constants.Constants.FiringParameters;
 import frc.robot.subsystems.shooter.areaManager.AreaManager;
@@ -194,71 +192,6 @@ public class FiringManager {
   }
 
   public static Translation2d getShootingTarget(Translation2d robotPosition) {
-    Zone zone = AreaManager.getZoneOfPosition(robotPosition);
-
-    if (Robot.alliance == Alliance.Blue) {
-
-      switch (zone) {
-        case ALLIANCE_ZONE:
-          Logger.recordOutput("FiringManager/targetZone", "Hub");
-          return Constants.FiringTargetTranslations.Blue.hubTranslation;
-        case RIGHT_NEUTRAL:
-          Logger.recordOutput("FiringManager/targetZone", "Alliance Right");
-          return Constants.FiringTargetTranslations.Blue.allianceRightTranslation;
-        case LEFT_NEUTRAL:
-          Logger.recordOutput("FiringManager/targetZone", "Alliance Left");
-          return Constants.FiringTargetTranslations.Blue.allianceLeftTranslation;
-        case RIGHT_OPPOSITION:
-          if (Constants.FiringManager.alwaysTargetAllianceZone) {
-            Logger.recordOutput("FiringManager/targetZone", "Alliance Right");
-            return Constants.FiringTargetTranslations.Blue.allianceRightTranslation;
-          } else {
-            Logger.recordOutput("FiringManager/targetZone", "Neutral Right");
-            return Constants.FiringTargetTranslations.Blue.neutralRightTranslation;
-          }
-        case LEFT_OPPOSITION:
-          if (Constants.FiringManager.alwaysTargetAllianceZone) {
-            Logger.recordOutput("FiringManager/targetZone", "Alliance Left");
-            return Constants.FiringTargetTranslations.Blue.allianceLeftTranslation;
-          } else {
-            Logger.recordOutput("FiringManager/targetZone", "Neutral Left");
-            return Constants.FiringTargetTranslations.Blue.neutralLeftTranslation;
-          }
-        default:
-          Logger.recordOutput("FiringManager/targetZone", "Invalid");
-          return new Translation2d();
-      }
-    } else {
-      switch (zone) {
-        case ALLIANCE_ZONE:
-          Logger.recordOutput("FiringManager/targetZone", "Hub");
-          return Constants.FiringTargetTranslations.Red.hubTranslation;
-        case RIGHT_NEUTRAL:
-          Logger.recordOutput("FiringManager/targetZone", "Alliance Right");
-          return Constants.FiringTargetTranslations.Red.allianceRightTranslation;
-        case LEFT_NEUTRAL:
-          Logger.recordOutput("FiringManager/targetZone", "Alliance Left");
-          return Constants.FiringTargetTranslations.Red.allianceLeftTranslation;
-        case RIGHT_OPPOSITION:
-          if (Constants.FiringManager.alwaysTargetAllianceZone) {
-            Logger.recordOutput("FiringManager/targetZone", "Alliance Right");
-            return Constants.FiringTargetTranslations.Red.allianceRightTranslation;
-          } else {
-            Logger.recordOutput("FiringManager/targetZone", "Neutral Right");
-            return Constants.FiringTargetTranslations.Red.neutralRightTranslation;
-          }
-        case LEFT_OPPOSITION:
-          if (Constants.FiringManager.alwaysTargetAllianceZone) {
-            Logger.recordOutput("FiringManager/targetZone", "Alliance Left");
-            return Constants.FiringTargetTranslations.Red.allianceLeftTranslation;
-          } else {
-            Logger.recordOutput("FiringManager/targetZone", "Neutral Left");
-            return Constants.FiringTargetTranslations.Red.neutralLeftTranslation;
-          }
-        default:
-          Logger.recordOutput("FiringManager/targetZone", "Invalid");
-          return new Translation2d();
-      }
-    }
+    return new Translation2d();
   }
 }
