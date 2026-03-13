@@ -23,6 +23,7 @@ import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -327,11 +328,20 @@ public class Drive extends SubsystemBase {
 
   /** Returns the current turret pose. */
   @AutoLogOutput(key = "Odometry/Turret")
-  public Translation2d getTurretTranslation() {
+  public Pose2d getTurretPose() {
     return poseEstimator
         .getEstimatedPosition()
-        .getTranslation()
-        .plus(Constants.Turret.originToTurret);
+        .transformBy(new Transform2d(Constants.Turret.originToTurret, new Rotation2d()));
+  }
+
+  /** Returns the current turret pose with a rotation */
+  public Pose2d getTurretPose(double rotationDeg) {
+    return new Pose2d(
+        poseEstimator
+            .getEstimatedPosition()
+            .transformBy(new Transform2d(Constants.Turret.originToTurret, new Rotation2d()))
+            .getTranslation(),
+        Rotation2d.fromDegrees(rotationDeg));
   }
 
   /** Returns the current odometry rotation. */

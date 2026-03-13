@@ -7,7 +7,6 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.Robot;
-import frc.robot.RobotContainer;
 import frc.robot.constants.Constants;
 import frc.robot.constants.Constants.FiringParameters;
 import frc.robot.subsystems.shooter.areaManager.AreaManager;
@@ -42,9 +41,9 @@ public class FiringManager {
       new LoggedTunableNumber("FiringManager/indexerSpeedRPS", 0);
 
   public static FiringSolution getFiringSolution(
-      Translation2d turretPosition, Translation2d robotVelocity, boolean isScoring) {
+      Pose2d turretPosition, Translation2d robotVelocity, boolean isScoring) {
 
-    Translation2d givenTargetPosition = getShootingTarget(turretPosition);
+    Translation2d givenTargetPosition = getShootingTarget(turretPosition.getTranslation());
 
     // Project future position based on velocity and latency compensation
     double latencyCompensation = 0;
@@ -56,18 +55,19 @@ public class FiringManager {
       }
     }
 
-    Translation2d futurePos = turretPosition.plus(robotVelocity.times(latencyCompensation));
+    Translation2d futurePos =
+        turretPosition.getTranslation().plus(robotVelocity.times(latencyCompensation));
     Logger.recordOutput("FiringManager/futurePos", new Pose2d(futurePos, new Rotation2d()));
 
     // Get target vector
     Translation2d vectorToGoal = givenTargetPosition.minus(futurePos);
 
     // aim slightly behind the center of the hub so we don't hit the front
-    if (AreaManager.getZoneOfPosition(turretPosition) == Zone.ALLIANCE_ZONE) {
+    if (AreaManager.getZoneOfPosition(turretPosition.getTranslation()) == Zone.ALLIANCE_ZONE) {
       givenTargetPosition =
           givenTargetPosition.plus(
               new Translation2d(Units.inchesToMeters(3), 0).rotateBy(vectorToGoal.getAngle()));
-      vectorToGoal = givenTargetPosition.minus(turretPosition);
+      vectorToGoal = givenTargetPosition.minus(turretPosition.getTranslation());
     }
 
     Logger.recordOutput("FiringManager/vectorToGoal", new Pose2d(vectorToGoal, new Rotation2d()));
@@ -77,7 +77,8 @@ public class FiringManager {
 
     Logger.recordOutput("FiringManager/distanceToGivenTarget", distanceToGivenTarget);
     Logger.recordOutput(
-        "FiringManager/targetDirection", new Pose2d(turretPosition, targetDirection.getAngle()));
+        "FiringManager/targetDirection",
+        new Pose2d(turretPosition.getTranslation(), targetDirection.getAngle()));
 
     // Get FiringParameters based on distance
     FiringParameters baseline =
@@ -103,7 +104,7 @@ public class FiringManager {
 
     Logger.recordOutput(
         "FiringManager/calculatedShootingTarget",
-        new Pose2d(turretPosition.plus(shotVelocity), new Rotation2d()));
+        new Pose2d(turretPosition.getTranslation().plus(shotVelocity), new Rotation2d()));
 
     double requiredVelocity = shotVelocity.getNorm();
     Logger.recordOutput("FiringManager/requiredVelocity", requiredVelocity);
