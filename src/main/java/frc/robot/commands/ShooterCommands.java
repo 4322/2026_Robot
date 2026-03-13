@@ -37,4 +37,15 @@ public class ShooterCommands {
     return Commands.run(() -> hood.trenchOverride(true))
         .finallyDo(() -> hood.trenchOverride(false));
   }
+
+  public static Command shootInTrench(Shooter shooter, Drive drive) {
+    return Commands.parallel(
+        DriveCommands.joystickDriveAtAngle(
+            drive,
+            () -> -RobotContainer.controller.getLeftY(),
+            () -> -RobotContainer.controller.getLeftX(),
+            () -> Rotation2d.fromDegrees(shooter.getTargetTurretAngleDeg()),
+            Constants.Turret.originToTurret)
+        );
+  }
 }
