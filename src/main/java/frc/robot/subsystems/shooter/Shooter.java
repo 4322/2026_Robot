@@ -205,7 +205,7 @@ public class Shooter extends SubsystemBase {
     Logger.recordOutput("Shooter/CurrentTurretPose", drive.getTurretPose(turret.getAngle()));
     Logger.recordOutput(
         "Shooter/TargetTurretPose",
-        GeomUtil.pose2dToPose3d(drive.getTurretPose(targetTurretAngleDeg), 0.4));
+        GeomUtil.pose2dToPose3d(drive.getTurretPose(targetTurretAngleDeg), 0.6));
     Logger.recordOutput(
         "Shooter/ComponentPoses",
         new Pose3d[] {
