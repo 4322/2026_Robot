@@ -22,7 +22,7 @@ import java.util.Map;
 import org.littletonrobotics.junction.Logger;
 
 public class Simulator extends SubsystemBase {
-  private static final RegressTests regressTest = RegressTests.TURRET;
+  private static final RegressTests regressTest = RegressTests.SUBSYSTEM_TEST_TELE;
   public static AutoName autoScenario;
   private TeleopScenario teleopScenario;
   private List<TeleAnomaly> teleAnomalies;
@@ -59,7 +59,8 @@ public class Simulator extends SubsystemBase {
     CONTROLLER_TEST2,
     SUBSYSTEM_TEST,
     AUTO_ROTATE,
-    TURRET
+    TURRET,
+    Slowly_Up_down
   }
 
   private enum EventType {
@@ -509,6 +510,27 @@ public class Simulator extends SubsystemBase {
               EventType.MOVE_JOYSTICK_TURN,
               new Pose2d(0.0, 0.3, Rotation2d.kZero)),
           new SimEvent(t += 20.0, "Final Movement", EventType.END_OF_SCENARIO));
+      case Slowly_Up_down -> List.of(
+          new SimEvent(
+              t += 0,
+              "Shoot on the move",
+              EventType.MOVE_JOYSTICK_DRIVE,
+              new Pose2d(0, 0.3, Rotation2d.k180deg)),
+          new SimEvent(
+              t += 0,
+              "Shoot on the move",
+              EventType.MOVE_JOYSTICK_DRIVE,
+              new Pose2d(0, -0.3, Rotation2d.k180deg)),
+          new SimEvent(
+              t += 0,
+              "Shoot on the move",
+              EventType.MOVE_JOYSTICK_DRIVE,
+              new Pose2d(0, 0.3, Rotation2d.k180deg)),
+          new SimEvent(
+              t += 0,
+              "Shoot on the move",
+              EventType.MOVE_JOYSTICK_DRIVE,
+              new Pose2d(0, -0.3, Rotation2d.k180deg)));
 
       default -> List.of();
     };

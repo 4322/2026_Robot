@@ -65,6 +65,8 @@ public class Turret {
   }
 
   public void requestAngle(Double angle, boolean safeToUnwind) {
+    Logger.recordOutput("Turret/State", state);
+    Logger.recordOutput("Turret/needToUnwind", needsToUnwind());
     this.desiredDeg = angle;
     if (Constants.turretLocked) {
       return;
@@ -93,8 +95,8 @@ public class Turret {
 
   public boolean needsToUnwind() {
     return (inputs.turretDegs >= Constants.Turret.maxUnwindLimitDeg
-        || inputs.turretDegs <= Constants.Turret.minUnwindLimitDeg
-        || !RobotContainer.isDriveInShootingArea());
+        || inputs.turretDegs <= Constants.Turret.minUnwindLimitDeg);
+    // return !RobotContainer.isDriveInShootingArea();
   }
 
   public boolean isAtGoal() {
