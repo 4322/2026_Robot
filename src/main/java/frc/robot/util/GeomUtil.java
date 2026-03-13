@@ -10,6 +10,7 @@ package frc.robot.util;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -145,5 +146,11 @@ public class GeomUtil {
   public static Translation2d[] vectorTranslationToTranslation2dList(
       Translation2d origin, Translation2d vector) {
     return new Translation2d[] {origin, origin.plus(vector)};
+  }
+
+  public static Pose3d pose2dToPose3d(Pose2d pose, double height) {
+    Translation3d translation = new Translation3d(pose.getX(), pose.getY(), height);
+    Rotation3d rotation = new Rotation3d(0, 0, pose.getRotation().getRadians());
+    return new Pose3d(translation, rotation);
   }
 }

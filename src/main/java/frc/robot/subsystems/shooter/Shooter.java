@@ -1,5 +1,9 @@
 package frc.robot.subsystems.shooter;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
@@ -15,6 +19,7 @@ import frc.robot.subsystems.shooter.spindexer.Spindexer;
 import frc.robot.subsystems.shooter.tunnel.Tunnel;
 import frc.robot.subsystems.shooter.turret.Turret;
 import frc.robot.subsystems.vision.visionGlobalPose.VisionGlobalPose;
+import frc.robot.util.GeomUtil;
 import frc.robot.util.HubShiftUtil;
 import org.littletonrobotics.junction.Logger;
 
@@ -198,7 +203,18 @@ public class Shooter extends SubsystemBase {
     Logger.recordOutput("Shooter/TargetTunnelSpeedRPS", targetTunnelSpeedRPS);
     Logger.recordOutput("Shooter/TargetIndexerSpeedRPS", targetIndexerSpeedRPS);
     Logger.recordOutput("Shooter/CurrentTurretPose", drive.getTurretPose(turret.getAngle()));
-    Logger.recordOutput("Shooter/TargetTurretPose", drive.getTurretPose(targetTurretAngleDeg));
+    Logger.recordOutput(
+        "Shooter/TargetTurretPose",
+        GeomUtil.pose2dToPose3d(drive.getTurretPose(targetTurretAngleDeg), 0.4));
+    Logger.recordOutput(
+        "Shooter/ComponentPoses",
+        new Pose3d[] {
+          GeomUtil.pose2dToPose3d(
+              new Pose2d(
+                  Constants.Turret.originToTurret,
+                  new Rotation2d(Units.degreesToRadians(targetTurretAngleDeg) - 4 * Math.PI / 3)),
+              0.22)
+        });
   }
 
   private void calculateFiringSolution() {
