@@ -205,7 +205,7 @@ public final class Constants {
   }
 
   public static class Control {
-    public static final int toggle1ButtonNumber = 1; // TODO set these
+    public static final int toggle1ButtonNumber = 1;
     public static final int toggle4ButtonNumber = 4;
     public static final int button3ButtonNumber = 5;
     public static final int toggle3ButtonNumber = 3;
@@ -214,11 +214,12 @@ public final class Constants {
   public class Rollers {
     public static final double voltageIntake = 6;
     public static final double voltageEject = -6;
-    public static final int motorId = 1;
+    public static final int leaderMotorId = 1;
+    public static final int followerMotorId = 5;
     public static final double statorCurrentLimit = 60;
     public static final double supplyCurrentLimit = 40;
-    public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
-    public static final InvertedValue motorInvert = InvertedValue.Clockwise_Positive;
+    public static final NeutralModeValue neutralMode = NeutralModeValue.Coast;
+    public static final InvertedValue leaderMotorInvert = InvertedValue.Clockwise_Positive;
     public static final double voltageIdle = 0;
   }
 

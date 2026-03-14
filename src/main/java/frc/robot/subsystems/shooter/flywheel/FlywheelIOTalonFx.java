@@ -40,11 +40,8 @@ public class FlywheelIOTalonFx implements FlywheelIO {
     config.Slot0.kI = Constants.Flywheel.kI;
     config.Slot0.kD = Constants.Flywheel.kD;
 
-    StatusCode configStatus = motor.getConfigurator().apply(config);
-
-    // Use a valid control to initialize the follower motor (set to zero velocity for now).
-    // Replace with a proper follower call if/when the correct Fo, nullllower constructor or API is
-    // available.
+    StatusCode leaderConfigStatus = motor.getConfigurator().apply(config);
+    StatusCode followerConfigStatus = motor.getConfigurator().apply(config);
     StatusCode followerMotorSetStatus =
         followerMotor.setControl(new Follower(motor.getDeviceID(), MotorAlignmentValue.Opposed));
 
@@ -64,17 +61,27 @@ public class FlywheelIOTalonFx implements FlywheelIO {
       }
     }
 
-    if (configStatus != StatusCode.OK) {
+    if (leaderConfigStatus != StatusCode.OK) {
       DriverStation.reportError(
-          "Talon " + motor.getDeviceID() + " error (Flywheel): " + configStatus.getDescription(),
+          "Talon "
+              + motor.getDeviceID()
+              + " config error (Flywheel Leader): "
+              + leaderConfigStatus.getDescription(),
           false);
     }
-
+    if (followerConfigStatus != StatusCode.OK) {
+      DriverStation.reportError(
+          "Talon "
+              + followerMotor.getDeviceID()
+              + " config error (Flywheel Follower): "
+              + followerConfigStatus.getDescription(),
+          false);
+    }
     if (followerMotorSetStatus != StatusCode.OK) {
       DriverStation.reportError(
           "Talon "
               + followerMotor.getDeviceID()
-              + " set error (Flywheel Follower): "
+              + " set follower error (Flywheel Follower): "
               + followerMotorSetStatus.getDescription(),
           false);
     }
