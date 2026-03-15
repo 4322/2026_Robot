@@ -42,19 +42,19 @@ public final class Constants {
   }
 
   public static SubsystemMode driveMode = SubsystemMode.NORMAL;
-  public static final SubsystemMode flywheelMode = SubsystemMode.DISABLED;
-  public static final SubsystemMode hoodMode = SubsystemMode.DISABLED;
-  public static final SubsystemMode spindexerMode = SubsystemMode.DISABLED;
-  public static final SubsystemMode tunnelMode = SubsystemMode.DISABLED;
+  public static final SubsystemMode flywheelMode = SubsystemMode.NORMAL;
+  public static final SubsystemMode hoodMode = SubsystemMode.NORMAL;
+  public static final SubsystemMode spindexerMode = SubsystemMode.NORMAL;
+  public static final SubsystemMode tunnelMode = SubsystemMode.NORMAL;
   public static SubsystemMode turretMode = SubsystemMode.NORMAL;
-  public static final SubsystemMode deployerMode = SubsystemMode.DISABLED;
-  public static final SubsystemMode rollerMode = SubsystemMode.DISABLED;
-  public static final SubsystemMode intakeMode = SubsystemMode.DISABLED;
+  public static final SubsystemMode deployerMode = SubsystemMode.NORMAL;
+  public static final SubsystemMode rollerMode = SubsystemMode.NORMAL;
+  public static final SubsystemMode intakeMode = SubsystemMode.NORMAL;
   public static final SubsystemMode climberMode = SubsystemMode.DISABLED;
   public static final SubsystemMode ledMode = SubsystemMode.DISABLED;
-  public static final SubsystemMode visionGlobalPose = SubsystemMode.DISABLED;
+  public static final SubsystemMode visionGlobalPose = SubsystemMode.NORMAL;
   public static final SubsystemMode visionObjectDetection = SubsystemMode.DISABLED;
-  public static final SubsystemMode firingManagerMode = SubsystemMode.DISABLED;
+  public static final SubsystemMode firingManagerMode = SubsystemMode.NORMAL;
   public static final boolean turretLocked = false;
   public static boolean shootOnTheMoveEnabled = false;
   public static final boolean frontRightCameraEnable = true;
