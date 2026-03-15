@@ -1,6 +1,7 @@
 package frc.robot.subsystems.shooter.turret;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.util.Units;
 import frc.robot.RobotContainer;
 import frc.robot.constants.Constants;
 import frc.robot.util.ClockUtil;
@@ -23,54 +24,65 @@ public class Turret {
   public Turret(TurretIO io) {
     this.io = io;
     io.updateInputs(inputs);
-    io.setPosition(getRotation());
+    io.setPosition(getRotation()); // busted
+    io.setPosition(0.5); // manual homing to the rear
   }
 
   public void periodic() {
     io.updateInputs(inputs);
     Logger.processInputs("Turret", inputs);
     Logger.recordOutput("Turret/State", state);
+    Logger.recordOutput("Turret/needToUnwind", needsToUnwind());
+
     switch (Constants.turretMode) {
       case DISABLED -> {}
       case TUNING -> {}
       case NORMAL -> {
         switch (state) {
-          case DISABLED -> {
-            break;
-          }
-          case UNWIND -> {
-            if (desiredDeg >= Constants.Turret.maxUnwindLimitDeg) {
-              desiredDeg = (desiredDeg - 360);
-            } else if (desiredDeg <= Constants.Turret.minUnwindLimitDeg) {
-              desiredDeg = (desiredDeg + 360);
-            } else {
-              desiredDeg = 0.0;
+            /*
+            case DISABLED -> {
+              break;
             }
-            if (!needsToUnwind()
-                && (isAtGoal() || (inputs.turretDegs >= -180 && inputs.turretDegs <= 180))) {
-              state = turretState.SET_TURRET_ANGLE;
+            case UNWIND -> {
+              if (desiredDeg >= Constants.Turret.maxUnwindLimitDeg) {
+                desiredDeg = (desiredDeg - 360);
+              } else if (desiredDeg <= Constants.Turret.minUnwindLimitDeg) {
+                desiredDeg = (desiredDeg + 360);
+              } else {
+                desiredDeg = 0.0;
+              }
+              if (!needsToUnwind()
+                  && (isAtGoal() || (inputs.turretDegs >= -180 && inputs.turretDegs <= 180))) {
+                state = turretState.SET_TURRET_ANGLE;
+              }
             }
-          }
-          case SET_TURRET_ANGLE -> {
-            if (needsToUnwind()) {
-              state = turretState.UNWIND;
-            }
-            if (desiredDeg != null) {
-              io.setAngle(desiredDeg);
-            }
-          }
+            case SET_TURRET_ANGLE -> {
+              if (needsToUnwind()) {
+                state = turretState.UNWIND;
+              }
+              if (desiredDeg != null) {
+                io.setAngle(desiredDeg);
+              }
+            } */
         }
       }
     }
   }
 
   public void requestAngle(Double angle, boolean safeToUnwind) {
-    Logger.recordOutput("Turret/State", state);
-    Logger.recordOutput("Turret/needToUnwind", needsToUnwind());
     this.desiredDeg = angle;
+    Logger.recordOutput("Turret/desiredDeg", desiredDeg);
     if (Constants.turretLocked) {
       return;
     }
+    double diffFromMid =
+        Units.radiansToDegrees(
+            MathUtil.angleModulus(
+                Units.degreesToRadians(desiredDeg - Constants.Turret.midPointPhysicalDeg)));
+    desiredDeg = Constants.Turret.midPointPhysicalDeg + diffFromMid;
+    io.setAngle(desiredDeg);
+
+    /*
     if (desiredDeg != null) {
       if (needsToUnwind()) {
         state = turretState.UNWIND;
@@ -90,7 +102,8 @@ public class Turret {
     if (safeToUnwind && needsToUnwind() || desiredDeg == null) {
       desiredDeg = Constants.Turret.midPointPhysicalDeg;
     }
-    Logger.recordOutput("Turret/desiredDeg", desiredDeg);
+      */
+    Logger.recordOutput("Turret/adjustedDeg", desiredDeg);
   }
 
   public boolean needsToUnwind() {
@@ -151,8 +164,8 @@ public class Turret {
   }
 
   private double getRotation() {
-    int CANCoderOneMod = mod(inputs.encoderOneCount, Constants.Turret.CANCoderOneRatio);
-    int CANCoderTwoMod = mod(inputs.encoderTwoCount, Constants.Turret.CANCoderTwoRatio);
+    int CANCoderOneMod = mod(inputs.encoderOneCount, Constants.Turret.CANCoderTwoRatio);
+    int CANCoderTwoMod = mod(inputs.encoderTwoCount, Constants.Turret.CANCoderOneRatio);
     double turretFullRotations = mod((10 * CANCoderOneMod) + (36 * CANCoderTwoMod), 45);
     double turretFractionalRotations =
         inputs.encoderTwoCount

@@ -7,6 +7,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.Robot;
+import frc.robot.RobotContainer;
 import frc.robot.constants.Constants;
 import frc.robot.constants.Constants.FiringParameters;
 import frc.robot.subsystems.shooter.areaManager.AreaManager;
@@ -172,7 +173,13 @@ public class FiringManager {
   }
 
   private static double adjustForTurretLock(double turretDeg) {
-    return Rotation2d.fromDegrees(turretDeg).rotateBy(Rotation2d.kCW_Pi_2).getDegrees();
+    if (Constants.turretLocked) {
+      return Rotation2d.fromDegrees(turretDeg).rotateBy(Rotation2d.kCW_Pi_2).getDegrees();
+    } else {
+      return Rotation2d.fromDegrees(turretDeg)
+          .rotateBy(RobotContainer.drive.getRotation().unaryMinus())
+          .getDegrees();
+    }
   }
 
   public static double velocityToEffectiveDistance(double velocity, boolean isScoring) {

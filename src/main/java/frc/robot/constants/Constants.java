@@ -41,12 +41,12 @@ public final class Constants {
     TUNING
   }
 
-  public static SubsystemMode driveMode = SubsystemMode.DISABLED;
+  public static SubsystemMode driveMode = SubsystemMode.NORMAL;
   public static final SubsystemMode flywheelMode = SubsystemMode.DISABLED;
   public static final SubsystemMode hoodMode = SubsystemMode.DISABLED;
   public static final SubsystemMode spindexerMode = SubsystemMode.DISABLED;
   public static final SubsystemMode tunnelMode = SubsystemMode.DISABLED;
-  public static SubsystemMode turretMode = SubsystemMode.TUNING;
+  public static SubsystemMode turretMode = SubsystemMode.NORMAL;
   public static final SubsystemMode deployerMode = SubsystemMode.DISABLED;
   public static final SubsystemMode rollerMode = SubsystemMode.DISABLED;
   public static final SubsystemMode intakeMode = SubsystemMode.DISABLED;
@@ -155,7 +155,7 @@ public final class Constants {
     public static final double kI = 0;
     public static final double kD = 0;
 
-    public static final double motionMagicCruiseVelocity = 3.5;
+    public static final double motionMagicCruiseVelocity = 1.0; // slow for testing
     public static final double motionMagicAcceleration = 14.0;
 
     public static final double statorCurrentLimit = 60; // HACK set limits
@@ -164,19 +164,17 @@ public final class Constants {
     public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
     public static final double goalToleranceDeg = 1.0;
     public static final double goalToleranceLockedDeg = 2.0;
-    public static final int CANCoderOneRatio = 9;
-    public static final int CANCoderTwoRatio = 5;
+    public static final int CANCoderOneRatio = 5;
+    public static final int CANCoderTwoRatio = 9;
     public static final int CANCoderResolution = 4096;
     public static final double CANCoderOneOffset = 0.0; // TODO find offsets
     public static final double CANCoderTwoOffset = 0.0; // find offsets
     public static final double turretGearRatio = 27;
-    public static final double minPhysicalLimitDeg = -250.0; // HACK find limits
-    public static final double maxPhysicalLimitDeg = 250.0; // HACK find limits
+    public static final double minPhysicalLimitDeg = -150;
+    public static final double maxPhysicalLimitDeg = 510;
     public static final double midPointPhysicalDeg =
         (minPhysicalLimitDeg + maxPhysicalLimitDeg) / 2.0;
-    public static final double maxMidPointPhysicalDeg = midPointPhysicalDeg + 180.0;
-    public static final double minMidPointPhysicalDeg = midPointPhysicalDeg - 180.0;
-    public static final double unwindToleranceDeg = 10.0; // HACK need to find proper tolerance
+    public static final double unwindToleranceDeg = 30.0;
     public static final double minUnwindLimitDeg = minPhysicalLimitDeg + unwindToleranceDeg;
     public static final double maxUnwindLimitDeg = maxPhysicalLimitDeg - unwindToleranceDeg;
     public static final int CANCoderOneId = 1;

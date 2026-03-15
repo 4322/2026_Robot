@@ -39,6 +39,12 @@ public class TurretIOTalonFx implements TurretIO {
 
     config.HardwareLimitSwitch.ReverseLimitEnable = false;
     config.HardwareLimitSwitch.ForwardLimitEnable = false;
+    config.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
+    config.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
+    config.SoftwareLimitSwitch.ReverseSoftLimitThreshold =
+        Units.degreesToRotations(Constants.Turret.minPhysicalLimitDeg);
+    config.SoftwareLimitSwitch.ForwardSoftLimitThreshold =
+        Units.degreesToRotations(Constants.Turret.maxPhysicalLimitDeg);
 
     CANconfigOne.MagnetSensor.MagnetOffset = Constants.Turret.CANCoderOneOffset;
     CANconfigTwo.MagnetSensor.MagnetOffset = Constants.Turret.CANCoderTwoOffset;
@@ -86,8 +92,7 @@ public class TurretIOTalonFx implements TurretIO {
 
   @Override
   public void updateInputs(TurretIOInputs inputs) {
-    inputs.turretDegs =
-        Units.rotationsToDegrees(turretMotor.getPosition().getValueAsDouble()) * 360;
+    inputs.turretDegs = Units.rotationsToDegrees(turretMotor.getPosition().getValueAsDouble());
     inputs.encoderOneCount =
         (int)
             (CANcoderOne.getAbsolutePosition().getValueAsDouble()
@@ -111,9 +116,7 @@ public class TurretIOTalonFx implements TurretIO {
   @Override
   public void setAngle(double degs) {
     turretMotor.setControl(
-        new MotionMagicVoltage(Units.degreesToRotations(degs) * Constants.Turret.turretGearRatio)
-            .withEnableFOC(true)
-            .withSlot(0));
+        new MotionMagicVoltage(Units.degreesToRotations(degs)).withEnableFOC(true).withSlot(0));
   }
 
   @Override
