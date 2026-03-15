@@ -17,7 +17,6 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.autonomous.AutonomousSelector;
-import frc.robot.commands.AutoIntake;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.IntakeCommands;
 import frc.robot.commands.ShooterCommands;
@@ -414,7 +413,7 @@ public class RobotContainer {
 
     Disable Shoot - Right Bumper Toggle (Operator)
     TODO Vibrate when disable
-    
+
     */
 
     controller.leftTrigger().whileTrue(ShooterCommands.trenchOverride(hood));
@@ -430,7 +429,6 @@ public class RobotContainer {
     intake.setDefaultCommand(IntakeCommands.setIdle(intake));
 
     controller.leftBumper().toggleOnTrue(IntakeCommands.setIntaking(intake));
-
   }
 
   /**
