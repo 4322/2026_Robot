@@ -326,6 +326,13 @@ public class Drive extends SubsystemBase {
     return poseEstimator.getEstimatedPosition();
   }
 
+  public Translation2d getTurretPosition() {
+    return poseEstimator
+        .getEstimatedPosition()
+        .getTranslation()
+        .plus(Constants.Turret.originToTurret);
+  }
+
   /** Returns the current turret pose. */
   @AutoLogOutput(key = "Odometry/Turret")
   public Pose2d getTurretPose() {
