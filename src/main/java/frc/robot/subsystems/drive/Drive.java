@@ -331,7 +331,7 @@ public class Drive extends SubsystemBase {
   public Pose2d getTurretPose() {
     return poseEstimator
         .getEstimatedPosition()
-        .transformBy(new Transform2d(Constants.Turret.originToTurret, new Rotation2d()));
+        .transformBy(new Transform2d(Constants.Turret.originToTurret, Rotation2d.kZero));
   }
 
   /** Returns the current turret pose with a rotation */
@@ -339,7 +339,7 @@ public class Drive extends SubsystemBase {
     return new Pose2d(
         poseEstimator
             .getEstimatedPosition()
-            .transformBy(new Transform2d(Constants.Turret.originToTurret, new Rotation2d()))
+            .transformBy(new Transform2d(Constants.Turret.originToTurret, Rotation2d.kZero))
             .getTranslation(),
         Rotation2d.fromDegrees(rotationDeg));
   }

@@ -46,7 +46,7 @@ public class FiringManager {
 
     Translation2d givenTargetPosition = getShootingTarget(turretPosition.getTranslation());
     Logger.recordOutput(
-        "FiringManager/givenTargetPosition", new Pose2d(givenTargetPosition, new Rotation2d()));
+        "FiringManager/givenTargetPosition", new Pose2d(givenTargetPosition, Rotation2d.kZero));
 
     // Project future position based on velocity and latency compensation
     double latencyCompensation = 0;
@@ -114,7 +114,7 @@ public class FiringManager {
             turretPosition.getTranslation(), shotVelocity));
 
     // Get turret angle based on angle of target velocity vector
-    Rotation2d turretAngle = new Rotation2d();
+    Rotation2d turretAngle = Rotation2d.kZero;
     try {
       turretAngle = shotVelocity.getAngle();
     } catch (Exception e) {
@@ -124,7 +124,7 @@ public class FiringManager {
 
     Logger.recordOutput(
         "FiringManager/calculatedShootingTarget",
-        new Pose2d(turretPosition.getTranslation().plus(shotVelocity), new Rotation2d()));
+        new Pose2d(turretPosition.getTranslation().plus(shotVelocity), Rotation2d.kZero));
 
     double requiredVelocity = shotVelocity.getNorm();
     Logger.recordOutput("FiringManager/requiredVelocity", requiredVelocity);

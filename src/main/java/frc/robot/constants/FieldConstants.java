@@ -217,10 +217,10 @@ public class FieldConstants {
 
     RobotContainer.getField()
         .getObject("Red.hubTranslation")
-        .setPose(new Pose2d(Red.hubTranslation, new Rotation2d()));
+        .setPose(new Pose2d(Red.hubTranslation, Rotation2d.kZero));
     RobotContainer.getField()
         .getObject("Blue.hubTranslation")
-        .setPose(new Pose2d(Blue.hubTranslation, new Rotation2d()));
+        .setPose(new Pose2d(Blue.hubTranslation, Rotation2d.kZero));
 
     RobotContainer.getField()
         .getObject("Neutral.rightNeutral")
