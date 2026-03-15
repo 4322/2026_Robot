@@ -155,7 +155,7 @@ public final class Constants {
     public static final double kI = 0;
     public static final double kD = 0;
 
-    public static final double motionMagicCruiseVelocity = 1.0; // slow for testing
+    public static final double motionMagicCruiseVelocity = 3.5;
     public static final double motionMagicAcceleration = 14.0;
 
     public static final double statorCurrentLimit = 60; // HACK set limits
