@@ -37,4 +37,8 @@ public class ShooterCommands {
     return Commands.run(() -> hood.trenchOverride(true))
         .finallyDo(() -> hood.trenchOverride(false));
   }
+
+  public static Command unjam(Shooter shooter) {
+    return Commands.run(() -> shooter.requestUnjam(), shooter);
+  }
 }

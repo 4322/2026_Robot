@@ -105,6 +105,8 @@ public final class Constants {
     public static final double stoppedMechanismRotationsPerSec = 0.1; // TODO
 
     public static final double motorToMechanismRatio = 12.0; // 10 inch wheel
+    // Normally 7 RPS for shooting
+    public static final double unjamRPS = -4.0;
   }
 
   public static class Tunnel {
@@ -122,6 +124,8 @@ public final class Constants {
     public static final double stoppedMechanismRotationsPerSec = 0.1; // TODO
     public static final double motorToMechanismRatio = 1.5; // 2 inch diameter
     public static final double minPercentVelocity = 0.95;
+    // Normally 37 RPS for shooting
+    public static final double unjamRPS = -25.0;
   }
 
   public static class Flywheel {
