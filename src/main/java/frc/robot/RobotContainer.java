@@ -405,35 +405,32 @@ public class RobotContainer {
             () -> -controller.getLeftX(),
             () -> -controller.getRightX()));
 
-    controller.leftBumper().whileTrue(ShooterCommands.trenchOverride(hood));
+    /*
+    Intake - Left Bumper Toggle (Driver)
+    TODO Brief vibration
+    Trench Override Hood - Left Trigger while held (Driver)
+    TODO Unjam Intake - B while held (Driver)
+    Shoot (Locked turret) - Right Trigger while held (Driver)
+
+    Disable Shoot - Right Bumper Toggle (Operator)
+    TODO Vibrate when disable
+    
+    */
+
+    controller.leftTrigger().whileTrue(ShooterCommands.trenchOverride(hood));
 
     if (Constants.turretLocked) {
       shooter.setDefaultCommand(ShooterCommands.idle(shooter));
-      controller.rightBumper().whileTrue(ShooterCommands.aimAndShoot(shooter, drive));
+      controller.rightTrigger().whileTrue(ShooterCommands.aimAndShoot(shooter, drive));
     } else {
       shooter.setDefaultCommand(ShooterCommands.shoot(shooter));
     }
-    controller2.rightBumper().or(inNonShootingArea).whileTrue(ShooterCommands.idle(shooter));
-
-    controller2
-        .b()
-        .onTrue(
-            new AutoIntake(drive, visionObjectDetection, led, intake, false)
-                .until(() -> (!toggle4.getAsBoolean() || button3.getAsBoolean())));
-
-    controller.a().onTrue(new AutoIntake(drive, visionObjectDetection, led, intake, true));
+    controller2.rightBumper().or(inNonShootingArea).toggleOnTrue(ShooterCommands.idle(shooter));
 
     intake.setDefaultCommand(IntakeCommands.setIdle(intake));
 
-    controller.y().toggleOnTrue(IntakeCommands.setIntaking(intake));
+    controller.leftBumper().toggleOnTrue(IntakeCommands.setIntaking(intake));
 
-    controller.x().toggleOnTrue(IntakeCommands.setRetract(intake));
-
-    controller.povDown().whileTrue(IntakeCommands.setEject(intake));
-
-    controller.povUp().onTrue(ShooterCommands.idle(shooter));
-
-    controller2.povRight().whileTrue(IntakeCommands.setRetract(intake));
   }
 
   /**

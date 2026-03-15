@@ -1,0 +1,49 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "R_StartR_To_NeutralR_Intake_Disrupt"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "R_Half_SuperSweep_B"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "R_Half_SuperSweep_C"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "R_Half_SuperSweep_D"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "R_Half_SuperSweep_E"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "R_Half_SuperSweep_F"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}
