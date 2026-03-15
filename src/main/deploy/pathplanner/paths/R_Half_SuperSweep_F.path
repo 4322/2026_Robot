@@ -3,37 +3,37 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.440156918687589,
-        "y": 0.65
+        "x": 5.824593437945791,
+        "y": 3.45922967189729
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.7005974941292425,
-        "y": 0.65
+        "x": 5.785777460770328,
+        "y": -0.12477888730385134
       },
       "isLocked": false,
-      "linkedName": "R.Trench.Start"
+      "linkedName": "R.Half.SuperSweep.E"
     },
     {
       "anchor": {
-        "x": 7.8,
-        "y": 1.3
+        "x": 3.8320399429386587,
+        "y": 0.5221540656205423
       },
       "prevControl": {
-        "x": 7.890570613409417,
-        "y": 0.4589871611982881
+        "x": 6.199814550641939,
+        "y": 0.48333808844507875
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "R.Neutral.Intake"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.5665286812536942,
-      "maxWaypointRelativePos": 1.0,
+      "minWaypointRelativePos": 0.21880544056771176,
+      "maxWaypointRelativePos": 0.7202838557066815,
       "constraints": {
         "maxVelocity": 1.0,
         "maxAcceleration": 3.0,
@@ -55,7 +55,7 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0.0,
+    "velocity": 0,
     "rotation": 90.0
   },
   "reversed": false,
