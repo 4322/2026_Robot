@@ -22,6 +22,8 @@ public class Turret {
 
   public Turret(TurretIO io) {
     this.io = io;
+    io.updateInputs(inputs);
+    io.setPosition(getRotation());
   }
 
   public void periodic() {
@@ -53,10 +55,8 @@ public class Turret {
             if (needsToUnwind()) {
               state = turretState.UNWIND;
             }
-            if (desiredDeg == null) {
+            if (desiredDeg != null) {
               io.setAngle(desiredDeg);
-            } else {
-              io.setPosition(getRotation());
             }
           }
         }
@@ -96,7 +96,6 @@ public class Turret {
   public boolean needsToUnwind() {
     return (inputs.turretDegs >= Constants.Turret.maxUnwindLimitDeg
         || inputs.turretDegs <= Constants.Turret.minUnwindLimitDeg);
-    // return !RobotContainer.isDriveInShootingArea();
   }
 
   public boolean isAtGoal() {
@@ -108,8 +107,9 @@ public class Turret {
           Constants.Turret.goalToleranceLockedDeg);
     } else if (Constants.turretMode == Constants.SubsystemMode.DISABLED) {
       return true;
+    } else {
+      return MathUtil.isNear(desiredDeg, inputs.turretDegs, Constants.Turret.goalToleranceDeg);
     }
-    return MathUtil.isNear(desiredDeg, inputs.turretDegs, Constants.Turret.goalToleranceDeg);
   }
 
   public void setTurretAngleState() {
@@ -151,35 +151,16 @@ public class Turret {
   }
 
   private double getRotation() {
-    int CANCoderOneMod;
-    int CANCoderTwoMod;
-    int resolution = 4096;
-    int CANcoderOneRotations = 0;
-    int CANcoderTwoRotations = 0;
-    int prevRotationsOne = 0;
-    int prevRotationsTwo = 0;
-    double turretMod;
-    if (inputs.encoderOneRotations < prevRotationsOne - resolution / 2) {
-      CANcoderOneRotations++;
-    } else if (inputs.encoderOneRotations > prevRotationsOne + resolution / 2) {
-      CANcoderOneRotations--;
-    }
-    if (inputs.encoderTwoRotations < prevRotationsTwo - resolution / 2) {
-      CANcoderTwoRotations++;
-    } else if (inputs.encoderTwoRotations > prevRotationsTwo + resolution / 2) {
-      CANcoderTwoRotations--;
-    }
-
-    prevRotationsOne = (int) inputs.encoderOneRotations;
-    prevRotationsTwo = (int) inputs.encoderTwoRotations;
-
-    CANCoderOneMod = mod((int) CANcoderOneRotations, (int) Constants.Turret.CANCoderOneRatio);
-    CANCoderTwoMod = mod((int) CANcoderTwoRotations, (int) Constants.Turret.CANCoderTwoRatio);
-
-    turretMod = mod((10 * CANCoderOneMod) + (36 * CANCoderTwoMod), 45);
-
-    return turretMod
-        + (inputs.encoderOneRotations / (double) resolution / Constants.Turret.CANCoderTwoRatio);
+    int CANCoderOneMod = mod(inputs.encoderOneCount, Constants.Turret.CANCoderOneRatio);
+    int CANCoderTwoMod = mod(inputs.encoderTwoCount, Constants.Turret.CANCoderTwoRatio);
+    double turretFullRotations = mod((10 * CANCoderOneMod) + (36 * CANCoderTwoMod), 45);
+    double turretFractionalRotations =
+        inputs.encoderTwoCount
+            / (double) Constants.Turret.CANCoderResolution
+            / Constants.Turret.CANCoderTwoRatio;
+    Logger.recordOutput("Turret/fullRotations", turretFullRotations);
+    Logger.recordOutput("Turret/fractionalRotations", turretFractionalRotations);
+    return turretFullRotations + turretFractionalRotations;
   }
 
   private int mod(int a, int b) {

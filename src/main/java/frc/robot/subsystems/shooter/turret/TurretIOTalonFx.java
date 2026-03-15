@@ -6,6 +6,7 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -27,6 +28,8 @@ public class TurretIOTalonFx implements TurretIO {
     config.CurrentLimits.SupplyCurrentLimit = Constants.Turret.supplyCurrentLimit;
     config.MotorOutput.Inverted = Constants.Turret.motorInvert;
     config.MotorOutput.NeutralMode = Constants.Turret.neutralMode;
+    config.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
+    config.Feedback.SensorToMechanismRatio = Constants.Turret.turretGearRatio;
 
     config.Slot0.kS = Constants.Turret.kS;
     config.Slot0.kV = Constants.Turret.kV;
@@ -37,17 +40,17 @@ public class TurretIOTalonFx implements TurretIO {
     config.HardwareLimitSwitch.ReverseLimitEnable = false;
     config.HardwareLimitSwitch.ForwardLimitEnable = false;
 
-    config.Feedback.SensorToMechanismRatio = Constants.Turret.turretGearRatio;
-
     CANconfigOne.MagnetSensor.MagnetOffset = Constants.Turret.CANCoderOneOffset;
     CANconfigTwo.MagnetSensor.MagnetOffset = Constants.Turret.CANCoderTwoOffset;
+    CANconfigOne.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 1; // range 0 to 1.0
+    CANconfigTwo.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 1;
 
     config.MotionMagic.MotionMagicCruiseVelocity = Constants.Turret.motionMagicCruiseVelocity;
     config.MotionMagic.MotionMagicAcceleration = Constants.Turret.motionMagicAcceleration;
 
     StatusCode configStatus = turretMotor.getConfigurator().apply(config);
-    StatusCode CANcoderStatus = CANcoderOne.getConfigurator().apply(CANconfigOne);
-    StatusCode CANcoderStatusTwo = CANcoderTwo.getConfigurator().apply(CANconfigTwo);
+    StatusCode CANcoderOneStatus = CANcoderOne.getConfigurator().apply(CANconfigOne);
+    StatusCode CANcoderTwoStatus = CANcoderTwo.getConfigurator().apply(CANconfigTwo);
 
     if (configStatus != StatusCode.OK) {
       DriverStation.reportError(
@@ -57,31 +60,42 @@ public class TurretIOTalonFx implements TurretIO {
               + configStatus.getDescription(),
           false);
     }
-    if (CANcoderStatus != StatusCode.OK) {
+    if (CANcoderOneStatus != StatusCode.OK) {
       DriverStation.reportError(
           "CANCoderOne "
               + CANcoderOne.getDeviceID()
-              + " error (CANCoderOne): "
-              + CANcoderStatus.getDescription(),
+              + " error (Turret): "
+              + CANcoderOneStatus.getDescription(),
           false);
     }
-    if (CANcoderStatusTwo != StatusCode.OK) {
+    if (CANcoderTwoStatus != StatusCode.OK) {
       DriverStation.reportError(
           "CANCoderTwo "
               + CANcoderTwo.getDeviceID()
-              + " error (CANCoderTwo): "
-              + CANcoderStatusTwo.getDescription(),
+              + " error (Turret): "
+              + CANcoderTwoStatus.getDescription(),
           false);
+    }
+
+    try {
+      // wait for encoder positions to be received
+      Thread.sleep(100);
+    } catch (InterruptedException e) {
     }
   }
 
   @Override
   public void updateInputs(TurretIOInputs inputs) {
     inputs.turretDegs =
-        Units.rotationsToDegrees(turretMotor.getPosition().getValueAsDouble())
-            / Constants.Turret.turretGearRatio;
-    inputs.encoderOneRotations = CANcoderOne.getPosition().getValueAsDouble();
-    inputs.encoderTwoRotations = CANcoderTwo.getPosition().getValueAsDouble();
+        Units.rotationsToDegrees(turretMotor.getPosition().getValueAsDouble()) * 360;
+    inputs.encoderOneCount =
+        (int)
+            (CANcoderOne.getAbsolutePosition().getValueAsDouble()
+                * Constants.Turret.CANCoderResolution);
+    inputs.encoderTwoCount =
+        (int)
+            (CANcoderTwo.getAbsolutePosition().getValueAsDouble()
+                * Constants.Turret.CANCoderResolution);
     inputs.motorConnected = turretMotor.isConnected();
     inputs.motorRPS = turretMotor.getVelocity().getValueAsDouble();
     inputs.appliedVolts = turretMotor.getSupplyVoltage().getValueAsDouble();
