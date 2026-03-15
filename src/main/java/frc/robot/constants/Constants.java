@@ -152,7 +152,6 @@ public final class Constants {
     public static final double kS = 0.28;
     public static final double kV = 0;
     public static final double kP = 150;
-    public static final double mmkP = 15;
     public static final double kI = 0;
     public static final double kD = 0;
 
