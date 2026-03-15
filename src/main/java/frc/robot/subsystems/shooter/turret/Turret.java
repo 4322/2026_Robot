@@ -80,7 +80,9 @@ public class Turret {
             MathUtil.angleModulus(
                 Units.degreesToRadians(desiredDeg - Constants.Turret.midPointPhysicalDeg)));
     desiredDeg = Constants.Turret.midPointPhysicalDeg + diffFromMid;
-    io.setAngle(desiredDeg);
+    if (RobotContainer.intake.isExtended()) {
+      io.setAngle(desiredDeg);
+    }
 
     /*
     if (desiredDeg != null) {

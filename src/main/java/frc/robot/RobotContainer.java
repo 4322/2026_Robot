@@ -94,7 +94,7 @@ public class RobotContainer {
   private static Tunnel tunnel;
   private static Turret turret;
 
-  private static Intake intake;
+  public static Intake intake;
   private static LED led;
   private static Rollers rollers;
   private static Deployer deployer;

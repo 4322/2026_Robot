@@ -243,7 +243,7 @@ public final class Constants {
     public static final int CANCoderID = 2;
     public static final double sensorToMechanismRatio = 3.0;
     public static final double RotorToSensorRatio = 12.0;
-    public static final double tolerance = 0.2;
+    public static final double tolerance = 2.0;
     public static final double SesnorOffsetRotations = 0.39; // retract pos > 0.02 to avoid wrapping
   }
 

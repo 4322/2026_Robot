@@ -48,7 +48,9 @@ public class Intake extends SubsystemBase {
       }
       case INTAKING -> {
         deployer.setGoal(DeployerState.EXTEND);
-        rollers.setState(RollersState.INTAKE);
+        if (deployer.isExtended()) {
+          rollers.setState(RollersState.INTAKE);
+        }
       }
     }
     deployer.periodic();
@@ -61,6 +63,10 @@ public class Intake extends SubsystemBase {
 
   public IntakeState getState() {
     return state;
+  }
+
+  public boolean isExtended() {
+    return deployer.isExtended();
   }
 
   public void enableBrakeMode(boolean enable) {
