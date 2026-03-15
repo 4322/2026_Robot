@@ -16,16 +16,16 @@
     },
     {
       "anchor": {
-        "x": 3.5991440798858774,
-        "y": 0.6774179743223976
+        "x": 1.8136091298145502,
+        "y": 0.832681883024252
       },
       "prevControl": {
-        "x": 9.330970042796004,
-        "y": 0.13399429386590656
+        "x": 7.545435092724677,
+        "y": 0.2892582025677608
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "R.Shoot"
+      "linkedName": "R.Shoot.LT"
     }
   ],
   "rotationTargets": [
@@ -34,7 +34,7 @@
       "rotationDegrees": 180.0
     },
     {
-      "waypointRelativePos": 0.8974763406940063,
+      "waypointRelativePos": 0.9463722397476317,
       "rotationDegrees": 180.0
     }
   ],
@@ -65,7 +65,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": -33.69006752597982
   },
   "reversed": false,
   "folder": null,

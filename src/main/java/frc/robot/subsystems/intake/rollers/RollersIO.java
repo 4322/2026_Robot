@@ -6,13 +6,21 @@ import org.littletonrobotics.junction.AutoLog;
 public interface RollersIO {
   @AutoLog
   public static class RollersIOInputs {
-    public boolean connected = false;
-    public double statorCurrentAmps = 0.0;
-    public double busCurrentAmps = 0.0;
-    public double motorTempCelcius = 0.0;
-    public double motorRotationsPerSec = 0.0;
-    public double appliedVoltage = 0.0;
-    public double controllerTempCelcius = 0.0;
+    public boolean leaderConnected = false;
+    public double leaderStatorAmps = 0.0;
+    public double leaderBusAmps = 0.0;
+    public double leaderMotorTempCelcius = 0.0;
+    public double leaderRotationsPerSec = 0.0;
+    public double leaderVolts = 0.0;
+    public double leaderControllerTempCelcius = 0.0;
+
+    public boolean followerConnected = false;
+    public double followerStatorAmps = 0.0;
+    public double followerBusAmps = 0.0;
+    public double followerMotorTempCelcius = 0.0;
+    public double followerRotationsPerSec = 0.0;
+    public double followerVolts = 0.0;
+    public double followerControllerTempCelcius = 0.0;
   }
 
   public default void updateInputs(RollersIOInputs inputs) {}

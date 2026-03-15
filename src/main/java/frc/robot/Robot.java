@@ -275,25 +275,35 @@ public class Robot extends LoggedRobot {
   @Override
   public void robotPeriodic() {
 
-    /* roboRIO settings to optimize Java memory use:
+    /* roboRIO settings to control Java memory usage.
+
+      If running out of memory, especially on a roboRIO 1, use:
       echo "vm.overcommit_memory=1" >> /etc/sysctl.conf
       echo "vm.vfs_cache_pressure=1000" >> /etc/sysctl.conf
       echo "vm.swappiness=100" >> /etc/sysctl.conf
       sync
       power cycle the RIO
 
-      To restiore default settings, edit /etc/sysctl.conf to set the
+      If CPU usage is a bigger concern than memory, use these values:
+      echo "vm.overcommit_memory=2" >> /etc/sysctl.conf
+      echo "vm.vfs_cache_pressure=50" >> /etc/sysctl.conf
+      echo "vm.swappiness=30" >> /etc/sysctl.conf
+      sync
+      power cycle the RIO
+
+      To restiore the default settings, edit /etc/sysctl.conf to set the
       following values:
         vm.overcommit_memory=2
         vm.vfs_cache_pressure=100
         vm.swappiness=60
+        sync
         power cycle the RIO
 
       To stop the web server to save memory:
       /etc/init.d/systemWebServer stop; update-rc.d -f systemWebServer remove; sync
       chmod a-x /usr/local/natinst/etc/init.d/systemWebServer; sync
 
-      To restart the web server in order to image the RIO:
+      To restart the web server in order to image a roboRIO 1:
       chmod a+x /usr/local/natinst/etc/init.d/systemWebServer; sync
       power cycle the RIO
     */
