@@ -58,19 +58,19 @@ public class FiringManager {
       }
     }
 
-    Translation2d futurePos =
+    Translation2d futureTurretPos =
         turretPosition.getTranslation().plus(robotVelocity.times(latencyCompensation));
-    Logger.recordOutput("FiringManager/futurePos", new Pose2d(futurePos, new Rotation2d()));
+    Logger.recordOutput("FiringManager/futurePos", new Pose2d(futureTurretPos, Rotation2d.kZero));
 
     // Get target vector
-    Translation2d vectorToGoal = givenTargetPosition.minus(futurePos);
+    Translation2d vectorToGoal = givenTargetPosition.minus(futureTurretPos);
 
     // aim slightly behind the center of the hub so we don't hit the front
     if (AreaManager.getZoneOfPosition(turretPosition.getTranslation()) == Zone.ALLIANCE_ZONE) {
       givenTargetPosition =
           givenTargetPosition.plus(
               new Translation2d(Units.inchesToMeters(3), 0).rotateBy(vectorToGoal.getAngle()));
-      vectorToGoal = givenTargetPosition.minus(turretPosition.getTranslation());
+      vectorToGoal = givenTargetPosition.minus(futureTurretPos);
     }
 
     Logger.recordOutput(
@@ -136,14 +136,6 @@ public class FiringManager {
             ? Constants.FiringManager.firingMapScoring.get(effectiveDistance)
             : Constants.FiringManager.firingMapPassing.get(effectiveDistance);
 
-    FiringSolution solution =
-        new FiringSolution(
-            solutionParameters.getFlywheelRPM(),
-            solutionParameters.getHoodAngleDeg(),
-            turretAngle.getDegrees(),
-            solutionParameters.getTunnelRPS(),
-            solutionParameters.getIndexerRPS());
-
     Logger.recordOutput("FiringManager/solution/flywheelRPM", solutionParameters.getFlywheelRPM());
     Logger.recordOutput("FiringManager/solution/hoodAngle", solutionParameters.getHoodAngleDeg());
     Logger.recordOutput("FiringManager/solution/tunnelRPS", solutionParameters.getTunnelRPS());
@@ -162,25 +154,21 @@ public class FiringManager {
           tunnelSpeedRPS.get(),
           indexerSpeedRPS.get());
 
-    } else if (!Constants.shootOnTheMoveEnabled) {
-      if (Constants.turretLocked) {
-        return new FiringSolution(
-            baseline.getFlywheelRPM(),
-            baseline.getHoodAngleDeg(),
-            adjustForTurretLock(targetDirection.getAngle().getDegrees()),
-            baseline.getTunnelRPS(),
-            baseline.getIndexerRPS());
-      } else {
-        return new FiringSolution(
-            baseline.getFlywheelRPM(),
-            baseline.getHoodAngleDeg(),
-            adjustForTurretLock(givenTargetPosition.getAngle().getDegrees()),
-            baseline.getTunnelRPS(),
-            baseline.getIndexerRPS());
-      }
+    } else if (Constants.shootOnTheMoveEnabled) {
+      return new FiringSolution(
+          solutionParameters.getFlywheelRPM(),
+          solutionParameters.getHoodAngleDeg(),
+          adjustForTurretLock(turretAngle.getDegrees()),
+          solutionParameters.getTunnelRPS(),
+          solutionParameters.getIndexerRPS());
+    } else {
+      return new FiringSolution(
+          baseline.getFlywheelRPM(),
+          baseline.getHoodAngleDeg(),
+          adjustForTurretLock(targetDirection.getAngle().getDegrees()),
+          baseline.getTunnelRPS(),
+          baseline.getIndexerRPS());
     }
-
-    return solution;
   }
 
   private static double adjustForTurretLock(double turretDeg) {
