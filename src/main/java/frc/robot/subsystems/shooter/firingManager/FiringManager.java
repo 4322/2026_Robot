@@ -93,16 +93,6 @@ public class FiringManager {
             ? Constants.FiringManager.firingMapScoring.get(distanceToGivenTarget)
             : Constants.FiringManager.firingMapPassing.get(distanceToGivenTarget);
 
-    // hack to reduce CPU usage for practice
-    if (!Constants.shootOnTheMoveEnabled) {
-      return new FiringSolution(
-          baseline.getFlywheelRPM(),
-          baseline.getHoodAngleDeg(),
-          adjustForTurretLock(targetDirection.getAngle().getDegrees()),
-          baseline.getTunnelRPS(),
-          baseline.getIndexerRPS());
-    }
-
     // Build target velocity vector
     double baselineVelocity = distanceToGivenTarget / baseline.getTimeOfFlightSec();
     Translation2d targetVelocity = targetDirection.times(baselineVelocity);
