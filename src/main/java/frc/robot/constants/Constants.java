@@ -5,6 +5,7 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.ctre.phoenix6.signals.StripTypeValue;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -409,37 +410,37 @@ public final class Constants {
     public static String backRightName = "BackRight";
     public static String backLeftName = "BackLeft";
 
-    // Robot to camera transforms
-    // TODO
     public static Transform3d frontRightTransform =
-        new Transform3d(
-            new Translation3d(
-                Units.inchesToMeters(14.199859),
-                Units.inchesToMeters(-12.199859),
-                Units.inchesToMeters(21.455136)),
-            new Rotation3d(0, Units.degreesToRadians(-19.8534025106), Units.degreesToRadians(-45)));
+        new Transform3d(new Pose3d(), new Pose3d()
+            .plus(new Transform3d(new Translation3d(), new Rotation3d(0, 0, Units.degreesToRadians(-90))))
+            .plus(new Transform3d(new Translation3d(Units.inchesToMeters(13.633), Units.inchesToMeters(11.634), Units.inchesToMeters(21.12)), Rotation3d.kZero))
+            .plus(new Transform3d(new Translation3d(), new Rotation3d(0, 0, Units.degreesToRadians(45))))
+            .plus(new Transform3d(new Translation3d(), new Rotation3d(0, Units.degreesToRadians(70.147), 0)))
+            .plus(new Transform3d(new Translation3d(), new Rotation3d(0, 0, Units.degreesToRadians(90)))));
+
     public static Transform3d frontLeftTransform =
-        new Transform3d(
-            new Translation3d(
-                Units.inchesToMeters(14.199859),
-                Units.inchesToMeters(12.199859),
-                Units.inchesToMeters(21.455136)),
-            new Rotation3d(0, Units.degreesToRadians(-19.8534025106), Units.degreesToRadians(45)));
-    public static Transform3d backRightTransform =
-        new Transform3d(
-            new Translation3d(
-                Units.inchesToMeters(-14.199859),
-                Units.inchesToMeters(-12.199859),
-                Units.inchesToMeters(21.455136)),
-            new Rotation3d(
-                0, Units.degreesToRadians(-19.8534025106), Units.degreesToRadians(-135)));
+        new Transform3d(new Pose3d(), new Pose3d()
+            .plus(new Transform3d(new Translation3d(), new Rotation3d(0, 0, Units.degreesToRadians(-90))))
+            .plus(new Transform3d(new Translation3d(Units.inchesToMeters(-13.634), Units.inchesToMeters(11.633), Units.inchesToMeters(21.12)), Rotation3d.kZero))
+            .plus(new Transform3d(new Translation3d(), new Rotation3d(0, 0, Units.degreesToRadians(135))))
+            .plus(new Transform3d(new Translation3d(), new Rotation3d(0, Units.degreesToRadians(70.147), 0)))
+            .plus(new Transform3d(new Translation3d(), new Rotation3d(0, 0, Units.degreesToRadians(90)))));
+
     public static Transform3d backLeftTransform =
-        new Transform3d(
-            new Translation3d(
-                Units.inchesToMeters(-14.199859),
-                Units.inchesToMeters(12.199859),
-                Units.inchesToMeters(21.455136)),
-            new Rotation3d(0, Units.degreesToRadians(-19.8534025106), Units.degreesToRadians(135)));
+        new Transform3d(new Pose3d(), new Pose3d()
+            .plus(new Transform3d(new Translation3d(), new Rotation3d(0, 0, Units.degreesToRadians(-90))))
+            .plus(new Transform3d(new Translation3d(Units.inchesToMeters(13.634), Units.inchesToMeters(-11.633), Units.inchesToMeters(21.12)), Rotation3d.kZero))
+            .plus(new Transform3d(new Translation3d(), new Rotation3d(0, 0, Units.degreesToRadians(-45))))
+            .plus(new Transform3d(new Translation3d(), new Rotation3d(0, Units.degreesToRadians(70.147), 0)))
+            .plus(new Transform3d(new Translation3d(), new Rotation3d(0, 0, Units.degreesToRadians(90)))));
+
+    public static Transform3d backRightTransform =
+        new Transform3d(new Pose3d(), new Pose3d()
+            .plus(new Transform3d(new Translation3d(), new Rotation3d(0, 0, Units.degreesToRadians(-90))))
+            .plus(new Transform3d(new Translation3d(Units.inchesToMeters(-13.633), Units.inchesToMeters(-11.646), Units.inchesToMeters(21.12)), Rotation3d.kZero))
+            .plus(new Transform3d(new Translation3d(), new Rotation3d(0, 0, Units.degreesToRadians(-135))))
+            .plus(new Transform3d(new Translation3d(), new Rotation3d(0, Units.degreesToRadians(70.147), 0)))
+            .plus(new Transform3d(new Translation3d(), new Rotation3d(0, 0, Units.degreesToRadians(90))))); 
 
     // Basic filtering thresholds
     // TODO
