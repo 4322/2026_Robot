@@ -114,14 +114,6 @@ public class RobotContainer {
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> testCommandChooser;
 
-  boolean inhibitAutoShoot = false;
-
-  // Boolean suppliers
-
-  private final BooleanSupplier toggle4 = () -> controller2.povLeft().getAsBoolean();
-
-  private final BooleanSupplier button3 = () -> controller2.povDown().getAsBoolean();
-
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     switch (Constants.currentMode) {
@@ -376,7 +368,7 @@ public class RobotContainer {
 
     // Triggers
     inNonShootingArea =
-        new Trigger(() -> !AreaManager.isShootingArea(drive.getRobotPose().getTranslation()));
+        new Trigger(() -> !AreaManager.isShootingArea(drive.getTurretPose().getTranslation()));
 
     // Configure the button bindings
     configureButtonBindings();
@@ -426,7 +418,6 @@ public class RobotContainer {
     }
     controller2
         .rightBumper()
-        .or(inNonShootingArea)
         .toggleOnTrue(ShooterCommands.idle(shooter))
         .onTrue(
             Commands.run(
@@ -439,6 +430,11 @@ public class RobotContainer {
                       controller.setRumble(GenericHID.RumbleType.kLeftRumble, 0.0);
                     })
                 .onlyIf(() -> shooter.getState() != Shooter.ShooterState.IDLE));
+    
+    inNonShootingArea
+        .and(() -> !shooter.isInIdle())
+        .whileTrue(ShooterCommands.idle(shooter));
+        
 
     intake.setDefaultCommand(IntakeCommands.setIdle(intake));
 
