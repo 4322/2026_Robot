@@ -87,6 +87,14 @@ public class FieldConstants {
             new Translation2d(
                 blueLineX - Units.inchesToMeters(22.20),
                 centerLineY + Units.inchesToMeters(58.41 / 2)));
+
+    public static FieldRectangle2d towerZone =
+        new FieldRectangle2d(
+            new Translation2d(
+                0, centerLineY - Units.inchesToMeters(11.38) - Units.inchesToMeters(47.00 / 2)),
+            new Translation2d(
+                blueLineX - Units.inchesToMeters(115.05 + (47.00 / 2)),
+                centerLineY - Units.inchesToMeters(11.38) + Units.inchesToMeters(47.00 / 2)));
   }
 
   public static class Red {
@@ -153,6 +161,14 @@ public class FieldConstants {
             new Translation2d(
                 redLineX + Units.inchesToMeters(22.20 + 40),
                 centerLineY + Units.inchesToMeters(58.41 / 2)));
+    public static FieldRectangle2d towerZone =
+        new FieldRectangle2d(
+            new Translation2d(
+                fieldLength,
+                centerLineY + Units.inchesToMeters(11.38) - Units.inchesToMeters(47.00 / 2)),
+            new Translation2d(
+                redLineX + Units.inchesToMeters(115.05 + (47.00 / 2)),
+                centerLineY + Units.inchesToMeters(11.38) + Units.inchesToMeters(47.00 / 2)));
   }
 
   public static class Neutral {
@@ -228,6 +244,9 @@ public class FieldConstants {
     RobotContainer.getField()
         .getObject("Neutral.leftNeutral")
         .setPoses(Neutral.leftNeutral.getCornerPoses());
+
+    RobotContainer.getField().getObject("Red.towerZone").setPoses(Red.towerZone.getCornerPoses());
+    RobotContainer.getField().getObject("Blue.towerZone").setPoses(Blue.towerZone.getCornerPoses());
   }
 
   public static final double aprilTagWidth = Units.inchesToMeters(6.50);

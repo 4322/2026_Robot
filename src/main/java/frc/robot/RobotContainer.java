@@ -73,7 +73,6 @@ import frc.robot.subsystems.vision.visionGlobalPose.VisionGlobalPoseIOSim;
 import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetection;
 import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetectionIO;
 import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetectionIOPhoton;
-import java.util.function.BooleanSupplier;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -430,11 +429,8 @@ public class RobotContainer {
                       controller.setRumble(GenericHID.RumbleType.kLeftRumble, 0.0);
                     })
                 .onlyIf(() -> shooter.getState() != Shooter.ShooterState.IDLE));
-    
-    inNonShootingArea
-        .and(() -> !shooter.isInIdle())
-        .whileTrue(ShooterCommands.idle(shooter));
-        
+
+    inNonShootingArea.and(() -> !shooter.isInIdle()).whileTrue(ShooterCommands.idle(shooter));
 
     intake.setDefaultCommand(IntakeCommands.setIdle(intake));
 

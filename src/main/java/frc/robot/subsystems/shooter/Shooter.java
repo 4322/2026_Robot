@@ -307,10 +307,12 @@ public class Shooter extends SubsystemBase {
     Logger.recordOutput("Shooter/currentMethod", "requestUnjam(");
     state = ShooterState.UNJAM;
   }
+
   public void endIdle() {
     inIdle = false;
-}
-public boolean isInIdle() {
-  return inIdle;
-}
+  }
+
+  public boolean isInIdle() {
+    return inIdle;
+  }
 }
