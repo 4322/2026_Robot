@@ -140,14 +140,14 @@ public final class Constants {
     public static final double kP = 0;
     public static final double kI = 0;
     public static final double kD = 0;
-    public static final double allowedVelocityErrorRPS = 2.0;
-    public static final boolean canAndColorEnabled = false;
+
     public static final double motorToMechanismRatio = 1;
+    public static final double mechanismToleranceRPS = 2.0;
+    public static final int idleRPS = 15;
 
     public static final int canandcolorId = 0;
+    public static final boolean canAndColorEnabled = false;
     public static final double minFuelDetectionProximity = 0.2;
-    public static final double allowedVelocityErrorMechanismRPS = 0.2;
-    public static final int idleRPS = 10;
   }
 
   public static class Turret {
