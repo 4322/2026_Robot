@@ -152,7 +152,6 @@ public final class Constants {
 
   public static class Turret {
     public static final int motorId = 22;
-    // TODO set PID
     public static final double kS = 0.26;
     public static final double kV = 0;
     public static final double kP = 150;
@@ -171,8 +170,8 @@ public final class Constants {
     public static final int CANCoderOneRatio = 5;
     public static final int CANCoderTwoRatio = 9;
     public static final int CANCoderResolution = 4096;
-    public static final int CANCoderOneOffsetCount = 1; // in locked position
-    public static final int CANCoderTwoOffsetCount = 2; // in locked position
+    public static final int CANCoderOneOffsetCount = 3784; // in locked position
+    public static final int CANCoderTwoOffsetCount = 1194; // in locked position
     public static final double turretGearRatio = 27;
     public static final double minPhysicalLimitDeg = -150;
     public static final double maxPhysicalLimitDeg = 510;
