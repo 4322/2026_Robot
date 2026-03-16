@@ -10,6 +10,7 @@ public class Rollers {
 
   public enum RollersState {
     IDLE,
+    DEPLOYING,
     INTAKE,
     EJECT,
     DISABLED
@@ -32,8 +33,11 @@ public class Rollers {
         switch (state) {
           case DISABLED -> {
             if (DriverStation.isEnabled()) {
-              state = RollersState.IDLE;
+              state = RollersState.DEPLOYING;
             }
+          }
+          case DEPLOYING -> {
+            rollersIO.setVoltage(Constants.Rollers.voltageDeploy);
           }
           case IDLE -> {
             rollersIO.setVoltage(Constants.Rollers.voltageIdle);
