@@ -38,6 +38,7 @@ public class Shooter extends SubsystemBase {
     PRESHOOT, // Flywheel gets up to speed; Turret/hood aim
     SHOOT, // Spindexer and tunnel get up to speed
     TRENCH,
+    UNJAM
   }
 
   private ShooterState state = ShooterState.DISABLED;
@@ -203,6 +204,7 @@ public class Shooter extends SubsystemBase {
         }
       }
       case PRESHOOT -> {
+        spindexer.requestIdle();
         flywheel.requestGoal(targetFlywheelSpeedRPS);
         hood.requestGoal(targetHoodAngleDeg);
         turret.requestAngle(targetTurretAngleDeg, true);
@@ -214,7 +216,16 @@ public class Shooter extends SubsystemBase {
         tunnel.requestGoal(targetTunnelSpeedRPS);
         if (tunnel.getVelocity() > Constants.Tunnel.minPercentVelocity * targetTunnelSpeedRPS) {
           spindexer.requestGoal(targetIndexerSpeedRPS);
+        } else {
+          spindexer.requestIdle();
         }
+      }
+      case UNJAM -> {
+        flywheel.requestGoal(targetFlywheelSpeedRPS);
+        hood.requestGoal(targetHoodAngleDeg);
+        turret.requestAngle(targetTurretAngleDeg, false);
+        tunnel.requestGoal(Constants.Tunnel.unjamRPS);
+        spindexer.requestGoal(Constants.Spindexer.unjamRPS);
       }
     }
 
@@ -307,6 +318,7 @@ public class Shooter extends SubsystemBase {
     if (Constants.firingManagerMode == Constants.SubsystemMode.TUNING) {
       return;
     }
+    // If in alliance zone and shift not active
     if (AreaManager.getZoneOfPosition(drive.getRobotPose().getTranslation()) == Zone.ALLIANCE_ZONE
         && !HubShiftUtil.getShiftedShiftInfo().active()) {
       if (Constants.turretLocked) {
@@ -324,8 +336,10 @@ public class Shooter extends SubsystemBase {
       }
 
     } else {
+      // Otherwise start shooting sequence
       if (state == ShooterState.PRESHOOT
           || state == ShooterState.IDLE
+          || state == ShooterState.UNJAM
           || (state == ShooterState.UNWIND && unwindComplete)) {
         unwindComplete = false;
         state = ShooterState.PRESHOOT;
@@ -353,6 +367,11 @@ public class Shooter extends SubsystemBase {
       unwindComplete = false;
       state = ShooterState.UNWIND;
     }
+  }
+
+  public void requestUnjam() {
+    Logger.recordOutput("Shooter/currentMethod", "requestUnjam(");
+    state = ShooterState.UNJAM;
   }
 
   private FiringTarget getShootingTarget(Translation2d robotPosition) {

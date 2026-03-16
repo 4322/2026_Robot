@@ -82,6 +82,12 @@ public class Robot extends LoggedRobot {
   public static PathPlannerPath C_Depot_To_Outpost;
   public static PathPlannerPath C_Start_To_Depot;
 
+  public static PathPlannerPath R_Half_SuperSweep_B;
+  public static PathPlannerPath R_Half_SuperSweep_C;
+  public static PathPlannerPath R_Half_SuperSweep_D;
+  public static PathPlannerPath R_Half_SuperSweep_E;
+  public static PathPlannerPath R_Half_SuperSweep_F;
+
   private FuelPhysicsSim ballSim;
 
   private Timer shotTimer;
@@ -238,6 +244,12 @@ public class Robot extends LoggedRobot {
       R_NeutralRMid_To_ShootR_LT = PathPlannerPath.fromPathFile("R_NeutralRMid_To_ShootR_LT");
       R_Neutral_Mid_To_ShootR_LT = PathPlannerPath.fromPathFile("R_Neutral_Mid_To_ShootR_LT");
 
+      R_Half_SuperSweep_B = PathPlannerPath.fromPathFile("R_Half_SuperSweep_B");
+      R_Half_SuperSweep_C = PathPlannerPath.fromPathFile("R_Half_SuperSweep_C");
+      R_Half_SuperSweep_D = PathPlannerPath.fromPathFile("R_Half_SuperSweep_D");
+      R_Half_SuperSweep_E = PathPlannerPath.fromPathFile("R_Half_SuperSweep_E");
+      R_Half_SuperSweep_F = PathPlannerPath.fromPathFile("R_Half_SuperSweep_F");
+
       L_NeutralL_Intake_Mid_Flip = R_NeutralR_Intake_Mid_Flip.mirrorPath();
       L_NeutralLMid_To_ShootL = R_NeutralRMid_To_ShootR.mirrorPath();
       L_NeutralL_Intake_To_Mid = R_NeutralR_Intake_To_Mid.mirrorPath();
@@ -278,6 +290,12 @@ public class Robot extends LoggedRobot {
     StatusLogger.disableAutoLogging(); // disable REV logging
     SignalLogger.stop(); // disable CTRE logging
     CommandScheduler.getInstance().schedule(FollowPathCommand.warmupCommand());
+
+    try {
+      // wait for cameras to connect due to high CPU
+      Thread.sleep(5000);
+    } catch (InterruptedException e) {
+    }
   }
 
   /** This function is called periodically during all modes. */

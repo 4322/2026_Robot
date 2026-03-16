@@ -47,15 +47,15 @@ public final class Constants {
   public static final SubsystemMode hoodMode = SubsystemMode.NORMAL;
   public static final SubsystemMode spindexerMode = SubsystemMode.NORMAL;
   public static final SubsystemMode tunnelMode = SubsystemMode.NORMAL;
-  public static SubsystemMode turretMode = SubsystemMode.DISABLED;
+  public static SubsystemMode turretMode = SubsystemMode.NORMAL;
   public static final SubsystemMode deployerMode = SubsystemMode.NORMAL;
   public static final SubsystemMode rollerMode = SubsystemMode.NORMAL;
   public static final SubsystemMode intakeMode = SubsystemMode.NORMAL;
-  public static final SubsystemMode climberMode = SubsystemMode.NORMAL;
+  public static final SubsystemMode climberMode = SubsystemMode.DISABLED;
   public static final SubsystemMode ledMode = SubsystemMode.DISABLED;
   public static final SubsystemMode visionGlobalPose = SubsystemMode.NORMAL;
   public static final SubsystemMode visionObjectDetection = SubsystemMode.DISABLED;
-  public static final SubsystemMode firingManagerMode = SubsystemMode.NORMAL;
+  public static final SubsystemMode firingManagerMode = SubsystemMode.TUNING;
   public static final boolean turretLocked = false;
   public static boolean shootOnTheMoveEnabled = true;
   public static final boolean frontRightCameraEnable = true;
@@ -112,6 +112,8 @@ public final class Constants {
     public static final double stoppedMechanismRotationsPerSec = 0.1; // TODO
 
     public static final double motorToMechanismRatio = 12.0; // 10 inch wheel
+    // Normally 7 RPS for shooting
+    public static final double unjamRPS = -4.0;
     public static final double shootRPS = 7.0;
   }
 
@@ -145,20 +147,19 @@ public final class Constants {
     public static final double kP = 0;
     public static final double kI = 0;
     public static final double kD = 0;
-    public static final double allowedVelocityErrorRPS = 2.0;
-    public static final boolean canAndColorEnabled = false;
+
     public static final double motorToMechanismRatio = 1;
+    public static final double mechanismToleranceRPS = 2.0;
+    public static final int idleRPS = 15;
 
     public static final int canandcolorId = 0;
+    public static final boolean canAndColorEnabled = false;
     public static final double minFuelDetectionProximity = 0.2;
-    public static final double allowedVelocityErrorMechanismRPS = 0.2;
-    public static final int idleRPS = 10;
   }
 
   public static class Turret {
     public static final int motorId = 22;
-    // TODO set PID
-    public static final double kS = 0.28;
+    public static final double kS = 0.26;
     public static final double kV = 0;
     public static final double kP = 150;
     public static final double kI = 0;
@@ -173,18 +174,17 @@ public final class Constants {
     public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
     public static final double goalToleranceDeg = 1.0;
     public static final double goalToleranceLockedDeg = 2.0;
-    public static final double CANCoderOneRatio = 9.0;
-    public static final double CANCoderTwoRatio = 5.0;
-    public static final double CANCoderOneOffset = 0.0; // TODO find offsets
-    public static final double CANCoderTwoOffset = 0.0; // find offsets
+    public static final int CANCoderOneRatio = 5;
+    public static final int CANCoderTwoRatio = 9;
+    public static final int CANCoderResolution = 4096;
+    public static final int CANCoderOneOffsetCount = 3784; // in locked position
+    public static final int CANCoderTwoOffsetCount = 1194; // in locked position
     public static final double turretGearRatio = 27;
-    public static final double minPhysicalLimitDeg = -250.0; // HACK find limits
-    public static final double maxPhysicalLimitDeg = 250.0; // HACK find limits
+    public static final double minPhysicalLimitDeg = -150;
+    public static final double maxPhysicalLimitDeg = 510;
     public static final double midPointPhysicalDeg =
         (minPhysicalLimitDeg + maxPhysicalLimitDeg) / 2.0;
-    public static final double maxMidPointPhysicalDeg = midPointPhysicalDeg + 180.0;
-    public static final double minMidPointPhysicalDeg = midPointPhysicalDeg - 180.0;
-    public static final double unwindToleranceDeg = 10.0; // HACK need to find proper tolerance
+    public static final double unwindToleranceDeg = 30.0;
     public static final double minUnwindLimitDeg = minPhysicalLimitDeg + unwindToleranceDeg;
     public static final double maxUnwindLimitDeg = maxPhysicalLimitDeg - unwindToleranceDeg;
     public static final int CANCoderOneId = 1;
@@ -222,6 +222,7 @@ public final class Constants {
   public class Rollers {
     public static final double voltageIntake = 6;
     public static final double voltageEject = -6;
+    public static final double voltageDeploy = -1;
     public static final int leaderMotorId = 1;
     public static final int followerMotorId = 5;
     public static final double statorCurrentLimit = 60;
@@ -234,9 +235,9 @@ public final class Constants {
   public class Deployer {
     // 0 degrees is stowed postion
     // postive degrees when extending
-    public static final double retractDeg = 0;
-    public static final double extendDeg = 126.1;
-    public static final double maxGravityDegrees = 110 - 180; // range is +/- 90 degrees
+    public static final double retractDeg = 7; // allow for net
+    public static final double extendDeg = 125.6; // fully against the bumper = 127.8
+    public static final double maxGravityDegrees = 125 - 180; // range is +/- 90 degrees
     public static final int motorId = 25;
     public static final double statorCurrentLimit = 60;
     public static final double supplyCurrentLimit = 40;
@@ -245,7 +246,7 @@ public final class Constants {
     public static final SensorDirectionValue sensorDirection =
         SensorDirectionValue.CounterClockwise_Positive;
     public static final double kP = 1000;
-    public static final double kG = 0.55;
+    public static final double kG = 0.65;
     public static final double kI = 0;
     public static final double kD = 0;
     public static final double motionMagicCruiseVelocity = 0.3;
@@ -253,8 +254,8 @@ public final class Constants {
     public static final int CANCoderID = 2;
     public static final double sensorToMechanismRatio = 3.0;
     public static final double RotorToSensorRatio = 12.0;
-    public static final double tolerance = 0.2;
-    public static final double SesnorOffsetRotations = 0.428;
+    public static final double tolerance = 2.0;
+    public static final double SesnorOffsetRotations = 0.39; // retract pos > 0.02 to avoid wrapping
   }
 
   public static class FiringParameters {

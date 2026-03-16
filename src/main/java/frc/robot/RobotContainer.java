@@ -13,11 +13,11 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.autonomous.AutonomousSelector;
-import frc.robot.commands.AutoIntake;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.IntakeCommands;
 import frc.robot.commands.ShooterCommands;
@@ -94,7 +94,7 @@ public class RobotContainer {
   private static Tunnel tunnel;
   private static Turret turret;
 
-  private static Intake intake;
+  public static Intake intake;
   private static LED led;
   private static Rollers rollers;
   private static Deployer deployer;
@@ -405,35 +405,56 @@ public class RobotContainer {
             () -> -controller.getLeftX(),
             () -> -controller.getRightX()));
 
-    controller.leftBumper().whileTrue(ShooterCommands.trenchOverride(hood));
+    /*
+    Intake - Left Bumper Toggle (Driver)
+    Trench Override Hood - Left Trigger while held (Driver)
+    Unjam Shooter - B while held (Driver)
+    Shoot (Locked turret) - Right Trigger while held (Driver)
+
+    Disable Shoot - Right Bumper Toggle (Operator)
+
+    */
+
+    controller.b().whileTrue(ShooterCommands.unjam(shooter));
+    controller.leftTrigger().whileTrue(ShooterCommands.trenchOverride(hood));
 
     if (Constants.turretLocked) {
       shooter.setDefaultCommand(ShooterCommands.idle(shooter));
-      controller.rightBumper().whileTrue(ShooterCommands.aimAndShoot(shooter, drive));
+      controller.rightTrigger().whileTrue(ShooterCommands.aimAndShoot(shooter, drive));
     } else {
       shooter.setDefaultCommand(ShooterCommands.shoot(shooter));
     }
-    controller2.rightBumper().or(inNonShootingArea).whileTrue(ShooterCommands.idle(shooter));
-
     controller2
-        .b()
+        .rightBumper()
+        .or(inNonShootingArea)
+        .toggleOnTrue(ShooterCommands.idle(shooter))
         .onTrue(
-            new AutoIntake(drive, visionObjectDetection, led, intake, false)
-                .until(() -> (!toggle4.getAsBoolean() || button3.getAsBoolean())));
-
-    controller.a().onTrue(new AutoIntake(drive, visionObjectDetection, led, intake, true));
+            Commands.run(
+                    () -> {
+                      controller.setRumble(GenericHID.RumbleType.kLeftRumble, 0.5);
+                    })
+                .withTimeout(0.5)
+                .finallyDo(
+                    () -> {
+                      controller.setRumble(GenericHID.RumbleType.kLeftRumble, 0.0);
+                    })
+                .onlyIf(() -> shooter.getState() != Shooter.ShooterState.IDLE));
 
     intake.setDefaultCommand(IntakeCommands.setIdle(intake));
 
-    controller.y().toggleOnTrue(IntakeCommands.setIntaking(intake));
-
-    controller.x().toggleOnTrue(IntakeCommands.setRetract(intake));
-
-    controller.povDown().whileTrue(IntakeCommands.setEject(intake));
-
-    controller.povUp().onTrue(ShooterCommands.idle(shooter));
-
-    controller2.povRight().whileTrue(IntakeCommands.setRetract(intake));
+    controller
+        .leftBumper()
+        .toggleOnTrue(IntakeCommands.setIntaking(intake))
+        .onTrue(
+            Commands.run(
+                    () -> {
+                      controller.setRumble(GenericHID.RumbleType.kLeftRumble, 0.5);
+                    })
+                .withTimeout(0.5)
+                .finallyDo(
+                    () -> {
+                      controller.setRumble(GenericHID.RumbleType.kLeftRumble, 0.0);
+                    }));
   }
 
   /**
