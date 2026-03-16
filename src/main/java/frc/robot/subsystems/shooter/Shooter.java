@@ -229,7 +229,7 @@ public class Shooter extends SubsystemBase {
 
     led.requestTurretUnwinding(state == ShooterState.UNWIND);
 
-      Logger.recordOutput("Shooter/State", state.toString());
+    Logger.recordOutput("Shooter/State", state.toString());
     Logger.recordOutput("Shooter/unwindComplete", unwindComplete);
     Logger.recordOutput("Shooter/spindexerStopped", spindexer.isStopped());
     Logger.recordOutput("Shooter/tunnelStopped", tunnel.isStopped());
@@ -434,6 +434,5 @@ public class Shooter extends SubsystemBase {
     } else {
       return new Translation3d();
     }
-
   }
 }

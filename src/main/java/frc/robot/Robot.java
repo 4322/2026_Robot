@@ -4,10 +4,8 @@ import com.ctre.phoenix6.SignalLogger;
 import com.pathplanner.lib.commands.FollowPathCommand;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.revrobotics.util.StatusLogger;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -432,9 +430,9 @@ public class Robot extends LoggedRobot {
         Constants.Robot.bumperHeightMeters,
         () -> robotContainer.getDrive().getRobotPose(),
         () -> robotContainer.getDrive().getChassisSpeeds());
-    
-        shotTimer = new Timer();
-        shotTimer.start();
+
+    shotTimer = new Timer();
+    shotTimer.start();
   }
 
   /** This function is called periodically whilst in simulation. */
@@ -447,10 +445,13 @@ public class Robot extends LoggedRobot {
       }
     }
     ballSim.tick(); // runs physics, publishes ball positions to NT
-    
   }
 
-  public void launchBall(Translation3d launchVelocity,double spinRPM) {
-    ballSim.launchBall(GeomUtil.pose2dToPose3d(new Pose2d(Constants.Turret.originToTurret, new Rotation2d()), 0.5).getTranslation(), launchVelocity, spinRPM);
+  public void launchBall(Translation3d launchVelocity, double spinRPM) {
+    ballSim.launchBall(
+        GeomUtil.pose2dToPose3d(new Pose2d(Constants.Turret.originToTurret, new Rotation2d()), 0.5)
+            .getTranslation(),
+        launchVelocity,
+        spinRPM);
   }
 }
