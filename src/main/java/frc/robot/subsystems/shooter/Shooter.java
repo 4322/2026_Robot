@@ -119,10 +119,10 @@ public class Shooter extends SubsystemBase {
   @Override
   public void periodic() {
     calculateFiringSolution();
-    if (AreaManager.isHoodDangerZone(drive.getTurretPose().getTranslation())) {
+    if (AreaManager.isHoodDangerZone(drive.getTurretPosition())) {
       state = ShooterState.TRENCH;
     }
-    if (AreaManager.isTrench(drive.getTurretPose().getTranslation())) {
+    if (AreaManager.isTrench(drive.getTurretPosition())) {
       state = ShooterState.IDLE;
     }
 
@@ -161,15 +161,15 @@ public class Shooter extends SubsystemBase {
         tunnel.requestIdle();
         flywheel.requestGoal(Constants.Flywheel.idleRPS);
         targetFlywheelSpeedRPS = Constants.Flywheel.idleRPS;
-        if (!AreaManager.isTrench(drive.getTurretPose().getTranslation())
-            && !AreaManager.isHoodDangerZone(drive.getTurretPose().getTranslation())) {
+        if (!AreaManager.isTrench(drive.getTurretPosition())
+            && !AreaManager.isHoodDangerZone(drive.getTurretPosition())) {
           state = ShooterState.IDLE;
         }
       }
       case IDLE -> {
         spindexer.requestIdle();
         turret.requestAngle(targetTurretAngleDeg, true);
-        if (AreaManager.isTrench(drive.getTurretPose().getTranslation())) {
+        if (AreaManager.isTrench(drive.getTurretPosition())) {
           hood.requestGoal(Constants.Hood.safeAngleDeg);
         } else {
           Logger.recordOutput("Shooter/isHoodDangerZone", false);
@@ -234,8 +234,7 @@ public class Shooter extends SubsystemBase {
     Logger.recordOutput("Shooter/spindexerStopped", spindexer.isStopped());
     Logger.recordOutput("Shooter/tunnelStopped", tunnel.isStopped());
     Logger.recordOutput(
-        "Shooter/currentZone",
-        AreaManager.getZoneOfPosition(drive.getTurretPose().getTranslation()));
+        "Shooter/currentZone", AreaManager.getZoneOfPosition(drive.getTurretPosition()));
     Logger.recordOutput("Shooter/flywheelAtSpeed", flywheel.atTargetVelocity());
     Logger.recordOutput("Shooter/hoodAtPosition", hood.isAtGoal());
     Logger.recordOutput("Shooter/turretAtPosition", turret.isAtGoal());

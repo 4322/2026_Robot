@@ -53,22 +53,22 @@ public class FieldRectangle2d extends Rectangle2d {
         new Pose2d(
             getCenter().getMeasureX().plus(getMeasureXWidth().div(2.0)),
             getCenter().getMeasureY().plus(getMeasureYWidth().div(2.0)),
-            new Rotation2d()));
+            Rotation2d.kZero));
     corners.add(
         new Pose2d(
             getCenter().getMeasureX().plus(getMeasureXWidth().div(2.0)),
             getCenter().getMeasureY().minus(getMeasureYWidth().div(2.0)),
-            new Rotation2d()));
+            Rotation2d.kZero));
     corners.add(
         new Pose2d(
             getCenter().getMeasureX().minus(getMeasureXWidth().div(2.0)),
             getCenter().getMeasureY().minus(getMeasureYWidth().div(2.0)),
-            new Rotation2d()));
+            Rotation2d.kZero));
     corners.add(
         new Pose2d(
             getCenter().getMeasureX().minus(getMeasureXWidth().div(2.0)),
             getCenter().getMeasureY().plus(getMeasureYWidth().div(2.0)),
-            new Rotation2d()));
+            Rotation2d.kZero));
     return corners.toArray(new Pose2d[0]);
   }
 }

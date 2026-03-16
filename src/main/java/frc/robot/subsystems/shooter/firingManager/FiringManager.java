@@ -44,7 +44,7 @@ public class FiringManager {
 
     Translation2d givenTargetPosition = getShootingTarget(turretPosition.getTranslation());
     Logger.recordOutput(
-        "FiringManager/givenTargetPosition", new Pose2d(givenTargetPosition, new Rotation2d()));
+        "FiringManager/givenTargetPosition", new Pose2d(givenTargetPosition, Rotation2d.kZero));
 
     // Project future position based on velocity and latency compensation
     double latencyCompensation = 0;
@@ -56,19 +56,19 @@ public class FiringManager {
       }
     }
 
-    Translation2d futurePos =
+    Translation2d futureTurretPos =
         turretPosition.getTranslation().plus(robotVelocity.times(latencyCompensation));
-    Logger.recordOutput("FiringManager/futurePos", new Pose2d(futurePos, new Rotation2d()));
+    Logger.recordOutput("FiringManager/futurePos", new Pose2d(futureTurretPos, Rotation2d.kZero));
 
     // Get target vector
-    Translation2d vectorToGoal = givenTargetPosition.minus(futurePos);
+    Translation2d vectorToGoal = givenTargetPosition.minus(futureTurretPos);
 
     // aim slightly behind the center of the hub so we don't hit the front
     if (AreaManager.getZoneOfPosition(turretPosition.getTranslation()) == Zone.ALLIANCE_ZONE) {
       givenTargetPosition =
           givenTargetPosition.plus(
               new Translation2d(Units.inchesToMeters(3), 0).rotateBy(vectorToGoal.getAngle()));
-      vectorToGoal = givenTargetPosition.minus(turretPosition.getTranslation());
+      vectorToGoal = givenTargetPosition.minus(futureTurretPos);
     }
 
     Logger.recordOutput(
@@ -112,7 +112,7 @@ public class FiringManager {
             turretPosition.getTranslation(), shotVelocity));
 
     // Get turret angle based on angle of target velocity vector
-    Rotation2d turretAngle = new Rotation2d();
+    Rotation2d turretAngle = Rotation2d.kZero;
     try {
       turretAngle = shotVelocity.getAngle();
     } catch (Exception e) {
@@ -122,7 +122,7 @@ public class FiringManager {
 
     Logger.recordOutput(
         "FiringManager/calculatedShootingTarget",
-        new Pose2d(turretPosition.getTranslation().plus(shotVelocity), new Rotation2d()));
+        new Pose2d(turretPosition.getTranslation().plus(shotVelocity), Rotation2d.kZero));
 
     double requiredVelocity = shotVelocity.getNorm();
     Logger.recordOutput("FiringManager/requiredVelocity", requiredVelocity);
@@ -133,14 +133,6 @@ public class FiringManager {
         isScoring
             ? Constants.FiringManager.firingMapScoring.get(effectiveDistance)
             : Constants.FiringManager.firingMapPassing.get(effectiveDistance);
-
-    FiringSolution solution =
-        new FiringSolution(
-            solutionParameters.getFlywheelRPM(),
-            solutionParameters.getHoodAngleDeg(),
-            turretAngle.getDegrees(),
-            solutionParameters.getTunnelRPS(),
-            solutionParameters.getIndexerRPS());
 
     Logger.recordOutput("FiringManager/solution/flywheelRPM", solutionParameters.getFlywheelRPM());
     Logger.recordOutput("FiringManager/solution/hoodAngle", solutionParameters.getHoodAngleDeg());
@@ -160,25 +152,21 @@ public class FiringManager {
           tunnelSpeedRPS.get(),
           indexerSpeedRPS.get());
 
-    } else if (!Constants.shootOnTheMoveEnabled) {
-      if (Constants.turretLocked) {
-        return new FiringSolution(
-            baseline.getFlywheelRPM(),
-            baseline.getHoodAngleDeg(),
-            adjustForTurretLock(targetDirection.getAngle().getDegrees()),
-            baseline.getTunnelRPS(),
-            baseline.getIndexerRPS());
-      } else {
-        return new FiringSolution(
-            baseline.getFlywheelRPM(),
-            baseline.getHoodAngleDeg(),
-            adjustForTurretLock(givenTargetPosition.getAngle().getDegrees()),
-            baseline.getTunnelRPS(),
-            baseline.getIndexerRPS());
-      }
+    } else if (Constants.shootOnTheMoveEnabled) {
+      return new FiringSolution(
+          solutionParameters.getFlywheelRPM(),
+          solutionParameters.getHoodAngleDeg(),
+          adjustForTurretLock(turretAngle.getDegrees()),
+          solutionParameters.getTunnelRPS(),
+          solutionParameters.getIndexerRPS());
+    } else {
+      return new FiringSolution(
+          baseline.getFlywheelRPM(),
+          baseline.getHoodAngleDeg(),
+          adjustForTurretLock(targetDirection.getAngle().getDegrees()),
+          baseline.getTunnelRPS(),
+          baseline.getIndexerRPS());
     }
-
-    return solution;
   }
 
   private static double adjustForTurretLock(double turretDeg) {

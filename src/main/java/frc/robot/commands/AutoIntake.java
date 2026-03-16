@@ -75,7 +75,7 @@ public class AutoIntake extends Command {
                 .transformBy(
                     new Transform2d(
                         new Translation2d(Constants.VisionObjectDetection.fuelIntakeOffset, 0),
-                        new Rotation2d()));
+                        Rotation2d.kZero));
         // TODO update drive to pose
       } else {
         // TODO drive.requestAutoRotate(targetAngle);

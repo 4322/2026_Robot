@@ -43,7 +43,7 @@ public class VisionObjectDetection extends SubsystemBase {
       if (bestFuelPosition != null) {
         Logger.recordOutput(
             "VisionObjectDetection/bestFuelFieldPos",
-            new Pose2d(bestFuelPosition, new Rotation2d()));
+            new Pose2d(bestFuelPosition, Rotation2d.kZero));
       }
     }
   }
@@ -84,7 +84,7 @@ public class VisionObjectDetection extends SubsystemBase {
       objectsPositionsOnField[i] = calculateObjectPositionFromRotation(visibleObjectsRotations[i]);
       Logger.recordOutput(
           "VisionObjectDetection/VisibleLemons",
-          new Pose2d(objectsPositionsOnField[i], new Rotation2d()));
+          new Pose2d(objectsPositionsOnField[i], Rotation2d.kZero));
     }
 
     return objectsPositionsOnField;
@@ -147,7 +147,7 @@ public class VisionObjectDetection extends SubsystemBase {
 
     Translation2d centroid = new Translation2d(sumX / count, sumY / count);
     Logger.recordOutput(
-        "VisionObjectDetection/TargetCentroid", new Pose2d(centroid, new Rotation2d()));
+        "VisionObjectDetection/TargetCentroid", new Pose2d(centroid, Rotation2d.kZero));
     if ((!AreaManager.isSameCompleteZone(centroid, drive.getRobotPose().getTranslation()))
         && sameZone) {
       return null;

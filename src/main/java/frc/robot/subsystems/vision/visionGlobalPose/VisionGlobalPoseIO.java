@@ -9,7 +9,7 @@ public interface VisionGlobalPoseIO {
   public static class VisionGlobalPoseIOInputs {
     public boolean connected = false;
     public TargetObservation latestTargetObservation =
-        new TargetObservation(new Rotation2d(), new Rotation2d());
+        new TargetObservation(Rotation2d.kZero, Rotation2d.kZero);
     public GlobalPoseObservation[] globalPoseObservations = new GlobalPoseObservation[0];
     public int singleTagFiducialID = 1;
   }

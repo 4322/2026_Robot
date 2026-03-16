@@ -23,6 +23,7 @@ import org.littletonrobotics.junction.Logger;
 
 public class Simulator extends SubsystemBase {
   private static final RegressTests regressTest = RegressTests.SUBSYSTEM_TEST_BOTH;
+  private static final RegressTests regressTest = RegressTests.TEST_AUTOROTATE;
   public static AutoName autoScenario;
   private TeleopScenario teleopScenario;
   private List<TeleAnomaly> teleAnomalies;
@@ -815,7 +816,7 @@ public class Simulator extends SubsystemBase {
     } else {
       events = teleopEvents;
     }
-    drive.setPose(new Pose2d(0, 0, new Rotation2d()));
+    drive.setPose(new Pose2d(0, 0, Rotation2d.kZero));
     resetScenario();
   }
 

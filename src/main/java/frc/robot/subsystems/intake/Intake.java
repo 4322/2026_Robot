@@ -65,6 +65,5 @@ public class Intake extends SubsystemBase {
 
   public void enableBrakeMode(boolean enable) {
     deployer.setBrakeMode(enable);
-    rollers.setBrakeMode(enable);
   }
 }

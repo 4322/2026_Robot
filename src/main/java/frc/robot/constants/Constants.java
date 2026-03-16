@@ -61,7 +61,7 @@ public final class Constants {
   public static final boolean frontRightCameraEnable = true;
   public static final boolean frontLeftCameraEnable = true;
   public static final boolean backRightCameraEnable = true;
-  public static final boolean backLeftCameraEnable = false;
+  public static final boolean backLeftCameraEnable = true;
 
   { // set dependent operational modes
     if (firingManagerMode == SubsystemMode.TUNING) {
@@ -76,7 +76,7 @@ public final class Constants {
   }
 
   public static final boolean buzz = false;
-  public static final String logPath = "/home/lvuser/logs";
+  public static final String logPath = "/media/sda1";
   public static final long minFreeSpace = 1000000000; // 1 GB
   public static final int dioCoastButton = 8;
   public static final double coastButtonDelaySec = 10.0;
@@ -161,7 +161,6 @@ public final class Constants {
     public static final double kS = 0.28;
     public static final double kV = 0;
     public static final double kP = 150;
-    public static final double mmkP = 15;
     public static final double kI = 0;
     public static final double kD = 0;
 
@@ -214,7 +213,7 @@ public final class Constants {
   }
 
   public static class Control {
-    public static final int toggle1ButtonNumber = 1; // TODO set these
+    public static final int toggle1ButtonNumber = 1;
     public static final int toggle4ButtonNumber = 4;
     public static final int button3ButtonNumber = 5;
     public static final int toggle3ButtonNumber = 3;
@@ -223,11 +222,12 @@ public final class Constants {
   public class Rollers {
     public static final double voltageIntake = 6;
     public static final double voltageEject = -6;
-    public static final int motorId = 1;
+    public static final int leaderMotorId = 1;
+    public static final int followerMotorId = 5;
     public static final double statorCurrentLimit = 60;
     public static final double supplyCurrentLimit = 40;
-    public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
-    public static final InvertedValue motorInvert = InvertedValue.Clockwise_Positive;
+    public static final NeutralModeValue neutralMode = NeutralModeValue.Coast;
+    public static final InvertedValue leaderMotorInvert = InvertedValue.Clockwise_Positive;
     public static final double voltageIdle = 0;
   }
 
