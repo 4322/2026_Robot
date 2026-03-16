@@ -270,6 +270,7 @@ public class Shooter extends SubsystemBase {
       // Otherwise start shooting sequence
       if (state == ShooterState.PRESHOOT
           || state == ShooterState.IDLE
+          || state == ShooterState.UNJAM
           || (state == ShooterState.UNWIND && unwindComplete)) {
         unwindComplete = false;
         state = ShooterState.PRESHOOT;
