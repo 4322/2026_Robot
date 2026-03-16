@@ -162,6 +162,7 @@ public class Shooter extends SubsystemBase {
         }
       }
       case PRESHOOT -> {
+        spindexer.requestIdle();
         flywheel.requestGoal(targetFlywheelSpeedRPS);
         hood.requestGoal(targetHoodAngleDeg);
         turret.requestAngle(targetTurretAngleDeg, true);
@@ -173,6 +174,8 @@ public class Shooter extends SubsystemBase {
         tunnel.requestGoal(targetTunnelSpeedRPS);
         if (tunnel.getVelocity() > Constants.Tunnel.minPercentVelocity * targetTunnelSpeedRPS) {
           spindexer.requestGoal(targetIndexerSpeedRPS);
+        } else {
+          spindexer.requestIdle();
         }
       }
       case UNJAM -> {
