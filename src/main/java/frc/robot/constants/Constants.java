@@ -42,10 +42,10 @@ public final class Constants {
   }
 
   public static SubsystemMode driveMode = SubsystemMode.NORMAL;
-  public static final SubsystemMode flywheelMode = SubsystemMode.NORMAL;
-  public static final SubsystemMode hoodMode = SubsystemMode.NORMAL;
-  public static final SubsystemMode spindexerMode = SubsystemMode.NORMAL;
-  public static final SubsystemMode tunnelMode = SubsystemMode.NORMAL;
+  public static final SubsystemMode flywheelMode = SubsystemMode.DISABLED;
+  public static final SubsystemMode hoodMode = SubsystemMode.DISABLED;
+  public static final SubsystemMode spindexerMode = SubsystemMode.DISABLED;
+  public static final SubsystemMode tunnelMode = SubsystemMode.DISABLED;
   public static SubsystemMode turretMode = SubsystemMode.NORMAL;
   public static final SubsystemMode deployerMode = SubsystemMode.NORMAL;
   public static final SubsystemMode rollerMode = SubsystemMode.NORMAL;
@@ -171,8 +171,8 @@ public final class Constants {
     public static final int CANCoderOneRatio = 5;
     public static final int CANCoderTwoRatio = 9;
     public static final int CANCoderResolution = 4096;
-    public static final double CANCoderOneOffset = 0.0; // TODO find offsets
-    public static final double CANCoderTwoOffset = 0.0; // find offsets
+    public static final int CANCoderOneOffsetCount = 1; // in locked position
+    public static final int CANCoderTwoOffsetCount = 2; // in locked position
     public static final double turretGearRatio = 27;
     public static final double minPhysicalLimitDeg = -150;
     public static final double maxPhysicalLimitDeg = 510;
@@ -229,7 +229,7 @@ public final class Constants {
     // 0 degrees is stowed postion
     // postive degrees when extending
     public static final double retractDeg = 7; // allow for net
-    public static final double extendDeg = 125.6; // slightly above bumper
+    public static final double extendDeg = 125.6; // fully against the bumper = 127.8
     public static final double maxGravityDegrees = 125 - 180; // range is +/- 90 degrees
     public static final int motorId = 25;
     public static final double statorCurrentLimit = 60;
