@@ -27,17 +27,19 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.util.Units;
 
 /**
- * Shoot-on-the-move fire control solver. Figures out what RPM and heading your robot needs
- * while you're driving around. It accounts for robot velocity, where the launcher is on the
- * robot, processing latency, and drag on the ball during flight.
+ * Shoot-on-the-move fire control solver. Figures out what RPM and heading your robot needs while
+ * you're driving around. It accounts for robot velocity, where the launcher is on the robot,
+ * processing latency, and drag on the ball during flight.
  *
  * <p>The core idea: if you're moving, you can't just aim at the target because the ball inherits
- * your velocity. So we use Newton's method to find the self-consistent time-of-flight where
- * the projected aim point and the LUT-predicted TOF agree. Usually converges in 2-3 iterations.
+ * your velocity. So we use Newton's method to find the self-consistent time-of-flight where the
+ * projected aim point and the LUT-predicted TOF agree. Usually converges in 2-3 iterations.
  *
  * <p>Usage:
+ *
  * <pre>
  *   // configure for your robot (measure from CAD)
  *   ShotCalculator.Config config = new ShotCalculator.Config();
@@ -67,7 +69,10 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
  */
 public class ShotCalculator {
 
-  /** The result of calculate(). RPM to spin up, time of flight, heading to aim at, and a 0-100 confidence score. */
+  /**
+   * The result of calculate(). RPM to spin up, time of flight, heading to aim at, and a 0-100
+   * confidence score.
+   */
   public record LaunchParameters(
       double rpm,
       double timeOfFlightSec,
@@ -84,9 +89,9 @@ public class ShotCalculator {
   }
 
   /**
-   * All the state the solver needs from your robot each cycle.
-   * pitchDeg and rollDeg are absolute tilt angles in degrees. If your gyro doesn't report
-   * these, just pass 0.0 for both and set config.maxTiltDeg to something huge.
+   * All the state the solver needs from your robot each cycle. pitchDeg and rollDeg are absolute
+   * tilt angles in degrees. If your gyro doesn't report these, just pass 0.0 for both and set
+   * config.maxTiltDeg to something huge.
    */
   public record ShotInputs(
       Pose2d robotPose,
@@ -106,15 +111,27 @@ public class ShotCalculator {
         Translation2d hubCenter,
         Translation2d hubForward,
         double visionConfidence) {
-      this(robotPose, fieldVelocity, robotVelocity, hubCenter, hubForward, visionConfidence, 0.0, 0.0);
+      this(
+          robotPose,
+          fieldVelocity,
+          robotVelocity,
+          hubCenter,
+          hubForward,
+          visionConfidence,
+          0.0,
+          0.0);
     }
   }
 
-  /** Tuning parameters. Set these to match your robot, or wire them to SmartDashboard/TunableNumber. */
+  /**
+   * Tuning parameters. Set these to match your robot, or wire them to SmartDashboard/TunableNumber.
+   */
   public static class Config {
     // Launcher geometry (measure from CAD)
-    public double launcherOffsetX = 0.20; // meters forward of robot center
-    public double launcherOffsetY = 0.0;  // meters left of robot center
+    public static double launcherOffsetX =
+        Units.inchesToMeters(-4.6111); // meters forward of robot center
+    public static double launcherOffsetY =
+        Units.inchesToMeters(5.8889); // meters left of robot center
 
     // How close/far you can score from (meters)
     public double minScoringDistance = 0.5;
@@ -133,7 +150,7 @@ public class ShotCalculator {
     public double maxSOTMSpeed = 3.0;
 
     // Latency compensation (ms)
-    public double phaseDelayMs = 30.0;  // vision pipeline lag
+    public double phaseDelayMs = 30.0; // vision pipeline lag
     public double mechLatencyMs = 20.0; // how long the mechanism takes to respond
 
     // The ball's inherited robot velocity decays in flight because of drag.
@@ -191,7 +208,10 @@ public class ShotCalculator {
     this(new Config());
   }
 
-  /** Add a distance/RPM/TOF point to the lookup table. Use ProjectileSimulator to generate these, or hand-tune. */
+  /**
+   * Add a distance/RPM/TOF point to the lookup table. Use ProjectileSimulator to generate these, or
+   * hand-tune.
+   */
   public void loadLUTEntry(double distanceM, double rpm, double tof) {
     rpmMap.put(distanceM, rpm);
     tofMap.put(distanceM, tof);
@@ -232,8 +252,10 @@ public class ShotCalculator {
    * you're out of range, behind the hub, going too fast, or the inputs are bad.
    */
   public LaunchParameters calculate(ShotInputs inputs) {
-    if (inputs == null || inputs.robotPose() == null
-        || inputs.fieldVelocity() == null || inputs.robotVelocity() == null) {
+    if (inputs == null
+        || inputs.robotPose() == null
+        || inputs.fieldVelocity() == null
+        || inputs.robotVelocity() == null) {
       return LaunchParameters.INVALID;
     }
 
@@ -243,8 +265,10 @@ public class ShotCalculator {
 
     double poseX = rawPose.getX();
     double poseY = rawPose.getY();
-    if (Double.isNaN(poseX) || Double.isNaN(poseY)
-        || Double.isInfinite(poseX) || Double.isInfinite(poseY)) {
+    if (Double.isNaN(poseX)
+        || Double.isNaN(poseY)
+        || Double.isInfinite(poseX)
+        || Double.isInfinite(poseY)) {
       return LaunchParameters.INVALID;
     }
 
@@ -275,8 +299,7 @@ public class ShotCalculator {
 
     // Behind-hub detection: dot product with hub forward vector
     Translation2d hubForward = inputs.hubForward();
-    double dot =
-        (hubX - robotX) * hubForward.getX() + (hubY - robotY) * hubForward.getY();
+    double dot = (hubX - robotX) * hubForward.getX() + (hubY - robotY) * hubForward.getY();
     if (dot < 0) {
       return LaunchParameters.INVALID;
     }
@@ -291,10 +314,8 @@ public class ShotCalculator {
     // Transform robot center to launcher position
     double cosH = Math.cos(heading);
     double sinH = Math.sin(heading);
-    double launcherX =
-        robotX + config.launcherOffsetX * cosH - config.launcherOffsetY * sinH;
-    double launcherY =
-        robotY + config.launcherOffsetX * sinH + config.launcherOffsetY * cosH;
+    double launcherX = robotX + config.launcherOffsetX * cosH - config.launcherOffsetY * sinH;
+    double launcherY = robotY + config.launcherOffsetX * sinH + config.launcherOffsetY * cosH;
 
     // Launcher velocity includes rotational component: v_launcher = v_robot + omega x r
     double launcherFieldOffX = config.launcherOffsetX * cosH - config.launcherOffsetY * sinH;
@@ -455,8 +476,9 @@ public class ShotCalculator {
       }
     }
 
-    double confidence = computeConfidence(
-        solverQuality, robotSpeed, headingErrorRad, distance, inputs.visionConfidence());
+    double confidence =
+        computeConfidence(
+            solverQuality, robotSpeed, headingErrorRad, distance, inputs.visionConfidence());
 
     previousSpeed = robotSpeed;
 
@@ -473,14 +495,17 @@ public class ShotCalculator {
   }
 
   /**
-   * Confidence from 0 to 100. Weighted geometric mean of 5 factors: solver convergence,
-   * velocity stability, vision confidence, heading accuracy, and distance from range edges.
-   * If any single factor drops to zero (like vision dies), the whole score tanks to zero.
-   * That's intentional because you really shouldn't be shooting if any one factor is gone.
+   * Confidence from 0 to 100. Weighted geometric mean of 5 factors: solver convergence, velocity
+   * stability, vision confidence, heading accuracy, and distance from range edges. If any single
+   * factor drops to zero (like vision dies), the whole score tanks to zero. That's intentional
+   * because you really shouldn't be shooting if any one factor is gone.
    */
   private double computeConfidence(
-      double solverQuality, double currentSpeed, double headingErrorRad,
-      double distance, double visionConfidence) {
+      double solverQuality,
+      double currentSpeed,
+      double headingErrorRad,
+      double distance,
+      double visionConfidence) {
 
     // 1. Solver quality (passed in, already 0-1)
     double convergenceQuality = solverQuality;
@@ -495,8 +520,7 @@ public class ShotCalculator {
     // 4. Heading accuracy with speed scaling and distance scaling.
     // Faster robot = tighter tolerance (because velocity errors compound).
     // Closer to hub = tighter tolerance (because small angles mean big misses).
-    double distanceScale = MathUtil.clamp(
-        config.headingReferenceDistance / distance, 0.5, 2.0);
+    double distanceScale = MathUtil.clamp(config.headingReferenceDistance / distance, 0.5, 2.0);
     double speedScale = 1.0 / (1.0 + config.headingSpeedScalar * currentSpeed);
     double scaledMaxError = config.headingMaxErrorRad * distanceScale * speedScale;
     double headingErr = Math.abs(headingErrorRad);
@@ -571,7 +595,9 @@ public class ShotCalculator {
     return rpmMap.get(distance);
   }
 
-  /** Reset the warm start state. Call this after a pose reset so the solver doesn't use stale data. */
+  /**
+   * Reset the warm start state. Call this after a pose reset so the solver doesn't use stale data.
+   */
   public void resetWarmStart() {
     previousTOF = -1;
     previousSpeed = 0;

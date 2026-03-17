@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.constants.Constants;
+import frc.robot.util.firecontrol.FuelPhysicsSim;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -82,6 +83,9 @@ public class Robot extends LoggedRobot {
   public static PathPlannerPath R_Half_SuperSweep_D;
   public static PathPlannerPath R_Half_SuperSweep_E;
   public static PathPlannerPath R_Half_SuperSweep_F;
+
+  private FuelPhysicsSim ballSim;
+  private Timer shotTimer;
 
   public Robot() {
     Logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME); // Set a metadata value
@@ -421,9 +425,43 @@ public class Robot extends LoggedRobot {
 
   /** This function is called once when the robot is first started up. */
   @Override
-  public void simulationInit() {}
+  public void simulationInit() {
+    ballSim = new FuelPhysicsSim("Sim/Fuel");
+    ballSim.enable();
+    ballSim.placeFieldBalls(); // spawns all the game pieces
+
+    // tell it about your robot
+    ballSim.configureRobot(
+        Constants.Robot.widthMeters,
+        Constants.Robot.lengthMeters,
+        Constants.Robot.bumperHeightMeters,
+        () -> robotContainer.getDrive().getRobotPose(),
+        () -> robotContainer.getDrive().getFieldVelocity());
+
+    shotTimer = new Timer();
+    shotTimer.start();
+  }
 
   /** This function is called periodically whilst in simulation. */
   @Override
-  public void simulationPeriodic() {}
+  public void simulationPeriodic() {
+    Logger.recordOutput("Sim/shouldSimShoot", robotContainer.getShooter().shouldSimShoot());
+    if (robotContainer.getShooter().shouldSimShoot()) {
+      if (shotTimer.hasElapsed(0.2)) {
+        shotTimer.restart();
+        launchBall();
+      }
+      Logger.recordOutput("Sim/AttemptingToShoot", true);
+    } else {
+      Logger.recordOutput("Sim/AttemptingToShoot", false);
+    }
+    ballSim.tick(); // runs physics, publishes ball positions to NT
+  }
+
+  private void launchBall() {
+    ballSim.launchBall(
+        robotContainer.getShooter().getShotPos(),
+        robotContainer.getShooter().getShotVelocity(),
+        robotContainer.getShooter().getSpinRPM());
+  }
 }

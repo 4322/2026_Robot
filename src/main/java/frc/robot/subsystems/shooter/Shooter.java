@@ -3,16 +3,20 @@ package frc.robot.subsystems.shooter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Robot;
 import frc.robot.constants.Constants;
+import frc.robot.constants.Constants.FiringParameters;
+import frc.robot.constants.Constants.FiringTarget;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.led.LED;
 import frc.robot.subsystems.shooter.areaManager.AreaManager;
 import frc.robot.subsystems.shooter.areaManager.AreaManager.Zone;
-import frc.robot.subsystems.shooter.firingManager.FiringManager;
-import frc.robot.subsystems.shooter.firingManager.FiringManager.FiringSolution;
 import frc.robot.subsystems.shooter.flywheel.Flywheel;
 import frc.robot.subsystems.shooter.hood.Hood;
 import frc.robot.subsystems.shooter.spindexer.Spindexer;
@@ -21,6 +25,8 @@ import frc.robot.subsystems.shooter.turret.Turret;
 import frc.robot.subsystems.vision.visionGlobalPose.VisionGlobalPose;
 import frc.robot.util.GeomUtil;
 import frc.robot.util.HubShiftUtil;
+import frc.robot.util.firecontrol.ProjectileSimulator;
+import frc.robot.util.firecontrol.ShotCalculator;
 import org.littletonrobotics.junction.Logger;
 
 public class Shooter extends SubsystemBase {
@@ -52,7 +58,15 @@ public class Shooter extends SubsystemBase {
   private double targetIndexerSpeedRPS;
 
   private boolean unwindComplete = false;
-  private boolean inIdle = true;
+  private boolean inIdle = false;
+
+  private FiringTarget firingTarget;
+  private ShotCalculator.ShotInputs shotCalculatorInputs;
+  private ShotCalculator.LaunchParameters launchParameters;
+  private ShotCalculator shotCalculator;
+  private ProjectileSimulator.GeneratedLUT lut;
+  private FiringParameters firingParameters;
+  private ProjectileSimulator sim;
 
   public Shooter(
       Flywheel flywheel,
@@ -70,6 +84,37 @@ public class Shooter extends SubsystemBase {
     this.turret = turret;
     this.led = led;
     this.drive = drive;
+
+    ShotCalculator.Config config = new ShotCalculator.Config();
+    ShotCalculator.Config.launcherOffsetX =
+        Constants.Turret.originToTurret
+            .getX(); // how far forward the launcher is from robot center (m)
+    ShotCalculator.Config.launcherOffsetY =
+        Constants.Turret.originToTurret.getY(); // how far left, 0 if centered
+    config.phaseDelayMs = Constants.VisionGlobalPose.phaseDelayMs; // your vision pipeline latency
+    config.mechLatencyMs =
+        Constants.Shooter.mechLatencyMs; // how long the mechanism takes to respond
+    config.maxTiltDeg =
+        Constants.Shooter.maxTiltDeg; // suppress firing when chassis tilts past this (bumps/ramps)
+    config.headingSpeedScalar =
+        Constants.Shooter
+            .headingSpeedScalar; // heading tolerance tightens with robot speed (0 to disable)
+    config.headingReferenceDistance =
+        Constants.Shooter
+            .headingReferenceDistance; // heading tolerance scales with distance from hub
+
+    this.shotCalculator = new ShotCalculator();
+
+    sim = new ProjectileSimulator(Constants.ShotCalculator.params);
+    this.lut = sim.generateLUT();
+
+    for (var entry : lut.entries()) {
+      if (entry.reachable()) {
+        System.out.printf(
+            "%.2fm -> %.0f RPM, %.3fs TOF%n", entry.distanceM(), entry.rpm(), entry.tof());
+        shotCalculator.loadLUTEntry(entry.distanceM(), entry.rpm(), entry.tof());
+      }
+    }
   }
 
   public double getTargetTurretAngleDeg() {
@@ -229,16 +274,37 @@ public class Shooter extends SubsystemBase {
   }
 
   private void calculateFiringSolution() {
-    FiringSolution firingSolution =
-        FiringManager.getFiringSolution(
-            drive.getTurretPose(),
-            drive.getVelocity(),
-            AreaManager.getZoneOfPosition(drive.getTurretPosition()) == Zone.ALLIANCE_ZONE);
-    targetHoodAngleDeg = firingSolution.hoodAngle();
-    targetFlywheelSpeedRPS = firingSolution.flywheelSpeedRPS();
-    targetTurretAngleDeg = firingSolution.turretAngleDeg();
-    targetTunnelSpeedRPS = firingSolution.tunnelSpeedRPS();
-    targetIndexerSpeedRPS = firingSolution.indexerSpeedRPS();
+    firingTarget = getShootingTarget(drive.getRobotPose().getTranslation());
+    shotCalculatorInputs =
+        new ShotCalculator.ShotInputs(
+            drive.getRobotPose(),
+            drive.getFieldVelocity(),
+            drive.getRobotVelocity(),
+            firingTarget.translation(),
+            firingTarget.forward(),
+            0.9, // vision confidence, 0 to 1
+            0, // pitch for tilt gate (0.0 if no gyro)
+            0 // roll for tilt gate (0.0 if no gyro)
+            );
+    launchParameters = shotCalculator.calculate(shotCalculatorInputs);
+    Logger.recordOutput(
+        "Shooter/FiringSolution/targetDistanceM", launchParameters.solvedDistanceM());
+    if (launchParameters.isValid() && launchParameters.confidence() > 50) {
+      if (Constants.ShotCalculator.useSimulatedShotTuning) {
+        targetFlywheelSpeedRPS = launchParameters.rpm() / 60;
+        targetTurretAngleDeg = launchParameters.driveAngle().getDegrees();
+        targetHoodAngleDeg = Constants.ShotCalculator.hoodAngle;
+        targetTunnelSpeedRPS = Constants.Tunnel.shootRPS;
+        targetIndexerSpeedRPS = Constants.Spindexer.shootRPS;
+      } else {
+
+        targetFlywheelSpeedRPS = firingParameters.getFlywheelRPM() / 60;
+        targetHoodAngleDeg = firingParameters.getHoodAngleDeg();
+        targetTunnelSpeedRPS = firingParameters.getTunnelRPS();
+        targetIndexerSpeedRPS = firingParameters.getIndexerRPS();
+        targetTurretAngleDeg = launchParameters.driveAngle().getDegrees();
+      }
+    }
   }
 
   public ShooterState getState() {
@@ -314,5 +380,124 @@ public class Shooter extends SubsystemBase {
 
   public boolean isInIdle() {
     return inIdle;
+  }
+
+  private FiringTarget getShootingTarget(Translation2d robotPosition) {
+    Zone zone = AreaManager.getZoneOfPosition(robotPosition);
+
+    if (Robot.alliance == Alliance.Blue) {
+
+      switch (zone) {
+        case ALLIANCE_ZONE:
+          Logger.recordOutput("FiringManager/targetZone", "Hub");
+          return Constants.FiringTargetTranslations.Blue.hubTarget;
+        case RIGHT_NEUTRAL:
+          Logger.recordOutput("FiringManager/targetZone", "Alliance Right");
+          return Constants.FiringTargetTranslations.Blue.allianceRightTarget;
+        case LEFT_NEUTRAL:
+          Logger.recordOutput("FiringManager/targetZone", "Alliance Left");
+          return Constants.FiringTargetTranslations.Blue.allianceLeftTarget;
+        case RIGHT_OPPOSITION:
+          if (Constants.FiringManager.alwaysTargetAllianceZone) {
+            Logger.recordOutput("FiringManager/targetZone", "Alliance Right");
+            return Constants.FiringTargetTranslations.Blue.allianceRightTarget;
+          } else {
+            Logger.recordOutput("FiringManager/targetZone", "Neutral Right");
+            return Constants.FiringTargetTranslations.Blue.neutralRightTarget;
+          }
+        case LEFT_OPPOSITION:
+          if (Constants.FiringManager.alwaysTargetAllianceZone) {
+            Logger.recordOutput("FiringManager/targetZone", "Alliance Left");
+            return Constants.FiringTargetTranslations.Blue.allianceLeftTarget;
+          } else {
+            Logger.recordOutput("FiringManager/targetZone", "Neutral Left");
+            return Constants.FiringTargetTranslations.Blue.neutralLeftTarget;
+          }
+        default:
+          Logger.recordOutput("FiringManager/targetZone", "Invalid");
+          return new FiringTarget(new Translation2d(), new Translation2d());
+      }
+    } else {
+      switch (zone) {
+        case ALLIANCE_ZONE:
+          Logger.recordOutput("FiringManager/targetZone", "Hub");
+          return Constants.FiringTargetTranslations.Red.hubTarget;
+        case RIGHT_NEUTRAL:
+          Logger.recordOutput("FiringManager/targetZone", "Alliance Right");
+          return Constants.FiringTargetTranslations.Red.allianceRightTarget;
+        case LEFT_NEUTRAL:
+          Logger.recordOutput("FiringManager/targetZone", "Alliance Left");
+          return Constants.FiringTargetTranslations.Red.allianceLeftTarget;
+        case RIGHT_OPPOSITION:
+          if (Constants.FiringManager.alwaysTargetAllianceZone) {
+            Logger.recordOutput("FiringManager/targetZone", "Alliance Right");
+            return Constants.FiringTargetTranslations.Red.allianceRightTarget;
+          } else {
+            Logger.recordOutput("FiringManager/targetZone", "Neutral Right");
+            return Constants.FiringTargetTranslations.Red.neutralRightTarget;
+          }
+        case LEFT_OPPOSITION:
+          if (Constants.FiringManager.alwaysTargetAllianceZone) {
+            Logger.recordOutput("FiringManager/targetZone", "Alliance Left");
+            return Constants.FiringTargetTranslations.Red.allianceLeftTarget;
+          } else {
+            Logger.recordOutput("FiringManager/targetZone", "Neutral Left");
+            return Constants.FiringTargetTranslations.Red.neutralLeftTarget;
+          }
+        default:
+          Logger.recordOutput("FiringManager/targetZone", "Invalid");
+          return new FiringTarget(new Translation2d(), new Translation2d());
+      }
+    }
+  }
+
+  public boolean shouldSimShoot() {
+    return spindexer.getVelocity() > 0.5 * targetIndexerSpeedRPS;
+  }
+
+  public Translation3d getShotVelocity() {
+    if (launchParameters != null) {
+      double exitSpeed = sim.exitVelocity(targetFlywheelSpeedRPS);
+      double launchRad = Math.toRadians(Constants.ShotCalculator.hoodAngle);
+
+      double vHorizontal = exitSpeed * Math.cos(launchRad);
+      double vVertical = exitSpeed * Math.sin(launchRad);
+
+      Rotation2d azimuth = launchParameters.driveAngle(); // or robot yaw if you're not doing SOTM
+      double vx = vHorizontal * azimuth.getCos();
+      double vy = vHorizontal * azimuth.getSin();
+
+      Translation3d launchVel = new Translation3d(vx, vy, vVertical);
+      return launchVel;
+    } else {
+      return new Translation3d();
+    }
+  }
+
+  public Translation3d getShotPos() {
+    if (launchParameters != null) {
+      double exitSpeed = sim.exitVelocity(targetFlywheelSpeedRPS);
+      double launchRad = Math.toRadians(Constants.ShotCalculator.hoodAngle);
+
+      double vHorizontal = exitSpeed * Math.cos(launchRad);
+      double vVertical = exitSpeed * Math.sin(launchRad);
+
+      Rotation2d azimuth = launchParameters.driveAngle(); // or robot yaw if you're not doing SOTM
+      double vx = vHorizontal * azimuth.getCos();
+      double vy = vHorizontal * azimuth.getSin();
+
+      Translation3d launchPos =
+          new Translation3d(
+              ShotCalculator.Config.launcherOffsetX,
+              ShotCalculator.Config.launcherOffsetY,
+              Constants.ShotCalculator.exitHeightM);
+      return launchPos;
+    } else {
+      return new Translation3d();
+    }
+  }
+
+  public double getSpinRPM() {
+    return targetFlywheelSpeedRPS * 60;
   }
 }

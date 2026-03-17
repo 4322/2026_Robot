@@ -374,10 +374,11 @@ public final class Constants {
   }
 
   public record FiringTarget(Translation2d translation, Translation2d forward) {}
+
   public static class FiringTargetTranslations {
     // Right/left are determined as view from blue alliance driver station
     // TODO get exact values
-      public static class Red {
+    public static class Red {
       public static final FiringTarget hubTarget =
           new FiringTarget(FieldConstants.Red.hubTranslation, new Translation2d(1, 0));
       public static final FiringTarget allianceRightTarget =
@@ -524,7 +525,9 @@ public final class Constants {
 
   public static class ShotCalculator {
     public static final double hoodAngle = 45.0;
-    public static final boolean useSimulatedShotTuning = false;
+    public static final boolean useSimulatedShotTuning = true;
+    public static final double exitHeightM = 0.43;
+    public static final double slipFactor = 0.6;
 
     public static final ProjectileSimulator.SimParameters params =
         new ProjectileSimulator.SimParameters(
@@ -533,7 +536,7 @@ public final class Constants {
             0.47, // drag coeff (smooth sphere)
             0.2, // Magnus coeff
             1.225, // air density
-            0.43, // exit height (m), floor to where the ball leaves the shooter
+            exitHeightM, // exit height (m), floor to where the ball leaves the shooter
             0.1016, // flywheel diameter (m), measure with calipers
             1.83, // target height (m), from game manual
             0.6, // TODO slip factor (0=no grip, 1=perfect), tune this on the real robot
