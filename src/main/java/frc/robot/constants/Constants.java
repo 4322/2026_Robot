@@ -132,6 +132,8 @@ public final class Constants {
     public static final double stoppedMechanismRotationsPerSec = 0.1; // TODO
     public static final double motorToMechanismRatio = 1.5; // 2 inch diameter
     public static final double minPercentVelocity = 0.95;
+    // Normally 37 RPS for shooting
+    public static final double unjamRPS = -25.0;
     public static final double shootRPS = 35;
   }
 
@@ -142,9 +144,11 @@ public final class Constants {
     public static final double supplyCurrentLimit = 40;
     public static final InvertedValue motorInvert = InvertedValue.Clockwise_Positive;
     public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
-    public static final double kS = 0.25;
+
+    // max RPS for a burst is 75 due to drop in battery voltage
+    public static final double kS = 0.28;
     public static final double kV = 0.128;
-    public static final double kP = 0;
+    public static final double kP = 2;
     public static final double kI = 0;
     public static final double kD = 0;
 
@@ -351,7 +355,9 @@ public final class Constants {
       putFiringMapEntryScoring(2.741, new FiringParameters(45, 10, 1, 35, 7));
       putFiringMapEntryScoring(3.546, new FiringParameters(52, 10, 1, 35, 7));
       putFiringMapEntryScoring(4.538, new FiringParameters(53, 15, 1, 35, 7));
-      putFiringMapEntryScoring(5.133, new FiringParameters(53, 24, 1, 35, 7));
+      putFiringMapEntryScoring(4.734, new FiringParameters(56, 18, 1, 35, 7));
+      putFiringMapEntryScoring(5.133, new FiringParameters(56, 20, 1, 35, 7));
+      putFiringMapEntryScoring(5.59, new FiringParameters(58, 22, 1, 35, 7));
 
       // Passing
       // need to be 112 inches past the blue line to clear the net
@@ -506,8 +512,7 @@ public final class Constants {
     public static final int ledStart = 0;
     public static final int ledEnd = 0;
   }
-
-  public static class Shooter {
+   public static class Shooter {
 
     public static final double mechLatencyMs = 20.0; // TODO how long the mechanism takes to respond
     public static final double maxTiltDeg =

@@ -65,6 +65,8 @@ public class Shooter extends SubsystemBase {
   private FiringParameters firingParameters;
 
   private boolean unwindComplete = false;
+private boolean inIdle = true;
+  private ProjectileSimulator sim;
 
   public Shooter(
       Flywheel flywheel,
@@ -314,6 +316,7 @@ public class Shooter extends SubsystemBase {
   }
 
   public void requestShoot() {
+    inIdle = false;
     Logger.recordOutput("Shooter/currentMethod", "requestShoot()");
     if (Constants.firingManagerMode == Constants.SubsystemMode.TUNING) {
       return;
@@ -360,6 +363,7 @@ public class Shooter extends SubsystemBase {
   }
 
   public void requestIdle() {
+    inIdle = true;
     Logger.recordOutput("Shooter/currentMethod", "requestIdle()");
     if (state == ShooterState.UNWIND && unwindComplete) {
       state = ShooterState.IDLE;
@@ -372,6 +376,14 @@ public class Shooter extends SubsystemBase {
   public void requestUnjam() {
     Logger.recordOutput("Shooter/currentMethod", "requestUnjam(");
     state = ShooterState.UNJAM;
+  }
+
+  public void endIdle() {
+    inIdle = false;
+  }
+
+  public boolean isInIdle() {
+    return inIdle;
   }
 
   private FiringTarget getShootingTarget(Translation2d robotPosition) {

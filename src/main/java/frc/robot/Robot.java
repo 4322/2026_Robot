@@ -290,12 +290,6 @@ public class Robot extends LoggedRobot {
     StatusLogger.disableAutoLogging(); // disable REV logging
     SignalLogger.stop(); // disable CTRE logging
     CommandScheduler.getInstance().schedule(FollowPathCommand.warmupCommand());
-
-    try {
-      // wait for cameras to connect due to high CPU
-      Thread.sleep(5000);
-    } catch (InterruptedException e) {
-    }
   }
 
   /** This function is called periodically during all modes. */

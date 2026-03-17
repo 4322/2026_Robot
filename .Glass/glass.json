@@ -22,6 +22,7 @@
       "/SmartDashboard/Field": "Field2d",
       "/SmartDashboard/PathPlanner": "Alerts",
       "/SmartDashboard/PhotonAlerts": "Alerts",
+      "/SmartDashboard/TestCommands": "String Chooser",
       "/SmartDashboard/VisionSystemSim-main/Sim Field": "Field2d"
     },
     "windows": {
@@ -119,6 +120,15 @@
             1.0,
             1.0,
             0.0,
+            255.0
+          ],
+          "style": "Line (Closed)"
+        },
+        "Blue.towerZone": {
+          "color": [
+            0.0,
+            255.0,
+            219.49366760253906,
             255.0
           ],
           "style": "Line (Closed)"
@@ -279,6 +289,15 @@
             255.0,
             245.3164520263672,
             0.0,
+            255.0
+          ],
+          "style": "Line (Closed)"
+        },
+        "Red.towerZone": {
+          "color": [
+            0.0,
+            77.46842193603516,
+            255.0,
             255.0
           ],
           "style": "Line (Closed)"

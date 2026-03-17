@@ -1,6 +1,7 @@
 package frc.robot.subsystems.intake.deployer;
 
 import frc.robot.constants.Constants;
+import frc.robot.constants.Constants.SubsystemMode;
 import org.littletonrobotics.junction.Logger;
 
 public class Deployer {
@@ -43,16 +44,16 @@ public class Deployer {
     }
   }
 
-  public void unjam() {
-    // TODO
-  }
-
   public void setBrakeMode(boolean mode) {
     deployerIO.enableBrakeMode(mode);
   }
 
   public boolean isExtended() {
-    return (inputs.angleDeg >= Constants.Deployer.extendDeg - Constants.Deployer.tolerance);
+    if (Constants.deployerMode == SubsystemMode.DISABLED) {
+      return true;
+    } else {
+      return inputs.angleDeg >= Constants.Deployer.extendDeg - Constants.Deployer.tolerance;
+    }
   }
 
   public void setGoal(DeployerState state) {
@@ -60,6 +61,10 @@ public class Deployer {
   }
 
   public boolean isStowed() {
-    return (inputs.angleDeg <= Constants.Deployer.retractDeg + Constants.Deployer.tolerance);
+    if (Constants.deployerMode == SubsystemMode.DISABLED) {
+      return true;
+    } else {
+      return inputs.angleDeg <= Constants.Deployer.retractDeg + Constants.Deployer.tolerance;
+    }
   }
 }

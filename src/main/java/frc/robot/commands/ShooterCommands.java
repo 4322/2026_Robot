@@ -30,7 +30,7 @@ public class ShooterCommands {
   }
 
   public static Command idle(Shooter shooter) {
-    return Commands.run(() -> shooter.requestIdle(), shooter);
+    return Commands.run(() -> shooter.requestIdle(), shooter).finallyDo(() -> shooter.endIdle());
   }
 
   public static Command trenchOverride(Hood hood) {
