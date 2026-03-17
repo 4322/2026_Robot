@@ -135,9 +135,11 @@ public final class Constants {
     public static final double supplyCurrentLimit = 40;
     public static final InvertedValue motorInvert = InvertedValue.Clockwise_Positive;
     public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
-    public static final double kS = 0.25;
+
+    // max RPS for a burst is 75 due to drop in battery voltage
+    public static final double kS = 0.28;
     public static final double kV = 0.128;
-    public static final double kP = 0;
+    public static final double kP = 2;
     public static final double kI = 0;
     public static final double kD = 0;
 

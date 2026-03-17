@@ -106,6 +106,8 @@ public class FlywheelIOTalonFx implements FlywheelIO {
     inputs.motorTempCelsius = motor.getDeviceTemp().getValueAsDouble();
     inputs.followerMotorTempCelsius = followerMotor.getDeviceTemp().getValueAsDouble();
     inputs.followerBusCurrentAmps = followerMotor.getSupplyCurrent().getValueAsDouble();
+    inputs.leaderStatorAmps = motor.getStatorCurrent().getValueAsDouble();
+    inputs.followerStatorAmps = followerMotor.getStatorCurrent().getValueAsDouble();
     inputs.followerAppliedVolts = followerMotor.getMotorVoltage().getValueAsDouble();
     inputs.busCurrentAmps = motor.getSupplyCurrent().getValueAsDouble();
     if (Constants.Flywheel.canAndColorEnabled) {
