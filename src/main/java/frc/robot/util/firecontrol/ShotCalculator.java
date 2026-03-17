@@ -27,6 +27,8 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.util.Units;
+import frc.robot.constants.Constants;
 
 /**
  * Shoot-on-the-move fire control solver. Figures out what RPM and heading your robot needs while
@@ -127,8 +129,10 @@ public class ShotCalculator {
    */
   public static class Config {
     // Launcher geometry (measure from CAD)
-    public double launcherOffsetX = 0.20; // meters forward of robot center
-    public double launcherOffsetY = 0.0; // meters left of robot center
+    public static double launcherOffsetX =
+        Units.inchesToMeters(-4.6111); // meters forward of robot center
+    public static double launcherOffsetY =
+        Units.inchesToMeters(5.8889); // meters left of robot center
 
     // How close/far you can score from (meters)
     public double minScoringDistance = 0.5;
@@ -216,15 +220,24 @@ public class ShotCalculator {
 
   // LUT lookup: base value + any corrections + copilot RPM offset
   double effectiveRPM(double distance) {
-    double base = rpmMap.get(distance);
-    Double correction = correctionRpmMap.get(distance);
-    return base + (correction != null ? correction : 0.0) + rpmOffset;
+    if (Constants.ShotCalculator.useSimulatedShotTuning) {
+      double base = rpmMap.get(distance);
+      Double correction = correctionRpmMap.get(distance);
+      return base + (correction != null ? correction : 0.0) + rpmOffset;
+    } else {
+      double base = Constants.FiringManager.firingMapScoring.get(distance).getFlywheelRPM();
+      return base;
+    }
   }
 
   double effectiveTOF(double distance) {
-    double base = tofMap.get(distance);
-    Double correction = correctionTofMap.get(distance);
-    return base + (correction != null ? correction : 0.0);
+    if (Constants.ShotCalculator.useSimulatedShotTuning) {
+      double base = tofMap.get(distance);
+      Double correction = correctionTofMap.get(distance);
+      return base + (correction != null ? correction : 0.0);
+    } else {
+      return Constants.FiringManager.velocityToDistanceMapScoring.get(distance);
+    }
   }
 
   // Drag-adjusted effective TOF: actual displacement < v*tof because drag.

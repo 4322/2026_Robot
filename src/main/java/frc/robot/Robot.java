@@ -450,20 +450,23 @@ public class Robot extends LoggedRobot {
   /** This function is called periodically whilst in simulation. */
   @Override
   public void simulationPeriodic() {
+    Logger.recordOutput("Sim/shouldSimShoot", robotContainer.getShooter().shouldSimShoot());
     if (robotContainer.getShooter().shouldSimShoot()) {
       if (shotTimer.hasElapsed(0.2)) {
         shotTimer.restart();
-        // TODO launchBall(, );
+        launchBall();
       }
+      Logger.recordOutput("Sim/AttemptingToShoot", true);
+    } else {
+      Logger.recordOutput("Sim/AttemptingToShoot", false);
     }
     ballSim.tick(); // runs physics, publishes ball positions to NT
   }
 
-  public void launchBall(Translation3d launchVelocity, double spinRPM) {
+  private void launchBall() {
     ballSim.launchBall(
-        GeomUtil.pose2dToPose3d(new Pose2d(Constants.Turret.originToTurret, new Rotation2d()), 0.5)
-            .getTranslation(),
-        launchVelocity,
-        spinRPM);
+        robotContainer.getShooter().getShotPos(),
+        robotContainer.getShooter().getShotVelocity(),
+        robotContainer.getShooter().getSpinRPM());
   }
 }

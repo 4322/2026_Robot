@@ -65,7 +65,7 @@ public class Shooter extends SubsystemBase {
   private FiringParameters firingParameters;
 
   private boolean unwindComplete = false;
-private boolean inIdle = true;
+
   private ProjectileSimulator sim;
 
   public Shooter(
@@ -86,10 +86,11 @@ private boolean inIdle = true;
     this.drive = drive;
 
     ShotCalculator.Config config = new ShotCalculator.Config();
-    config.launcherOffsetX =
+    ShotCalculator.Config.launcherOffsetX =
         Constants.Turret.originToTurret
             .getX(); // how far forward the launcher is from robot center (m)
-    config.launcherOffsetY = Constants.Turret.originToTurret.getY(); // how far left, 0 if centered
+    ShotCalculator.Config.launcherOffsetY =
+        Constants.Turret.originToTurret.getY(); // how far left, 0 if centered
     config.phaseDelayMs = Constants.VisionGlobalPose.phaseDelayMs; // your vision pipeline latency
     config.mechLatencyMs =
         Constants.Shooter.mechLatencyMs; // how long the mechanism takes to respond
@@ -104,13 +105,18 @@ private boolean inIdle = true;
 
     this.shotCalculator = new ShotCalculator();
 
-    ProjectileSimulator sim = new ProjectileSimulator(Constants.ShotCalculator.params);
+    sim = new ProjectileSimulator(Constants.ShotCalculator.params);
     this.lut = sim.generateLUT();
 
     for (var entry : lut.entries()) {
       if (entry.reachable()) {
         System.out.printf(
             "%.2fm -> %.0f RPM, %.3fs TOF%n", entry.distanceM(), entry.rpm(), entry.tof());
+      }
+    }
+    for (var entry : lut.entries()) {
+      if (entry.reachable()) {
+        shotCalculator.loadLUTEntry(entry.distanceM(), entry.rpm(), entry.tof());
       }
     }
   }
@@ -285,6 +291,8 @@ private boolean inIdle = true;
             0 // roll for tilt gate (0.0 if no gyro)
             );
     launchParameters = shotCalculator.calculate(shotCalculatorInputs);
+    Logger.recordOutput(
+        "Shooter/FiringSolution/targetDistanceM", launchParameters.solvedDistanceM());
     if (launchParameters.isValid() && launchParameters.confidence() > 50) {
       if (Constants.ShotCalculator.useSimulatedShotTuning) {
         targetFlywheelSpeedRPS = launchParameters.rpm() / 60;
@@ -293,15 +301,9 @@ private boolean inIdle = true;
         targetTunnelSpeedRPS = Constants.Tunnel.shootRPS;
         targetIndexerSpeedRPS = Constants.Spindexer.shootRPS;
       } else {
-        if (AreaManager.getZoneOfPosition(drive.getTurretPose().getTranslation())
-            == Zone.ALLIANCE_ZONE) {
-          firingParameters =
-              Constants.FiringManager.firingMapScoring.get(launchParameters.solvedDistanceM());
+        firingParameters =
+            Constants.FiringManager.firingMapScoring.get(launchParameters.solvedDistanceM());
 
-        } else {
-          firingParameters =
-              Constants.FiringManager.firingMapPassing.get(launchParameters.solvedDistanceM());
-        }
         targetFlywheelSpeedRPS = firingParameters.getFlywheelRPM() / 60;
         targetHoodAngleDeg = firingParameters.getHoodAngleDeg();
         targetTunnelSpeedRPS = firingParameters.getTunnelRPS();
@@ -316,7 +318,6 @@ private boolean inIdle = true;
   }
 
   public void requestShoot() {
-    inIdle = false;
     Logger.recordOutput("Shooter/currentMethod", "requestShoot()");
     if (Constants.firingManagerMode == Constants.SubsystemMode.TUNING) {
       return;
@@ -363,7 +364,6 @@ private boolean inIdle = true;
   }
 
   public void requestIdle() {
-    inIdle = true;
     Logger.recordOutput("Shooter/currentMethod", "requestIdle()");
     if (state == ShooterState.UNWIND && unwindComplete) {
       state = ShooterState.IDLE;
@@ -376,14 +376,6 @@ private boolean inIdle = true;
   public void requestUnjam() {
     Logger.recordOutput("Shooter/currentMethod", "requestUnjam(");
     state = ShooterState.UNJAM;
-  }
-
-  public void endIdle() {
-    inIdle = false;
-  }
-
-  public boolean isInIdle() {
-    return inIdle;
   }
 
   private FiringTarget getShootingTarget(Translation2d robotPosition) {
@@ -461,9 +453,47 @@ private boolean inIdle = true;
 
   public Translation3d getShotVelocity() {
     if (launchParameters != null) {
-      return new Translation3d(); // TODO
+      double exitSpeed = sim.exitVelocity(targetFlywheelSpeedRPS);
+      double launchRad = Math.toRadians(Constants.ShotCalculator.hoodAngle);
+
+      double vHorizontal = exitSpeed * Math.cos(launchRad);
+      double vVertical = exitSpeed * Math.sin(launchRad);
+
+      Rotation2d azimuth = launchParameters.driveAngle(); // or robot yaw if you're not doing SOTM
+      double vx = vHorizontal * azimuth.getCos();
+      double vy = vHorizontal * azimuth.getSin();
+
+      Translation3d launchVel = new Translation3d(vx, vy, vVertical);
+      return launchVel;
     } else {
       return new Translation3d();
     }
+  }
+
+  public Translation3d getShotPos() {
+    if (launchParameters != null) {
+      double exitSpeed = sim.exitVelocity(targetFlywheelSpeedRPS);
+      double launchRad = Math.toRadians(Constants.ShotCalculator.hoodAngle);
+
+      double vHorizontal = exitSpeed * Math.cos(launchRad);
+      double vVertical = exitSpeed * Math.sin(launchRad);
+
+      Rotation2d azimuth = launchParameters.driveAngle(); // or robot yaw if you're not doing SOTM
+      double vx = vHorizontal * azimuth.getCos();
+      double vy = vHorizontal * azimuth.getSin();
+
+      Translation3d launchPos =
+          new Translation3d(
+              ShotCalculator.Config.launcherOffsetX,
+              ShotCalculator.Config.launcherOffsetY,
+              Constants.ShotCalculator.exitHeightM);
+      return launchPos;
+    } else {
+      return new Translation3d();
+    }
+  }
+
+  public double getSpinRPM() {
+    return targetFlywheelSpeedRPS * 60;
   }
 }
