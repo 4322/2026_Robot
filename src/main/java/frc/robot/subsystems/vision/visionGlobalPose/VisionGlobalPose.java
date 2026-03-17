@@ -16,7 +16,7 @@ import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.vision.visionGlobalPose.VisionGlobalPoseIO.GlobalPoseObservation;
 import frc.robot.util.GeomUtil;
 import frc.robot.util.PolynomialRegression;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import org.littletonrobotics.junction.Logger;
 
@@ -65,6 +65,14 @@ public class VisionGlobalPose extends SubsystemBase {
     return inputs[cameraIndex].latestTargetObservation.tx();
   }
 
+  List<Pose2d> allRobotPoses = new ArrayList<>();
+  List<Pose2d> allRobotPosesAccepted = new ArrayList<>();
+  List<Pose2d> allRobotPosesRejected = new ArrayList<>();
+
+  List<Pose2d> robotPoses = new ArrayList<>();
+  List<Pose2d> robotPosesAccepted = new ArrayList<>();
+  List<Pose2d> robotPosesRejected = new ArrayList<>();
+
   @Override
   public void periodic() {
     for (int i = 0; i < io.length; i++) {
@@ -73,16 +81,16 @@ public class VisionGlobalPose extends SubsystemBase {
     }
 
     // Initialize logging values
-    List<Pose2d> allRobotPoses = new LinkedList<>();
-    List<Pose2d> allRobotPosesAccepted = new LinkedList<>();
-    List<Pose2d> allRobotPosesRejected = new LinkedList<>();
+    allRobotPoses.clear();
+    allRobotPosesAccepted.clear();
+    allRobotPosesRejected.clear();
 
     // Loop over cameras
     for (int cameraIndex = 0; cameraIndex < io.length; cameraIndex++) {
       // Initialize logging values
-      List<Pose2d> robotPoses = new LinkedList<>();
-      List<Pose2d> robotPosesAccepted = new LinkedList<>();
-      List<Pose2d> robotPosesRejected = new LinkedList<>();
+      robotPoses.clear();
+      robotPosesAccepted.clear();
+      robotPosesRejected.clear();
 
       for (GlobalPoseObservation observation : inputs[cameraIndex].globalPoseObservations) {
         Pose3d disambiguatedRobotPose; // Robot pose chosen after disambiguation
@@ -198,16 +206,18 @@ public class VisionGlobalPose extends SubsystemBase {
                   Constants.VisionGlobalPose.stdDevBaseline
                       * Constants.VisionGlobalPose.thetaStdDevBaseline
                       * thetaStdDev));
-          Logger.recordOutput(
-              "VisionGlobalPose/StdDev/XY",
-              Constants.VisionGlobalPose.stdDevBaseline
-                  * xyStdDev
-                  * Constants.VisionGlobalPose.thetaStdDevBaseline);
-          Logger.recordOutput(
-              "VisionGlobalPose/StdDev/Theta",
-              Constants.VisionGlobalPose.stdDevBaseline
-                  * thetaStdDev
-                  * Constants.VisionGlobalPose.thetaStdDevBaseline);
+          if (Constants.VisionGlobalPose.enableVerbosePoseLogging) {
+            Logger.recordOutput(
+                "VisionGlobalPose/StdDev/XY",
+                Constants.VisionGlobalPose.stdDevBaseline
+                    * xyStdDev
+                    * Constants.VisionGlobalPose.thetaStdDevBaseline);
+            Logger.recordOutput(
+                "VisionGlobalPose/StdDev/Theta",
+                Constants.VisionGlobalPose.stdDevBaseline
+                    * thetaStdDev
+                    * Constants.VisionGlobalPose.thetaStdDevBaseline);
+          }
         } else {
           xyStdDev = Math.max(xyStdDevModel.predict(avgTagDistance), 0.000001);
 
@@ -227,36 +237,42 @@ public class VisionGlobalPose extends SubsystemBase {
                   Constants.VisionGlobalPose.stdDevBaseline * xyStdDev,
                   thetaStdDev));
 
-          Logger.recordOutput(
-              "VisionGlobalPose/StdDev/XY", Constants.VisionGlobalPose.stdDevBaseline * xyStdDev);
-          Logger.recordOutput(
-              "VisionGlobalPose/StdDev/Theta",
-              Constants.VisionGlobalPose.stdDevBaseline * thetaStdDev);
+          if (Constants.VisionGlobalPose.enableVerbosePoseLogging) {
+            Logger.recordOutput(
+                "VisionGlobalPose/StdDev/XY", Constants.VisionGlobalPose.stdDevBaseline * xyStdDev);
+            Logger.recordOutput(
+                "VisionGlobalPose/StdDev/Theta",
+                Constants.VisionGlobalPose.stdDevBaseline * thetaStdDev);
+          }
         }
       }
 
       // Log camera datadata
-      Logger.recordOutput(
-          "VisionGlobalPose/Camera" + Integer.toString(cameraIndex) + "/RobotPosesAccepted",
-          robotPosesAccepted.toArray(new Pose2d[robotPosesAccepted.size()]));
-      Logger.recordOutput(
-          "VisionGlobalPose/Camera" + Integer.toString(cameraIndex) + "/RobotPosesRejected",
-          robotPosesRejected.toArray(new Pose2d[robotPosesRejected.size()]));
-      allRobotPoses.addAll(robotPoses);
-      allRobotPosesAccepted.addAll(robotPosesAccepted);
-      allRobotPosesRejected.addAll(robotPosesRejected);
+
+      if (Constants.VisionGlobalPose.enableVerbosePoseLogging) {
+        Logger.recordOutput(
+            "VisionGlobalPose/Camera" + Integer.toString(cameraIndex) + "/RobotPosesAccepted",
+            (Pose2d[]) robotPosesAccepted.toArray());
+        Logger.recordOutput(
+            "VisionGlobalPose/Camera" + Integer.toString(cameraIndex) + "/RobotPosesRejected",
+            (Pose2d[]) robotPosesRejected.toArray());
+        allRobotPoses.addAll(robotPoses);
+        allRobotPosesAccepted.addAll(robotPosesAccepted);
+        allRobotPosesRejected.addAll(robotPosesRejected);
+      }
     }
 
     // Log summary data
-    Logger.recordOutput(
-        "VisionGlobalPose/Summary/RobotPoses",
-        allRobotPoses.toArray(new Pose2d[allRobotPoses.size()]));
-    Logger.recordOutput(
-        "VisionGlobalPose/Summary/RobotPosesAccepted",
-        allRobotPosesAccepted.toArray(new Pose2d[allRobotPosesAccepted.size()]));
-    Logger.recordOutput(
-        "VisionGlobalPose/Summary/RobotPosesRejected",
-        allRobotPosesRejected.toArray(new Pose2d[allRobotPosesRejected.size()]));
+    if (Constants.VisionGlobalPose.enableVerbosePoseLogging) {
+      Logger.recordOutput(
+          "VisionGlobalPose/Summary/RobotPoses", (Pose2d[]) allRobotPoses.toArray());
+      Logger.recordOutput(
+          "VisionGlobalPose/Summary/RobotPosesAccepted",
+          (Pose2d[]) allRobotPosesAccepted.toArray());
+      Logger.recordOutput(
+          "VisionGlobalPose/Summary/RobotPosesRejected",
+          (Pose2d[]) allRobotPosesRejected.toArray());
+    }
   }
 
   @FunctionalInterface
