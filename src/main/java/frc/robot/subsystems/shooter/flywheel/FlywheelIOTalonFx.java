@@ -5,6 +5,7 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.reduxrobotics.sensors.canandcolor.Canandcolor;
@@ -30,6 +31,9 @@ public class FlywheelIOTalonFx implements FlywheelIO {
 
     config.CurrentLimits.StatorCurrentLimit = Constants.Flywheel.statorCurrentLimit;
     config.CurrentLimits.SupplyCurrentLimit = Constants.Flywheel.supplyCurrentLimit;
+
+    config.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
+    config.Feedback.SensorToMechanismRatio = Constants.Flywheel.motorToMechanismRatio;
 
     config.MotorOutput.Inverted = Constants.Flywheel.motorInvert;
     config.MotorOutput.NeutralMode = Constants.Flywheel.neutralMode;
@@ -94,10 +98,8 @@ public class FlywheelIOTalonFx implements FlywheelIO {
 
     inputs.requestedMechanismRPS = lastRequestedVelocity;
 
-    inputs.mechanismRPS =
-        motor.getVelocity().getValueAsDouble() / Constants.Flywheel.motorToMechanismRatio;
-    inputs.followerMechanismRPS =
-        followerMotor.getVelocity().getValueAsDouble() / Constants.Flywheel.motorToMechanismRatio;
+    inputs.mechanismRPS = motor.getVelocity().getValueAsDouble();
+    inputs.followerMechanismRPS = followerMotor.getVelocity().getValueAsDouble();
 
     inputs.speedMotorRPS = motor.getVelocity().getValueAsDouble();
     inputs.appliedVolts = motor.getMotorVoltage().getValueAsDouble();
@@ -118,15 +120,12 @@ public class FlywheelIOTalonFx implements FlywheelIO {
   }
 
   @Override
-  public void setTargetMechanismRPS(double speedMechanismRotations) {
-    if (speedMechanismRotations != lastRequestedVelocity) {
-      motor.setControl(
-          velocityRequest
-              .withVelocity(speedMechanismRotations * Constants.Flywheel.motorToMechanismRatio)
-              .withEnableFOC(true));
+  public void setTargetMechanismRPS(double mechanismRPS) {
+    if (mechanismRPS != lastRequestedVelocity) {
+      motor.setControl(velocityRequest.withVelocity(mechanismRPS).withEnableFOC(true));
     }
 
-    lastRequestedVelocity = speedMechanismRotations;
+    lastRequestedVelocity = mechanismRPS;
   }
 
   @Override
