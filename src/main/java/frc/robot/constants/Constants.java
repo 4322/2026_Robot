@@ -344,7 +344,9 @@ public final class Constants {
       putFiringMapEntryScoring(2.741, new FiringParameters(45, 10, 1, 35, 7));
       putFiringMapEntryScoring(3.546, new FiringParameters(52, 10, 1, 35, 7));
       putFiringMapEntryScoring(4.538, new FiringParameters(53, 15, 1, 35, 7));
-      putFiringMapEntryScoring(5.133, new FiringParameters(53, 24, 1, 35, 7));
+      putFiringMapEntryScoring(4.734, new FiringParameters(56, 18, 1, 35, 7));
+      putFiringMapEntryScoring(5.133, new FiringParameters(56, 20, 1, 35, 7));
+      putFiringMapEntryScoring(5.59, new FiringParameters(58, 22, 1, 35, 7));
 
       // Passing
       // need to be 112 inches past the blue line to clear the net
