@@ -11,6 +11,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.constants.Constants;
+import frc.robot.util.PhoenixUtil;
 
 public class TurretIOTalonFx implements TurretIO {
   private TalonFX turretMotor;
@@ -133,6 +134,6 @@ public class TurretIOTalonFx implements TurretIO {
 
   @Override
   public void setPosition(double rot) {
-    turretMotor.setPosition(rot);
+    PhoenixUtil.tryUntilOk(5, () -> turretMotor.setPosition(rot));
   }
 }

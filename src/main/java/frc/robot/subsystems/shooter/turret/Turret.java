@@ -10,16 +10,7 @@ import org.littletonrobotics.junction.Logger;
 public class Turret {
   private TurretIO io;
   private TurretIOInputsAutoLogged inputs = new TurretIOInputsAutoLogged();
-  private Double desiredDeg = 0.0;
-  private boolean minInclusive = false;
-
-  public enum turretState {
-    DISABLED,
-    SET_TURRET_ANGLE,
-    UNWIND
-  }
-
-  public turretState state = turretState.DISABLED;
+  private double desiredDeg = 0.0;
 
   public Turret(TurretIO io) {
     this.io = io;
@@ -31,15 +22,15 @@ public class Turret {
   public void periodic() {
     io.updateInputs(inputs);
     Logger.processInputs("Turret", inputs);
-    Logger.recordOutput("Turret/State", state);
-    Logger.recordOutput("Turret/needToUnwind", needsToUnwind());
+    // Logger.recordOutput("Turret/State", state);
+    Logger.recordOutput("Turret/unwindDone", unwindDone());
 
     switch (Constants.turretMode) {
       case DISABLED -> {}
       case TUNING -> {}
       case NORMAL -> {
+        /*
         switch (state) {
-            /*
             case DISABLED -> {
               break;
             }
@@ -63,54 +54,61 @@ public class Turret {
               if (desiredDeg != null) {
                 io.setAngle(desiredDeg);
               }
-            } */
-        }
+            }
+        }*/
       }
     }
   }
 
-  public void requestAngle(Double angle, boolean safeToUnwind) {
-    this.desiredDeg = angle;
-    Logger.recordOutput("Turret/desiredDeg", desiredDeg);
+  public void requestAngle(double angle, boolean safeToUnwind) {
+    Logger.recordOutput("Turret/desiredDeg", angle);
     if (Constants.turretLocked) {
       return;
     }
+
+    // This has the additional strange effect of inverting the direction of the turret relative to
+    // robot front
+    // But I think it just cancels out lol
     double diffFromMid =
         Units.radiansToDegrees(
             MathUtil.angleModulus(
-                Units.degreesToRadians(desiredDeg - Constants.Turret.midPointPhysicalDeg)));
-    desiredDeg = Constants.Turret.midPointPhysicalDeg + diffFromMid;
-    if (RobotContainer.intake.isExtended()) {
+                Units.degreesToRadians(angle - Constants.Turret.midPointPhysicalDeg)));
+    // desiredDeg = Constants.Turret.midPointPhysicalDeg + diffFromMid;
+
+    // prev command of turret in the Full 540 deg+ Range
+    double currentDeg = this.desiredDeg;
+
+    // current position in -180..180
+    // this is what would've been commanded from diffFromMid
+    double currentDegClamped =
+        MathUtil.angleModulus(
+            Units.degreesToRadians(currentDeg - Constants.Turret.midPointPhysicalDeg));
+    double delta =
+        MathUtil.inputModulus(Units.degreesToRadians(diffFromMid - currentDegClamped), -180, 180);
+
+    this.desiredDeg = currentDeg + delta;
+    boolean willUnwind = false;
+    while (desiredDeg > Constants.Turret.maxUnwindLimitDeg) {
+      desiredDeg -= 360.0;
+      willUnwind = true;
+    }
+    while (desiredDeg < Constants.Turret.minUnwindLimitDeg) {
+      desiredDeg += 360.0;
+      willUnwind = true;
+    }
+
+    this.desiredDeg = Constants.Turret.midPointPhysicalDeg + diffFromMid;
+
+    // only update IO angle if we're allowed to
+    if (RobotContainer.intake.isExtended() && (!willUnwind || safeToUnwind)) {
       io.setAngle(desiredDeg);
     }
 
-    /*
-    if (desiredDeg != null) {
-      if (needsToUnwind()) {
-        state = turretState.UNWIND;
-      }
-    }
-    if (desiredDeg != null) {
-      if (inputs.turretDegs + 180 >= Constants.Turret.maxPhysicalLimitDeg) {
-        minInclusive = true;
-      } else if (inputs.turretDegs - 180 <= Constants.Turret.minPhysicalLimitDeg) {
-        minInclusive = false;
-      }
-      desiredDeg = angleDistance(desiredDeg, inputs.turretDegs, minInclusive);
-      if (state != turretState.UNWIND && !needsToUnwind()) {
-        state = turretState.SET_TURRET_ANGLE;
-      }
-    }
-    if (safeToUnwind && needsToUnwind() || desiredDeg == null) {
-      desiredDeg = Constants.Turret.midPointPhysicalDeg;
-    }
-      */
     Logger.recordOutput("Turret/adjustedDeg", desiredDeg);
   }
 
-  public boolean needsToUnwind() {
-    return (inputs.turretDegs >= Constants.Turret.maxUnwindLimitDeg
-        || inputs.turretDegs <= Constants.Turret.minUnwindLimitDeg);
+  public boolean unwindDone() {
+    return MathUtil.isNear(desiredDeg, inputs.turretDegs, Constants.Turret.unwindToleranceDeg);
   }
 
   public boolean isAtGoal() {
@@ -127,13 +125,12 @@ public class Turret {
     }
   }
 
-  public void setTurretAngleState() {
-    state = turretState.SET_TURRET_ANGLE;
-  }
-
   public void unwind() {
-    desiredDeg = setAngleWithinMidpoint();
-    state = turretState.UNWIND;
+    if (desiredDeg > Constants.Turret.midPointPhysicalDeg + 180) {
+      desiredDeg -= 360;
+    } else if (desiredDeg < Constants.Turret.midPointPhysicalDeg - 180) {
+      desiredDeg += 360;
+    }
   }
 
   public double getAngle() {
@@ -155,7 +152,6 @@ public class Turret {
   }
 
   private double setAngleWithinMidpoint() {
-    desiredDeg = desiredDeg == null ? Constants.Turret.midPointPhysicalDeg : desiredDeg;
     if (desiredDeg == Constants.Turret.midPointPhysicalDeg) {
       return desiredDeg;
     }
