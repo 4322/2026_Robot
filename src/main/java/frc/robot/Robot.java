@@ -446,7 +446,8 @@ public class Robot extends LoggedRobot {
   @Override
   public void simulationPeriodic() {
     Logger.recordOutput("Sim/shouldSimShoot", robotContainer.getShooter().shouldSimShoot());
-    if (robotContainer.getShooter().shouldSimShoot()) {
+    if (
+    /*robotContainer.getShooter().shouldSimShoot()*/ true) {
       if (shotTimer.hasElapsed(0.2)) {
         shotTimer.restart();
         launchBall();

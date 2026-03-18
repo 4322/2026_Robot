@@ -135,7 +135,7 @@ public class ShotCalculator {
 
     // How close/far you can score from (meters)
     public double minScoringDistance = 0.5;
-    public double maxScoringDistance = 5.0;
+    public double maxScoringDistance = 5.59;
 
     // Newton solver tuning
     public int maxIterations = 25;
@@ -314,12 +314,12 @@ public class ShotCalculator {
     // Transform robot center to launcher position
     double cosH = Math.cos(heading);
     double sinH = Math.sin(heading);
-    double launcherX = robotX + config.launcherOffsetX * cosH - config.launcherOffsetY * sinH;
-    double launcherY = robotY + config.launcherOffsetX * sinH + config.launcherOffsetY * cosH;
+    double launcherX = robotX + Config.launcherOffsetX * cosH - Config.launcherOffsetY * sinH;
+    double launcherY = robotY + Config.launcherOffsetX * sinH + Config.launcherOffsetY * cosH;
 
     // Launcher velocity includes rotational component: v_launcher = v_robot + omega x r
-    double launcherFieldOffX = config.launcherOffsetX * cosH - config.launcherOffsetY * sinH;
-    double launcherFieldOffY = config.launcherOffsetX * sinH + config.launcherOffsetY * cosH;
+    double launcherFieldOffX = Config.launcherOffsetX * cosH - Config.launcherOffsetY * sinH;
+    double launcherFieldOffY = Config.launcherOffsetX * sinH + Config.launcherOffsetY * cosH;
     double omega = fieldVel.omegaRadiansPerSecond;
     double vx = fieldVel.vxMetersPerSecond + (-launcherFieldOffY) * omega;
     double vy = fieldVel.vyMetersPerSecond + launcherFieldOffX * omega;

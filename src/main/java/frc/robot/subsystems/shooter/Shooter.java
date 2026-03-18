@@ -5,6 +5,7 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -457,7 +458,7 @@ public class Shooter extends SubsystemBase {
 
   public Translation3d getShotVelocity() {
     if (launchParameters != null) {
-      double exitSpeed = sim.exitVelocity(targetFlywheelSpeedRPS);
+      double exitSpeed = sim.exitVelocity(targetFlywheelSpeedRPS * 60);
       double launchRad = Math.toRadians(Constants.ShotCalculator.hoodAngle);
 
       double vHorizontal = exitSpeed * Math.cos(launchRad);
@@ -468,6 +469,7 @@ public class Shooter extends SubsystemBase {
       double vy = vHorizontal * azimuth.getSin();
 
       Translation3d launchVel = new Translation3d(vx, vy, vVertical);
+      Logger.recordOutput("Shooter/launchVelocity", launchVel);
       return launchVel;
     } else {
       return new Translation3d();
@@ -476,7 +478,7 @@ public class Shooter extends SubsystemBase {
 
   public Translation3d getShotPos() {
     if (launchParameters != null) {
-      double exitSpeed = sim.exitVelocity(targetFlywheelSpeedRPS);
+      double exitSpeed = sim.exitVelocity(targetFlywheelSpeedRPS * 60);
       double launchRad = Math.toRadians(Constants.ShotCalculator.hoodAngle);
 
       double vHorizontal = exitSpeed * Math.cos(launchRad);
@@ -486,11 +488,16 @@ public class Shooter extends SubsystemBase {
       double vx = vHorizontal * azimuth.getCos();
       double vy = vHorizontal * azimuth.getSin();
 
+      Translation2d offset =
+          new Translation2d(
+                  ShotCalculator.Config.launcherOffsetX, ShotCalculator.Config.launcherOffsetY)
+              .rotateBy(drive.getRobotPose().getRotation());
+
       Translation3d launchPos =
-          new Translation3d(
-              ShotCalculator.Config.launcherOffsetX,
-              ShotCalculator.Config.launcherOffsetY,
-              Constants.ShotCalculator.exitHeightM);
+          new Translation3d(drive.getTurretPosition())
+              .plus(
+                  new Translation3d(
+                      offset.getX(), offset.getY(), Constants.ShotCalculator.exitHeightM));
       return launchPos;
     } else {
       return new Translation3d();
