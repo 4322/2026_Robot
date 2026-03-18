@@ -3,6 +3,7 @@ package frc.robot.subsystems.shooter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
@@ -27,6 +28,7 @@ import frc.robot.util.GeomUtil;
 import frc.robot.util.HubShiftUtil;
 import frc.robot.util.firecontrol.ProjectileSimulator;
 import frc.robot.util.firecontrol.ShotCalculator;
+import frc.robot.util.firecontrol.ShotCalculator.LaunchParameters;
 import org.littletonrobotics.junction.Logger;
 
 public class Shooter extends SubsystemBase {
@@ -274,7 +276,13 @@ public class Shooter extends SubsystemBase {
   }
 
   private void calculateFiringSolution() {
-    firingTarget = getShootingTarget(drive.getRobotPose().getTranslation());
+    firingTarget = getShootingTarget(drive.getTurretPose().getTranslation());
+    Logger.recordOutput(
+        "Shooter/FiringTarget", new Pose2d(firingTarget.translation(), new Rotation2d()));
+    Logger.recordOutput(
+        "Shooter/FiringTargetAndTranslation",
+        new Pose2d(firingTarget.translation(), new Rotation2d())
+            .plus(new Transform2d(firingTarget.translation(), Rotation2d.kZero)));
     shotCalculatorInputs =
         new ShotCalculator.ShotInputs(
             drive.getRobotPose(),
@@ -287,8 +295,16 @@ public class Shooter extends SubsystemBase {
             0 // roll for tilt gate (0.0 if no gyro)
             );
     launchParameters = shotCalculator.calculate(shotCalculatorInputs);
+    if (launchParameters.equals(LaunchParameters.INVALID)) {
+      Logger.recordOutput("ShotCalculator/Working", false);
+    } else {
+      Logger.recordOutput("ShotCalculator/Working", true);
+    }
     Logger.recordOutput(
         "Shooter/FiringSolution/targetDistanceM", launchParameters.solvedDistanceM());
+    Logger.recordOutput(
+        "Shooter/FiringSolution/targetAngle",
+        drive.getTurretPose().rotateBy(launchParameters.driveAngle()));
     if (launchParameters.isValid() && launchParameters.confidence() > 50) {
       if (Constants.ShotCalculator.useSimulatedShotTuning) {
         targetFlywheelSpeedRPS = launchParameters.rpm() / 60;

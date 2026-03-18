@@ -526,7 +526,7 @@ public final class Constants {
   public static class ShotCalculator {
     public static final double hoodAngle = 45.0;
     public static final boolean useSimulatedShotTuning = true;
-    public static final double exitHeightM = 0.43;
+    public static final double exitHeightM = Units.inchesToMeters(21.5);
     public static final double slipFactor = 0.6;
 
     public static final ProjectileSimulator.SimParameters params =
@@ -537,12 +537,12 @@ public final class Constants {
             0.2, // Magnus coeff
             1.225, // air density
             exitHeightM, // exit height (m), floor to where the ball leaves the shooter
-            0.1016, // flywheel diameter (m), measure with calipers
+            Units.inchesToMeters(4), // flywheel diameter (m), measure with calipers
             1.83, // target height (m), from game manual
             0.6, // TODO slip factor (0=no grip, 1=perfect), tune this on the real robot
             hoodAngle, // launch angle from horizontal, measure from CAD
             0.001, // sim timestep
-            1500,
+            0,
             6000,
             25,
             5.0 // RPM search range, iterations, max sim time

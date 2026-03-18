@@ -28,6 +28,7 @@ import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
+import org.littletonrobotics.junction.Logger;
 
 /**
  * Shoot-on-the-move fire control solver. Figures out what RPM and heading your robot needs while
@@ -256,6 +257,7 @@ public class ShotCalculator {
         || inputs.robotPose() == null
         || inputs.fieldVelocity() == null
         || inputs.robotVelocity() == null) {
+      Logger.recordOutput("ShotCalculator/error", "Null inputs");
       return LaunchParameters.INVALID;
     }
 
@@ -269,6 +271,7 @@ public class ShotCalculator {
         || Double.isNaN(poseY)
         || Double.isInfinite(poseX)
         || Double.isInfinite(poseY)) {
+      Logger.recordOutput("ShotCalculator/error", "Invalid pose");
       return LaunchParameters.INVALID;
     }
 
@@ -301,6 +304,7 @@ public class ShotCalculator {
     Translation2d hubForward = inputs.hubForward();
     double dot = (hubX - robotX) * hubForward.getX() + (hubY - robotY) * hubForward.getY();
     if (dot < 0) {
+      Logger.recordOutput("ShotCalculator/error", "Behind target");
       return LaunchParameters.INVALID;
     }
 
@@ -308,6 +312,7 @@ public class ShotCalculator {
     // suppress firing when the chassis is tilted beyond the threshold.
     if (Math.abs(inputs.pitchDeg()) > config.maxTiltDeg
         || Math.abs(inputs.rollDeg()) > config.maxTiltDeg) {
+      Logger.recordOutput("ShotCalculator/error", "Tilted");
       return LaunchParameters.INVALID;
     }
 
@@ -330,6 +335,7 @@ public class ShotCalculator {
     double distance = Math.hypot(rx, ry);
 
     if (distance < config.minScoringDistance || distance > config.maxScoringDistance) {
+      Logger.recordOutput("ShotCalculator/error", "Out of range/Too close");
       return LaunchParameters.INVALID;
     }
 
@@ -337,6 +343,7 @@ public class ShotCalculator {
 
     // Speed cap: shots above this speed are out of calibration range
     if (robotSpeed > config.maxSOTMSpeed) {
+      Logger.recordOutput("ShotCalculator/error", "Too fast");
       return LaunchParameters.INVALID;
     }
 
