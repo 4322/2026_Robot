@@ -166,19 +166,50 @@ public class Turret {
   }
 
   private double getRotation() {
-    int CANCoderOneMod = mod(inputs.encoderOneCount, Constants.Turret.CANCoderTwoRatio);
-    int CANCoderTwoMod = mod(inputs.encoderTwoCount, Constants.Turret.CANCoderOneRatio);
-    double turretFullRotations = mod((10 * CANCoderOneMod) + (36 * CANCoderTwoMod), 45);
-    double turretFractionalRotations =
-        inputs.encoderTwoCount
-            / (double) Constants.Turret.CANCoderResolution
-            / Constants.Turret.CANCoderTwoRatio;
+
+    // Based off of 4522's "brute force" solver:
+    // https://www.chiefdelphi.com/uploads/short-url/vvrM1V1pqvDnnZfHtAhS02mBVIi.pdf
+    // This is only capable of calculating rotation in the 0-360 degree range.
+    // This is because there's an ambiguity when the turret rotates 360 degrees; at one full
+    // rotation both sensors will be at (0, 0) again.
+    // Might be problematic in a brownout + over-rotated turret, but that's not here nor there.
+    final int GCD = Constants.Turret.CANCoderOneRatio * Constants.Turret.CANCoderTwoRatio;
+    double encoderOne = inputs.encoderOneCount / Constants.Turret.CANCoderResolution;
+    double encoderTwo = inputs.encoderTwoCount / Constants.Turret.CANCoderResolution;
+
+    double bestError = Double.MAX_VALUE;
+    double turretFullRotations = 0.5;
+
+    // look for the entry in both lists of possible values that is the same.
+    for (int i = 0; i < GCD; i++) {
+      // generate the candidate rotation value from encoder 1
+      double candidate1 = mod(encoderOne + (double) i / Constants.Turret.CANCoderOneRatio, 1.0);
+      for (int j = 0; j < GCD; j++) {
+        // generate the candidate rotation value from encoder 2
+        double candidate2 = mod((encoderTwo + (double) i / Constants.Turret.CANCoderTwoRatio), 1.0);
+        double error = Math.abs(candidate2 - candidate1);
+        if (error < bestError) {
+          bestError = error;
+          turretFullRotations = candidate1;
+        }
+      }
+    }
     Logger.recordOutput("Turret/fullRotations", turretFullRotations);
-    Logger.recordOutput("Turret/fractionalRotations", turretFractionalRotations);
-    return turretFullRotations + turretFractionalRotations;
+    return turretFullRotations;
+
+    // int CANCoderOneMod = mod(inputs.encoderOneCount, Constants.Turret.CANCoderTwoRatio);
+    // int CANCoderTwoMod = mod(inputs.encoderTwoCount, Constants.Turret.CANCoderOneRatio);
+    // double turretFullRotations = mod((10 * CANCoderOneMod) + (36 * CANCoderTwoMod), 45);
+    // double turretFractionalRotations =
+    //    inputs.encoderTwoCount
+    //        / (double) Constants.Turret.CANCoderResolution
+    //        / Constants.Turret.CANCoderTwoRatio;
+    // Logger.recordOutput("Turret/fullRotations", turretFullRotations);
+    // Logger.recordOutput("Turret/fractionalRotations", turretFractionalRotations);
+    // return turretFullRotations + turretFractionalRotations;
   }
 
-  private int mod(int a, int b) {
+  private static double mod(double a, double b) {
     return ((a % b) + b) % b;
   }
 }

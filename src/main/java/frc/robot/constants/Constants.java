@@ -427,6 +427,8 @@ public final class Constants {
   public static final class VisionGlobalPose {
     // TODO
     public static final boolean enableGlobalPoseTrigEstimation = false;
+    // See if this helps with NT/CPU stability
+    public static final boolean enableVerbosePoseLogging = false;
     // Camera names, must match names configured on coprocessor
     public static String frontRightName = "FrontRight";
     public static String frontLeftName = "FrontLeft";
