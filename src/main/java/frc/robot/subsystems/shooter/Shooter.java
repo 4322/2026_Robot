@@ -27,13 +27,12 @@ public class Shooter extends SubsystemBase {
 
   public enum ShooterState {
     DISABLED,
-    IDLE, // Spindexer stopped, flywheel at full speed, tunnel at full speed
+    IDLE,
     UNWIND,
     PRESHOOT, // Flywheel gets up to speed; Turret/hood aim
     SHOOT, // Spindexer and tunnel get up to speed
     TRENCH,
-    UNJAM,
-    STOP // Everything but flywheel stopped
+    UNJAM
   }
 
   private ShooterState state = ShooterState.DISABLED;
@@ -130,19 +129,19 @@ public class Shooter extends SubsystemBase {
       case IDLE -> {
         spindexer.requestIdle();
         turret.requestAngle(targetTurretAngleDeg, true);
-        if (Constants.turretLocked) {
-          if (spindexer.isStopped()) {
-            tunnel.requestIdle();
-          }
-        } else {
-          tunnel.requestGoal(targetTunnelSpeedRPS);
-        }
-
         if (AreaManager.isTrench(drive.getTurretPosition())) {
           hood.requestGoal(Constants.Hood.safeAngleDeg);
         } else {
           Logger.recordOutput("Shooter/isHoodDangerZone", false);
           hood.requestGoal(targetHoodAngleDeg);
+        }
+
+        if (spindexer.isStopped()) {
+          tunnel.requestIdle();
+          if (tunnel.isStopped()) {
+            flywheel.requestGoal(Constants.Flywheel.idleRPS);
+            targetFlywheelSpeedRPS = Constants.Flywheel.idleRPS;
+          }
         }
       }
       case UNWIND -> {
@@ -186,15 +185,6 @@ public class Shooter extends SubsystemBase {
         turret.requestAngle(targetTurretAngleDeg, false);
         tunnel.requestGoal(Constants.Tunnel.unjamRPS);
         spindexer.requestGoal(Constants.Spindexer.unjamRPS);
-      }
-      case STOP -> {
-        flywheel.requestGoal(Constants.Flywheel.idleRPS);
-        hood.requestGoal(targetHoodAngleDeg);
-        turret.requestAngle(targetTurretAngleDeg, true);
-        spindexer.requestIdle();
-        if (spindexer.isStopped()) {
-          tunnel.requestIdle();
-        }
       }
     }
 
@@ -265,7 +255,7 @@ public class Shooter extends SubsystemBase {
     if (AreaManager.getZoneOfPosition(drive.getRobotPose().getTranslation()) == Zone.ALLIANCE_ZONE
         && !HubShiftUtil.getShiftedShiftInfo().active()) {
       if (Constants.turretLocked) {
-        state = ShooterState.STOP;
+        state = ShooterState.IDLE;
         return;
       }
       // Don't shoot if inactive
@@ -283,7 +273,6 @@ public class Shooter extends SubsystemBase {
       if (state == ShooterState.PRESHOOT
           || state == ShooterState.IDLE
           || state == ShooterState.UNJAM
-          || state == ShooterState.STOP
           || (state == ShooterState.UNWIND && unwindComplete)) {
         unwindComplete = false;
         state = ShooterState.PRESHOOT;
@@ -308,17 +297,6 @@ public class Shooter extends SubsystemBase {
     Logger.recordOutput("Shooter/currentMethod", "requestIdle()");
     if (state == ShooterState.UNWIND && unwindComplete) {
       state = ShooterState.IDLE;
-    } else if (state == ShooterState.PRESHOOT || state == ShooterState.SHOOT) {
-      unwindComplete = false;
-      state = ShooterState.UNWIND;
-    }
-  }
-
-  public void requestStop() {
-    inIdle = true;
-    Logger.recordOutput("Shooter/currentMethod", "requestStop()");
-    if (state == ShooterState.UNWIND && unwindComplete) {
-      state = ShooterState.STOP;
     } else if (state == ShooterState.PRESHOOT || state == ShooterState.SHOOT) {
       unwindComplete = false;
       state = ShooterState.UNWIND;

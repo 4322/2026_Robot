@@ -33,10 +33,6 @@ public class ShooterCommands {
     return Commands.run(() -> shooter.requestIdle(), shooter).finallyDo(() -> shooter.endIdle());
   }
 
-  public static Command stop(Shooter shooter) {
-    return Commands.run(() -> shooter.requestStop(), shooter).finallyDo(() -> shooter.endIdle());
-  }
-
   public static Command trenchOverride(Hood hood) {
     return Commands.run(() -> hood.trenchOverride(true))
         .finallyDo(() -> hood.trenchOverride(false));

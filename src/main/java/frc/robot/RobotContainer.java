@@ -417,7 +417,7 @@ public class RobotContainer {
     }
     controller2
         .rightBumper()
-        .toggleOnTrue(ShooterCommands.stop(shooter))
+        .toggleOnTrue(ShooterCommands.idle(shooter))
         .onTrue(
             Commands.run(
                     () -> {
