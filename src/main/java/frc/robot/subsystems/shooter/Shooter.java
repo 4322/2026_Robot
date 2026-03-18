@@ -137,7 +137,7 @@ public class Shooter extends SubsystemBase {
         } else {
           tunnel.requestGoal(targetTunnelSpeedRPS);
         }
-        
+
         if (AreaManager.isTrench(drive.getTurretPosition())) {
           hood.requestGoal(Constants.Hood.safeAngleDeg);
         } else {
