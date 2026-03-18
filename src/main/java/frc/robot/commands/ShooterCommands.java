@@ -12,11 +12,8 @@ import frc.robot.subsystems.shooter.hood.Hood;
 public class ShooterCommands {
 
   public static Command shoot(Shooter shooter) {
-
     return Commands.run(() -> shooter.requestShoot(), shooter);
   }
-
-  // Main commands
 
   public static Command aimAndShoot(Shooter shooter, Drive drive) {
     return Commands.parallel(
@@ -30,11 +27,11 @@ public class ShooterCommands {
   }
 
   public static Command idle(Shooter shooter) {
-    return Commands.run(() -> shooter.requestIdle(), shooter).finallyDo(() -> shooter.endIdle());
+    return Commands.run(() -> shooter.requestIdle(), shooter);
   }
 
   public static Command stop(Shooter shooter) {
-    return Commands.run(() -> shooter.requestStop(), shooter).finallyDo(() -> shooter.endIdle());
+    return Commands.run(() -> shooter.requestStop(), shooter);
   }
 
   public static Command trenchOverride(Hood hood) {

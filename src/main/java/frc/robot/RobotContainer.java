@@ -400,35 +400,23 @@ public class RobotContainer {
     Intake - Left Bumper Toggle (Driver)
     Trench Override Hood - Left Trigger while held (Driver)
     Unjam Shooter - B while held (Driver)
-    Shoot (Locked turret) - Right Trigger while held (Driver)
-
-    Disable Shoot - Right Bumper Toggle (Operator)
-
+    Shoot - Left Trigger while held (Operator)
     */
 
+    shooter.setDefaultCommand(ShooterCommands.idle(shooter));
     controller.b().whileTrue(ShooterCommands.unjam(shooter));
     controller.leftTrigger().whileTrue(ShooterCommands.trenchOverride(hood));
 
     if (Constants.turretLocked) {
-      shooter.setDefaultCommand(ShooterCommands.idle(shooter));
-      controller.rightTrigger().whileTrue(ShooterCommands.aimAndShoot(shooter, drive));
+      controller2
+          .leftTrigger()
+          .whileTrue(
+              ShooterCommands.aimAndShoot(shooter, drive).onlyIf(inNonShootingArea.negate()));
     } else {
-      shooter.setDefaultCommand(ShooterCommands.shoot(shooter));
+      controller2
+          .leftTrigger()
+          .whileTrue(ShooterCommands.shoot(shooter).onlyIf(inNonShootingArea.negate()));
     }
-    controller2
-        .rightBumper()
-        .toggleOnTrue(ShooterCommands.stop(shooter))
-        .onTrue(
-            Commands.run(
-                    () -> {
-                      controller.setRumble(GenericHID.RumbleType.kLeftRumble, 0.5);
-                    })
-                .withTimeout(0.5)
-                .finallyDo(
-                    () -> {
-                      controller.setRumble(GenericHID.RumbleType.kLeftRumble, 0.0);
-                    })
-                .onlyIf(() -> shooter.getState() != Shooter.ShooterState.IDLE));
 
     inNonShootingArea.and(() -> !shooter.isInIdle()).whileTrue(ShooterCommands.idle(shooter));
 

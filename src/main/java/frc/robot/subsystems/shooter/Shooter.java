@@ -181,9 +181,6 @@ public class Shooter extends SubsystemBase {
         }
       }
       case UNJAM -> {
-        flywheel.requestGoal(targetFlywheelSpeedRPS);
-        hood.requestGoal(targetHoodAngleDeg);
-        turret.requestAngle(targetTurretAngleDeg, false);
         tunnel.requestGoal(Constants.Tunnel.unjamRPS);
         spindexer.requestGoal(Constants.Spindexer.unjamRPS);
       }
@@ -287,7 +284,7 @@ public class Shooter extends SubsystemBase {
           || (state == ShooterState.UNWIND && unwindComplete)) {
         unwindComplete = false;
         state = ShooterState.PRESHOOT;
-        calculateFiringSolution();
+        calculateFiringSolution(); // TODO optimize out
         if (hood.isAtGoal() && flywheel.atTargetVelocity() && turret.isAtGoal()) {
           state = ShooterState.SHOOT;
         }
@@ -306,32 +303,21 @@ public class Shooter extends SubsystemBase {
   public void requestIdle() {
     inIdle = true;
     Logger.recordOutput("Shooter/currentMethod", "requestIdle()");
-    if (state == ShooterState.UNWIND && unwindComplete) {
-      state = ShooterState.IDLE;
-    } else if (state == ShooterState.PRESHOOT || state == ShooterState.SHOOT) {
-      unwindComplete = false;
-      state = ShooterState.UNWIND;
-    }
+    state = ShooterState.IDLE;
+    // TODO deal with UNWIND state
   }
 
   public void requestStop() {
     inIdle = true;
     Logger.recordOutput("Shooter/currentMethod", "requestStop()");
-    if (state == ShooterState.UNWIND && unwindComplete) {
-      state = ShooterState.STOP;
-    } else if (state == ShooterState.PRESHOOT || state == ShooterState.SHOOT) {
-      unwindComplete = false;
-      state = ShooterState.UNWIND;
-    }
+    state = ShooterState.STOP;
+    // TODO deal with UNWIND state
   }
 
   public void requestUnjam() {
     Logger.recordOutput("Shooter/currentMethod", "requestUnjam(");
     state = ShooterState.UNJAM;
-  }
-
-  public void endIdle() {
-    inIdle = false;
+    // TODO deal with UNWIND state
   }
 
   public boolean isInIdle() {
