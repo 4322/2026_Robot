@@ -109,8 +109,9 @@ public class Turret {
   }
 
   public boolean needsToUnwind() {
-    return (inputs.turretDegs >= Constants.Turret.maxUnwindLimitDeg
-        || inputs.turretDegs <= Constants.Turret.minUnwindLimitDeg);
+    return false; /*
+                  return (inputs.turretDegs >= Constants.Turret.maxUnwindLimitDeg
+                      || inputs.turretDegs <= Constants.Turret.minUnwindLimitDeg);*/
   }
 
   public boolean isAtGoal() {
