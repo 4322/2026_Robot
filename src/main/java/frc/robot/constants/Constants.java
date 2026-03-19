@@ -55,7 +55,7 @@ public final class Constants {
   public static final SubsystemMode ledMode = SubsystemMode.DISABLED;
   public static final SubsystemMode visionGlobalPose = SubsystemMode.NORMAL;
   public static final SubsystemMode visionObjectDetection = SubsystemMode.DISABLED;
-  public static final SubsystemMode firingManagerMode = SubsystemMode.NORMAL;
+  public static final SubsystemMode firingManagerMode = SubsystemMode.TUNING;
   public static final boolean turretLocked = false;
   public static boolean shootOnTheMoveEnabled = false;
   public static final boolean frontRightCameraEnable = true;
@@ -342,6 +342,16 @@ public final class Constants {
       // Meters is center of turret to 3 inches behind center from hub
 
       // Shooting
+      putFiringMapEntryScoring(1.089, new FiringParameters(43, 5, 1, 35, 7));
+      putFiringMapEntryScoring(2.09, new FiringParameters(45, 9, 1, 35, 7));
+      putFiringMapEntryScoring(2.78, new FiringParameters(51.2, 9, 1, 35, 7));
+      putFiringMapEntryScoring(3.57, new FiringParameters(56, 11, 1, 35, 7));
+      putFiringMapEntryScoring(4.542, new FiringParameters(58, 18, 1, 35, 7));
+      putFiringMapEntryScoring(4.741, new FiringParameters(59, 18, 1, 35, 7));
+      putFiringMapEntryScoring(5.121, new FiringParameters(61, 19, 1, 35, 7));
+      putFiringMapEntryScoring(5.821, new FiringParameters(62.5, 23, 1, 35, 7));
+
+      /* Tuned shots with fresh kicker wheels
       putFiringMapEntryScoring(1.111, new FiringParameters(45, 3.5, 1, 35, 7));
       putFiringMapEntryScoring(2.129, new FiringParameters(44.7, 5, 1, 35, 7));
       putFiringMapEntryScoring(2.741, new FiringParameters(45, 10, 1, 35, 7));
@@ -350,6 +360,7 @@ public final class Constants {
       putFiringMapEntryScoring(4.734, new FiringParameters(56, 18, 1, 35, 7));
       putFiringMapEntryScoring(5.133, new FiringParameters(56, 20, 1, 35, 7));
       putFiringMapEntryScoring(5.59, new FiringParameters(58, 22, 1, 35, 7));
+       */
 
       // Passing
       // need to be 112 inches past the blue line to clear the net
@@ -366,9 +377,10 @@ public final class Constants {
     public static final boolean alwaysTargetAllianceZone = true;
   }
 
-  public static final double fixedSolutionBlueDeg = 0;
+  public static final double fixedSolutionBlueDeg = -73;
+  // Trench structure - distance 2.90
   public static final FiringSolution fixedSolutionBlue =
-      new FiringSolution(50, 15, fixedSolutionBlueDeg, 35, 7);
+      new FiringSolution(53, 10, fixedSolutionBlueDeg, 35, 7);
   public static final FiringSolution fixedSolutionRed =
       new FiringSolution(50, 15, fixedSolutionBlueDeg + 180, 35, 7);
 
