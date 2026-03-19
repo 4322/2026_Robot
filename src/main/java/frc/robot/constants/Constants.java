@@ -146,7 +146,7 @@ public final class Constants {
 
     public static final double motorToMechanismRatio = 1;
     public static final double mechanismToleranceRPS = 2.0;
-    public static final int idleRPS = 15;
+    public static final int idleRPS = 0; // normally 15
 
     public static final int canandcolorId = 0;
     public static final boolean canAndColorEnabled = false;
