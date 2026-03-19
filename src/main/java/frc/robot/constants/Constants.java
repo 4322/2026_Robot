@@ -14,6 +14,7 @@ import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
 import edu.wpi.first.math.interpolation.InverseInterpolator;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotBase;
+import frc.robot.subsystems.shooter.firingManager.FiringManager.FiringSolution;
 import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetection.ObjectDetectionType;
 
 /**
@@ -364,6 +365,12 @@ public final class Constants {
 
     public static final boolean alwaysTargetAllianceZone = true;
   }
+
+  public static final double fixedSolutionBlueDeg = 0;
+  public static final FiringSolution fixedSolutionBlue =
+      new FiringSolution(50, 15, fixedSolutionBlueDeg, 35, 7);
+  public static final FiringSolution fixedSolutionRed =
+      new FiringSolution(50, 15, fixedSolutionBlueDeg + 180, 35, 7);
 
   public static class FiringTargetTranslations {
     // Right/left are determined as view from blue alliance driver station

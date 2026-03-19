@@ -12,7 +12,11 @@ import frc.robot.subsystems.shooter.hood.Hood;
 public class ShooterCommands {
 
   public static Command shoot(Shooter shooter) {
-    return Commands.run(() -> shooter.requestShoot(), shooter);
+    return Commands.run(() -> shooter.requestShoot(false), shooter);
+  }
+
+  public static Command shootFixed(Shooter shooter) {
+    return Commands.run(() -> shooter.requestShoot(true), shooter);
   }
 
   public static Command aimAndShoot(Shooter shooter, Drive drive) {

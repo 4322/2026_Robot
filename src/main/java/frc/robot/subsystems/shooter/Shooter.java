@@ -6,6 +6,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Robot;
 import frc.robot.constants.Constants;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.led.LED;
@@ -54,6 +55,7 @@ public class Shooter extends SubsystemBase {
 
   private boolean unwindComplete = false;
   private boolean inIdle = true;
+  private boolean fixedPositionShooting = false;
 
   public Shooter(
       Flywheel flywheel,
@@ -236,6 +238,19 @@ public class Shooter extends SubsystemBase {
   }
 
   private void calculateFiringSolution() {
+    if (fixedPositionShooting) {
+      targetHoodAngleDeg = Constants.fixedSolutionBlue.hoodAngle();
+      targetFlywheelSpeedRPS = Constants.fixedSolutionBlue.flywheelSpeedRPS();
+
+      targetTunnelSpeedRPS = Constants.fixedSolutionBlue.tunnelSpeedRPS();
+      targetIndexerSpeedRPS = Constants.fixedSolutionBlue.indexerSpeedRPS();
+      if (Robot.alliance == DriverStation.Alliance.Blue) {
+        targetTurretAngleDeg = Constants.fixedSolutionBlue.turretAngleDeg();
+      } else {
+        targetTurretAngleDeg = Constants.fixedSolutionRed.turretAngleDeg();
+      }
+    }
+    
     FiringSolution firingSolution =
         FiringManager.getFiringSolution(
             drive.getTurretPose(),
@@ -252,8 +267,9 @@ public class Shooter extends SubsystemBase {
     return state;
   }
 
-  public void requestShoot() {
+  public void requestShoot(boolean fixedPosition) {
     inIdle = false;
+    fixedPositionShooting = fixedPosition;
     Logger.recordOutput("Shooter/currentMethod", "requestShoot()");
     if (Constants.firingManagerMode == Constants.SubsystemMode.TUNING) {
       return;
