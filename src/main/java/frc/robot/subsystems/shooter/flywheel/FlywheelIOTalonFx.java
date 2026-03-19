@@ -124,7 +124,11 @@ public class FlywheelIOTalonFx implements FlywheelIO {
   @Override
   public void setTargetMechanismRPS(double mechanismRPS) {
     if (mechanismRPS != lastRequestedVelocity) {
-      motor.setControl(velocityRequest.withVelocity(mechanismRPS).withEnableFOC(true));
+      if (mechanismRPS == 0) {
+        motor.stopMotor();
+      } else {
+        motor.setControl(velocityRequest.withVelocity(mechanismRPS).withEnableFOC(true));
+      }
     }
 
     lastRequestedVelocity = mechanismRPS;
