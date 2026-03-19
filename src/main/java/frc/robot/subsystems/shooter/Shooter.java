@@ -132,12 +132,13 @@ public class Shooter extends SubsystemBase {
       case IDLE -> {
         spindexer.requestIdle();
         turret.requestAngle(targetTurretAngleDeg, true);
-        if (Constants.turretLocked) {
-          if (spindexer.isStopped()) {
-            tunnel.requestIdle();
-          }
+        if (spindexer.isStopped()) {
+          tunnel.requestIdle();
         } else {
           tunnel.requestGoal(targetTunnelSpeedRPS);
+        }
+        if (tunnel.isStopped()) {
+          flywheel.requestGoal(Constants.Flywheel.motorId);
         }
 
         if (AreaManager.isTrench(drive.getTurretPosition())) {
@@ -146,6 +147,13 @@ public class Shooter extends SubsystemBase {
           Logger.recordOutput("Shooter/isHoodDangerZone", false);
           hood.requestGoal(targetHoodAngleDeg);
         }
+      }
+      case STOP -> {
+        flywheel.requestGoal(Constants.Flywheel.idleRPS);
+        hood.requestGoal(targetHoodAngleDeg);
+        turret.requestAngle(targetTurretAngleDeg, true);
+        spindexer.requestIdle();
+        tunnel.requestIdle();
       }
       case UNWIND -> {
         spindexer.requestIdle();
@@ -185,15 +193,6 @@ public class Shooter extends SubsystemBase {
       case UNJAM -> {
         tunnel.requestGoal(Constants.Tunnel.unjamRPS);
         spindexer.requestGoal(Constants.Spindexer.unjamRPS);
-      }
-      case STOP -> {
-        flywheel.requestGoal(Constants.Flywheel.idleRPS);
-        hood.requestGoal(targetHoodAngleDeg);
-        turret.requestAngle(targetTurretAngleDeg, true);
-        spindexer.requestIdle();
-        if (spindexer.isStopped()) {
-          tunnel.requestIdle();
-        }
       }
     }
 

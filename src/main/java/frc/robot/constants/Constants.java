@@ -122,7 +122,7 @@ public final class Constants {
     public static final double kI = 0;
     public static final double kD = 0;
 
-    public static final double stoppedMechanismRotationsPerSec = 0.1; // TODO
+    public static final double stoppedMechanismRotationsPerSec = 2;
     public static final double motorToMechanismRatio = 1.5; // 2 inch diameter
     public static final double minPercentVelocity = 0.95;
     // Normally 37 RPS for shooting
