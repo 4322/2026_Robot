@@ -250,7 +250,7 @@ public class Shooter extends SubsystemBase {
         targetTurretAngleDeg = Constants.fixedSolutionRed.turretAngleDeg();
       }
     }
-    
+
     FiringSolution firingSolution =
         FiringManager.getFiringSolution(
             drive.getTurretPose(),
