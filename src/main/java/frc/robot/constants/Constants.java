@@ -197,12 +197,12 @@ public final class Constants {
     public static final double kSPulsewidthUp = 80;
     public static final double kSPulsewidthDown = 45;
     public static final double kV = 0;
-    public static final double kP = 0.04;
-    public static final double kI = 0.03;
-    public static final double kIZone = 1.0;
+    public static final double kP = 0.12;
+    public static final double kI = 0.05;
+    public static final double kIZone = 0.5;
     public static final double kD = 0.0;
     public static final int idleVelocity = 0;
-    public static final double toleranceDeg = 0.1;
+    public static final double toleranceDeg = 0.25;
     public static final double homingVelocityThresholdRPS = 0.01;
     public static final double homingVelocity = -0.4;
     public static final double idleAngleDeg = 0;
