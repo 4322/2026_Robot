@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.14061340941512,
-        "y": 6.655078459343795
+        "x": 8.4,
+        "y": 6.5
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.797948177030328,
-        "y": 6.667377266457112
+        "x": 8.057334767615208,
+        "y": 6.512298807113317
       },
       "isLocked": false,
       "linkedName": "R.Neutral.Intake.Disrupt.Full"
