@@ -298,11 +298,14 @@ public class Shooter extends SubsystemBase {
           || state == ShooterState.STOP
           || (state == ShooterState.UNWIND && unwindComplete)) {
         unwindComplete = false;
-        state = ShooterState.PRESHOOT;
-        calculateFiringSolution(); // TODO optimize out
-        if (hood.isAtGoal() && flywheel.atTargetVelocity() && turret.isAtGoal()) {
-          state = ShooterState.SHOOT;
+        // don't check goals until initial requests have been sent
+        if (state == ShooterState.PRESHOOT) {
+          if (hood.isAtGoal() && flywheel.atTargetVelocity() && turret.isAtGoal()) {
+            state = ShooterState.SHOOT;
+          }
         }
+        state = ShooterState.PRESHOOT;
+
       } else {
         // Seperate if to prevent warnings DO NOT COMBINE
         if (!Constants.turretLocked) {
