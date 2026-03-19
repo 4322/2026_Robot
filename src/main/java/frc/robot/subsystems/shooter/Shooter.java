@@ -138,7 +138,7 @@ public class Shooter extends SubsystemBase {
           tunnel.requestGoal(targetTunnelSpeedRPS);
         }
         if (tunnel.isStopped()) {
-          flywheel.requestGoal(Constants.Flywheel.motorId);
+          flywheel.requestGoal(Constants.Flywheel.idleRPS);
         }
 
         if (AreaManager.isTrench(drive.getTurretPosition())) {
@@ -149,7 +149,7 @@ public class Shooter extends SubsystemBase {
         }
       }
       case STOP -> {
-        flywheel.requestGoal(Constants.Flywheel.idleRPS);
+        flywheel.requestGoal(0);
         hood.requestGoal(targetHoodAngleDeg);
         turret.requestAngle(targetTurretAngleDeg, true);
         spindexer.requestIdle();
