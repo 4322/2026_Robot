@@ -14,8 +14,6 @@ public interface FlywheelIO {
     public double followerRequestedMechanismRPS = 0.0;
     public double mechanismRPS = 0.0;
     public double followerMechanismRPS = 0.0;
-    public double speedMotorRPS = 0.0;
-    public double followerSpeedMotorRPS = 0.0;
     public double appliedVolts = 0.0;
     public double followerAppliedVolts = 0.0;
     public double motorTempCelsius = 0.0;

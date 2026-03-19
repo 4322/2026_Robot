@@ -101,7 +101,6 @@ public class FlywheelIOTalonFx implements FlywheelIO {
     inputs.mechanismRPS = motor.getVelocity().getValueAsDouble();
     inputs.followerMechanismRPS = followerMotor.getVelocity().getValueAsDouble();
 
-    inputs.speedMotorRPS = motor.getVelocity().getValueAsDouble();
     inputs.appliedVolts = motor.getMotorVoltage().getValueAsDouble();
     inputs.motorTempCelsius = motor.getDeviceTemp().getValueAsDouble();
     inputs.followerMotorTempCelsius = followerMotor.getDeviceTemp().getValueAsDouble();
