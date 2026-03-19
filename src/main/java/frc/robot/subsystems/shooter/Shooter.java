@@ -82,11 +82,13 @@ public class Shooter extends SubsystemBase {
   @Override
   public void periodic() {
     calculateFiringSolution();
-    if (AreaManager.isHoodDangerZone(drive.getTurretPosition())) {
-      state = ShooterState.TRENCH;
-    }
-    if (AreaManager.isTrench(drive.getTurretPosition())) {
-      state = ShooterState.IDLE;
+    if (!fixedPositionShooting) {
+      if (AreaManager.isHoodDangerZone(drive.getTurretPosition())) {
+        state = ShooterState.TRENCH;
+      }
+      if (AreaManager.isTrench(drive.getTurretPosition())) {
+        state = ShooterState.IDLE;
+      }
     }
 
     if (Constants.firingManagerMode == Constants.SubsystemMode.TUNING) {
@@ -240,7 +242,6 @@ public class Shooter extends SubsystemBase {
     if (fixedPositionShooting) {
       targetHoodAngleDeg = Constants.fixedSolutionBlue.hoodAngle();
       targetFlywheelSpeedRPS = Constants.fixedSolutionBlue.flywheelSpeedRPS();
-
       targetTunnelSpeedRPS = Constants.fixedSolutionBlue.tunnelSpeedRPS();
       targetIndexerSpeedRPS = Constants.fixedSolutionBlue.indexerSpeedRPS();
       if (Robot.alliance == DriverStation.Alliance.Blue) {
@@ -248,18 +249,18 @@ public class Shooter extends SubsystemBase {
       } else {
         targetTurretAngleDeg = Constants.fixedSolutionRed.turretAngleDeg();
       }
+    } else {
+      FiringSolution firingSolution =
+          FiringManager.getFiringSolution(
+              drive.getTurretPose(),
+              drive.getVelocity(),
+              AreaManager.getZoneOfPosition(drive.getTurretPosition()) == Zone.ALLIANCE_ZONE);
+      targetHoodAngleDeg = firingSolution.hoodAngle();
+      targetFlywheelSpeedRPS = firingSolution.flywheelSpeedRPS();
+      targetTurretAngleDeg = firingSolution.turretAngleDeg();
+      targetTunnelSpeedRPS = firingSolution.tunnelSpeedRPS();
+      targetIndexerSpeedRPS = firingSolution.indexerSpeedRPS();
     }
-
-    FiringSolution firingSolution =
-        FiringManager.getFiringSolution(
-            drive.getTurretPose(),
-            drive.getVelocity(),
-            AreaManager.getZoneOfPosition(drive.getTurretPosition()) == Zone.ALLIANCE_ZONE);
-    targetHoodAngleDeg = firingSolution.hoodAngle();
-    targetFlywheelSpeedRPS = firingSolution.flywheelSpeedRPS();
-    targetTurretAngleDeg = firingSolution.turretAngleDeg();
-    targetTunnelSpeedRPS = firingSolution.tunnelSpeedRPS();
-    targetIndexerSpeedRPS = firingSolution.indexerSpeedRPS();
   }
 
   public ShooterState getState() {
