@@ -105,12 +105,13 @@ public class HubTracker {
   }
 
   /** Returns whether the robot is able to shoot, including buffer time around hub windows. */
-  public static boolean isAbleToShoot() {
-    Optional<Alliance> allianceOpt = DriverStation.getAlliance();
-    if (allianceOpt.isEmpty()) {
-      Logger.recordOutput("HubTracker/isAbleToShoot", "Alliance Empty");
-      return false;
-    }
+  /*
+    public static boolean isAbleToShoot() {
+      Optional<Alliance> allianceOpt = DriverStation.getAlliance();
+      if (allianceOpt.isEmpty()) {
+        Logger.recordOutput("HubTracker/isAbleToShoot", "Alliance Empty");
+        return false;
+      }
 
       Alliance alliance = allianceOpt.get();
       double matchTime = getMatchTime();
