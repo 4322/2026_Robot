@@ -29,7 +29,7 @@ public class LHalfSweepShoot extends SequentialCommandGroup {
     Pose2d startPoseRed = path.flipPath().getStartingHolonomicPose().get();
 
     setName("L_HALF_SWEEP_SHOOT");
-    if (Constants.turretLocked) {
+    
       addCommands(
           new InstantCommand(
               () -> {
@@ -39,66 +39,14 @@ public class LHalfSweepShoot extends SequentialCommandGroup {
                   drive.setPose(startPoseRed);
                 }
               }),
-          new ParallelCommandGroup(
-              IntakeCommands.setIntaking(intake),
-              new SequentialCommandGroup(
-                  AutoBuilder.followPath(Robot.L_StartL_To_NeutralL_Intake),
-                  AutoBuilder.followPath(Robot.L_NeutralL_Intake_To_Mid),
-                  AutoBuilder.followPath(Robot.L_NeutralL_Intake_Mid_Flip),
-                  AutoBuilder.followPath(Robot.L_NeutralLMid_To_ShootL_LT) /* ,
-                ShooterCommands.aimAndShoot(shooter, drive)*/)));
-    } else {
-      addCommands(
-          new InstantCommand(
-              () -> {
-                Logger.recordOutput("Autonomous/AutoStarted", "RHalfSweepShoot");
-                if (Robot.alliance == Alliance.Blue) {
-                  drive.setPose(startPoseBlue);
-                  Logger.recordOutput("Autonomous/StartPose", "startPoseBlue");
-                } else {
-                  drive.setPose(startPoseRed);
-                  Logger.recordOutput("Autonomous/StartPose", "startPoseRed");
-                }
-              }),
-          new ParallelCommandGroup(
-              new SequentialCommandGroup(
-                  ShooterCommands.trenchOverride(hood).withTimeout(1),
-                  new WaitCommand(7),
-                  ShooterCommands.trenchOverride(hood).withTimeout(2)),
               new ParallelCommandGroup(
                   IntakeCommands.setIntaking(intake),
                   new SequentialCommandGroup(
-                      AutoBuilder.followPath(Robot.R_StartR_To_NeutralR_Intake),
-                      AutoBuilder.followPath(Robot.R_NeutralR_Intake_To_Mid),
-                      AutoBuilder.followPath(Robot.R_NeutralR_Intake_Mid_Flip),
-                      AutoBuilder.followPath(Robot.R_NeutralRMid_To_ShootR)))));
-    }
+                      AutoBuilder.followPath(Robot.L_StartL_To_NeutralL_Intake),
+                      AutoBuilder.followPath(Robot.L_NeutralL_Intake_To_Mid),
+                      AutoBuilder.followPath(Robot.L_NeutralL_Intake_Mid_Flip),
+                      AutoBuilder.followPath(Robot.L_NeutralLMid_To_ShootL))));
+    
   }
 
-  public LHalfSweepShoot(
-      Drive drive, LED led, Intake intake, VisionObjectDetection visionObjectDetection) {
-    PathPlannerPath path = Robot.R_StartR_To_NeutralR_Intake;
-    Pose2d startPoseBlue = path.getStartingHolonomicPose().get();
-
-    Pose2d startPoseRed = path.flipPath().getStartingHolonomicPose().get();
-
-    setName("R_HALF_SWEEP_SHOOT_OD");
-    addCommands(
-        new InstantCommand(
-            () -> {
-              if (Robot.alliance == Alliance.Blue) {
-                drive.setPose(startPoseBlue);
-              } else {
-                drive.setPose(startPoseRed);
-              }
-            }),
-        new ParallelCommandGroup(IntakeCommands.setIntaking(intake)),
-        new SequentialCommandGroup(
-            AutoBuilder.followPath(Robot.R_StartR_To_NeutralR_Intake),
-            AutoBuilder.followPath(Robot.R_NeutralR_Intake_To_Mid),
-            AutoBuilder.followPath(Robot.R_NeutralR_Intake_Mid_Flip),
-            new ParallelCommandGroup(
-                new AutoIntake(drive, visionObjectDetection, led, intake, false),
-                AutoBuilder.followPath(Robot.R_NeutralRMid_To_ShootR))));
-  }
 }
