@@ -1,7 +1,6 @@
 package frc.robot.subsystems.shooter.turret;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.util.Units;
 import frc.robot.RobotContainer;
 import frc.robot.constants.Constants;
 import frc.robot.util.ClockUtil;
@@ -12,6 +11,7 @@ public class Turret {
   private TurretIOInputsAutoLogged inputs = new TurretIOInputsAutoLogged();
   private Double desiredDeg = 0.0;
   private boolean minInclusive = false;
+
   public enum turretState {
     DISABLED,
     SET_TURRET_ANGLE,
@@ -38,23 +38,21 @@ public class Turret {
       case TUNING -> {}
       case NORMAL -> {
         switch (state) {
-            case DISABLED -> {
-              break;
+          case DISABLED -> {
+            break;
+          }
+          case UNWIND -> {
+            //Meant to unwind turret to a bound of mid point
+            //Add a method to replace needToUnwind as to follow above intent 
+            if (!needsToUnwind() && (isAtGoal())) {
+              state = turretState.SET_TURRET_ANGLE;
             }
-            case UNWIND -> {
-              if (!needsToUnwind()
-                  && (isAtGoal())) {
-                state = turretState.SET_TURRET_ANGLE;
-              }
+          }
+          case SET_TURRET_ANGLE -> {
+            if (desiredDeg != null) {
+              io.setAngle(desiredDeg);
             }
-            case SET_TURRET_ANGLE -> {
-              if (needsToUnwind()) {
-                state = turretState.UNWIND;
-              }
-              if (desiredDeg != null) {
-                io.setAngle(desiredDeg);
-              }
-            } 
+          }
         }
       }
     }
@@ -66,29 +64,30 @@ public class Turret {
     if (Constants.turretLocked) {
       return;
     }
-    double diffFromMid =
-        Units.radiansToDegrees(
-            MathUtil.angleModulus(
-                Units.degreesToRadians(desiredDeg - Constants.Turret.midPointPhysicalDeg)));
-    desiredDeg = Constants.Turret.midPointPhysicalDeg + diffFromMid;
+    //Null represents a zone that returns no angle
     if (desiredDeg != null) {
-      if (needsToUnwind()) {
-        state = turretState.UNWIND;
-      }
-    }
-    if (desiredDeg != null) {
+      //If statement is meant to set the requested angle to a respective bound need to fix
       if (inputs.turretDegs + 180 >= Constants.Turret.maxPhysicalLimitDeg) {
         minInclusive = true;
       } else if (inputs.turretDegs - 180 <= Constants.Turret.minPhysicalLimitDeg) {
         minInclusive = false;
       }
       desiredDeg = angleDistance(desiredDeg, inputs.turretDegs, minInclusive);
-      if (state != turretState.UNWIND && !needsToUnwind()) {
-        state = turretState.SET_TURRET_ANGLE;
-      }
-    }
-    if (safeToUnwind && needsToUnwind() || desiredDeg == null) {
+    } else {
+      //In the case when we are in a zone that returns null angle 
       desiredDeg = Constants.Turret.midPointPhysicalDeg;
+    }
+    //Sets state of turret for needed unwind cases
+    if ((desiredDeg == Constants.Turret.midPointPhysicalDeg
+        || (needsToUnwind() && safeToUnwind)
+        || RobotContainer.shooterInUnwind()) && state != turretState.UNWIND) {
+      state = turretState.UNWIND;
+      }
+    //Code that is meant to set the degree of turret is unwind cases
+    if(state == turretState.UNWIND){
+      //MathUtil.isNear(Constants.Turret.midPointPhysicalDeg, desiredDeg, 90) ? desiredDeg : setInMidpoint;
+      //setInMidpoint is a placehodler to reprsent a mod method
+      //Meant to reduce desired degree to a number that is between +- 90 of mid
     }
     Logger.recordOutput("Turret/adjustedDeg", desiredDeg);
   }

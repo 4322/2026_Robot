@@ -456,6 +456,10 @@ public class RobotContainer {
     return AreaManager.isShootingArea(drive.getRobotPose().getTranslation());
   }
 
+  public static boolean shooterInUnwind() {
+    return shooter.getState() == Shooter.ShooterState.UNWIND;
+  }
+
   public void setBrakeMode(boolean brake) {
     deployer.setBrakeMode(brake);
     flywheel.enableBrakeMode(brake);
