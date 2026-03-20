@@ -42,8 +42,8 @@ public class Turret {
             break;
           }
           case UNWIND -> {
-            //Meant to unwind turret to a bound of mid point
-            //Add a method to replace needToUnwind as to follow above intent 
+            // Meant to unwind turret to a bound of mid point
+            // Add a method to replace needToUnwind as to follow above intent
             if (!needsToUnwind() && (isAtGoal())) {
               state = turretState.SET_TURRET_ANGLE;
             }
@@ -64,9 +64,9 @@ public class Turret {
     if (Constants.turretLocked) {
       return;
     }
-    //Null represents a zone that returns no angle
+    // Null represents a zone that returns no angle
     if (desiredDeg != null) {
-      //If statement is meant to set the requested angle to a respective bound need to fix
+      // If statement is meant to set the requested angle to a respective bound need to fix
       if (inputs.turretDegs + 180 >= Constants.Turret.maxPhysicalLimitDeg) {
         minInclusive = true;
       } else if (inputs.turretDegs - 180 <= Constants.Turret.minPhysicalLimitDeg) {
@@ -74,20 +74,22 @@ public class Turret {
       }
       desiredDeg = angleDistance(desiredDeg, inputs.turretDegs, minInclusive);
     } else {
-      //In the case when we are in a zone that returns null angle 
+      // In the case when we are in a zone that returns null angle
       desiredDeg = Constants.Turret.midPointPhysicalDeg;
     }
-    //Sets state of turret for needed unwind cases
+    // Sets state of turret for needed unwind cases
     if ((desiredDeg == Constants.Turret.midPointPhysicalDeg
-        || (needsToUnwind() && safeToUnwind)
-        || RobotContainer.shooterInUnwind()) && state != turretState.UNWIND) {
+            || (needsToUnwind() && safeToUnwind)
+            || RobotContainer.shooterInUnwind())
+        && state != turretState.UNWIND) {
       state = turretState.UNWIND;
-      }
-    //Code that is meant to set the degree of turret is unwind cases
-    if(state == turretState.UNWIND){
-      //MathUtil.isNear(Constants.Turret.midPointPhysicalDeg, desiredDeg, 90) ? desiredDeg : setInMidpoint;
-      //setInMidpoint is a placehodler to reprsent a mod method
-      //Meant to reduce desired degree to a number that is between +- 90 of mid
+    }
+    // Code that is meant to set the degree of turret is unwind cases
+    if (state == turretState.UNWIND) {
+      // MathUtil.isNear(Constants.Turret.midPointPhysicalDeg, desiredDeg, 90) ? desiredDeg :
+      // setInMidpoint;
+      // setInMidpoint is a placehodler to reprsent a mod method
+      // Meant to reduce desired degree to a number that is between +- 90 of mid
     }
     Logger.recordOutput("Turret/adjustedDeg", desiredDeg);
   }
