@@ -12,7 +12,6 @@ public class Turret {
   private TurretIOInputsAutoLogged inputs = new TurretIOInputsAutoLogged();
   private Double desiredDeg = 0.0;
   private boolean minInclusive = false;
-
   public enum turretState {
     DISABLED,
     SET_TURRET_ANGLE,
@@ -39,20 +38,12 @@ public class Turret {
       case TUNING -> {}
       case NORMAL -> {
         switch (state) {
-            /*
             case DISABLED -> {
               break;
             }
             case UNWIND -> {
-              if (desiredDeg >= Constants.Turret.maxUnwindLimitDeg) {
-                desiredDeg = (desiredDeg - 360);
-              } else if (desiredDeg <= Constants.Turret.minUnwindLimitDeg) {
-                desiredDeg = (desiredDeg + 360);
-              } else {
-                desiredDeg = 0.0;
-              }
               if (!needsToUnwind()
-                  && (isAtGoal() || (inputs.turretDegs >= -180 && inputs.turretDegs <= 180))) {
+                  && (isAtGoal())) {
                 state = turretState.SET_TURRET_ANGLE;
               }
             }
@@ -63,7 +54,7 @@ public class Turret {
               if (desiredDeg != null) {
                 io.setAngle(desiredDeg);
               }
-            } */
+            } 
         }
       }
     }
@@ -80,11 +71,6 @@ public class Turret {
             MathUtil.angleModulus(
                 Units.degreesToRadians(desiredDeg - Constants.Turret.midPointPhysicalDeg)));
     desiredDeg = Constants.Turret.midPointPhysicalDeg + diffFromMid;
-    if (RobotContainer.intake.isExtended()) {
-      io.setAngle(desiredDeg);
-    }
-
-    /*
     if (desiredDeg != null) {
       if (needsToUnwind()) {
         state = turretState.UNWIND;
@@ -104,7 +90,6 @@ public class Turret {
     if (safeToUnwind && needsToUnwind() || desiredDeg == null) {
       desiredDeg = Constants.Turret.midPointPhysicalDeg;
     }
-      */
     Logger.recordOutput("Turret/adjustedDeg", desiredDeg);
   }
 
@@ -133,7 +118,6 @@ public class Turret {
   }
 
   public void unwind() {
-    desiredDeg = setAngleWithinMidpoint();
     state = turretState.UNWIND;
   }
 
@@ -153,17 +137,6 @@ public class Turret {
     double angleDistance =
         ClockUtil.inputModulus(targetAngle - currentAngle, -180, 180, minInclusive) + currentAngle;
     return angleDistance;
-  }
-
-  private double setAngleWithinMidpoint() {
-    desiredDeg = desiredDeg == null ? Constants.Turret.midPointPhysicalDeg : desiredDeg;
-    if (desiredDeg == Constants.Turret.midPointPhysicalDeg) {
-      return desiredDeg;
-    }
-    return desiredDeg =
-        MathUtil.isNear(Constants.Turret.midPointPhysicalDeg, desiredDeg, 180)
-            ? desiredDeg
-            : Constants.Turret.midPointPhysicalDeg;
   }
 
   private double getRotation() {
