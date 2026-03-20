@@ -10,7 +10,6 @@ public class Turret {
   private TurretIO io;
   private TurretIOInputsAutoLogged inputs = new TurretIOInputsAutoLogged();
   private Double desiredDeg = 0.0;
-  private boolean minInclusive = false;
 
   public enum turretState {
     DISABLED,
@@ -66,13 +65,7 @@ public class Turret {
     }
     // Null represents a zone that returns no angle
     if (desiredDeg != null) {
-      // If statement is meant to set the requested angle to a respective bound need to fix
-      if (inputs.turretDegs + 180 >= Constants.Turret.maxPhysicalLimitDeg) {
-        minInclusive = true;
-      } else if (inputs.turretDegs - 180 <= Constants.Turret.minPhysicalLimitDeg) {
-        minInclusive = false;
-      }
-      desiredDeg = angleDistance(desiredDeg, inputs.turretDegs, minInclusive);
+      desiredDeg = angleDistance(desiredDeg, inputs.turretDegs);
     } else {
       // In the case when we are in a zone that returns null angle
       desiredDeg = Constants.Turret.midPointPhysicalDeg;
@@ -134,7 +127,14 @@ public class Turret {
     io.setBrakeMode(mode);
   }
 
-  private double angleDistance(double targetAngle, double currentAngle, boolean minInclusive) {
+  private double angleDistance(double targetAngle, double currentAngle) {
+    //Sets minInclusive based on desired degree
+    boolean minInclusive;
+    if(targetAngle - currentAngle == 180) {
+      minInclusive = false;
+    } else {
+      minInclusive = true;
+    }
     double angleDistance =
         ClockUtil.inputModulus(targetAngle - currentAngle, -180, 180, minInclusive) + currentAngle;
     return angleDistance;
