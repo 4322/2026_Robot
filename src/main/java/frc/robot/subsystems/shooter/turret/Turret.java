@@ -213,4 +213,199 @@ public class Turret {
   private static double mod(double a, double b) {
     return ((a % b) + b) % b;
   }
+    
+    // Gear ratios
+    private static final double GEAR_RATIO_5X = 5.0;
+    private static final double GEAR_RATIO_9X = 9.0;
+    private static final double MAX_TURRET_ROTATIONS = 45.0;
+    
+    // Cached turret position
+    private double turretPositionRotations = 0.0;
+    private boolean positionValid = false;
+    
+    // Tolerance for floating point comparison
+    private static final double EPSILON = 1e-6;
+    
+    /**
+     * Calculates the absolute turret position on power-up without moving.
+     * Uses Chinese Remainder Theorem approach with the two geared encoders.
+     */
+    private void calculateInitialPosition() {
+        double a = getAbsolutePositionNormalized(encoder5x);
+        double b = getAbsolutePositionNormalized(encoder9x);
+        
+        turretPositionRotations = solveTurretPosition(a, b);
+        positionValid = true;
+    }
+    
+    /**
+     * Gets normalized absolute position (0.0 to 1.0) from CANcoder.
+     * Handles CTRE's continuous position reporting.
+     */
+    private double getAbsolutePositionNormalized(CANcoder encoder) {
+        // getAbsolutePosition() returns rotations (can be negative or >1)
+        // We want the fractional part 0.0 to 1.0
+        double pos = encoder.getAbsolutePosition().getValueAsDouble();
+        pos = pos % 1.0;
+        if (pos < 0) pos += 1.0;
+        return pos;
+    }
+    
+    /**
+     * Core algorithm: Solves for turret position given two encoder readings.
+     * 
+     * Math: Find P such that:
+     *   (5 * P) % 1 = a
+     *   (9 * P) % 1 = b
+     *   0 <= P < 45
+     */
+    private double solveTurretPosition(double a, double b) {
+        // We need integers i, j where:
+        // 5*P = a + i  (i is which 5x rotation we're in)
+        // 9*P = b + j  (j is which 9x rotation we're in)
+        // 
+        // Cross multiply: 9*(a + i) = 5*(b + j)
+        // 9a + 9i = 5b + 5j
+        // 9i - 5j = 5b - 9a
+        
+        double target = 5.0 * b - 9.0 * a;
+        
+        // Find integer solution to 9i - 5j = target
+        // Extended Euclidean: 9*(-1) + 5*(2) = 1, so 9*(-target) - 5*(-2*target) = target
+        // Wait, we need 9i - 5j = target, so i0 = -target, j0 = -2*target works:
+        // 9*(-target) - 5*(-2*target) = -9t + 10t = t (but we want target, not -target)
+        // Actually: 9*(target) - 5*(2*target) = 9t - 10t = -t
+        // So: i0 = -target, j0 = -2*target gives 9*(-t) - 5*(-2t) = -9t + 10t = t
+        
+        // General solution: i = i0 + 5k, j = j0 + 9k for integer k
+        
+        double i0 = -target;
+        double j0 = -2.0 * target;
+        
+        // Find k that puts i and j in valid ranges
+        // i should be in [0, 5*45), j should be in [0, 9*45)
+        
+        double bestP = 0;
+        double minError = Double.MAX_VALUE;
+        boolean found = false;
+        
+        // Search reasonable range of k values
+        for (int k = -50; k <= 50; k++) {
+            double i = i0 + 5.0 * k;
+            double j = j0 + 9.0 * k;
+            
+            // Check if i and j are valid integers (within epsilon)
+            if (Math.abs(i - Math.round(i)) > EPSILON || Math.abs(j - Math.round(j)) > EPSILON) {
+                continue;
+            }
+            
+            int iInt = (int) Math.round(i);
+            int jInt = (int) Math.round(j);
+            
+            // Check ranges
+            if (iInt < 0 || iInt >= GEAR_RATIO_5X * MAX_TURRET_ROTATIONS) continue;
+            if (jInt < 0 || jInt >= GEAR_RATIO_9X * MAX_TURRET_ROTATIONS) continue;
+            
+            // Calculate P from both equations
+            double pFrom5 = (a + iInt) / GEAR_RATIO_5X;
+            double pFrom9 = (b + jInt) / GEAR_RATIO_9X;
+            
+            double error = Math.abs(pFrom5 - pFrom9);
+            
+            if (error < minError && error < 0.01) { // Must agree within 1% of a rotation
+                minError = error;
+                bestP = (pFrom5 + pFrom9) / 2.0; // Average for stability
+                found = true;
+            }
+        }
+        
+        if (!found) {
+            // Fallback: try brute force search if analytical solution fails
+            bestP = bruteForceSearch(a, b);
+        }
+        
+        return bestP;
+    }
+    
+    /**
+     * Brute force search as fallback - checks all 45 possible rotations.
+     */
+    private double bruteForceSearch(double a, double b) {
+        double bestP = 0;
+        double minError = Double.MAX_VALUE;
+        
+        // Check at high resolution (0.001 rotation steps)
+        for (double p = 0; p < MAX_TURRET_ROTATIONS; p += 0.001) {
+            double expected5 = (GEAR_RATIO_5X * p) % 1.0;
+            double expected9 = (GEAR_RATIO_9X * p) % 1.0;
+            
+            // Handle wrap-around for error calculation
+            double err5 = Math.abs(expected5 - a);
+            if (err5 > 0.5) err5 = 1.0 - err5;
+            
+            double err9 = Math.abs(expected9 - b);
+            if (err9 > 0.5) err9 = 1.0 - err9;
+            
+            double totalError = err5 + err9;
+            
+            if (totalError < minError) {
+                minError = totalError;
+                bestP = p;
+            }
+        }
+        
+        return bestP;
+    }
+    
+    /**
+     * Returns the absolute turret position in rotations (0 to 45).
+     * This is calculated on boot without requiring movement.
+     */
+    public double getTurretPositionRotations() {
+        if (!positionValid) {
+            calculateInitialPosition();
+        }
+        return turretPositionRotations;
+    }
+    
+    /**
+     * Returns turret position as Rotation2d (0 to 16200 degrees mapped to 0 to 2π).
+     * Note: This loses the multi-rotation information! Use getTurretPositionRotations()
+     * if you need to know which of the 45 rotations you're in.
+     */
+    public Rotation2d getTurretRotation2d() {
+        // Rotation2d only handles 0-360, so we take fractional part
+        double fraction = turretPositionRotations % 1.0;
+        return Rotation2d.fromRotations(fraction);
+    }
+    
+    /**
+     * Get the continuous angle in degrees (0 to 16200).
+     */
+    public double getTurretAngleDegrees() {
+        return turretPositionRotations * 360.0;
+    }
+    
+    /**
+     * Check if encoder readings are consistent (diagnostic).
+     */
+    public boolean isEncoderConsistent() {
+        double a = getAbsolutePositionNormalized(encoder5x);
+        double b = getAbsolutePositionNormalized(encoder9x);
+        
+        double calculatedP = solveTurretPosition(a, b);
+        
+        // Verify by computing what encoders should read
+        double expected5 = (GEAR_RATIO_5X * calculatedP) % 1.0;
+        double expected9 = (GEAR_RATIO_9X * calculatedP) % 1.0;
+        
+        double err5 = Math.abs(expected5 - a);
+        if (err5 > 0.5) err5 = 1.0 - err5;
+        
+        double err9 = Math.abs(expected9 - b);
+        if (err9 > 0.5) err9 = 1.0 - err9;
+        
+        return err5 < 0.01 && err9 < 0.01; // Within 1% of rotation
+    }
+}
 }
