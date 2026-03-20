@@ -21,7 +21,6 @@ import frc.robot.subsystems.shooter.tunnel.Tunnel;
 import frc.robot.subsystems.shooter.turret.Turret;
 import frc.robot.subsystems.vision.visionGlobalPose.VisionGlobalPose;
 import frc.robot.util.GeomUtil;
-import frc.robot.util.HubTracker;
 import org.littletonrobotics.junction.Logger;
 
 public class Shooter extends SubsystemBase {
@@ -276,7 +275,7 @@ public class Shooter extends SubsystemBase {
     }
     // If in alliance zone and shift not active
     if (AreaManager.getZoneOfPosition(drive.getRobotPose().getTranslation()) == Zone.ALLIANCE_ZONE
-        && !HubTracker.isAbleToShoot()) {
+        && !HubShiftUtil.getShiftedShiftInfo().active()) {
       if (Constants.turretLocked) {
         state = ShooterState.STOP;
         return;
