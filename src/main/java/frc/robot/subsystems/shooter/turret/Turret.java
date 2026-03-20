@@ -42,8 +42,9 @@ public class Turret {
           }
           case UNWIND -> {
             // Meant to unwind turret to a bound of mid point
-            // Add a method to replace needToUnwind as to follow above intent
-            if (!needsToUnwind() && (isAtGoal())) {
+            io.setAngle(desiredDeg);
+            if (MathUtil.isNear(inputs.turretDegs, Constants.Turret.midPointPhysicalDeg, 90)
+                && isAtGoal()) {
               state = turretState.SET_TURRET_ANGLE;
             }
           }
@@ -88,9 +89,8 @@ public class Turret {
   }
 
   public boolean needsToUnwind() {
-    return false; /*
-                  return (inputs.turretDegs >= Constants.Turret.maxUnwindLimitDeg
-                      || inputs.turretDegs <= Constants.Turret.minUnwindLimitDeg);*/
+    return (inputs.turretDegs >= Constants.Turret.maxUnwindLimitDeg
+        || inputs.turretDegs <= Constants.Turret.minUnwindLimitDeg);
   }
 
   public boolean isAtGoal() {
