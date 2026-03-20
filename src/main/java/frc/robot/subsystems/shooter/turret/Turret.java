@@ -128,9 +128,9 @@ public class Turret {
   }
 
   private double angleDistance(double targetAngle, double currentAngle) {
-    //Sets minInclusive based on desired degree
+    // Sets minInclusive based on desired degree
     boolean minInclusive;
-    if(targetAngle - currentAngle == 180) {
+    if (targetAngle - currentAngle == 180) {
       minInclusive = false;
     } else {
       minInclusive = true;
