@@ -7,19 +7,13 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Robot;
-import frc.robot.commands.AutoIntake;
 import frc.robot.commands.IntakeCommands;
-import frc.robot.commands.ShooterCommands;
-import frc.robot.constants.Constants;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.led.LED;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.shooter.hood.Hood;
-import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetection;
-import org.littletonrobotics.junction.Logger;
 
 public class LHalfSweepShoot extends SequentialCommandGroup {
 
@@ -29,24 +23,22 @@ public class LHalfSweepShoot extends SequentialCommandGroup {
     Pose2d startPoseRed = path.flipPath().getStartingHolonomicPose().get();
 
     setName("L_HALF_SWEEP_SHOOT");
-    
-      addCommands(
-          new InstantCommand(
-              () -> {
-                if (Robot.alliance == Alliance.Blue) {
-                  drive.setPose(startPoseBlue);
-                } else {
-                  drive.setPose(startPoseRed);
-                }
-              }),
-              new ParallelCommandGroup(
-                  IntakeCommands.setIntaking(intake),
-                  new SequentialCommandGroup(
-                      AutoBuilder.followPath(Robot.L_StartL_To_NeutralL_Intake),
-                      AutoBuilder.followPath(Robot.L_NeutralL_Intake_To_Mid),
-                      AutoBuilder.followPath(Robot.L_NeutralL_Intake_Mid_Flip),
-                      AutoBuilder.followPath(Robot.L_NeutralLMid_To_ShootL))));
-    
-  }
 
+    addCommands(
+        new InstantCommand(
+            () -> {
+              if (Robot.alliance == Alliance.Blue) {
+                drive.setPose(startPoseBlue);
+              } else {
+                drive.setPose(startPoseRed);
+              }
+            }),
+        new ParallelCommandGroup(
+            IntakeCommands.setIntaking(intake),
+            new SequentialCommandGroup(
+                AutoBuilder.followPath(Robot.L_StartL_To_NeutralL_Intake),
+                AutoBuilder.followPath(Robot.L_NeutralL_Intake_To_Mid),
+                AutoBuilder.followPath(Robot.L_NeutralL_Intake_Mid_Flip),
+                AutoBuilder.followPath(Robot.L_NeutralLMid_To_ShootL))));
+  }
 }
