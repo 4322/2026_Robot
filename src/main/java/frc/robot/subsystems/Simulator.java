@@ -22,7 +22,7 @@ import java.util.Map;
 import org.littletonrobotics.junction.Logger;
 
 public class Simulator extends SubsystemBase {
-  private static final RegressTests regressTest = RegressTests.SUBSYSTEM_TEST_BOTH;
+  private static final RegressTests regressTest = RegressTests.ALL_AUTOS;
   public static AutoName autoScenario;
   private TeleopScenario teleopScenario;
   private List<TeleAnomaly> teleAnomalies;
@@ -41,7 +41,8 @@ public class Simulator extends SubsystemBase {
     SUBSYSTEM_TEST_TELE,
     TEST_AUTOROTATE,
     AUTO,
-    TURRET
+    TURRET,
+    ALL_AUTOS
   }
 
   private enum TeleAnomaly {
@@ -233,8 +234,6 @@ public class Simulator extends SubsystemBase {
   private List<RegressionTest> regressionTestCases() {
     return switch (regressTest) {
       case AUTO -> List.of(new RegressionTest("AUTO", AutoName.R_FULL_SWEEP_SHOOT, Alliance.Red));
-        // Useable Autos are R_FULL_SWEEP_SHOOT, R_HALF_SWEEP_SHOOT, R_MIDLINE_SWEEP_SHOOT,
-        // R_DISRUPT_SWEEP_SHOOT, & C_DEPOT_OUTPOST
       case SHOOT -> List.of(new RegressionTest("Shoot", TeleopScenario.SHOOT, Alliance.Blue));
       case DO_NOTHING -> List.of(
           new RegressionTest("Do nothing", AutoName.DO_NOTHING, Alliance.Blue));
@@ -250,6 +249,28 @@ public class Simulator extends SubsystemBase {
           new RegressionTest("Auto Rotate", TeleopScenario.AUTO_ROTATE, Alliance.Blue));
       case TURRET -> List.of(
           new RegressionTest("Turret Test", TeleopScenario.TURRET, Alliance.Blue));
+      case ALL_AUTOS -> List.of(
+          new RegressionTest("Red/C/CDepotOutpost", AutoName.C_DEPOT_OUTPOST, Alliance.Red),
+          new RegressionTest("Red/L/LHalfSweepShoot", AutoName.L_HALF_SWEEP_SHOOT, Alliance.Red),
+          new RegressionTest(
+              "Red/R/RDisruptSweepShoot", AutoName.R_DISRUPT_SWEEP_SHOOT, Alliance.Red),
+          new RegressionTest("Red/R/RFullSweepShoot", AutoName.R_FULL_SWEEP_SHOOT, Alliance.Red),
+          new RegressionTest("Red/R/RHalfSweepShoot", AutoName.R_HALF_SWEEP_SHOOT, Alliance.Red),
+          new RegressionTest(
+              "Red/R/RMidlineSweepShoot", AutoName.R_MIDLINE_SWEEP_SHOOT, Alliance.Red),
+          new RegressionTest(
+              "Red/R/RHalfSuperSweepShoot", AutoName.R_HALF_SUPER_SWEEP_SHOOT, Alliance.Red),
+          new RegressionTest("Blue/C/CDepotOutpost", AutoName.C_DEPOT_OUTPOST, Alliance.Blue),
+          new RegressionTest("Blue/L/LHalfSweepShoot", AutoName.L_HALF_SWEEP_SHOOT, Alliance.Blue),
+          new RegressionTest(
+              "Blue/R/RDisruptSweepShoot", AutoName.R_DISRUPT_SWEEP_SHOOT, Alliance.Blue),
+          new RegressionTest("Blue/R/RFullSweepShoot", AutoName.R_FULL_SWEEP_SHOOT, Alliance.Blue),
+          new RegressionTest("Blue/R/RHalfSweepShoot", AutoName.R_HALF_SWEEP_SHOOT, Alliance.Blue),
+          new RegressionTest(
+              "Blue/R/RMidlineSweepShoot", AutoName.R_MIDLINE_SWEEP_SHOOT, Alliance.Blue),
+          new RegressionTest(
+              "Blue/R/RHalfSuperSweepShoot", AutoName.R_HALF_SUPER_SWEEP_SHOOT, Alliance.Blue));
+
       default -> List.of();
     };
   }
