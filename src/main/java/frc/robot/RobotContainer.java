@@ -407,15 +407,13 @@ public class RobotContainer {
     controller.b().whileTrue(ShooterCommands.unjam(shooter));
     controller.leftTrigger().whileTrue(ShooterCommands.trenchOverride(hood));
 
-    if (!Constants.turretLocked) {
+    if (Constants.turretLocked) {
       controller2
           .leftTrigger()
           .whileTrue(
               ShooterCommands.aimAndShoot(shooter, drive).onlyIf(inNonShootingArea.negate()));
     } else {
-      controller2
-          .leftTrigger()
-          .whileTrue(ShooterCommands.shoot(shooter).onlyIf(inNonShootingArea.negate()));
+      controller.a().whileTrue(ShooterCommands.shoot(shooter).onlyIf(inNonShootingArea.negate()));
       controller2.rightTrigger().whileTrue(ShooterCommands.shootFixed(shooter));
     }
 
