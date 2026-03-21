@@ -415,7 +415,7 @@ public class RobotContainer {
       controller
           .rightTrigger()
           .whileTrue(ShooterCommands.shoot(shooter).onlyIf(inNonShootingArea.negate()));
-      controller.rightBumper().whileTrue(ShooterCommands.shootFixed(shooter));
+      controller.a().whileTrue(ShooterCommands.shootFixed(shooter));
     }
 
     inNonShootingArea.and(() -> !shooter.isInIdle()).whileTrue(ShooterCommands.idle(shooter));
