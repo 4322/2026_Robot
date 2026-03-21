@@ -421,8 +421,9 @@ public class RobotContainer {
 
     inNonShootingArea
         .and(() -> !shooter.isInIdle())
-        .whileTrue(ShooterCommands.idle(shooter))
-        .whileFalse(
+        .whileTrue(ShooterCommands.idle(shooter));
+        
+    inNonShootingArea.negate().whileTrue(
             ShooterCommands.shoot(shooter).onlyIf(() -> DriverStation.isAutonomousEnabled()));
 
     intake.setDefaultCommand(IntakeCommands.setIdle(intake));
