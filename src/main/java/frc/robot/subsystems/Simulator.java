@@ -584,7 +584,15 @@ public class Simulator extends SubsystemBase {
               "Move",
               EventType.MOVE_JOYSTICK_DRIVE,
               new Pose2d(0.46, 0, Rotation2d.kZero)),
-          new SimEvent(t += 10, "End", EventType.END_OF_SCENARIO));
+          new SimEvent(
+              t += 10, "Stop", EventType.MOVE_JOYSTICK_DRIVE, new Pose2d(0, 0, Rotation2d.kZero)),
+          new SimEvent(
+              t += 0.1,
+              "Fixed Pose",
+              EventType.SET_POSE,
+              new FieldPose2d(3.7, 6.5, Rotation2d.kZero)),
+          new SimEvent(t += 0.1, "Fixed Shoot", EventType.HOLD_RIGHT_BUMPER),
+          new SimEvent(t += 5, "End", EventType.END_OF_SCENARIO));
 
       default -> List.of();
     };
