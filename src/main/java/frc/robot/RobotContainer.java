@@ -106,7 +106,6 @@ public class RobotContainer {
 
   // Controller
   public static final CommandXboxController controller = new CommandXboxController(0);
-  public static final CommandXboxController controller2 = new CommandXboxController(1);
 
   private final Trigger inNonShootingArea;
 
@@ -408,15 +407,15 @@ public class RobotContainer {
     controller.leftTrigger().whileTrue(ShooterCommands.trenchOverride(hood));
 
     if (Constants.turretLocked) {
-      controller2
-          .leftTrigger()
+      controller
+          .rightTrigger()
           .whileTrue(
               ShooterCommands.aimAndShoot(shooter, drive).onlyIf(inNonShootingArea.negate()));
     } else {
-      controller2
-          .leftTrigger()
+      controller
+          .rightTrigger()
           .whileTrue(ShooterCommands.shoot(shooter).onlyIf(inNonShootingArea.negate()));
-      controller2.rightTrigger().whileTrue(ShooterCommands.shootFixed(shooter));
+      controller.rightBumper().whileTrue(ShooterCommands.shootFixed(shooter));
     }
 
     inNonShootingArea.and(() -> !shooter.isInIdle()).whileTrue(ShooterCommands.idle(shooter));

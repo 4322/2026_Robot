@@ -113,12 +113,6 @@ public class Simulator extends SubsystemBase {
     DISABLE_WHEEL_SLIP,
     BLUE_INACTIVE_FIRST,
     RED_INACTIVE_FIRST,
-    TOGGLE_1_ON,
-    TOGGLE_1_OFF,
-    TOGGLE_3_ON,
-    TOGGLE_3_OFF,
-    TOGGLE_4_ON,
-    TOGGLE_4_OFF,
     END_OF_SCENARIO
   }
 
@@ -592,10 +586,6 @@ public class Simulator extends SubsystemBase {
 
   private final Drive drive;
 
-  // Controller2 simulation
-  private final int hid2Port = RobotContainer.controller2.getHID().getPort();
-  private int controller2ButtonBitmask = 0;
-
   public Simulator(Drive drive) {
     this.drive = drive;
 
@@ -709,18 +699,6 @@ public class Simulator extends SubsystemBase {
           case DISABLE_WHEEL_SLIP -> slipWheels = false;
           case BLUE_INACTIVE_FIRST -> gameSpecificMessage = "B";
           case RED_INACTIVE_FIRST -> gameSpecificMessage = "R";
-          case TOGGLE_1_ON -> setOperatorToggle(
-              frc.robot.constants.Constants.Control.toggle1ButtonNumber, true);
-          case TOGGLE_1_OFF -> setOperatorToggle(
-              frc.robot.constants.Constants.Control.toggle1ButtonNumber, false);
-          case TOGGLE_3_ON -> setOperatorToggle(
-              frc.robot.constants.Constants.Control.toggle3ButtonNumber, true);
-          case TOGGLE_3_OFF -> setOperatorToggle(
-              frc.robot.constants.Constants.Control.toggle3ButtonNumber, false);
-          case TOGGLE_4_ON -> setOperatorToggle(
-              frc.robot.constants.Constants.Control.toggle4ButtonNumber, true);
-          case TOGGLE_4_OFF -> setOperatorToggle(
-              frc.robot.constants.Constants.Control.toggle4ButtonNumber, false);
           case END_OF_SCENARIO -> {}
         }
       }
@@ -754,7 +732,6 @@ public class Simulator extends SubsystemBase {
       DriverStationSim.setGameSpecificMessage(gameSpecificMessage);
       DriverStationSim.setJoystickPOV(hidPort, 0, activePOV);
       DriverStationSim.setJoystickButtons(hidPort, activeButtonBitmask);
-      DriverStationSim.setJoystickButtons(hid2Port, controller2ButtonBitmask);
       // notifyNewData() fails 1 out of 5000 calls for unknown reasons
       DriverStationSim.notifyNewData();
     } while (DriverStation.getStickAxisCount(hidPort) != 6
@@ -778,9 +755,6 @@ public class Simulator extends SubsystemBase {
     DriverStationSim.setJoystickIsXbox(hidPort, true);
     DriverStationSim.setJoystickAxisCount(hidPort, 6);
     DriverStationSim.setJoystickButtonCount(hidPort, 10);
-
-    DriverStationSim.setJoystickButtonCount(hid2Port, 12);
-    DriverStationSim.setJoystickAxisCount(hid2Port, 0);
   }
 
   private void resetScenario() {
@@ -815,7 +789,6 @@ public class Simulator extends SubsystemBase {
     stopJoystick();
     activeButtonBitmask = 0;
     momentaryButtonBitmask = 0;
-    controller2ButtonBitmask = 0;
     gameSpecificMessage = "";
     DriverStationSim.setEnabled(false);
 
@@ -884,15 +857,6 @@ public class Simulator extends SubsystemBase {
 
   private void releaseTrigger(ControllerAxis axis) {
     persistAxis(axis, 0.0);
-  }
-
-  // Operator board toggle control
-  private void setOperatorToggle(int buttonNumber, boolean on) {
-    if (on) {
-      controller2ButtonBitmask |= 1 << (buttonNumber - 1);
-    } else {
-      controller2ButtonBitmask &= ~(1 << (buttonNumber - 1));
-    }
   }
 
   public static boolean wheelSlip() {
