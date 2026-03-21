@@ -33,7 +33,8 @@ public class CDepotOutpost extends SequentialCommandGroup {
             }),
         new ParallelCommandGroup(
             IntakeCommands.setIntaking(intake),
-            AutoBuilder.followPath(Robot.C_Start_To_Depot)
-                .andThen(AutoBuilder.followPath(Robot.C_Depot_To_Outpost))));
+            new SequentialCommandGroup(
+                AutoBuilder.followPath(Robot.C_Start_To_Depot),
+                AutoBuilder.followPath(Robot.C_Depot_To_Outpost))));
   }
 }
