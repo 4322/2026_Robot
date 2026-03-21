@@ -220,8 +220,8 @@ public class FiringManager {
             return Constants.FiringTargetTranslations.Blue.neutralLeftTranslation;
           }
         default:
-          Logger.recordOutput("FiringManager/targetZone", "Invalid");
-          return new Translation2d();
+          Logger.recordOutput("FiringManager/targetZone", "Invalid (Targeting Hub)");
+          return Constants.FiringTargetTranslations.Blue.hubTranslation;
       }
     } else {
       switch (zone) {
@@ -251,8 +251,8 @@ public class FiringManager {
             return Constants.FiringTargetTranslations.Red.neutralLeftTranslation;
           }
         default:
-          Logger.recordOutput("FiringManager/targetZone", "Invalid");
-          return new Translation2d();
+          Logger.recordOutput("FiringManager/targetZone", "Invalid (Targeting Hub)");
+          return Constants.FiringTargetTranslations.Red.hubTranslation;
       }
     }
   }

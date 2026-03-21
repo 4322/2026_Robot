@@ -48,9 +48,9 @@ public final class Constants {
   public static final SubsystemMode spindexerMode = SubsystemMode.NORMAL;
   public static final SubsystemMode tunnelMode = SubsystemMode.NORMAL;
   public static SubsystemMode turretMode = SubsystemMode.NORMAL;
-  public static final SubsystemMode deployerMode = SubsystemMode.DISABLED;
-  public static final SubsystemMode rollerMode = SubsystemMode.DISABLED;
-  public static final SubsystemMode intakeMode = SubsystemMode.DISABLED;
+  public static final SubsystemMode deployerMode = SubsystemMode.NORMAL;
+  public static final SubsystemMode rollerMode = SubsystemMode.NORMAL;
+  public static final SubsystemMode intakeMode = SubsystemMode.NORMAL;
   public static final SubsystemMode climberMode = SubsystemMode.DISABLED;
   public static final SubsystemMode ledMode = SubsystemMode.DISABLED;
   public static final SubsystemMode visionGlobalPose = SubsystemMode.NORMAL;
@@ -78,7 +78,7 @@ public final class Constants {
   }
 
   public static final boolean buzz = false;
-  public static final String logPath = "/media/sda1";
+  public static final String logPath = "/home/lvuser/logs";
   public static final long minFreeSpace = 1000000000; // 1 GB
   public static final int dioCoastButton = 8;
   public static final double coastButtonDelaySec = 10.0;
@@ -233,7 +233,7 @@ public final class Constants {
   public class Deployer {
     // 0 degrees is stowed postion
     // postive degrees when extending
-    public static final double retractDeg = 7; // allow for net
+    public static final double retractDeg = 7; // allow for net (starting config = 3.87)
     public static final double extendDeg = 125.6; // fully against the bumper = 127.8
     public static final double maxGravityDegrees = 125 - 180; // range is +/- 90 degrees
     public static final int motorId = 25;
