@@ -46,6 +46,7 @@ public class Shooter extends SubsystemBase {
   private Turret turret;
   private Drive drive;
   private LED led;
+  private boolean goIntoNonShootArea;
 
   private double targetHoodAngleDeg;
   private double targetFlywheelSpeedRPS;
@@ -284,6 +285,13 @@ public class Shooter extends SubsystemBase {
     if (Constants.firingManagerMode == Constants.SubsystemMode.TUNING) {
       return;
     }
+    if (!AreaManager.isShootingArea(drive.getRobotPose().getTranslation()) && !goIntoNonShootArea) {
+      unwindComplete = false;
+      state = ShooterState.UNWIND;
+      goIntoNonShootArea = true;
+    } else if (AreaManager.isShootingArea(drive.getRobotPose().getTranslation())) {
+      goIntoNonShootArea = false;
+    }
     // If in alliance zone and shift not active
     if (AreaManager.getZoneOfPosition(drive.getRobotPose().getTranslation()) == Zone.ALLIANCE_ZONE
         && !HubShiftUtil.getShiftedShiftInfo().active()) {
@@ -291,13 +299,21 @@ public class Shooter extends SubsystemBase {
         state = ShooterState.STOP;
         return;
       }
-      // Don't shoot if inactive
-      if (turret.needsToUnwind() && state != ShooterState.SHOOT) {
+
+      if (!goIntoNonShootArea) {
         unwindComplete = false;
         state = ShooterState.UNWIND;
-      } else if (state == ShooterState.SHOOT) {
-        turret.unwind(false);
+        goIntoNonShootArea = true;
+      } else if (goIntoNonShootArea) {
+        goIntoNonShootArea = false;
       }
+      // // Don't shoot if inactive
+      // if (turret.needsToUnwind() && state != ShooterState.SHOOT) {
+      //   unwindComplete = false;
+      //   state = ShooterState.UNWIND;
+      // } else if (state == ShooterState.SHOOT) {
+      //   turret.unwind(false);
+      // }
 
     } else {
       // Otherwise start shooting sequence

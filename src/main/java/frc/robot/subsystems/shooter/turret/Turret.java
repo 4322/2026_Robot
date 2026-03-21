@@ -130,6 +130,8 @@ public class Turret {
               : getTargetAngleInMidpoint();
       Logger.recordOutput("Turret/adjustedDeg", desiredDeg);
       state = turretState.UNWIND;
+    } else if (!safeToUnwind) {
+      state = turretState.SET_TURRET_ANGLE;
     }
   }
 
