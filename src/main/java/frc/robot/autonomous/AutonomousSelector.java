@@ -38,12 +38,8 @@ public class AutonomousSelector {
     R_HALF_SWEEP_SHOOT,
     R_MIDLINE_SWEEP_SHOOT,
     R_DISRUPT_SWEEP_SHOOT,
-    R_FULL_SWEEP_SHOOT_OD,
-    R_HALF_SWEEP_SHOOT_OD,
-    R_MIDLINE_SWEEP_SHOOT_OD,
-    R_DISRUPT_SWEEP_SHOOT_OD,
-    L_HALF_SWEEP_SHOOT,
     R_HALF_SUPER_SWEEP_SHOOT,
+    L_HALF_SWEEP_SHOOT,
 
     DRIVE_WHEEL_RADIUS_CHARACTERIZATION,
     DRIVE_SIMPLE_FF_CHARACTERIZATION,
@@ -77,6 +73,7 @@ public class AutonomousSelector {
     autos =
         List.of(
             new Auto(AutoName.DO_NOTHING, new DoNothing(hood)),
+            new Auto(AutoName.C_DEPOT_OUTPOST, new CDepotOutpost(drive, led, intake)),
             new Auto(AutoName.R_FULL_SWEEP_SHOOT, new RFullSweepShoot(drive, led, intake, shooter)),
             new Auto(
                 AutoName.R_HALF_SWEEP_SHOOT,
@@ -87,13 +84,14 @@ public class AutonomousSelector {
             new Auto(
                 AutoName.R_DISRUPT_SWEEP_SHOOT,
                 new RDisruptSweepShoot(drive, led, intake, shooter)),
-            new Auto(AutoName.C_DEPOT_OUTPOST, new CDepotOutpost(drive, led, intake)),
-            new Auto(
-                AutoName.L_HALF_SWEEP_SHOOT,
-                new LHalfSweepShoot(drive, led, intake, shooter, hood)),
+            new Auto(AutoName.R_FULL_SWEEP_SHOOT, new RFullSweepShoot(drive, led, intake, shooter)),
             new Auto(
                 AutoName.R_HALF_SUPER_SWEEP_SHOOT,
                 new RHalfSuperSweepShoot(drive, led, intake, shooter)),
+            new Auto(AutoName.R_FULL_SWEEP_SHOOT, new RFullSweepShoot(drive, led, intake, shooter)),
+            new Auto(
+                AutoName.L_HALF_SWEEP_SHOOT,
+                new LHalfSweepShoot(drive, led, intake, shooter, hood)),
             new Auto(
                 AutoName.DRIVE_WHEEL_RADIUS_CHARACTERIZATION,
                 new SequentialCommandGroup(
