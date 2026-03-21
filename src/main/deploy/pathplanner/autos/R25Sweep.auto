@@ -7,37 +7,49 @@
         {
           "type": "path",
           "data": {
-            "pathName": "R_StartR_To_NeutralR_Intake_Disrupt"
+            "pathName": "R_2.5Sweep_A"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "R_Half_SuperSweep_B"
+            "pathName": "R_2.5Sweep_B"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "R_Half_SuperSweep_C"
+            "pathName": "R_2.5Sweep_CG"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "R_Half_SuperSweep_D"
+            "pathName": "R_2.5Sweep_D"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "R_Half_SuperSweep_E"
+            "pathName": "R_2.5Sweep_E"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "R_Half_SuperSweep_F"
+            "pathName": "R_2.5Sweep_F"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "R_2.5Sweep_CG"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "R_2.5Sweep_H"
           }
         }
       ]
