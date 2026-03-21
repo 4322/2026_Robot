@@ -48,11 +48,15 @@ public class Turret {
                   && isAtGoal()) {
                 state = turretState.SET_TURRET_ANGLE;
               }
+            } else {
+              io.setAngle(Constants.Turret.midPointPhysicalDeg);
             }
           }
           case SET_TURRET_ANGLE -> {
             if (desiredDeg != null) {
               io.setAngle(desiredDeg);
+            } else {
+              io.setAngle(Constants.Turret.midPointPhysicalDeg);
             }
           }
         }
