@@ -419,11 +419,11 @@ public class RobotContainer {
       controller.rightBumper().whileTrue(ShooterCommands.shootFixed(shooter));
     }
 
+    inNonShootingArea.and(() -> !shooter.isInIdle()).whileTrue(ShooterCommands.idle(shooter));
+
     inNonShootingArea
-        .and(() -> !shooter.isInIdle())
-        .whileTrue(ShooterCommands.idle(shooter));
-        
-    inNonShootingArea.negate().whileTrue(
+        .negate()
+        .whileTrue(
             ShooterCommands.shoot(shooter).onlyIf(() -> DriverStation.isAutonomousEnabled()));
 
     intake.setDefaultCommand(IntakeCommands.setIdle(intake));
