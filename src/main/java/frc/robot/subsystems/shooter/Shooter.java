@@ -285,13 +285,6 @@ public class Shooter extends SubsystemBase {
     if (Constants.firingManagerMode == Constants.SubsystemMode.TUNING) {
       return;
     }
-    if (!AreaManager.isShootingArea(drive.getRobotPose().getTranslation()) && !goIntoNonShootArea) {
-      unwindComplete = false;
-      state = ShooterState.UNWIND;
-      goIntoNonShootArea = true;
-    } else if (AreaManager.isShootingArea(drive.getRobotPose().getTranslation())) {
-      goIntoNonShootArea = false;
-    }
     // If in alliance zone and shift not active
     if (AreaManager.getZoneOfPosition(drive.getRobotPose().getTranslation()) == Zone.ALLIANCE_ZONE
         && !HubShiftUtil.getShiftedShiftInfo().active()) {
