@@ -22,6 +22,9 @@ import frc.robot.subsystems.shooter.turret.Turret;
 import frc.robot.subsystems.vision.visionGlobalPose.VisionGlobalPose;
 import frc.robot.util.GeomUtil;
 import frc.robot.util.HubShiftUtil;
+
+import java.util.function.BooleanSupplier;
+
 import org.littletonrobotics.junction.Logger;
 
 public class Shooter extends SubsystemBase {
@@ -56,6 +59,8 @@ public class Shooter extends SubsystemBase {
   private boolean unwindComplete = false;
   private boolean inIdle = true;
   private boolean fixedPositionShooting = false;
+
+  private boolean autoShootEnabled = false;
 
   public Shooter(
       Flywheel flywheel,
@@ -342,5 +347,13 @@ public class Shooter extends SubsystemBase {
 
   public boolean isInIdle() {
     return inIdle;
+  }
+
+  public void toggleAutoShoot(boolean enabled) {
+    autoShootEnabled = enabled;
+  }
+
+  public boolean autoShootEnabled() {
+    return autoShootEnabled;
   }
 }
