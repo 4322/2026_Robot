@@ -365,7 +365,7 @@ public class Shooter extends SubsystemBase {
     return inIdle;
   }
 
-  public void toggleAutoShoot(boolean enabled) {
+  public void setAutoShoot(boolean enabled) {
     autoShootEnabled = enabled;
   }
 

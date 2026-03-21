@@ -310,7 +310,7 @@ public class RobotContainer {
                 : new Rollers(new RollersIOSim());
         intake = new Intake(deployer, rollers);
 
-        new Simulator(drive);
+        new Simulator(drive, shooter);
       }
 
       default -> {
@@ -416,7 +416,7 @@ public class RobotContainer {
       controller
           .rightTrigger()
           .whileTrue(ShooterCommands.shoot(shooter).onlyIf(inNonShootingArea.negate()));
-      controller.rightBumper().whileTrue(ShooterCommands.shootFixed(shooter));
+      controller.a().whileTrue(ShooterCommands.shootFixed(shooter));
     }
 
     inNonShootingArea.and(() -> !shooter.isInIdle()).whileTrue(ShooterCommands.idle(shooter));
@@ -428,6 +428,8 @@ public class RobotContainer {
                 .onlyIf(() -> DriverStation.isAutonomousEnabled() && shooter.autoShootEnabled()));
 
     intake.setDefaultCommand(IntakeCommands.setIdle(intake));
+
+    controller.x().whileTrue(IntakeCommands.setEject(intake));
 
     controller
         .leftBumper()
