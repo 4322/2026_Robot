@@ -166,7 +166,6 @@ public class Turret {
   }
 
   private double getRotation() {
-
     // Based off of 4522's "brute force" solver:
     // https://www.chiefdelphi.com/uploads/short-url/vvrM1V1pqvDnnZfHtAhS02mBVIi.pdf
 
@@ -174,7 +173,8 @@ public class Turret {
     final int GCD = 90;
     final double LCM = lcm(Constants.Turret.CANCoderOneRatio, Constants.Turret.CANCoderTwoRatio);
     // Range of motion in rotations
-    final double ROTATIONAL_RANGE = LCM / Constants.Turret.CANCoderOneRatio / Constants.Turret.CANCoderTwoRatio;
+    final double ROTATIONAL_RANGE =
+        LCM / Constants.Turret.CANCoderOneRatio / Constants.Turret.CANCoderTwoRatio;
 
     double encoderOne = inputs.encoderOneCount / Constants.Turret.CANCoderResolution;
     double encoderTwo = inputs.encoderTwoCount / Constants.Turret.CANCoderResolution;
@@ -185,10 +185,12 @@ public class Turret {
     // look for the entry in both lists of possible values that is the same.
     for (int i = 0; i < GCD; i++) {
       // generate the candidate rotation value from encoder 1
-      double candidate1 = mod(encoderOne + (double) i / Constants.Turret.CANCoderOneRatio, ROTATIONAL_RANGE);
+      double candidate1 =
+          mod((encoderOne + (double) i) / Constants.Turret.CANCoderOneRatio, ROTATIONAL_RANGE);
       for (int j = 0; j < GCD; j++) {
         // generate the candidate rotation value from encoder 2
-        double candidate2 = mod((encoderTwo + (double) i / Constants.Turret.CANCoderTwoRatio), ROTATIONAL_RANGE);
+        double candidate2 =
+            mod(((encoderTwo + (double) j) / Constants.Turret.CANCoderTwoRatio), ROTATIONAL_RANGE);
         double error = Math.abs(candidate2 - candidate1);
         if (error < bestError) {
           bestError = error;
@@ -207,19 +209,18 @@ public class Turret {
 
   /**
    * Least common multiple that works on fractional values.
-   * 
+   *
    * @param a value a
    * @param b value b
    * @return least common multiple
    */
   private static double lcm(double a, double b) {
     double i = 1.0;
-    while (a * i < a * b)  {
-      if (mod(a * i, b) < 0.001) {
+    while (true) {
+      if (a * i % b < 0.001) {
         return a * i;
       }
       i += 1.0;
     }
-    return a * b;
   }
 }
