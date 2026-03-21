@@ -83,6 +83,10 @@ public class Shooter extends SubsystemBase {
   public void periodic() {
     calculateFiringSolution();
     if (!fixedPositionShooting) {
+      if (turret.needsToUnwind()) {
+        unwindComplete = false;
+        state = ShooterState.UNWIND;
+      }
       if (AreaManager.isHoodDangerZone(drive.getTurretPosition())) {
         state = ShooterState.TRENCH;
       }
@@ -159,13 +163,15 @@ public class Shooter extends SubsystemBase {
       }
       case UNWIND -> {
         spindexer.requestIdle();
-        turret.requestAngle(targetTurretAngleDeg, false);
+        if (!tunnel.isStopped() && !spindexer.isStopped()) {
+          turret.requestAngle(targetTurretAngleDeg, false);
+        }
         hood.requestGoal(targetHoodAngleDeg);
 
         if (spindexer.isStopped()) {
           tunnel.requestIdle();
           if (tunnel.isStopped()) {
-            turret.unwind();
+            turret.unwind(true);
             flywheel.requestGoal(Constants.Flywheel.idleRPS);
             targetFlywheelSpeedRPS = Constants.Flywheel.idleRPS;
           }
@@ -173,6 +179,7 @@ public class Shooter extends SubsystemBase {
         // In case for some reason we end up in this state when turret is locked
         if (turret.isAtGoal() || Constants.turretLocked) {
           unwindComplete = true;
+          turret.unwind(false);
         }
       }
       case PRESHOOT -> {
@@ -283,12 +290,12 @@ public class Shooter extends SubsystemBase {
       }
       // Don't shoot if inactive
       if (turret.needsToUnwind()) {
-        unwindComplete = false;
-        state = ShooterState.UNWIND;
-      }
-      if (state == ShooterState.UNWIND && unwindComplete) {
-        unwindComplete = false;
-        state = ShooterState.IDLE;
+        if (state == ShooterState.SHOOT) {
+          state = ShooterState.IDLE;
+        } else {
+          unwindComplete = false;
+          state = ShooterState.UNWIND;
+        }
       }
 
     } else {
@@ -312,8 +319,12 @@ public class Shooter extends SubsystemBase {
         // Seperate if to prevent warnings DO NOT COMBINE
         if (!Constants.turretLocked) {
           if (turret.needsToUnwind()) {
-            unwindComplete = false;
-            state = ShooterState.UNWIND;
+            if (state == ShooterState.SHOOT) {
+              state = ShooterState.IDLE;
+            } else {
+              unwindComplete = false;
+              state = ShooterState.UNWIND;
+            }
           }
         }
       }

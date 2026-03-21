@@ -41,10 +41,13 @@ public class Turret {
           }
           case UNWIND -> {
             // Meant to unwind turret to a bound of mid point
-            io.setAngle(desiredDeg);
-            if (MathUtil.isNear(inputs.turretDegs, Constants.Turret.midPointPhysicalDeg, 90)
-                && isAtGoal()) {
-              state = turretState.SET_TURRET_ANGLE;
+            // This goes to the angle for the turret to unwind to
+            if (desiredDeg != null) {
+              io.setAngle(desiredDeg);
+              if (MathUtil.isNear(inputs.turretDegs, Constants.Turret.midPointPhysicalDeg, 90)
+                  && isAtGoal()) {
+                state = turretState.SET_TURRET_ANGLE;
+              }
             }
           }
           case SET_TURRET_ANGLE -> {
@@ -71,10 +74,7 @@ public class Turret {
       desiredDeg = Constants.Turret.midPointPhysicalDeg;
       state = turretState.UNWIND;
     }
-    // Sets state of turret for needed unwind cases
-    if (((needsToUnwind() && safeToUnwind)) || state == turretState.UNWIND) {
-      unwind();
-    }
+
     // Code that is meant to set the degree of turret is unwind cases
 
     // setInMidpoint is a placehodler to reprsent a mod method
@@ -122,14 +122,15 @@ public class Turret {
     state = turretState.SET_TURRET_ANGLE;
   }
 
-  public void unwind() {
-    // This goes to the angle for the turret to unwind to
-    desiredDeg =
-        (MathUtil.isNear(Constants.Turret.midPointPhysicalDeg, desiredDeg, 90))
-            ? desiredDeg
-            : getTargetAngleInMidpoint();
-    state = turretState.UNWIND;
-    Logger.recordOutput("Turret/adjustedDeg", desiredDeg);
+  public void unwind(boolean safeToUnwind) {
+    if (state == turretState.SET_TURRET_ANGLE && safeToUnwind) {
+      desiredDeg =
+          (MathUtil.isNear(Constants.Turret.midPointPhysicalDeg, desiredDeg, 90))
+              ? desiredDeg
+              : getTargetAngleInMidpoint();
+      Logger.recordOutput("Turret/adjustedDeg", desiredDeg);
+      state = turretState.UNWIND;
+    }
   }
 
   public double getAngle() {
