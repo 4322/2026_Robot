@@ -180,7 +180,7 @@ public class Shooter extends SubsystemBase {
           }
         }
         // In case for some reason we end up in this state when turret is locked
-        if ((!turret.needsToUnwind() && turret.isAtGoal()) || Constants.turretLocked) {
+        if (turret.isAtGoal() || Constants.turretLocked) {
           unwindComplete = true;
           turret.unwind(false);
           state = ShooterState.IDLE;

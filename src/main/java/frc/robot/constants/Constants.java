@@ -419,7 +419,7 @@ public final class Constants {
 
   public static class Sim {
 
-    public static final double tunnelRate = 1;
+    public static final double tunnelRate = 0.2;
     public static final double spindexerRate = 0.2;
     public static final double flywheelRate = 0.1;
     public static final double servoRate = 0.2;
