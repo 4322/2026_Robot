@@ -428,7 +428,7 @@ public class RobotContainer {
 
     intake.setDefaultCommand(IntakeCommands.setIdle(intake));
 
-    controller.povDown().whileTrue(IntakeCommands.setEject(intake));
+    controller.x().whileTrue(IntakeCommands.setEject(intake));
 
     controller
         .leftBumper()
