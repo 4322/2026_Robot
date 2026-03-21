@@ -7,49 +7,49 @@
         {
           "type": "path",
           "data": {
-            "pathName": "R_2.5Sweep_A"
+            "pathName": "R_2Sweep_A"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "R_2.5Sweep_B"
+            "pathName": "R_2Sweep_B"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "R_2.5Sweep_CG"
+            "pathName": "R_2Sweep_CG"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "R_2.5Sweep_D"
+            "pathName": "R_2Sweep_D"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "R_2.5Sweep_E"
+            "pathName": "R_2Sweep_E"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "R_2.5Sweep_F"
+            "pathName": "R_2Sweep_F"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "R_2.5Sweep_CG"
+            "pathName": "R_2Sweep_CG"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "R_2.5Sweep_H"
+            "pathName": "R_2Sweep_H"
           }
         }
       ]

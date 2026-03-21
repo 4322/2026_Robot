@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.247845934379456,
-        "y": 2.6182168330955777
+        "x": 3.2498002853067045,
+        "y": 0.5350927246790309
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.170213980028531,
-        "y": 3.666248216833096
+        "x": 4.257749127670245,
+        "y": 0.5350927246790309
       },
       "isLocked": false,
-      "linkedName": "R.2.5Sweep_E"
+      "linkedName": "R.2Sweep_D"
     },
     {
       "anchor": {
-        "x": 5.8892867332382295,
-        "y": 2.6182168330955777
+        "x": 6.782054208273894,
+        "y": 0.5350927246790309
       },
       "prevControl": {
-        "x": 5.928102710413694,
-        "y": 4.0414693295292405
+        "x": 5.782054208273894,
+        "y": 0.535092724679031
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "R.2.5Sweep_F"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
@@ -41,14 +41,14 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0.1,
-    "rotation": -123.25436657471204
+    "velocity": 0,
+    "rotation": 90.0
   },
   "reversed": false,
-  "folder": "R_2.5Sweep",
+  "folder": "R_2Sweep",
   "idealStartingState": {
     "velocity": 0.1,
-    "rotation": 115.01689347810002
+    "rotation": 90.0
   },
   "useDefaultConstraints": true
 }
