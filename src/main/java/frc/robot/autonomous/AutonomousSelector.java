@@ -75,7 +75,7 @@ public class AutonomousSelector {
     autos =
         List.of(
             new Auto(AutoName.DO_NOTHING, new DoNothing(hood)),
-            new Auto(AutoName.C_DEPOT_OUTPOST, new CDepotOutpost(drive, led, intake)),
+            new Auto(AutoName.C_DEPOT_OUTPOST, new CDepotOutpost(drive, led, intake, shooter)),
             new Auto(AutoName.C_OUTPOST, new COutpost(drive, led, shooter)),
             new Auto(AutoName.R_FULL_SWEEP_SHOOT, new RFullSweepShoot(drive, led, intake, shooter)),
             new Auto(
