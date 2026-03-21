@@ -9,7 +9,7 @@
       "prevControl": null,
       "nextControl": {
         "x": 5.785777460770328,
-        "y": -0.12477888730385134
+        "y": -0.1247788873038509
       },
       "isLocked": false,
       "linkedName": "R.Half.SuperSweep.E"
@@ -59,7 +59,7 @@
     "rotation": 90.0
   },
   "reversed": false,
-  "folder": null,
+  "folder": "R_Half_SuperSweep",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 90.0
