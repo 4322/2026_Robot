@@ -39,9 +39,9 @@ public class RFullSweepShoot extends SequentialCommandGroup {
             new SequentialCommandGroup(
                 AutoBuilder.followPath(Robot.R_StartR_To_NeutralR_Intake),
                 AutoBuilder.followPath(Robot.R_NeutralR_Intake_Full),
-                ShooterCommands.toggleAutoShoot(shooter, true),
                 AutoBuilder.followPath(Robot.R_NeutralR_Intake_Full_Flip),
-                AutoBuilder.followPath(Robot.R_Neutral_Mid_To_ShootR))));
+                AutoBuilder.followPath(Robot.R_Neutral_Mid_To_ShootR),
+                ShooterCommands.toggleAutoShoot(shooter, true))));
   }
 
   public RFullSweepShoot(

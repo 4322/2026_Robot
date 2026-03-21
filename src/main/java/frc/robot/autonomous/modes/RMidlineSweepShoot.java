@@ -38,9 +38,9 @@ public class RMidlineSweepShoot extends SequentialCommandGroup {
             new SequentialCommandGroup(
                 AutoBuilder.followPath(Robot.R_StartR_To_NeutralR_Intake_Midline),
                 AutoBuilder.followPath(Robot.R_NeutralR_Intake_Full_Midline),
-                ShooterCommands.toggleAutoShoot(shooter, true),
                 AutoBuilder.followPath(Robot.R_NeutralR_Intake_Full_Midline_Flip),
-                AutoBuilder.followPath(Robot.R_NeutralRMid_To_ShootR))));
+                AutoBuilder.followPath(Robot.R_NeutralRMid_To_ShootR),
+                ShooterCommands.toggleAutoShoot(shooter, true))));
   }
 
   public RMidlineSweepShoot(

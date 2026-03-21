@@ -39,9 +39,9 @@ public class RDisruptSweepShoot extends SequentialCommandGroup {
             new SequentialCommandGroup(
                 AutoBuilder.followPath(Robot.R_StartR_To_NeutralR_Intake_Disrupt),
                 AutoBuilder.followPath(Robot.R_NeutralR_Intake_Full_Disrupt),
-                ShooterCommands.toggleAutoShoot(shooter, true),
                 AutoBuilder.followPath(Robot.R_NeutralR_Intake_Full_Disrupt_Flip),
-                AutoBuilder.followPath(Robot.R_NeutralRMid_To_ShootR))));
+                AutoBuilder.followPath(Robot.R_NeutralRMid_To_ShootR),
+                ShooterCommands.toggleAutoShoot(shooter, true))));
   }
 
   public RDisruptSweepShoot(
