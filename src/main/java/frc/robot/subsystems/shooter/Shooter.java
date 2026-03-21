@@ -22,9 +22,6 @@ import frc.robot.subsystems.shooter.turret.Turret;
 import frc.robot.subsystems.vision.visionGlobalPose.VisionGlobalPose;
 import frc.robot.util.GeomUtil;
 import frc.robot.util.HubShiftUtil;
-
-import java.util.function.BooleanSupplier;
-
 import org.littletonrobotics.junction.Logger;
 
 public class Shooter extends SubsystemBase {
