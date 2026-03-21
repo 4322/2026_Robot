@@ -46,4 +46,8 @@ public class ShooterCommands {
   public static Command unjam(Shooter shooter) {
     return Commands.run(() -> shooter.requestUnjam(), shooter);
   }
+
+  public static Command toggleAutoShoot(Shooter shooter, boolean enabled) {
+    return Commands.runOnce(() -> shooter.setAutoShoot(enabled));
+  }
 }

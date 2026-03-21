@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
 import frc.robot.autonomous.AutonomousSelector.AutoName;
 import frc.robot.subsystems.drive.Drive;
+import frc.robot.subsystems.shooter.Shooter;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -633,9 +634,11 @@ public class Simulator extends SubsystemBase {
   boolean momentaryPOV;
 
   private final Drive drive;
+  private final Shooter shooter;
 
-  public Simulator(Drive drive) {
+  public Simulator(Drive drive, Shooter shooter) {
     this.drive = drive;
+    this.shooter = shooter;
 
     warmupTimer.start();
   }
@@ -858,6 +861,7 @@ public class Simulator extends SubsystemBase {
       events = teleopEvents;
     }
     drive.setPose(new Pose2d(0, 0, Rotation2d.kZero));
+    shooter.setAutoShoot(false);
     resetScenario();
   }
 
