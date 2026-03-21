@@ -69,6 +69,8 @@ public final class Constants {
     }
     if (turretLocked) {
       turretMode = SubsystemMode.DISABLED;
+    } else {
+      turretMode = SubsystemMode.NORMAL;
     }
     if (Constants.Drive.zeroTurnEncoders) {
       driveMode = SubsystemMode.TUNING;

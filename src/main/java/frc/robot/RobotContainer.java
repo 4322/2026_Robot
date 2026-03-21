@@ -407,7 +407,7 @@ public class RobotContainer {
     controller.b().whileTrue(ShooterCommands.unjam(shooter));
     controller.leftTrigger().whileTrue(ShooterCommands.trenchOverride(hood));
 
-    if (Constants.turretLocked) {
+    if (!Constants.turretLocked) {
       controller2
           .leftTrigger()
           .whileTrue(
@@ -454,10 +454,6 @@ public class RobotContainer {
 
   public static boolean isDriveInShootingArea() {
     return AreaManager.isShootingArea(drive.getRobotPose().getTranslation());
-  }
-
-  public static boolean shooterInUnwind() {
-    return shooter.getState() == Shooter.ShooterState.UNWIND;
   }
 
   public void setBrakeMode(boolean brake) {

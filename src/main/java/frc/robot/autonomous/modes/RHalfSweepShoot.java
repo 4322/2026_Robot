@@ -29,7 +29,7 @@ public class RHalfSweepShoot extends SequentialCommandGroup {
     Pose2d startPoseRed = path.flipPath().getStartingHolonomicPose().get();
 
     setName("R_HALF_SWEEP_SHOOT");
-    if (Constants.turretLocked) {
+    if (!Constants.turretLocked) {
       addCommands(
           new InstantCommand(
               () -> {
@@ -45,8 +45,8 @@ public class RHalfSweepShoot extends SequentialCommandGroup {
                   AutoBuilder.followPath(Robot.R_StartR_To_NeutralR_Intake),
                   AutoBuilder.followPath(Robot.R_NeutralR_Intake_To_Mid),
                   AutoBuilder.followPath(Robot.R_NeutralR_Intake_Mid_Flip),
-                  AutoBuilder.followPath(Robot.R_NeutralRMid_To_ShootR_LT) /* ,
-                ShooterCommands.aimAndShoot(shooter, drive)*/)));
+                  AutoBuilder.followPath(Robot.R_NeutralRMid_To_ShootR_LT),
+                  ShooterCommands.aimAndShoot(shooter, drive))));
     } else {
       addCommands(
           new InstantCommand(

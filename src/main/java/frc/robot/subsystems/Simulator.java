@@ -22,7 +22,7 @@ import java.util.Map;
 import org.littletonrobotics.junction.Logger;
 
 public class Simulator extends SubsystemBase {
-  private static final RegressTests regressTest = RegressTests.SUBSYSTEM_TEST_BOTH;
+  private static final RegressTests regressTest = RegressTests.AUTO;
   public static AutoName autoScenario;
   private TeleopScenario teleopScenario;
   private List<TeleAnomaly> teleAnomalies;
@@ -232,7 +232,8 @@ public class Simulator extends SubsystemBase {
 
   private List<RegressionTest> regressionTestCases() {
     return switch (regressTest) {
-      case AUTO -> List.of(new RegressionTest("AUTO", AutoName.R_FULL_SWEEP_SHOOT, Alliance.Red));
+      case AUTO -> List.of(
+          new RegressionTest("AUTO", AutoName.R_DISRUPT_SWEEP_SHOOT, Alliance.Red));
         // Useable Autos are R_FULL_SWEEP_SHOOT, R_HALF_SWEEP_SHOOT, R_MIDLINE_SWEEP_SHOOT,
         // R_DISRUPT_SWEEP_SHOOT, & C_DEPOT_OUTPOST
       case SHOOT -> List.of(new RegressionTest("Shoot", TeleopScenario.SHOOT, Alliance.Blue));

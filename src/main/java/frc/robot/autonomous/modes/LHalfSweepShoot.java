@@ -29,7 +29,7 @@ public class LHalfSweepShoot extends SequentialCommandGroup {
     Pose2d startPoseRed = path.flipPath().getStartingHolonomicPose().get();
 
     setName("L_HALF_SWEEP_SHOOT");
-    if (Constants.turretLocked) {
+    if (!Constants.turretLocked) {
       addCommands(
           new InstantCommand(
               () -> {
@@ -45,8 +45,8 @@ public class LHalfSweepShoot extends SequentialCommandGroup {
                   AutoBuilder.followPath(Robot.L_StartL_To_NeutralL_Intake),
                   AutoBuilder.followPath(Robot.L_NeutralL_Intake_To_Mid),
                   AutoBuilder.followPath(Robot.L_NeutralL_Intake_Mid_Flip),
-                  AutoBuilder.followPath(Robot.L_NeutralLMid_To_ShootL_LT) /* ,
-                ShooterCommands.aimAndShoot(shooter, drive)*/)));
+                  AutoBuilder.followPath(Robot.L_NeutralLMid_To_ShootL_LT),
+                  ShooterCommands.aimAndShoot(shooter, drive))));
     } else {
       addCommands(
           new InstantCommand(

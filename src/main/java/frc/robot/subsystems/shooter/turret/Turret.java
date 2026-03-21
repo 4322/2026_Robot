@@ -17,13 +17,11 @@ public class Turret {
     UNWIND
   }
 
-  public turretState state = turretState.DISABLED;
+  public turretState state = turretState.SET_TURRET_ANGLE;
 
   public Turret(TurretIO io) {
     this.io = io;
     io.updateInputs(inputs);
-    io.setPosition(getRotation()); // busted
-    io.setPosition(0.5); // manual homing to the rear
   }
 
   public void periodic() {
@@ -66,26 +64,32 @@ public class Turret {
     }
     // Null represents a zone that returns no angle
     if (desiredDeg != null) {
-      desiredDeg = angleDistance(desiredDeg, inputs.turretDegs);
+      desiredDeg = getClosestTargetAngle(desiredDeg, inputs.turretDegs);
     } else {
       // In the case when we are in a zone that returns null angle
       desiredDeg = Constants.Turret.midPointPhysicalDeg;
     }
     // Sets state of turret for needed unwind cases
-    if ((desiredDeg == Constants.Turret.midPointPhysicalDeg
-            || (needsToUnwind() && safeToUnwind)
-            || RobotContainer.shooterInUnwind())
-        && state != turretState.UNWIND) {
-      state = turretState.UNWIND;
+    if ((desiredDeg == Constants.Turret.midPointPhysicalDeg || (needsToUnwind() && safeToUnwind))
+        || state == turretState.UNWIND) {
+      unwind();
     }
     // Code that is meant to set the degree of turret is unwind cases
-    if (state == turretState.UNWIND) {
-      // MathUtil.isNear(Constants.Turret.midPointPhysicalDeg, desiredDeg, 90) ? desiredDeg :
-      // setInMidpoint;
-      // setInMidpoint is a placehodler to reprsent a mod method
-      // Meant to reduce desired degree to a number that is between +- 90 of mid
+
+    // setInMidpoint is a placehodler to reprsent a mod method
+    // Meant to reduce desired degree to a number that is between +- 90 of mid
+
+  }
+
+  private double getTargetAngleInMidpoint() {
+    Logger.recordOutput("Shooter/currentMethod", "getTargetAngleInMidpoint()");
+    if (Math.abs(desiredDeg - Constants.Turret.midPointPhysicalDeg) > 360) {
+      double mod = ((desiredDeg - Constants.Turret.midPointPhysicalDeg) % 360) + 180;
+      double modInverse = Math.abs(desiredDeg - mod) / 360;
+      return (desiredDeg > 0) ? desiredDeg - (360 * modInverse) : desiredDeg + (360 * mod);
+    } else {
+      return (desiredDeg > 0) ? desiredDeg - 360 : desiredDeg + 360;
     }
-    Logger.recordOutput("Turret/adjustedDeg", desiredDeg);
   }
 
   public boolean needsToUnwind() {
@@ -112,7 +116,12 @@ public class Turret {
   }
 
   public void unwind() {
+    desiredDeg =
+        (MathUtil.isNear(Constants.Turret.midPointPhysicalDeg, desiredDeg, 90))
+            ? desiredDeg
+            : getTargetAngleInMidpoint();
     state = turretState.UNWIND;
+    Logger.recordOutput("Turret/adjustedDeg", desiredDeg);
   }
 
   public double getAngle() {
@@ -127,7 +136,7 @@ public class Turret {
     io.setBrakeMode(mode);
   }
 
-  private double angleDistance(double targetAngle, double currentAngle) {
+  private double getClosestTargetAngle(double targetAngle, double currentAngle) {
     // Sets minInclusive based on desired degree
     boolean minInclusive;
     if (targetAngle - currentAngle == 180) {
@@ -135,9 +144,9 @@ public class Turret {
     } else {
       minInclusive = true;
     }
-    double angleDistance =
+    targetAngle =
         ClockUtil.inputModulus(targetAngle - currentAngle, -180, 180, minInclusive) + currentAngle;
-    return angleDistance;
+    return targetAngle;
   }
 
   private double getRotation() {
