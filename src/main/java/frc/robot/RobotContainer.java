@@ -400,7 +400,9 @@ public class RobotContainer {
     Intake - Left Bumper Toggle (Driver)
     Trench Override Hood - Left Trigger while held (Driver)
     Unjam Shooter - B while held (Driver)
-    Shoot - Left Trigger while held (Operator)
+
+    Shoot - Right Trigger toggle (Driver)
+    Right Trigger - Smoosh intake (Driver)
     */
 
     shooter.setDefaultCommand(ShooterCommands.idle(shooter));
@@ -426,6 +428,19 @@ public class RobotContainer {
     controller
         .leftBumper()
         .toggleOnTrue(IntakeCommands.setIntaking(intake))
+        .onTrue(
+            Commands.run(
+                    () -> {
+                      controller.setRumble(GenericHID.RumbleType.kLeftRumble, 0.5);
+                    })
+                .withTimeout(0.5)
+                .finallyDo(
+                    () -> {
+                      controller.setRumble(GenericHID.RumbleType.kLeftRumble, 0.0);
+                    }));
+    controller
+        .rightTrigger()
+        .whileTrue(IntakeCommands.setSmoosh(intake))
         .onTrue(
             Commands.run(
                     () -> {

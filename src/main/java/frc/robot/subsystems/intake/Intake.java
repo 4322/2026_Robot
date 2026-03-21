@@ -22,6 +22,7 @@ public class Intake extends SubsystemBase {
     EJECT,
     IDLE,
     INTAKING,
+    SMOOSH,
     // aadd unjamstill blue and not a priority in docs as of current so TODO
   }
 
@@ -51,6 +52,10 @@ public class Intake extends SubsystemBase {
         if (deployer.isExtended()) {
           rollers.setState(RollersState.INTAKE);
         }
+      }
+      case SMOOSH -> {
+        deployer.setGoal(DeployerState.SMOOSH);
+        rollers.setState(RollersState.IDLE);
       }
     }
     deployer.periodic();

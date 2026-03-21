@@ -12,7 +12,7 @@ public class Deployer {
     DISABLED,
     EXTEND,
     RETRACT,
-    // UNJAM TODO
+    SMOOSH
   }
 
   private DeployerState state = DeployerState.DISABLED;
@@ -37,7 +37,10 @@ public class Deployer {
             deployerIO.setPosition(Constants.Deployer.extendDeg);
           }
           case RETRACT -> {
-            // deployerIO.setPosition(Constants.Deployer.retractDeg);
+            deployerIO.setPosition(Constants.Deployer.retractDeg);
+          }
+          case SMOOSH -> {
+            deployerIO.setPosition(Constants.Deployer.smooshDeg);
           }
         }
       }
