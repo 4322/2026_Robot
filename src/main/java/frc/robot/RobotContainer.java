@@ -415,13 +415,13 @@ public class RobotContainer {
     if (Constants.turretLocked) {
       controller
           .rightBumper()
-          .whileTrue(
+          .toggleOnTrue(
               ShooterCommands.aimAndShoot(shooter, drive).onlyIf(inNonShootingArea.negate()));
     } else {
       controller
           .x()
-          .whileTrue(ShooterCommands.shoot(shooter).onlyIf(inNonShootingArea.negate()));
-      controller.a().whileTrue(ShooterCommands.shootFixed(shooter));
+          .toggleOnTrue(ShooterCommands.shoot(shooter).onlyIf(inNonShootingArea.negate()));
+      controller.a().toggleOnTrue(ShooterCommands.shootFixed(shooter));
     }
 
     inNonShootingArea.and(() -> !shooter.isInIdle()).whileTrue(ShooterCommands.idle(shooter));
