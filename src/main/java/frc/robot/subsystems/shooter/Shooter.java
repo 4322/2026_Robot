@@ -84,7 +84,7 @@ public class Shooter extends SubsystemBase {
   @Override
   public void periodic() {
     calculateFiringSolution();
-    if (!fixedPositionShooting && !DriverStation.isAutonomousEnabled()) {
+    if (!fixedPositionShooting) {
       if (AreaManager.isHoodDangerZone(drive.getTurretPosition())) {
         state = ShooterState.TRENCH;
       }
@@ -256,8 +256,7 @@ public class Shooter extends SubsystemBase {
           FiringManager.getFiringSolution(
               drive.getTurretPose(),
               drive.getVelocity(),
-              AreaManager.getZoneOfPosition(drive.getTurretPosition()) == Zone.ALLIANCE_ZONE
-                  || AreaManager.isTrench(drive.getTurretPosition()));
+              AreaManager.getZoneOfPosition(drive.getTurretPosition()) == Zone.ALLIANCE_ZONE);
       targetHoodAngleDeg = firingSolution.hoodAngle();
       targetFlywheelSpeedRPS = firingSolution.flywheelSpeedRPS();
       targetTurretAngleDeg = firingSolution.turretAngleDeg();

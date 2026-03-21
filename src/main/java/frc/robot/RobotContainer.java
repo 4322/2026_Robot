@@ -109,7 +109,6 @@ public class RobotContainer {
   public static final CommandXboxController controller = new CommandXboxController(0);
 
   private final Trigger inNonShootingArea;
-  private final Trigger autoAbleToShoot;
 
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> testCommandChooser;
@@ -370,9 +369,6 @@ public class RobotContainer {
     inNonShootingArea =
         new Trigger(() -> !AreaManager.isShootingArea(drive.getTurretPose().getTranslation()));
 
-    autoAbleToShoot =
-        new Trigger(() -> shooter.autoShootEnabled() && DriverStation.isAutonomousEnabled());
-
     // Configure the button bindings
     configureButtonBindings();
 
@@ -423,12 +419,13 @@ public class RobotContainer {
       controller.a().whileTrue(ShooterCommands.shootFixed(shooter));
     }
 
-    inNonShootingArea
-        .and(() -> !shooter.isInIdle())
-        .and(autoAbleToShoot.negate())
-        .whileTrue(ShooterCommands.idle(shooter));
+    inNonShootingArea.and(() -> !shooter.isInIdle()).whileTrue(ShooterCommands.idle(shooter));
 
-    autoAbleToShoot.whileTrue(ShooterCommands.shoot(shooter));
+    inNonShootingArea
+        .negate()
+        .whileTrue(
+            ShooterCommands.shoot(shooter)
+                .onlyIf(() -> DriverStation.isAutonomousEnabled() && shooter.autoShootEnabled()));
 
     intake.setDefaultCommand(IntakeCommands.setIdle(intake));
 
