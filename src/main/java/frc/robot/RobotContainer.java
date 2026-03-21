@@ -310,7 +310,7 @@ public class RobotContainer {
                 : new Rollers(new RollersIOSim());
         intake = new Intake(deployer, rollers);
 
-        new Simulator(drive);
+        new Simulator(drive, shooter);
       }
 
       default -> {
