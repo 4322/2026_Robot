@@ -57,6 +57,8 @@ public class Shooter extends SubsystemBase {
   private boolean inIdle = true;
   private boolean fixedPositionShooting = false;
 
+  private boolean autoShootEnabled = false;
+
   public Shooter(
       Flywheel flywheel,
       Hood hood,
@@ -342,5 +344,13 @@ public class Shooter extends SubsystemBase {
 
   public boolean isInIdle() {
     return inIdle;
+  }
+
+  public void setAutoShoot(boolean enabled) {
+    autoShootEnabled = enabled;
+  }
+
+  public boolean autoShootEnabled() {
+    return autoShootEnabled;
   }
 }
