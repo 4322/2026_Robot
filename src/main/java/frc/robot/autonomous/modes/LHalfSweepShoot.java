@@ -9,10 +9,12 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Robot;
 import frc.robot.commands.IntakeCommands;
+import frc.robot.commands.ShooterCommands;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.led.LED;
 import frc.robot.subsystems.shooter.Shooter;
+import frc.robot.subsystems.shooter.areaManager.AreaManager;
 import frc.robot.subsystems.shooter.hood.Hood;
 
 public class LHalfSweepShoot extends SequentialCommandGroup {
@@ -35,6 +37,8 @@ public class LHalfSweepShoot extends SequentialCommandGroup {
             }),
         new ParallelCommandGroup(
             IntakeCommands.setIntaking(intake),
+            ShooterCommands.autoShoot(
+                shooter, () -> AreaManager.isShootingArea(drive.getTurretPose().getTranslation())),
             new SequentialCommandGroup(
                 AutoBuilder.followPath(Robot.L_StartL_To_NeutralL_Intake),
                 AutoBuilder.followPath(Robot.L_NeutralL_Intake_To_Mid),

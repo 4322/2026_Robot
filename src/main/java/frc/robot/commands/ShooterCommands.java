@@ -8,11 +8,24 @@ import frc.robot.constants.Constants;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.shooter.hood.Hood;
+import java.util.function.BooleanSupplier;
 
 public class ShooterCommands {
 
   public static Command shoot(Shooter shooter) {
     return Commands.run(() -> shooter.requestShoot(false), shooter);
+  }
+
+  public static Command autoShoot(Shooter shooter, BooleanSupplier inShootingZone) {
+    return Commands.run(
+        () -> {
+          if (inShootingZone.getAsBoolean()) {
+            shooter.requestShoot(false);
+          } else {
+            shooter.requestIdle();
+          }
+        },
+        shooter);
   }
 
   public static Command shootFixed(Shooter shooter) {
