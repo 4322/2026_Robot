@@ -84,6 +84,22 @@ public class Robot extends LoggedRobot {
   public static PathPlannerPath R_Half_SuperSweep_E;
   public static PathPlannerPath R_Half_SuperSweep_F;
 
+  public static PathPlannerPath R_2SWEEP_A;
+  public static PathPlannerPath R_2SWEEP_B;
+public static PathPlannerPath R_2SWEEP_CG;
+  public static PathPlannerPath R_2SWEEP_D;
+  public static PathPlannerPath R_2SWEEP_E;
+  public static PathPlannerPath R_2SWEEP_F;
+  public static PathPlannerPath R_2SWEEP_H;
+
+  public static PathPlannerPath L_2SWEEP_A;
+  public static PathPlannerPath L_2SWEEP_B;
+public static PathPlannerPath L_2SWEEP_CG;
+  public static PathPlannerPath L_2SWEEP_D;
+  public static PathPlannerPath L_2SWEEP_E;
+  public static PathPlannerPath L_2SWEEP_F;
+  public static PathPlannerPath L_2SWEEP_H;
+
   public Robot() {
     Logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME); // Set a metadata value
     Logger.recordMetadata("BuildDate", BuildConstants.BUILD_DATE);
@@ -242,6 +258,13 @@ public class Robot extends LoggedRobot {
       R_Half_SuperSweep_E = PathPlannerPath.fromPathFile("R_Half_SuperSweep_E");
       R_Half_SuperSweep_F = PathPlannerPath.fromPathFile("R_Half_SuperSweep_F");
 
+      R_2SWEEP_A = PathPlannerPath.fromPathFile("R_2Sweep_A");
+      R_2SWEEP_B = PathPlannerPath.fromPathFile("R_2Sweep_B");
+      R_2SWEEP_CG = PathPlannerPath.fromPathFile("R_2Sweep_CG");
+      R_2SWEEP_D = PathPlannerPath.fromPathFile("R_2Sweep_D");
+      R_2SWEEP_E = PathPlannerPath.fromPathFile("R_2Sweep_E");
+      R_2SWEEP_F = PathPlannerPath.fromPathFile("R_2Sweep_F");
+      R_2SWEEP_H = PathPlannerPath.fromPathFile("R_2Sweep_H");
       L_NeutralL_Intake_Mid_Flip = R_NeutralR_Intake_Mid_Flip.mirrorPath();
       L_NeutralLMid_To_ShootL = R_NeutralRMid_To_ShootR.mirrorPath();
       L_NeutralL_Intake_To_Mid = R_NeutralR_Intake_To_Mid.mirrorPath();
@@ -258,6 +281,15 @@ public class Robot extends LoggedRobot {
 
       L_NeutralLMid_To_ShootL_LT = R_NeutralRMid_To_ShootR_LT.mirrorPath();
       L_Neutral_Mid_To_ShootL_LT = R_Neutral_Mid_To_ShootR_LT.mirrorPath();
+
+        L_2SWEEP_A = R_2SWEEP_A.mirrorPath();
+        L_2SWEEP_B = R_2SWEEP_B.mirrorPath();
+        L_2SWEEP_CG = R_2SWEEP_CG.mirrorPath();
+        L_2SWEEP_D = R_2SWEEP_D.mirrorPath();
+        L_2SWEEP_E = R_2SWEEP_E.mirrorPath();
+        L_2SWEEP_F = R_2SWEEP_F.mirrorPath();
+        L_2SWEEP_H = R_2SWEEP_H.mirrorPath();
+        
 
     } catch (Exception e) {
       DriverStation.reportError("Failed to load PathPlanner path - " + e.getMessage(), true);
