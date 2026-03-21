@@ -524,6 +524,7 @@ public class Simulator extends SubsystemBase {
           // requires turret to be unlocked
           new SimEvent(
               t += 0.1, "Start pose", EventType.SET_POSE, new FieldPose2d(2, 2, Rotation2d.kZero)),
+          new SimEvent(t += 0.1, "SHooter!", EventType.HOLD_A),
           new SimEvent(
               t += 0.1,
               "Spin",
