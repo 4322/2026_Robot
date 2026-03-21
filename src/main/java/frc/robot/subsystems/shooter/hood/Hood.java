@@ -60,9 +60,7 @@ public class Hood {
         requestGoal(tuningGoalDeg.get());
 
         pidVelocity = pidController.calculate(inputs.degrees, requestedAngleDeg);
-        if (pidController.atSetpoint()) {
-          pidVelocity = 0;
-        }
+
         io.setServoVelocity(pidVelocity);
         Logger.recordOutput("Hood/requestedServoVelocity", pidVelocity);
       }
