@@ -46,17 +46,8 @@ public class TurretIOTalonFx implements TurretIO {
         Units.degreesToRotations(Constants.Turret.minPhysicalLimitDeg);
     config.SoftwareLimitSwitch.ForwardSoftLimitThreshold =
         Units.degreesToRotations(Constants.Turret.maxPhysicalLimitDeg);
-
-    double CANCoderOneOffsetRot = Constants.Turret.CANCoderOneOffsetRot - 0.25;
-    if (CANCoderOneOffsetRot < 0) {
-      CANCoderOneOffsetRot++;
-    }
-    double CANCoderTwoOffsetRot = Constants.Turret.CANCoderTwoOffsetRot - 0.25;
-    if (CANCoderTwoOffsetRot < 0) {
-      CANCoderTwoOffsetRot++;
-    }
-    CANconfigOne.MagnetSensor.MagnetOffset = CANCoderOneOffsetRot;
-    CANconfigTwo.MagnetSensor.MagnetOffset = CANCoderTwoOffsetRot;
+    CANconfigOne.MagnetSensor.MagnetOffset = Constants.Turret.CANCoderOneOffsetRot;
+    CANconfigTwo.MagnetSensor.MagnetOffset = Constants.Turret.CANCoderTwoOffsetRot;
     CANconfigOne.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 1; // range 0 to 1.0
     CANconfigTwo.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 1;
     CANconfigOne.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;

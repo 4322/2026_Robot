@@ -24,7 +24,7 @@ public class Turret {
   public Turret(TurretIO io) {
     this.io = io;
     io.updateInputs(inputs);
-    io.setPosition(getRotation());
+    io.setPosition(getRotation() - 0.25); // adjust for offset locked (calibrated) position
   }
 
   public void periodic() {
@@ -166,6 +166,8 @@ public class Turret {
   }
 
   private double getRotation() {
+    // returns rotations relative to locked position
+
     // Based off of 4522's "brute force" solver:
     // https://www.chiefdelphi.com/uploads/short-url/vvrM1V1pqvDnnZfHtAhS02mBVIi.pdf
 
