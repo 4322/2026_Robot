@@ -420,7 +420,7 @@ public class RobotContainer {
       controller
           .rightTrigger()
           .whileTrue(ShooterCommands.shoot(shooter).onlyIf(inNonShootingArea.negate()));
-      controller.rightBumper().whileTrue(ShooterCommands.shootFixed(shooter));
+      controller.a().whileTrue(ShooterCommands.shootFixed(shooter));
     }
 
     inNonShootingArea
@@ -431,6 +431,8 @@ public class RobotContainer {
     autoAbleToShoot.whileTrue(ShooterCommands.shoot(shooter));
 
     intake.setDefaultCommand(IntakeCommands.setIdle(intake));
+
+    controller.x().whileTrue(IntakeCommands.setEject(intake));
 
     controller
         .leftBumper()
