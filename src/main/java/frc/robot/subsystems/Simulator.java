@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
 import frc.robot.autonomous.AutonomousSelector.AutoName;
 import frc.robot.subsystems.drive.Drive;
+import frc.robot.subsystems.shooter.Shooter;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -22,7 +23,7 @@ import java.util.Map;
 import org.littletonrobotics.junction.Logger;
 
 public class Simulator extends SubsystemBase {
-  private static final RegressTests regressTest = RegressTests.SUBSYSTEM_TEST_BOTH;
+  private static final RegressTests regressTest = RegressTests.ALL_AUTOS;
   public static AutoName autoScenario;
   private TeleopScenario teleopScenario;
   private List<TeleAnomaly> teleAnomalies;
@@ -269,6 +270,7 @@ public class Simulator extends SubsystemBase {
       case ZONES -> List.of(
           new RegressionTest("Zones Blue", TeleopScenario.ZONES, Alliance.Blue),
           new RegressionTest("Zones Red", TeleopScenario.ZONES, Alliance.Red));
+      
 
       default -> List.of();
     };
@@ -632,9 +634,11 @@ public class Simulator extends SubsystemBase {
   boolean momentaryPOV;
 
   private final Drive drive;
+  private final Shooter shooter;
 
-  public Simulator(Drive drive) {
+  public Simulator(Drive drive, Shooter shooter) {
     this.drive = drive;
+    this.shooter = shooter;
 
     warmupTimer.start();
   }
@@ -857,6 +861,7 @@ public class Simulator extends SubsystemBase {
       events = teleopEvents;
     }
     drive.setPose(new Pose2d(0, 0, Rotation2d.kZero));
+    shooter.setAutoShoot(false);
     resetScenario();
   }
 

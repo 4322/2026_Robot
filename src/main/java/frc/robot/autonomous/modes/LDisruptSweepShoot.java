@@ -12,17 +12,17 @@ import frc.robot.commands.IntakeCommands;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.led.LED;
-import org.littletonrobotics.junction.Logger;
+import frc.robot.subsystems.shooter.Shooter;
 
-public class CDepotOutpost extends SequentialCommandGroup {
-  public CDepotOutpost(Drive drive, LED led, Intake intake) {
-    PathPlannerPath path = Robot.C_Start_To_Depot;
+public class LDisruptSweepShoot extends SequentialCommandGroup {
+
+  public LDisruptSweepShoot(Drive drive, LED led, Intake intake, Shooter shooter) {
+    PathPlannerPath path = Robot.L_StartL_To_NeutralL_Intake_Disrupt;
     Pose2d startPoseBlue = path.getStartingHolonomicPose().get();
     Pose2d startPoseRed = path.flipPath().getStartingHolonomicPose().get();
-    setName("C_DEPOT_OUTPOST");
 
+    setName("L_DISRUPT_SWEEP_SHOOT");
     addCommands(
-        new InstantCommand(() -> Logger.recordOutput("Autonomous/autoStarted", true)),
         new InstantCommand(
             () -> {
               if (Robot.alliance == Alliance.Blue) {
@@ -34,7 +34,9 @@ public class CDepotOutpost extends SequentialCommandGroup {
         new ParallelCommandGroup(
             IntakeCommands.setIntaking(intake),
             new SequentialCommandGroup(
-                AutoBuilder.followPath(Robot.C_Start_To_Depot),
-                AutoBuilder.followPath(Robot.C_Depot_To_Outpost))));
+                AutoBuilder.followPath(Robot.L_StartL_To_NeutralL_Intake_Disrupt)
+                    .andThen(AutoBuilder.followPath(Robot.L_NeutralL_Intake_Full_Disrupt))
+                    .andThen(AutoBuilder.followPath(Robot.L_NeutralL_Intake_Full_Disrupt_Flip))
+                    .andThen(AutoBuilder.followPath(Robot.L_NeutralLMid_To_ShootL)))));
   }
 }
