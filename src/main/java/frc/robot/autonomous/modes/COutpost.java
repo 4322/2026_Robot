@@ -31,6 +31,6 @@ public class COutpost extends SequentialCommandGroup {
               }
             }),
         AutoBuilder.followPath(Robot.C_Outpost),
-        ShooterCommands.shoot(shooter));
+        ShooterCommands.toggleAutoShoot(shooter, true));
   }
 }
