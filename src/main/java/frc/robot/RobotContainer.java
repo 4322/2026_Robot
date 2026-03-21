@@ -399,8 +399,13 @@ public class RobotContainer {
     /*
     Intake - Left Bumper Toggle (Driver)
     Trench Override Hood - Left Trigger while held (Driver)
+    Smoosh Intake - Right Trigger while held (Driver)
+    Shoot - Right Bumper toggle (Driver) [Locked Turret]
+
     Unjam Shooter - B while held (Driver)
-    Shoot - Left Trigger while held (Operator)
+    Fixed Position Shoot - A Toggle (Driver)
+    Manually Override Shoot - X Toggle (Driver)
+    Disable shooting - Y Toggle (Driver)
     */
 
     shooter.setDefaultCommand(ShooterCommands.idle(shooter));
@@ -408,15 +413,15 @@ public class RobotContainer {
     controller.leftTrigger().whileTrue(ShooterCommands.trenchOverride(hood));
 
     if (Constants.turretLocked) {
-      controller2
-          .leftTrigger()
-          .whileTrue(
+      controller
+          .rightBumper()
+          .toggleOnTrue(
               ShooterCommands.aimAndShoot(shooter, drive).onlyIf(inNonShootingArea.negate()));
     } else {
-      controller2
-          .leftTrigger()
-          .whileTrue(ShooterCommands.shoot(shooter).onlyIf(inNonShootingArea.negate()));
-      controller2.rightTrigger().whileTrue(ShooterCommands.shootFixed(shooter));
+      controller
+          .x()
+          .toggleOnTrue(ShooterCommands.shoot(shooter).onlyIf(inNonShootingArea.negate()));
+      controller.a().toggleOnTrue(ShooterCommands.shootFixed(shooter));
     }
 
     inNonShootingArea.and(() -> !shooter.isInIdle()).whileTrue(ShooterCommands.idle(shooter));
