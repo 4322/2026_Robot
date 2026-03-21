@@ -84,6 +84,12 @@ public class Robot extends LoggedRobot {
   public static PathPlannerPath R_Half_SuperSweep_E;
   public static PathPlannerPath R_Half_SuperSweep_F;
 
+  public static PathPlannerPath L_Half_SuperSweep_B;
+  public static PathPlannerPath L_Half_SuperSweep_C;
+  public static PathPlannerPath L_Half_SuperSweep_D;
+  public static PathPlannerPath L_Half_SuperSweep_E;
+  public static PathPlannerPath L_Half_SuperSweep_F;
+
   public Robot() {
     Logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME); // Set a metadata value
     Logger.recordMetadata("BuildDate", BuildConstants.BUILD_DATE);
@@ -258,6 +264,12 @@ public class Robot extends LoggedRobot {
 
       L_NeutralLMid_To_ShootL_LT = R_NeutralRMid_To_ShootR_LT.mirrorPath();
       L_Neutral_Mid_To_ShootL_LT = R_Neutral_Mid_To_ShootR_LT.mirrorPath();
+
+      L_Half_SuperSweep_B = R_Half_SuperSweep_B.mirrorPath();
+      L_Half_SuperSweep_C = R_Half_SuperSweep_C.mirrorPath();
+      L_Half_SuperSweep_D = R_Half_SuperSweep_D.mirrorPath();
+      L_Half_SuperSweep_E = R_Half_SuperSweep_E.mirrorPath();
+      L_Half_SuperSweep_F = R_Half_SuperSweep_F.mirrorPath();
 
     } catch (Exception e) {
       DriverStation.reportError("Failed to load PathPlanner path - " + e.getMessage(), true);
