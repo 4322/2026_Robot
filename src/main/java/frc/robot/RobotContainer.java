@@ -8,6 +8,7 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -106,7 +107,6 @@ public class RobotContainer {
 
   // Controller
   public static final CommandXboxController controller = new CommandXboxController(0);
-  public static final CommandXboxController controller2 = new CommandXboxController(1);
 
   private final Trigger inNonShootingArea;
 
@@ -408,20 +408,27 @@ public class RobotContainer {
     controller.leftTrigger().whileTrue(ShooterCommands.trenchOverride(hood));
 
     if (Constants.turretLocked) {
-      controller2
-          .leftTrigger()
+      controller
+          .rightTrigger()
           .whileTrue(
               ShooterCommands.aimAndShoot(shooter, drive).onlyIf(inNonShootingArea.negate()));
     } else {
-      controller2
-          .leftTrigger()
+      controller
+          .rightTrigger()
           .whileTrue(ShooterCommands.shoot(shooter).onlyIf(inNonShootingArea.negate()));
-      controller2.rightTrigger().whileTrue(ShooterCommands.shootFixed(shooter));
+      controller.a().whileTrue(ShooterCommands.shootFixed(shooter));
     }
 
     inNonShootingArea.and(() -> !shooter.isInIdle()).whileTrue(ShooterCommands.idle(shooter));
 
+    inNonShootingArea
+        .negate()
+        .whileTrue(
+            ShooterCommands.shoot(shooter).onlyIf(() -> DriverStation.isAutonomousEnabled()));
+
     intake.setDefaultCommand(IntakeCommands.setIdle(intake));
+
+    controller.x().whileTrue(IntakeCommands.setEject(intake));
 
     controller
         .leftBumper()
