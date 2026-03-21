@@ -42,7 +42,8 @@ public class Simulator extends SubsystemBase {
     TEST_AUTOROTATE,
     AUTO,
     TURRET,
-    ALL_AUTOS
+    ALL_AUTOS,
+    ZONES
   }
 
   private enum TeleAnomaly {
@@ -61,7 +62,8 @@ public class Simulator extends SubsystemBase {
     SUBSYSTEM_TEST,
     AUTO_ROTATE,
     TURRET,
-    Slowly_Up_down
+    Slowly_Up_down,
+    ZONES
   }
 
   private enum EventType {
@@ -113,12 +115,6 @@ public class Simulator extends SubsystemBase {
     DISABLE_WHEEL_SLIP,
     BLUE_INACTIVE_FIRST,
     RED_INACTIVE_FIRST,
-    TOGGLE_1_ON,
-    TOGGLE_1_OFF,
-    TOGGLE_3_ON,
-    TOGGLE_3_OFF,
-    TOGGLE_4_ON,
-    TOGGLE_4_OFF,
     END_OF_SCENARIO
   }
 
@@ -156,8 +152,8 @@ public class Simulator extends SubsystemBase {
     }
   }
 
-  public class FieldPose2D extends Pose2d {
-    public FieldPose2D(double x, double y, Rotation2d rotation) {
+  public class FieldPose2d extends Pose2d {
+    public FieldPose2d(double x, double y, Rotation2d rotation) {
       super(x, y, rotation);
     }
 
@@ -271,6 +267,9 @@ public class Simulator extends SubsystemBase {
               "Blue/R/RMidlineSweepShoot", AutoName.R_MIDLINE_SWEEP_SHOOT, Alliance.Blue),
           new RegressionTest(
               "Blue/R/RHalfSuperSweepShoot", AutoName.R_HALF_SUPER_SWEEP_SHOOT, Alliance.Blue));
+      case ZONES -> List.of(
+          new RegressionTest("Zones Blue", TeleopScenario.ZONES, Alliance.Blue),
+          new RegressionTest("Zones Red", TeleopScenario.ZONES, Alliance.Red));
 
       default -> List.of();
     };
@@ -320,9 +319,9 @@ public class Simulator extends SubsystemBase {
       this.eventType = eventType;
       this.eventStatus = eventStatus;
       this.pose =
-          currentAlliance == Alliance.Blue || !(pose instanceof FieldPose2D)
+          currentAlliance == Alliance.Blue || !(pose instanceof FieldPose2d)
               ? pose
-              : ((FieldPose2D) pose).flipPose();
+              : ((FieldPose2d) pose).flipPose();
     }
   }
 
@@ -349,7 +348,7 @@ public class Simulator extends SubsystemBase {
               t += 1.0,
               "Start pose",
               EventType.SET_POSE,
-              new FieldPose2D(12.0, 4.0, Rotation2d.k180deg)),
+              new FieldPose2d(12.0, 4.0, Rotation2d.k180deg)),
           new SimEvent(t += 1.0, "Event " + eventNum++, EventType.PRESS_X),
           new SimEvent(t += 1.0, "Event " + eventNum++, EventType.PRESS_LEFT_POV),
           new SimEvent(t += 1.0, "Event " + eventNum++, EventType.PRESS_LEFT_BUMPER),
@@ -418,7 +417,7 @@ public class Simulator extends SubsystemBase {
 
       case SUBSYSTEM_TEST -> List.of(
           new SimEvent(
-              t, "Start Pose", EventType.SET_POSE, new FieldPose2D(4.44, 0.650, Rotation2d.kZero)),
+              t, "Start Pose", EventType.SET_POSE, new FieldPose2d(4.44, 0.650, Rotation2d.kZero)),
           new SimEvent(t += 4.0, "Start Intake", EventType.PRESS_Y),
           new SimEvent(t += 1.0, "Stop Intake", EventType.PRESS_X),
           new SimEvent(
@@ -471,7 +470,7 @@ public class Simulator extends SubsystemBase {
 
       case AUTO_ROTATE -> List.of(
           new SimEvent(
-              t += 1.0, "Start pose", EventType.SET_POSE, new FieldPose2D(2, 2, Rotation2d.kZero)),
+              t += 1.0, "Start pose", EventType.SET_POSE, new FieldPose2d(2, 2, Rotation2d.kZero)),
           new SimEvent(
               t += 1,
               "Drive to Neutral Zone",
@@ -525,7 +524,7 @@ public class Simulator extends SubsystemBase {
       case TURRET -> List.of(
           // requires turret to be unlocked
           new SimEvent(
-              t += 0.1, "Start pose", EventType.SET_POSE, new FieldPose2D(2, 2, Rotation2d.kZero)),
+              t += 0.1, "Start pose", EventType.SET_POSE, new FieldPose2d(2, 2, Rotation2d.kZero)),
           new SimEvent(
               t += 0.1,
               "Spin",
@@ -553,6 +552,48 @@ public class Simulator extends SubsystemBase {
               "Shoot on the move",
               EventType.MOVE_JOYSTICK_DRIVE,
               new Pose2d(0, -0.3, Rotation2d.k180deg)));
+
+      case ZONES -> List.of(
+          new SimEvent(
+              t += 0, "Lateral", EventType.SET_POSE, new FieldPose2d(3.7, -0.5, Rotation2d.kZero)),
+          new SimEvent(
+              t += 0.1,
+              "Move",
+              EventType.MOVE_JOYSTICK_DRIVE,
+              new Pose2d(0, 0.42, Rotation2d.kZero)),
+          new SimEvent(
+              t += 10, "Stop", EventType.MOVE_JOYSTICK_DRIVE, new Pose2d(0, 0, Rotation2d.kZero)),
+          new SimEvent(
+              t += 0.1,
+              "Right Trench",
+              EventType.SET_POSE,
+              new FieldPose2d(-0.5, 0.5, Rotation2d.kZero)),
+          new SimEvent(
+              t += 0.1,
+              "Move",
+              EventType.MOVE_JOYSTICK_DRIVE,
+              new Pose2d(0.46, 0, Rotation2d.kZero)),
+          new SimEvent(
+              t += 10, "Stop", EventType.MOVE_JOYSTICK_DRIVE, new Pose2d(0, 0, Rotation2d.kZero)),
+          new SimEvent(
+              t += 0.1,
+              "Left Trench",
+              EventType.SET_POSE,
+              new FieldPose2d(-0.5, 7.5, Rotation2d.kZero)),
+          new SimEvent(
+              t += 0.1,
+              "Move",
+              EventType.MOVE_JOYSTICK_DRIVE,
+              new Pose2d(0.46, 0, Rotation2d.kZero)),
+          new SimEvent(
+              t += 10, "Stop", EventType.MOVE_JOYSTICK_DRIVE, new Pose2d(0, 0, Rotation2d.kZero)),
+          new SimEvent(
+              t += 0.1,
+              "Fixed Pose",
+              EventType.SET_POSE,
+              new FieldPose2d(3.7, 6.5, Rotation2d.kZero)),
+          new SimEvent(t += 0.1, "Fixed Shoot", EventType.HOLD_RIGHT_BUMPER),
+          new SimEvent(t += 5, "End", EventType.END_OF_SCENARIO));
 
       default -> List.of();
     };
@@ -592,10 +633,6 @@ public class Simulator extends SubsystemBase {
   boolean momentaryPOV;
 
   private final Drive drive;
-
-  // Controller2 simulation
-  private final int hid2Port = RobotContainer.controller2.getHID().getPort();
-  private int controller2ButtonBitmask = 0;
 
   public Simulator(Drive drive) {
     this.drive = drive;
@@ -710,18 +747,6 @@ public class Simulator extends SubsystemBase {
           case DISABLE_WHEEL_SLIP -> slipWheels = false;
           case BLUE_INACTIVE_FIRST -> gameSpecificMessage = "B";
           case RED_INACTIVE_FIRST -> gameSpecificMessage = "R";
-          case TOGGLE_1_ON -> setOperatorToggle(
-              frc.robot.constants.Constants.Control.toggle1ButtonNumber, true);
-          case TOGGLE_1_OFF -> setOperatorToggle(
-              frc.robot.constants.Constants.Control.toggle1ButtonNumber, false);
-          case TOGGLE_3_ON -> setOperatorToggle(
-              frc.robot.constants.Constants.Control.toggle3ButtonNumber, true);
-          case TOGGLE_3_OFF -> setOperatorToggle(
-              frc.robot.constants.Constants.Control.toggle3ButtonNumber, false);
-          case TOGGLE_4_ON -> setOperatorToggle(
-              frc.robot.constants.Constants.Control.toggle4ButtonNumber, true);
-          case TOGGLE_4_OFF -> setOperatorToggle(
-              frc.robot.constants.Constants.Control.toggle4ButtonNumber, false);
           case END_OF_SCENARIO -> {}
         }
       }
@@ -755,7 +780,6 @@ public class Simulator extends SubsystemBase {
       DriverStationSim.setGameSpecificMessage(gameSpecificMessage);
       DriverStationSim.setJoystickPOV(hidPort, 0, activePOV);
       DriverStationSim.setJoystickButtons(hidPort, activeButtonBitmask);
-      DriverStationSim.setJoystickButtons(hid2Port, controller2ButtonBitmask);
       // notifyNewData() fails 1 out of 5000 calls for unknown reasons
       DriverStationSim.notifyNewData();
     } while (DriverStation.getStickAxisCount(hidPort) != 6
@@ -779,9 +803,6 @@ public class Simulator extends SubsystemBase {
     DriverStationSim.setJoystickIsXbox(hidPort, true);
     DriverStationSim.setJoystickAxisCount(hidPort, 6);
     DriverStationSim.setJoystickButtonCount(hidPort, 10);
-
-    DriverStationSim.setJoystickButtonCount(hid2Port, 12);
-    DriverStationSim.setJoystickAxisCount(hid2Port, 0);
   }
 
   private void resetScenario() {
@@ -816,7 +837,6 @@ public class Simulator extends SubsystemBase {
     stopJoystick();
     activeButtonBitmask = 0;
     momentaryButtonBitmask = 0;
-    controller2ButtonBitmask = 0;
     gameSpecificMessage = "";
     DriverStationSim.setEnabled(false);
 
@@ -885,15 +905,6 @@ public class Simulator extends SubsystemBase {
 
   private void releaseTrigger(ControllerAxis axis) {
     persistAxis(axis, 0.0);
-  }
-
-  // Operator board toggle control
-  private void setOperatorToggle(int buttonNumber, boolean on) {
-    if (on) {
-      controller2ButtonBitmask |= 1 << (buttonNumber - 1);
-    } else {
-      controller2ButtonBitmask &= ~(1 << (buttonNumber - 1));
-    }
   }
 
   public static boolean wheelSlip() {
