@@ -8,7 +8,6 @@ import frc.robot.constants.Constants;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.shooter.hood.Hood;
-import java.util.function.BooleanSupplier;
 
 public class ShooterCommands {
 

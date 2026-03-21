@@ -8,7 +8,6 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
@@ -420,8 +419,11 @@ public class RobotContainer {
       controller.rightBumper().whileTrue(ShooterCommands.shootFixed(shooter));
     }
 
-    inNonShootingArea.and(() -> !shooter.isInIdle()).whileTrue(ShooterCommands.idle(shooter))
-        .whileFalse(ShooterCommands.shoot(shooter).onlyIf(() -> DriverStation.isAutonomousEnabled()));
+    inNonShootingArea
+        .and(() -> !shooter.isInIdle())
+        .whileTrue(ShooterCommands.idle(shooter))
+        .whileFalse(
+            ShooterCommands.shoot(shooter).onlyIf(() -> DriverStation.isAutonomousEnabled()));
 
     intake.setDefaultCommand(IntakeCommands.setIdle(intake));
 
