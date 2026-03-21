@@ -291,7 +291,7 @@ public class Shooter extends SubsystemBase {
         return;
       }
       // Don't shoot if inactive
-      if (turret.needsToUnwind() && state != ShooterState.SHOOT || !AreaManager.isShootingArea(drive.getRobotPose().getTranslation())) {
+      if (turret.needsToUnwind() && state != ShooterState.SHOOT) {
           unwindComplete = false;
           state = ShooterState.UNWIND;
       } else if (state == ShooterState.SHOOT){
@@ -318,7 +318,7 @@ public class Shooter extends SubsystemBase {
       } else {
         // Seperate if to prevent warnings DO NOT COMBINE
         if (!Constants.turretLocked) {
-          if (turret.needsToUnwind() && state != ShooterState.SHOOT ||!AreaManager.isShootingArea(drive.getRobotPose().getTranslation())) {
+          if (turret.needsToUnwind() && state != ShooterState.SHOOT) {
               unwindComplete = false;
               state = ShooterState.UNWIND;
             }else if (state == ShooterState.SHOOT){
