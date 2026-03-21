@@ -270,7 +270,6 @@ public class Simulator extends SubsystemBase {
       case ZONES -> List.of(
           new RegressionTest("Zones Blue", TeleopScenario.ZONES, Alliance.Blue),
           new RegressionTest("Zones Red", TeleopScenario.ZONES, Alliance.Red));
-      
 
       default -> List.of();
     };

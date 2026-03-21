@@ -43,5 +43,4 @@ public class LHalfSweepShoot extends SequentialCommandGroup {
                 AutoBuilder.followPath(Robot.L_NeutralLMid_To_ShootL),
                 ShooterCommands.toggleAutoShoot(shooter, true))));
   }
-
 }
