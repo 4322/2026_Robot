@@ -22,6 +22,7 @@ public class Turret {
   public Turret(TurretIO io) {
     this.io = io;
     io.updateInputs(inputs);
+    // Removed set postion code
   }
 
   public void periodic() {
@@ -68,10 +69,10 @@ public class Turret {
     } else {
       // In the case when we are in a zone that returns null angle
       desiredDeg = Constants.Turret.midPointPhysicalDeg;
+      state = turretState.UNWIND;
     }
     // Sets state of turret for needed unwind cases
-    if ((desiredDeg == Constants.Turret.midPointPhysicalDeg || (needsToUnwind() && safeToUnwind))
-        || state == turretState.UNWIND) {
+    if (((needsToUnwind() && safeToUnwind)) || state == turretState.UNWIND) {
       unwind();
     }
     // Code that is meant to set the degree of turret is unwind cases
@@ -83,6 +84,10 @@ public class Turret {
 
   private double getTargetAngleInMidpoint() {
     Logger.recordOutput("Shooter/currentMethod", "getTargetAngleInMidpoint()");
+    // The below code uses the desired angle and subtracts the midpoint
+    // As to set the desired angle to reference 0 as to see the differnce between
+    // The midpoint and desired angle so we can see how much angle we can reduce the angle by
+    // as to get to the id
     if (Math.abs(desiredDeg - Constants.Turret.midPointPhysicalDeg) > 360) {
       double mod = ((desiredDeg - Constants.Turret.midPointPhysicalDeg) % 360) + 180;
       double modInverse = Math.abs(desiredDeg - mod) / 360;
@@ -106,6 +111,8 @@ public class Turret {
           Constants.Turret.goalToleranceLockedDeg);
     } else if (Constants.turretMode == Constants.SubsystemMode.DISABLED) {
       return true;
+    } else if (state == turretState.UNWIND) {
+      return MathUtil.isNear(desiredDeg, inputs.turretDegs, 6);
     } else {
       return MathUtil.isNear(desiredDeg, inputs.turretDegs, Constants.Turret.goalToleranceDeg);
     }
@@ -116,6 +123,7 @@ public class Turret {
   }
 
   public void unwind() {
+    // This goes to the angle for the turret to unwind to
     desiredDeg =
         (MathUtil.isNear(Constants.Turret.midPointPhysicalDeg, desiredDeg, 90))
             ? desiredDeg
@@ -137,13 +145,21 @@ public class Turret {
   }
 
   private double getClosestTargetAngle(double targetAngle, double currentAngle) {
-    // Sets minInclusive based on desired degree
+    // Sets minInclusive based on desired degree aka if +-180 % 180, the remainder is 0
+    // So if it's 0 we don't know our desired angle, since it could +- 180
+    // Then to fix this minInclusive is evaluated if our difference between our target angle
+    // and current angle is +- 180 and go to it's respective angle
     boolean minInclusive;
     if (targetAngle - currentAngle == 180) {
       minInclusive = false;
     } else {
       minInclusive = true;
     }
+    // The input modulus equation is used to find the distance to closest angle matching the target
+    // angle based on
+    // the current angle
+    // and then add that distance of the current angle to set the target to the closest target
+    // angle.
     targetAngle =
         ClockUtil.inputModulus(targetAngle - currentAngle, -180, 180, minInclusive) + currentAngle;
     return targetAngle;
