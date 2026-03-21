@@ -414,6 +414,7 @@ public class RobotContainer {
               ShooterCommands.aimAndShoot(shooter, drive).onlyIf(inNonShootingArea.negate()));
     } else {
       controller.a().whileTrue(ShooterCommands.shoot(shooter).onlyIf(inNonShootingArea.negate()));
+      // FIX THIS IS TEMP FOR CONTROLLER2 LEFT TRIGGER /\ !!
       controller2.rightTrigger().whileTrue(ShooterCommands.shootFixed(shooter));
     }
 
