@@ -8,6 +8,7 @@ import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.ctre.phoenix6.signals.SensorDirectionValue;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.constants.Constants;
@@ -46,15 +47,11 @@ public class TurretIOTalonFx implements TurretIO {
     config.SoftwareLimitSwitch.ForwardSoftLimitThreshold =
         Units.degreesToRotations(Constants.Turret.maxPhysicalLimitDeg);
 
-    double CANCoderOneOffsetRot =
-        Constants.Turret.CANCoderOneOffsetCount / (double) Constants.Turret.CANCoderResolution
-            - 0.25;
+    double CANCoderOneOffsetRot = Constants.Turret.CANCoderOneOffsetRot - 0.25;
     if (CANCoderOneOffsetRot < 0) {
       CANCoderOneOffsetRot++;
     }
-    double CANCoderTwoOffsetRot =
-        Constants.Turret.CANCoderTwoOffsetCount / (double) Constants.Turret.CANCoderResolution
-            - 0.25;
+    double CANCoderTwoOffsetRot = Constants.Turret.CANCoderTwoOffsetRot - 0.25;
     if (CANCoderTwoOffsetRot < 0) {
       CANCoderTwoOffsetRot++;
     }
@@ -62,6 +59,8 @@ public class TurretIOTalonFx implements TurretIO {
     CANconfigTwo.MagnetSensor.MagnetOffset = CANCoderTwoOffsetRot;
     CANconfigOne.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 1; // range 0 to 1.0
     CANconfigTwo.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 1;
+    CANconfigOne.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
+    CANconfigTwo.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
 
     config.MotionMagic.MotionMagicCruiseVelocity = Constants.Turret.motionMagicCruiseVelocity;
     config.MotionMagic.MotionMagicAcceleration = Constants.Turret.motionMagicAcceleration;
@@ -105,14 +104,8 @@ public class TurretIOTalonFx implements TurretIO {
   @Override
   public void updateInputs(TurretIOInputs inputs) {
     inputs.turretDegs = Units.rotationsToDegrees(turretMotor.getPosition().getValueAsDouble());
-    inputs.encoderOneCount =
-        (int)
-            (CANcoderOne.getAbsolutePosition().getValueAsDouble()
-                * Constants.Turret.CANCoderResolution);
-    inputs.encoderTwoCount =
-        (int)
-            (CANcoderTwo.getAbsolutePosition().getValueAsDouble()
-                * Constants.Turret.CANCoderResolution);
+    inputs.encoderOneRot = CANcoderOne.getAbsolutePosition().getValueAsDouble();
+    inputs.encoderTwoRot = CANcoderTwo.getAbsolutePosition().getValueAsDouble();
     inputs.motorConnected = turretMotor.isConnected();
     inputs.motorRPS = turretMotor.getVelocity().getValueAsDouble();
     inputs.appliedVolts = turretMotor.getSupplyVoltage().getValueAsDouble();

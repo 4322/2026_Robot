@@ -173,8 +173,8 @@ public final class Constants {
     public static final double CANCoderOneRatio = 90.0 / 10.0;
     public static final double CANCoderTwoRatio = 90.0 / 19.0;
     public static final int CANCoderResolution = 4096;
-    public static final int CANCoderOneOffsetCount = 3784; // in locked position
-    public static final int CANCoderTwoOffsetCount = 1194; // in locked position
+    public static final double CANCoderOneOffsetRot = 0.0; // in locked position
+    public static final double CANCoderTwoOffsetRot = 0.0; // in locked position
     public static final double turretGearRatio = 27;
     public static final double minPhysicalLimitDeg = -150;
     public static final double maxPhysicalLimitDeg = 510;

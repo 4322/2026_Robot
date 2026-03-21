@@ -176,8 +176,8 @@ public class Turret {
     final double ROTATIONAL_RANGE =
         LCM / Constants.Turret.CANCoderOneRatio / Constants.Turret.CANCoderTwoRatio;
 
-    double encoderOne = inputs.encoderOneCount / Constants.Turret.CANCoderResolution;
-    double encoderTwo = inputs.encoderTwoCount / Constants.Turret.CANCoderResolution;
+    double encoderOne = inputs.encoderOneRot;
+    double encoderTwo = inputs.encoderTwoRot;
 
     double bestError = Double.MAX_VALUE;
     double turretFullRotations = 0.5;
