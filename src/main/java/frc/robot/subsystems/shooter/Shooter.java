@@ -182,6 +182,7 @@ public class Shooter extends SubsystemBase {
         if (turret.isAtGoal() || Constants.turretLocked) {
           unwindComplete = true;
           turret.unwind(false);
+          state = ShooterState.IDLE;
         }
       }
       case PRESHOOT -> {
@@ -292,9 +293,9 @@ public class Shooter extends SubsystemBase {
       }
       // Don't shoot if inactive
       if (turret.needsToUnwind() && state != ShooterState.SHOOT) {
-          unwindComplete = false;
-          state = ShooterState.UNWIND;
-      } else if (state == ShooterState.SHOOT){
+        unwindComplete = false;
+        state = ShooterState.UNWIND;
+      } else if (state == ShooterState.SHOOT) {
         turret.unwind(false);
       }
 
@@ -311,7 +312,7 @@ public class Shooter extends SubsystemBase {
           if (hood.isAtGoal() && flywheel.atTargetVelocity() && turret.isAtGoal()) {
             state = ShooterState.SHOOT;
           }
-        } else {
+        } else if (state != ShooterState.UNWIND) {
           state = ShooterState.PRESHOOT;
         }
 
@@ -319,15 +320,15 @@ public class Shooter extends SubsystemBase {
         // Seperate if to prevent warnings DO NOT COMBINE
         if (!Constants.turretLocked) {
           if (turret.needsToUnwind() && state != ShooterState.SHOOT) {
-              unwindComplete = false;
-              state = ShooterState.UNWIND;
-            }else if (state == ShooterState.SHOOT){
-        turret.unwind(false);
-      }
+            unwindComplete = false;
+            state = ShooterState.UNWIND;
+          } else if (state == ShooterState.SHOOT) {
+            turret.unwind(false);
           }
         }
       }
     }
+  }
 
   public void requestIdle() {
     inIdle = true;
