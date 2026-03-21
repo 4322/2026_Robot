@@ -170,7 +170,7 @@ public final class Constants {
     public static final double supplyCurrentLimit = 40; // set limits
     public static final InvertedValue motorInvert = InvertedValue.CounterClockwise_Positive;
     public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
-    public static final double goalToleranceDeg = 1.0;
+    public static final double goalToleranceDeg = 5.0;
     public static final double goalToleranceLockedDeg = 2.0;
     public static final int CANCoderOneRatio = 5;
     public static final int CANCoderTwoRatio = 9;
@@ -419,7 +419,7 @@ public final class Constants {
 
   public static class Sim {
 
-    public static final double tunnelRate = 0.2;
+    public static final double tunnelRate = 1;
     public static final double spindexerRate = 0.2;
     public static final double flywheelRate = 0.1;
     public static final double servoRate = 0.2;
