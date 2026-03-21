@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.autonomous.modes.CDepotOutpost;
+import frc.robot.autonomous.modes.COutpost;
 import frc.robot.autonomous.modes.DoNothing;
 import frc.robot.autonomous.modes.LHalfSweepShoot;
 import frc.robot.autonomous.modes.RDisruptSweepShoot;
@@ -34,6 +35,7 @@ public class AutonomousSelector {
   public enum AutoName {
     DO_NOTHING,
     C_DEPOT_OUTPOST,
+    C_OUTPOST,
     R_FULL_SWEEP_SHOOT,
     R_HALF_SWEEP_SHOOT,
     R_MIDLINE_SWEEP_SHOOT,
@@ -74,6 +76,7 @@ public class AutonomousSelector {
         List.of(
             new Auto(AutoName.DO_NOTHING, new DoNothing(hood)),
             new Auto(AutoName.C_DEPOT_OUTPOST, new CDepotOutpost(drive, led, intake)),
+            new Auto(AutoName.C_OUTPOST, new COutpost(drive, led, shooter)),
             new Auto(AutoName.R_FULL_SWEEP_SHOOT, new RFullSweepShoot(drive, led, intake, shooter)),
             new Auto(
                 AutoName.R_HALF_SWEEP_SHOOT,
