@@ -16,18 +16,6 @@ public class ShooterCommands {
     return Commands.run(() -> shooter.requestShoot(false), shooter);
   }
 
-  public static Command autoShoot(Shooter shooter, BooleanSupplier inShootingZone) {
-    return Commands.run(
-        () -> {
-          if (inShootingZone.getAsBoolean()) {
-            shooter.requestShoot(false);
-          } else {
-            shooter.requestIdle();
-          }
-        },
-        shooter);
-  }
-
   public static Command shootFixed(Shooter shooter) {
     return Commands.run(() -> shooter.requestShoot(true), shooter);
   }

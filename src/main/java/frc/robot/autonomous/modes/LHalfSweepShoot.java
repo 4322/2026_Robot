@@ -37,8 +37,6 @@ public class LHalfSweepShoot extends SequentialCommandGroup {
             }),
         new ParallelCommandGroup(
             IntakeCommands.setIntaking(intake),
-            ShooterCommands.autoShoot(
-                shooter, () -> AreaManager.isShootingArea(drive.getTurretPose().getTranslation())),
             new SequentialCommandGroup(
                 AutoBuilder.followPath(Robot.L_StartL_To_NeutralL_Intake),
                 AutoBuilder.followPath(Robot.L_NeutralL_Intake_To_Mid),
