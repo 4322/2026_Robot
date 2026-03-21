@@ -293,20 +293,22 @@ public class Shooter extends SubsystemBase {
         return;
       }
 
-      if (!goIntoNonShootArea) {
+      if (!goIntoNonShootArea && !HubShiftUtil.getShiftedShiftInfo().active()) {
         unwindComplete = false;
         state = ShooterState.UNWIND;
         goIntoNonShootArea = true;
-      } else if (goIntoNonShootArea) {
+      } else if (HubShiftUtil.getShiftedShiftInfo().active()) {
         goIntoNonShootArea = false;
       }
       // // Don't shoot if inactive
-      // if (turret.needsToUnwind() && state != ShooterState.SHOOT) {
-      //   unwindComplete = false;
-      //   state = ShooterState.UNWIND;
-      // } else if (state == ShooterState.SHOOT) {
-      //   turret.unwind(false);
-      // }
+      if (turret.needsToUnwind() && state != ShooterState.SHOOT) {
+        unwindComplete = false;
+        state = ShooterState.UNWIND;
+        goIntoNonShootArea = true;
+      } else if (state == ShooterState.SHOOT) {
+        turret.unwind(false);
+        goIntoNonShootArea = true;
+      }
 
     } else {
       // Otherwise start shooting sequence
