@@ -12,7 +12,6 @@ import frc.robot.autonomous.modes.RDisruptSweepShoot;
 import frc.robot.autonomous.modes.RFullSweepShoot;
 import frc.robot.autonomous.modes.RHalfSuperSweepShoot;
 import frc.robot.autonomous.modes.RHalfSweepShoot;
-import frc.robot.autonomous.modes.RMidlineSweepShoot;
 import frc.robot.commands.DriveCommands;
 import frc.robot.constants.Constants;
 import frc.robot.constants.Constants.Mode;
