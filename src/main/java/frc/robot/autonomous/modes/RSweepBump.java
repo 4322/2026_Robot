@@ -15,13 +15,13 @@ import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.led.LED;
 import frc.robot.subsystems.shooter.Shooter;
 
-public class L2Sweep extends SequentialCommandGroup {
-  public L2Sweep(Drive drive, LED led, Intake intake, Shooter shooter) {
-    PathPlannerPath path = Robot.L_2SWEEP_A;
+public class RSweepBump extends SequentialCommandGroup {
+  public RSweepBump(Drive drive, LED led, Intake intake, Shooter shooter) {
+    PathPlannerPath path = Robot.R_2SWEEP_A;
     Pose2d startPoseBlue = path.getStartingHolonomicPose().get();
     Pose2d startPoseRed = path.flipPath().getStartingHolonomicPose().get();
 
-    setName("L_2_SWEEP");
+    setName("R_SWEEP_BUMP");
 
     addCommands(
         new InstantCommand(
@@ -35,17 +35,8 @@ public class L2Sweep extends SequentialCommandGroup {
         new ParallelCommandGroup(
             IntakeCommands.setIntaking(intake),
             new SequentialCommandGroup(
-                AutoBuilder.followPath(Robot.L_2SWEEP_A),
-                AutoBuilder.followPath(Robot.L_2SWEEP_B),
-                ShooterCommands.toggleAutoShoot(shooter, true),
-                AutoBuilder.followPath(Robot.L_2SWEEP_CG),
-                ShooterCommands.toggleAutoShoot(shooter, false),
-                AutoBuilder.followPath(Robot.L_2SWEEP_D),
-                AutoBuilder.followPath(Robot.L_2SWEEP_E),
-                AutoBuilder.followPath(Robot.L_2SWEEP_F),
-                ShooterCommands.toggleAutoShoot(shooter, true),
-                AutoBuilder.followPath(Robot.L_2SWEEP_CG),
-                ShooterCommands.toggleAutoShoot(shooter, false),
-                AutoBuilder.followPath(Robot.L_2SWEEP_H))));
+                AutoBuilder.followPath(Robot.R_2SWEEP_A),
+                AutoBuilder.followPath(Robot.R_2SWEEP_B),
+                ShooterCommands.toggleAutoShoot(shooter, true))));
   }
 }
