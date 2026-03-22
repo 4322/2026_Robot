@@ -230,8 +230,7 @@ public class Simulator extends SubsystemBase {
 
   private List<RegressionTest> regressionTestCases() {
     return switch (regressTest) {
-      case AUTO -> List.of(
-          new RegressionTest("AUTO", AutoName.R_DISRUPT_SWEEP_SHOOT, Alliance.Blue));
+      case AUTO -> List.of(new RegressionTest("AUTO", AutoName.L_HALF_SWEEP_SHOOT, Alliance.Red));
       case SHOOT -> List.of(new RegressionTest("Shoot", TeleopScenario.SHOOT, Alliance.Blue));
       case DO_NOTHING -> List.of(
           new RegressionTest("Do nothing", AutoName.DO_NOTHING, Alliance.Blue));
@@ -499,8 +498,8 @@ public class Simulator extends SubsystemBase {
               "Stop Drive",
               EventType.MOVE_JOYSTICK_DRIVE,
               new Pose2d(0.0, 0.0, Rotation2d.k180deg)),
-          new SimEvent(t += 0.1, "Shoot", EventType.HOLD_RIGHT_BUMPER),
-          new SimEvent(t += 6, "Stop Shooting", EventType.RELEASE_RIGHT_BUMPER),
+          new SimEvent(t += 0.1, "Shoot", EventType.HOLD_RIGHT_TRIGGER),
+          new SimEvent(t += 6, "Stop Shooting", EventType.RELEASE_RIGHT_TRIGGER),
           new SimEvent(
               t += 0.1,
               "Drive Back",
