@@ -33,6 +33,8 @@ public class Turret {
     Logger.processInputs("Turret", inputs);
     Logger.recordOutput("Turret/State", state);
     Logger.recordOutput("Turret/needToUnwind", needsToUnwind());
+    Logger.recordOutput("Turret/atGoal", isAtGoal());
+      Logger.recordOutput("Turret/BetweenUnwindThreshold", betweenUnwindThreshold());
 
     switch (Constants.turretMode) {
       case DISABLED -> {}
