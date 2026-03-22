@@ -498,8 +498,8 @@ public class Simulator extends SubsystemBase {
               "Stop Drive",
               EventType.MOVE_JOYSTICK_DRIVE,
               new Pose2d(0.0, 0.0, Rotation2d.k180deg)),
-          new SimEvent(t += 0.1, "Shoot", EventType.HOLD_RIGHT_BUMPER),
-          new SimEvent(t += 6, "Stop Shooting", EventType.RELEASE_RIGHT_BUMPER),
+          new SimEvent(t += 0.1, "Shoot", EventType.HOLD_RIGHT_TRIGGER),
+          new SimEvent(t += 6, "Stop Shooting", EventType.RELEASE_RIGHT_TRIGGER),
           new SimEvent(
               t += 0.1,
               "Drive Back",
