@@ -11,6 +11,7 @@ import frc.robot.autonomous.modes.RFullSweepShoot;
 import frc.robot.autonomous.modes.RHalfSuperSweepShoot;
 import frc.robot.autonomous.modes.RHalfSweepShoot;
 import frc.robot.autonomous.modes.RMidlineSweepShoot;
+import frc.robot.autonomous.modes.RSweepBump;
 import frc.robot.commands.DriveCommands;
 import frc.robot.constants.Constants;
 import frc.robot.constants.Constants.Mode;
@@ -40,6 +41,11 @@ public class AutonomousSelector {
     R_DISRUPT_SWEEP_SHOOT,
     R_HALF_SUPER_SWEEP_SHOOT,
     L_HALF_SWEEP_SHOOT,
+
+    R_2_SWEEP,
+    L_2_SWEEP,
+    R_SWEEP_BUMP,
+    R_ROUTPOST,
 
     DRIVE_WHEEL_RADIUS_CHARACTERIZATION,
     DRIVE_SIMPLE_FF_CHARACTERIZATION,
@@ -92,6 +98,7 @@ public class AutonomousSelector {
             new Auto(
                 AutoName.L_HALF_SWEEP_SHOOT,
                 new LHalfSweepShoot(drive, led, intake, shooter, hood)),
+            new Auto(AutoName.R_SWEEP_BUMP, new RSweepBump(drive, led, intake, shooter)),
             new Auto(
                 AutoName.DRIVE_WHEEL_RADIUS_CHARACTERIZATION,
                 new SequentialCommandGroup(

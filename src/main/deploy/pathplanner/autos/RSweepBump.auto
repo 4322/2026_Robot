@@ -7,19 +7,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "C_Start_To_Depot"
+            "pathName": "R_2Sweep_A"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "C_Depot_To_Outpost"
+            "pathName": "R_2Sweep_B"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "C",
+  "folder": "R",
   "choreoAuto": false
 }

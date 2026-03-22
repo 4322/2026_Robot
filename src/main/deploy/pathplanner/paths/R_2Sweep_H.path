@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.440156918687589,
-        "y": 0.65
+        "x": 3.2498002853067045,
+        "y": 0.5350927246790309
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.898502139800283,
+        "x": 4.257749127670245,
         "y": 0.5350927246790309
       },
       "isLocked": false,
-      "linkedName": "R.Trench.Start"
+      "linkedName": "R.2Sweep_D"
     },
     {
       "anchor": {
-        "x": 8.25,
-        "y": 1.3
+        "x": 6.782054208273894,
+        "y": 0.5350927246790309
       },
       "prevControl": {
-        "x": 8.340570613409417,
-        "y": 0.4589871611982881
+        "x": 5.782054208273894,
+        "y": 0.535092724679031
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "R.Neutral.Intake.Midline"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
@@ -33,7 +33,7 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 5.0,
+    "maxVelocity": 3.0,
     "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
@@ -41,14 +41,14 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0.0,
-    "rotation": 119.99999999999999
-  },
-  "reversed": false,
-  "folder": "R_NeutralR_Midline",
-  "idealStartingState": {
     "velocity": 0,
     "rotation": 90.0
   },
-  "useDefaultConstraints": false
+  "reversed": false,
+  "folder": "R_2Sweep",
+  "idealStartingState": {
+    "velocity": 0.1,
+    "rotation": 90.0
+  },
+  "useDefaultConstraints": true
 }

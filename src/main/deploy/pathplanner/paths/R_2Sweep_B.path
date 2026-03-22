@@ -3,32 +3,41 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.25,
-        "y": 1.3
+        "x": 8.2,
+        "y": 2.7
       },
       "prevControl": null,
       "nextControl": {
-        "x": 8.25,
-        "y": 2.3
+        "x": 5.979857346647646,
+        "y": 2.6052781740370903
       },
       "isLocked": false,
-      "linkedName": "R.Neutral.Intake.Midline"
+      "linkedName": "R.2Sweep_B"
     },
     {
       "anchor": {
-        "x": 8.25,
-        "y": 6.5
+        "x": 2.732253922967189,
+        "y": 2.566462196861627
       },
       "prevControl": {
-        "x": 8.25,
-        "y": 5.5
+        "x": 4.422933554050566,
+        "y": 2.566462196861627
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "R.Neutral.Intake.Midline.Full"
+      "linkedName": "R.2Sweep_C"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.36034115138592615,
+      "rotationDegrees": -150.0
+    },
+    {
+      "waypointRelativePos": 0.8976545842217432,
+      "rotationDegrees": -150.0
+    }
+  ],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [],
@@ -41,14 +50,14 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0.0,
-    "rotation": 150.0
+    "velocity": 0.01,
+    "rotation": -123.254
   },
   "reversed": false,
-  "folder": "R_NeutralR_Midline",
+  "folder": "R_2Sweep",
   "idealStartingState": {
-    "velocity": 0.0,
-    "rotation": 119.99999999999999
+    "velocity": 0.1,
+    "rotation": 104.9399737021552
   },
   "useDefaultConstraints": true
 }
