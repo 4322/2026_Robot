@@ -38,7 +38,6 @@ public class AutonomousSelector {
     C_DEPOT_OUTPOST,
     R_FULL_SWEEP_SHOOT,
     R_HALF_SWEEP_SHOOT,
-    R_MIDLINE_SWEEP_SHOOT,
     R_DISRUPT_SWEEP_SHOOT,
     R_HALF_SUPER_SWEEP_SHOOT,
     L_HALF_SWEEP_SHOOT,
@@ -83,9 +82,6 @@ public class AutonomousSelector {
             new Auto(
                 AutoName.R_HALF_SWEEP_SHOOT,
                 new RHalfSweepShoot(drive, led, intake, shooter, hood)),
-            new Auto(
-                AutoName.R_MIDLINE_SWEEP_SHOOT,
-                new RMidlineSweepShoot(drive, led, intake, shooter)),
             new Auto(
                 AutoName.R_DISRUPT_SWEEP_SHOOT,
                 new RDisruptSweepShoot(drive, led, intake, shooter)),
