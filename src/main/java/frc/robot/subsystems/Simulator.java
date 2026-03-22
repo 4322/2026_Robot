@@ -23,7 +23,7 @@ import java.util.Map;
 import org.littletonrobotics.junction.Logger;
 
 public class Simulator extends SubsystemBase {
-  private static final RegressTests regressTest = RegressTests.AUTO;
+  private static final RegressTests regressTest = RegressTests.SUBSYSTEM_TEST_TELE;
   public static AutoName autoScenario;
   private TeleopScenario teleopScenario;
   private List<TeleAnomaly> teleAnomalies;
@@ -58,6 +58,7 @@ public class Simulator extends SubsystemBase {
   private enum TeleopScenario {
     NONE,
     SHOOT,
+    UNJAM,
     CONTROLLER_TEST1,
     CONTROLLER_TEST2,
     SUBSYSTEM_TEST,
@@ -241,7 +242,7 @@ public class Simulator extends SubsystemBase {
           new RegressionTest("Auto test", AutoName.R_FULL_SWEEP_SHOOT, Alliance.Blue),
           new RegressionTest("Subsystem Test", TeleopScenario.SUBSYSTEM_TEST, Alliance.Blue));
       case SUBSYSTEM_TEST_TELE -> List.of(
-          new RegressionTest("Subsystem Test", TeleopScenario.SUBSYSTEM_TEST, Alliance.Blue));
+          new RegressionTest("Subsystem Test", TeleopScenario.UNJAM, Alliance.Blue));
       case TEST_AUTOROTATE -> List.of(
           new RegressionTest("Auto Rotate", TeleopScenario.AUTO_ROTATE, Alliance.Blue));
       case TURRET -> List.of(
@@ -594,7 +595,13 @@ public class Simulator extends SubsystemBase {
               new FieldPose2d(3.7, 6.5, Rotation2d.kZero)),
           new SimEvent(t += 0.1, "Fixed Shoot", EventType.HOLD_RIGHT_BUMPER),
           new SimEvent(t += 5, "End", EventType.END_OF_SCENARIO));
-
+      case UNJAM -> List.of(
+          new SimEvent(
+              t += 0.1, "Start pose", EventType.SET_POSE, new FieldPose2d(2, 2, Rotation2d.kZero)),
+          new SimEvent(t += 1.0, "Hold_Left_Trigger" + eventNum++, EventType.HOLD_RIGHT_TRIGGER),
+          new SimEvent(t += 10.0, "Hold_B" + eventNum++, EventType.HOLD_B),
+          new SimEvent(t += 6.0, "Release_B" + eventNum++, EventType.RELEASE_B),
+          new SimEvent(t += 10.0, "Final Movement", EventType.END_OF_SCENARIO));
       default -> List.of();
     };
   }
