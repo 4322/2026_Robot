@@ -504,6 +504,7 @@ public final class Constants {
     public static final double pathPlannerRotationkP = 4;
     public static final double unjamTimeSec = 0.5;
     public static final double emptyTime = 4;
+    public static final double foreverTime = 20;
   }
 
   public static class LED {

@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Robot;
 import frc.robot.commands.IntakeCommands;
 import frc.robot.commands.ShooterCommands;
+import frc.robot.constants.Constants;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.led.LED;
@@ -38,6 +39,7 @@ public class CDepotOutpost extends SequentialCommandGroup {
             new SequentialCommandGroup(
                 AutoBuilder.followPath(Robot.C_Start_To_Depot),
                 AutoBuilder.followPath(Robot.C_Depot_To_Outpost),
-                ShooterCommands.setAutoShoot(shooter, true))));
+                ShooterCommands.unjam(shooter).withTimeout(Constants.Autonomous.unjamTimeSec),
+                ShooterCommands.shoot(shooter).withTimeout(Constants.Autonomous.foreverTime))));
   }
 }

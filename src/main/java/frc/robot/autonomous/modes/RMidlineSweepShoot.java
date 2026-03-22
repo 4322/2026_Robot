@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Robot;
 import frc.robot.commands.IntakeCommands;
 import frc.robot.commands.ShooterCommands;
+import frc.robot.constants.Constants;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.led.LED;
@@ -40,7 +41,8 @@ public class RMidlineSweepShoot extends SequentialCommandGroup {
                 AutoBuilder.followPath(Robot.R_NeutralR_Intake_Full_Midline),
                 AutoBuilder.followPath(Robot.R_NeutralR_Intake_Full_Midline_Flip),
                 AutoBuilder.followPath(Robot.R_NeutralRMid_To_ShootR),
-                ShooterCommands.setAutoShoot(shooter, true))));
+                ShooterCommands.unjam(shooter).withTimeout(Constants.Autonomous.unjamTimeSec),
+                ShooterCommands.shoot(shooter).withTimeout(Constants.Autonomous.foreverTime))));
   }
 
   public RMidlineSweepShoot(
