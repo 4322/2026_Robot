@@ -36,13 +36,13 @@ public class RHalfSuperSweepShoot extends SequentialCommandGroup {
             IntakeCommands.setIntaking(intake),
             new SequentialCommandGroup(
                 AutoBuilder.followPath(Robot.R_StartR_To_NeutralR_Intake_Disrupt),
-                ShooterCommands.toggleAutoShoot(shooter, true),
+                ShooterCommands.setAutoShoot(shooter, true),
                 AutoBuilder.followPath(Robot.R_Half_SuperSweep_B),
-                ShooterCommands.toggleAutoShoot(shooter, false),
+                ShooterCommands.setAutoShoot(shooter, false),
                 AutoBuilder.followPath(Robot.R_Half_SuperSweep_C),
                 AutoBuilder.followPath(Robot.R_Half_SuperSweep_D),
                 AutoBuilder.followPath(Robot.R_Half_SuperSweep_E),
                 AutoBuilder.followPath(Robot.R_Half_SuperSweep_F),
-                ShooterCommands.toggleAutoShoot(shooter, true))));
+                ShooterCommands.setAutoShoot(shooter, true))));
   }
 }
