@@ -265,7 +265,8 @@ public class Shooter extends SubsystemBase {
           FiringManager.getFiringSolution(
               drive.getTurretPose(),
               drive.getVelocity(),
-              AreaManager.getZoneOfPosition(drive.getTurretPosition()) == Zone.ALLIANCE_ZONE);
+              AreaManager.getZoneOfPosition(drive.getTurretPosition()) == Zone.ALLIANCE_ZONE
+                  || AreaManager.isTrench(drive.getTurretPosition()));
       targetHoodAngleDeg = firingSolution.hoodAngle();
       targetFlywheelSpeedRPS = firingSolution.flywheelSpeedRPS();
       targetTurretAngleDeg = firingSolution.turretAngleDeg();
