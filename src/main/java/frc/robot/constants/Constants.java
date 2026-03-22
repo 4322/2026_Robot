@@ -207,6 +207,7 @@ public final class Constants {
     public static final double toleranceDeg = 1;
     public static final double homingVelocityThresholdRPS = 0.01;
     public static final double homingVelocity = -0.4;
+    public static final double holdDownVelocity = -0.1;
   }
 
   public static class Control {

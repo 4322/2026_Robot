@@ -83,8 +83,10 @@ public class Hood {
           }
         } else if (DriverStation.isEnabled()) {
           pidVelocity = pidController.calculate(inputs.degrees, requestedAngleDeg);
-          if (pidController.atSetpoint()) {
-            pidVelocity = 0;
+          // let hood continually adjust, unless it is near the bottom, in which case
+          // we don't want kI building up to max negative velocity
+          if (pidController.atSetpoint() && requestedAngleDeg == Constants.Hood.safeAngleDeg) {
+            pidVelocity = Constants.Hood.holdDownVelocity;
           }
           io.setServoVelocity(pidVelocity);
           Logger.recordOutput("Hood/requestedServoVelocity", pidVelocity);
