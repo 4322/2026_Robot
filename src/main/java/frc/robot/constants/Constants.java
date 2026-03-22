@@ -193,7 +193,7 @@ public final class Constants {
     public static final int servoChannel = 3;
     public static final int encoderId = 3;
     public static final double gearRatio = 164 / 11.0;
-    public static final double safeAngleDeg = 1;
+    public static final double safeAngleDeg = 0;
     public static final double kSPulsewidthUp = 80;
     public static final double kSPulsewidthDown = 45;
     public static final double kV = 0;
@@ -205,7 +205,7 @@ public final class Constants {
     public static final double toleranceDeg = 1;
     public static final double homingVelocityThresholdRPS = 0.01;
     public static final double homingVelocity = -0.4;
-    public static final double idleAngleDeg = 0;
+    public static final double holdDownVelocity = -0.1;
   }
 
   public static class Control {
@@ -417,7 +417,7 @@ public final class Constants {
 
   public static class Sim {
 
-    public static final double tunnelRate = 0.2;
+    public static final double tunnelRate = 1;
     public static final double spindexerRate = 0.2;
     public static final double flywheelRate = 2;
     public static final double servoRate = 0.2;
@@ -502,6 +502,7 @@ public final class Constants {
 
     public static final double pathPlannerDrivekP = 5; // TODO probably increase
     public static final double pathPlannerRotationkP = 4;
+    public static final double unjamTimeSec = 0.5;
   }
 
   public static class LED {

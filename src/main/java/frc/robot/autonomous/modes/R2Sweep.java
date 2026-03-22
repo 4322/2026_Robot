@@ -37,15 +37,15 @@ public class R2Sweep extends SequentialCommandGroup {
             new SequentialCommandGroup(
                 AutoBuilder.followPath(Robot.R_2SWEEP_A),
                 AutoBuilder.followPath(Robot.R_2SWEEP_B),
-                ShooterCommands.toggleAutoShoot(shooter, true),
+                ShooterCommands.setAutoShoot(shooter, true),
                 AutoBuilder.followPath(Robot.R_2SWEEP_CG),
-                ShooterCommands.toggleAutoShoot(shooter, false),
+                ShooterCommands.setAutoShoot(shooter, false),
                 AutoBuilder.followPath(Robot.R_2SWEEP_D),
                 AutoBuilder.followPath(Robot.R_2SWEEP_E),
                 AutoBuilder.followPath(Robot.R_2SWEEP_F),
-                ShooterCommands.toggleAutoShoot(shooter, true),
+                ShooterCommands.setAutoShoot(shooter, true),
                 AutoBuilder.followPath(Robot.R_2SWEEP_CG),
-                ShooterCommands.toggleAutoShoot(shooter, false),
+                ShooterCommands.setAutoShoot(shooter, false),
                 AutoBuilder.followPath(Robot.R_2SWEEP_H))));
   }
 }

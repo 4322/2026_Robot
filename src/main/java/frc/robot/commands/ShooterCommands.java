@@ -77,7 +77,7 @@ public class ShooterCommands {
         shooter);
   }
 
-  public static Command toggleAutoShoot(Shooter shooter, boolean enabled) {
+  public static Command setAutoShoot(Shooter shooter, boolean enabled) {
     return Commands.runOnce(
         () -> {
           shooter.setAutoShoot(enabled);

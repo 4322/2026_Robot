@@ -40,7 +40,7 @@ public class RMidlineSweepShoot extends SequentialCommandGroup {
                 AutoBuilder.followPath(Robot.R_NeutralR_Intake_Full_Midline),
                 AutoBuilder.followPath(Robot.R_NeutralR_Intake_Full_Midline_Flip),
                 AutoBuilder.followPath(Robot.R_NeutralRMid_To_ShootR),
-                ShooterCommands.toggleAutoShoot(shooter, true))));
+                ShooterCommands.setAutoShoot(shooter, true))));
   }
 
   public RMidlineSweepShoot(

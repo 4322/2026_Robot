@@ -428,7 +428,10 @@ public class RobotContainer {
         .and(autoAbleToShoot.negate())
         .whileTrue(ShooterCommands.idle(shooter));
 
-    autoAbleToShoot.whileTrue(ShooterCommands.shoot(shooter));
+    autoAbleToShoot.onTrue(
+        ShooterCommands.unjam(shooter)
+            .withTimeout(Constants.Autonomous.unjamTimeSec)
+            .andThen(ShooterCommands.shoot(shooter).until(autoAbleToShoot.negate())));
 
     intake.setDefaultCommand(IntakeCommands.setIdle(intake));
 
