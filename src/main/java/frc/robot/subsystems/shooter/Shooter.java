@@ -46,7 +46,7 @@ public class Shooter extends SubsystemBase {
   private Turret turret;
   private Drive drive;
   private LED led;
-  private boolean goIntoNonShootArea;
+  private boolean dontWantPremtiveUnwind;
 
   private double targetHoodAngleDeg;
   private double targetFlywheelSpeedRPS;
@@ -180,10 +180,9 @@ public class Shooter extends SubsystemBase {
           }
         }
         // In case for some reason we end up in this state when turret is locked
-        if (turret.isAtGoal() || Constants.turretLocked) {
+        if ((turret.isAtGoal() && turret.betweenUnwindThreshold() && !turret.needsToUnwind()) || Constants.turretLocked) {
           unwindComplete = true;
           turret.unwind(false);
-          state = ShooterState.IDLE;
         }
       }
       case PRESHOOT -> {
@@ -293,21 +292,22 @@ public class Shooter extends SubsystemBase {
         return;
       }
 
-      if (!goIntoNonShootArea && !HubShiftUtil.getShiftedShiftInfo().active()) {
-        unwindComplete = false;
-        state = ShooterState.UNWIND;
-        goIntoNonShootArea = true;
-      } else if (HubShiftUtil.getShiftedShiftInfo().active()) {
-        goIntoNonShootArea = false;
-      }
+
       // // Don't shoot if inactive
       if (turret.needsToUnwind() && state != ShooterState.SHOOT) {
         unwindComplete = false;
         state = ShooterState.UNWIND;
-        goIntoNonShootArea = true;
+        dontWantPremtiveUnwind = true;
       } else if (state == ShooterState.SHOOT) {
-        turret.unwind(false);
-        goIntoNonShootArea = true;
+        dontWantPremtiveUnwind = true;
+      }
+
+    if (!dontWantPremtiveUnwind && !HubShiftUtil.getShiftedShiftInfo().active()) {
+        unwindComplete = false;
+        state = ShooterState.UNWIND;
+        dontWantPremtiveUnwind = true;
+      } else if (HubShiftUtil.getShiftedShiftInfo().active()) {
+        dontWantPremtiveUnwind = false;
       }
 
     } else {
@@ -333,9 +333,7 @@ public class Shooter extends SubsystemBase {
           if (turret.needsToUnwind() && state != ShooterState.SHOOT) {
             unwindComplete = false;
             state = ShooterState.UNWIND;
-          } else if (state == ShooterState.SHOOT) {
-            turret.unwind(false);
-          }
+          } 
         }
       }
     }
@@ -344,8 +342,9 @@ public class Shooter extends SubsystemBase {
   public void requestIdle() {
     inIdle = true;
     Logger.recordOutput("Shooter/currentMethod", "requestIdle()");
+    if (!turret.needsToUnwind() && unwindComplete){
     state = ShooterState.IDLE;
-    // TODO deal with UNWIND state
+    }
   }
 
   public void requestStop() {

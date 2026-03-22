@@ -10,6 +10,9 @@ public class Turret {
   private TurretIO io;
   private TurretIOInputsAutoLogged inputs = new TurretIOInputsAutoLogged();
   private Double desiredDeg = 0.0;
+  private double unwindDeg = 0.0;
+    private double prevDeg = 0.0;
+  private boolean needsUnwindFinish = false;
 
   public enum turretState {
     DISABLED,
@@ -45,18 +48,18 @@ public class Turret {
             if (desiredDeg != null) {
               io.setAngle(desiredDeg);
               if (MathUtil.isNear(inputs.turretDegs, Constants.Turret.midPointPhysicalDeg, 90)
-                  && isAtGoal()) {
+                  && isAtGoal() && betweenUnwindThreshold()) {
                 state = turretState.SET_TURRET_ANGLE;
               }
             } else {
-              io.setAngle(Constants.Turret.midPointPhysicalDeg);
+              io.setAngle(prevDeg);
             }
           }
           case SET_TURRET_ANGLE -> {
             if (desiredDeg != null) {
               io.setAngle(desiredDeg);
             } else {
-              io.setAngle(Constants.Turret.midPointPhysicalDeg);
+              io.setAngle(prevDeg);
             }
           }
         }
@@ -70,12 +73,20 @@ public class Turret {
     if (Constants.turretLocked) {
       return;
     }
+
     // Null represents a zone that returns no angle
-    if (desiredDeg != null) {
+    if (needsUnwindFinish){
+      state = turretState.UNWIND;
+      if (betweenUnwindThreshold()){
+        needsUnwindFinish = false;
+      }
+    }
+    else if (desiredDeg != null) {
       desiredDeg = getClosestTargetAngle(desiredDeg, inputs.turretDegs);
+      prevDeg = desiredDeg;
     } else {
       // In the case when we are in a zone that returns null angle
-      desiredDeg = Constants.Turret.midPointPhysicalDeg;
+      desiredDeg =  prevDeg;
       state = turretState.UNWIND;
     }
 
@@ -106,6 +117,11 @@ public class Turret {
         || inputs.turretDegs <= Constants.Turret.minUnwindLimitDeg);
   }
 
+  public boolean betweenUnwindThreshold() {
+    return (inputs.turretDegs >= (unwindDeg - Constants.Turret.goalToleranceDeg)
+        || inputs.turretDegs <= (unwindDeg + Constants.Turret.goalToleranceDeg));
+  }
+
   public boolean isAtGoal() {
     if (Constants.turretLocked) {
       // desired turret angle is required robot heading when turret is locked
@@ -128,11 +144,13 @@ public class Turret {
 
   public void unwind(boolean safeToUnwind) {
     if (state == turretState.SET_TURRET_ANGLE && safeToUnwind) {
+      needsUnwindFinish = true;
       desiredDeg =
           (MathUtil.isNear(Constants.Turret.midPointPhysicalDeg, desiredDeg, 90))
               ? desiredDeg
               : getTargetAngleInMidpoint();
       Logger.recordOutput("Turret/adjustedDeg", desiredDeg);
+      unwindDeg = desiredDeg;
       state = turretState.UNWIND;
     } else if (!safeToUnwind) {
       state = turretState.SET_TURRET_ANGLE;
