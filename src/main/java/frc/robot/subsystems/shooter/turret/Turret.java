@@ -11,7 +11,7 @@ public class Turret {
   private TurretIOInputsAutoLogged inputs = new TurretIOInputsAutoLogged();
   private Double desiredDeg = 0.0;
   private double unwindDeg = 0.0;
-  private double prevDeg = 0.0;
+  private double prevDeg = Constants.Turret.midPointPhysicalDeg;
   private boolean needsUnwindFinish = false;
 
   public enum turretState {
@@ -85,9 +85,8 @@ public class Turret {
       desiredDeg = getClosestTargetAngle(desiredDeg, inputs.turretDegs);
       prevDeg = desiredDeg;
     } else {
-      // In the case when we are in a zone that returns null angle
+      // Made it so we stay in same place we did before it was null
       desiredDeg = prevDeg;
-      state = turretState.UNWIND;
     }
 
     // Code that is meant to set the degree of turret is unwind cases
