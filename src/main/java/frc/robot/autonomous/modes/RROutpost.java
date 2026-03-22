@@ -32,11 +32,11 @@ public class RROutpost extends SequentialCommandGroup {
               }
             }),
         new SequentialCommandGroup(
-            ShooterCommands.toggleAutoShoot(shooter, true),
+            ShooterCommands.setAutoShoot(shooter, true),
             AutoBuilder.followPath(Robot.R_ROutpost_A),
             new WaitCommand(4),
-            ShooterCommands.toggleAutoShoot(shooter, false),
+            ShooterCommands.setAutoShoot(shooter, false),
             AutoBuilder.followPath(Robot.R_ROutpost_B),
-            ShooterCommands.toggleAutoShoot(shooter, true)));
+            ShooterCommands.setAutoShoot(shooter, true)));
   }
 }

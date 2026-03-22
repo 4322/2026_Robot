@@ -43,7 +43,7 @@ public class RHalfSweepShoot extends SequentialCommandGroup {
                 AutoBuilder.followPath(Robot.R_NeutralR_Intake_To_Mid),
                 AutoBuilder.followPath(Robot.R_NeutralR_Intake_Mid_Flip),
                 AutoBuilder.followPath(Robot.R_NeutralRMid_To_ShootR),
-                ShooterCommands.toggleAutoShoot(shooter, true))));
+                ShooterCommands.setAutoShoot(shooter, true))));
   }
 
   public RHalfSweepShoot(
