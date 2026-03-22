@@ -303,7 +303,7 @@ public class Shooter extends SubsystemBase {
         dontWantPremtiveUnwind = true;
       }
 
-      if (!dontWantPremtiveUnwind && !HubShiftUtil.getShiftedShiftInfo().active()) {
+      if (!dontWantPremtiveUnwind && !HubShiftUtil.getShiftedShiftInfo().active() && ((turret.getAngle() >= Constants.Turret.midPointPhysicalDeg + 30) || (turret.getAngle() <= Constants.Turret.midPointPhysicalDeg - 30))) {
         unwindComplete = false;
         state = ShooterState.UNWIND;
         dontWantPremtiveUnwind = true;
@@ -318,7 +318,6 @@ public class Shooter extends SubsystemBase {
           || state == ShooterState.UNJAM
           || state == ShooterState.STOP
           || (state == ShooterState.UNWIND && unwindComplete)) {
-        unwindComplete = false;
         // don't check goals until initial requests have been sent
         if (state == ShooterState.PRESHOOT) {
           if (hood.isAtGoal() && flywheel.atTargetVelocity() && turret.isAtGoal()) {
