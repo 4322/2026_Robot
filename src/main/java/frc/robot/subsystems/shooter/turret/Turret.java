@@ -34,7 +34,7 @@ public class Turret {
     Logger.recordOutput("Turret/State", state);
     Logger.recordOutput("Turret/needToUnwind", needsToUnwind());
     Logger.recordOutput("Turret/atGoal", isAtGoal());
-      Logger.recordOutput("Turret/BetweenUnwindThreshold", betweenUnwindThreshold());
+    Logger.recordOutput("Turret/BetweenUnwindThreshold", betweenUnwindThreshold());
 
     switch (Constants.turretMode) {
       case DISABLED -> {}
@@ -48,15 +48,16 @@ public class Turret {
             // Meant to unwind turret to a bound of mid point
             // This goes to the angle for the turret to unwind to
             if (desiredDeg != null) {
-              io.setAngle(desiredDeg);
-              if (MathUtil.isNear(inputs.turretDegs, Constants.Turret.midPointPhysicalDeg, 90)
-                  && isAtGoal()
-                  && betweenUnwindThreshold()) {
+              io.setAngle(unwindDeg);
+              if ((MathUtil.isNear(inputs.turretDegs, Constants.Turret.midPointPhysicalDeg, 90)
+                      && isAtGoal())
+                  || betweenUnwindThreshold()) {
                 state = turretState.SET_TURRET_ANGLE;
               }
             } else {
               io.setAngle(prevDeg);
             }
+            Logger.recordOutput("Turret/adjustedDeg", unwindDeg);
           }
           case SET_TURRET_ANGLE -> {
             if (desiredDeg != null) {
@@ -150,11 +151,8 @@ public class Turret {
           (MathUtil.isNear(Constants.Turret.midPointPhysicalDeg, desiredDeg, 90))
               ? desiredDeg
               : getTargetAngleInMidpoint();
-      Logger.recordOutput("Turret/adjustedDeg", desiredDeg);
       unwindDeg = desiredDeg;
       state = turretState.UNWIND;
-    } else if (!safeToUnwind) {
-      state = turretState.SET_TURRET_ANGLE;
     }
   }
 

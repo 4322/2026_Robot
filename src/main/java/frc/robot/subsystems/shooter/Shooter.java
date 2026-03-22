@@ -303,7 +303,10 @@ public class Shooter extends SubsystemBase {
         dontWantPremtiveUnwind = true;
       }
 
-      if (!dontWantPremtiveUnwind && !HubShiftUtil.getShiftedShiftInfo().active() && ((turret.getAngle() >= Constants.Turret.midPointPhysicalDeg + 30) || (turret.getAngle() <= Constants.Turret.midPointPhysicalDeg - 30))) {
+      if (!dontWantPremtiveUnwind
+          && !HubShiftUtil.getShiftedShiftInfo().active()
+          && ((turret.getAngle() >= Constants.Turret.midPointPhysicalDeg + 30)
+              || (turret.getAngle() <= Constants.Turret.midPointPhysicalDeg - 30))) {
         unwindComplete = false;
         state = ShooterState.UNWIND;
         dontWantPremtiveUnwind = true;
