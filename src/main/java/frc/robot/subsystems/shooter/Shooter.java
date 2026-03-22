@@ -238,6 +238,7 @@ public class Shooter extends SubsystemBase {
                   new Rotation2d(Units.degreesToRadians(targetTurretAngleDeg) - 4 * Math.PI / 3)),
               0.22)
         });
+    Logger.recordOutput("Shooter/autoShoot", autoShootEnabled);
   }
 
   private void calculateFiringSolution() {
