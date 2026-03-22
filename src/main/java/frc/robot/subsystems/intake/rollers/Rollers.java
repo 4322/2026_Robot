@@ -1,6 +1,5 @@
 package frc.robot.subsystems.intake.rollers;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.constants.Constants;
 import org.littletonrobotics.junction.Logger;
 
@@ -10,13 +9,13 @@ public class Rollers {
 
   public enum RollersState {
     IDLE,
-    DEPLOYING,
+    DEPLOY,
     INTAKE,
     EJECT,
     DISABLED
   }
 
-  public RollersState state = RollersState.IDLE;
+  public RollersState state = RollersState.DISABLED;
 
   public Rollers(RollersIO rollersIO) {
     this.rollersIO = rollersIO;
@@ -31,12 +30,8 @@ public class Rollers {
       case DISABLED -> {}
       case NORMAL -> {
         switch (state) {
-          case DISABLED -> {
-            if (DriverStation.isEnabled()) {
-              state = RollersState.DEPLOYING;
-            }
-          }
-          case DEPLOYING -> {
+          case DISABLED -> {}
+          case DEPLOY -> {
             rollersIO.setVoltage(Constants.Rollers.voltageDeploy);
           }
           case IDLE -> {

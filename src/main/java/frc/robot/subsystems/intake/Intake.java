@@ -10,6 +10,8 @@ import org.littletonrobotics.junction.Logger;
 public class Intake extends SubsystemBase {
   private final Deployer deployer;
   private final Rollers rollers;
+  private IntakeState state = IntakeState.DISABLED;
+  private boolean wasExtended;
 
   public Intake(Deployer deployer, Rollers rollers) {
     this.deployer = deployer;
@@ -25,8 +27,6 @@ public class Intake extends SubsystemBase {
     // aadd unjamstill blue and not a priority in docs as of current so TODO
   }
 
-  public IntakeState state = IntakeState.DISABLED;
-
   @Override
   public void periodic() {
     Logger.recordOutput("Intake/State", state);
@@ -39,17 +39,30 @@ public class Intake extends SubsystemBase {
         rollers.setState(RollersState.IDLE);
       }
       case EJECT -> {
-        deployer.setGoal(DeployerState.EXTEND);
         rollers.setState(RollersState.EJECT);
       }
       case IDLE -> {
-        deployer.setGoal(DeployerState.EXTEND);
-        rollers.setState(RollersState.IDLE);
+        if (deployer.isExtended()) {
+          wasExtended = true;
+          rollers.setState(RollersState.IDLE);
+        } else {
+          deployer.setGoal(DeployerState.EXTEND);
+          if (!wasExtended) {
+            // untangle from the net
+            rollers.setState(RollersState.DEPLOY);
+          }
+        }
       }
       case INTAKING -> {
-        deployer.setGoal(DeployerState.EXTEND);
         if (deployer.isExtended()) {
+          wasExtended = true;
           rollers.setState(RollersState.INTAKE);
+        } else {
+          deployer.setGoal(DeployerState.EXTEND);
+          if (!wasExtended) {
+            // untangle from the net
+            rollers.setState(RollersState.DEPLOY);
+          }
         }
       }
     }
