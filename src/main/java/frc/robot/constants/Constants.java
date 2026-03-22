@@ -202,7 +202,7 @@ public final class Constants {
     public static final double kIZone = 1.0;
     public static final double kD = 0.0;
     public static final int idleVelocity = 0;
-    public static final double toleranceDeg = 0.25;
+    public static final double toleranceDeg = 1;
     public static final double homingVelocityThresholdRPS = 0.01;
     public static final double homingVelocity = -0.4;
     public static final double idleAngleDeg = 0;
