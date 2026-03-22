@@ -132,7 +132,7 @@ public final class Constants {
   public static class Flywheel {
     public static final int motorId = 2;
     public static final int followerMotorId = 3;
-    public static final double statorCurrentLimit = 60;
+    public static final double statorCurrentLimit = 120;
     public static final double supplyCurrentLimit = 40;
     public static final InvertedValue motorInvert = InvertedValue.Clockwise_Positive;
     public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
