@@ -180,7 +180,8 @@ public class Shooter extends SubsystemBase {
           }
         }
         // In case for some reason we end up in this state when turret is locked
-        if ((turret.isAtGoal() && turret.betweenUnwindThreshold() && !turret.needsToUnwind()) || Constants.turretLocked) {
+        if ((turret.isAtGoal() && turret.betweenUnwindThreshold() && !turret.needsToUnwind())
+            || Constants.turretLocked) {
           unwindComplete = true;
           turret.unwind(false);
         }
@@ -292,7 +293,6 @@ public class Shooter extends SubsystemBase {
         return;
       }
 
-
       // // Don't shoot if inactive
       if (turret.needsToUnwind() && state != ShooterState.SHOOT) {
         unwindComplete = false;
@@ -302,7 +302,7 @@ public class Shooter extends SubsystemBase {
         dontWantPremtiveUnwind = true;
       }
 
-    if (!dontWantPremtiveUnwind && !HubShiftUtil.getShiftedShiftInfo().active()) {
+      if (!dontWantPremtiveUnwind && !HubShiftUtil.getShiftedShiftInfo().active()) {
         unwindComplete = false;
         state = ShooterState.UNWIND;
         dontWantPremtiveUnwind = true;
@@ -333,7 +333,7 @@ public class Shooter extends SubsystemBase {
           if (turret.needsToUnwind() && state != ShooterState.SHOOT) {
             unwindComplete = false;
             state = ShooterState.UNWIND;
-          } 
+          }
         }
       }
     }
@@ -342,8 +342,8 @@ public class Shooter extends SubsystemBase {
   public void requestIdle() {
     inIdle = true;
     Logger.recordOutput("Shooter/currentMethod", "requestIdle()");
-    if (!turret.needsToUnwind() && unwindComplete){
-    state = ShooterState.IDLE;
+    if (!turret.needsToUnwind() && unwindComplete) {
+      state = ShooterState.IDLE;
     }
   }
 

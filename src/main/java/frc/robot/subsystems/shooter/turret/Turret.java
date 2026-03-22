@@ -11,7 +11,7 @@ public class Turret {
   private TurretIOInputsAutoLogged inputs = new TurretIOInputsAutoLogged();
   private Double desiredDeg = 0.0;
   private double unwindDeg = 0.0;
-    private double prevDeg = 0.0;
+  private double prevDeg = 0.0;
   private boolean needsUnwindFinish = false;
 
   public enum turretState {
@@ -48,7 +48,8 @@ public class Turret {
             if (desiredDeg != null) {
               io.setAngle(desiredDeg);
               if (MathUtil.isNear(inputs.turretDegs, Constants.Turret.midPointPhysicalDeg, 90)
-                  && isAtGoal() && betweenUnwindThreshold()) {
+                  && isAtGoal()
+                  && betweenUnwindThreshold()) {
                 state = turretState.SET_TURRET_ANGLE;
               }
             } else {
@@ -75,18 +76,17 @@ public class Turret {
     }
 
     // Null represents a zone that returns no angle
-    if (needsUnwindFinish){
+    if (needsUnwindFinish) {
       state = turretState.UNWIND;
-      if (betweenUnwindThreshold()){
+      if (betweenUnwindThreshold()) {
         needsUnwindFinish = false;
       }
-    }
-    else if (desiredDeg != null) {
+    } else if (desiredDeg != null) {
       desiredDeg = getClosestTargetAngle(desiredDeg, inputs.turretDegs);
       prevDeg = desiredDeg;
     } else {
       // In the case when we are in a zone that returns null angle
-      desiredDeg =  prevDeg;
+      desiredDeg = prevDeg;
       state = turretState.UNWIND;
     }
 
