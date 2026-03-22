@@ -77,12 +77,11 @@ public class ShooterCommands {
         shooter);
   }
 
-  public static Command toggleAutoShoot(Shooter shooter, boolean enabled) {
-    return Commands.runOnce(
+  public static Command setAutoShoot(Shooter shooter, boolean enabled) {
+    return Commands.run(
         () -> {
           shooter.setAutoShoot(enabled);
           Logger.recordOutput("Shooter/command", "toggleAutoShoot");
-        },
-        shooter);
+        });
   }
 }

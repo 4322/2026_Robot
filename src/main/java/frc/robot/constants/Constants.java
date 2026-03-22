@@ -13,6 +13,7 @@ import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
 import edu.wpi.first.math.interpolation.InverseInterpolator;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.measure.Time;
 import edu.wpi.first.wpilibj.RobotBase;
 import frc.robot.subsystems.shooter.firingManager.FiringManager.FiringSolution;
 import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetection.ObjectDetectionType;
@@ -504,6 +505,7 @@ public final class Constants {
 
     public static final double pathPlannerDrivekP = 5; // TODO probably increase
     public static final double pathPlannerRotationkP = 4;
+    public static final double unjamTimeSec = 2.0;
   }
 
   public static class LED {
