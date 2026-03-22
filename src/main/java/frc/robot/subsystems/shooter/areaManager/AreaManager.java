@@ -4,6 +4,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.Robot;
 import frc.robot.constants.FieldConstants;
+import frc.robot.util.FieldRectangle2d;
 
 public class AreaManager {
 
@@ -66,6 +67,7 @@ public class AreaManager {
   }
 
   public static Zone getZoneOfPosition(Translation2d position) {
+    //Ordered in a way to create a race condition as some coordinated overlap
     if (Robot.alliance == Alliance.Blue) {
       if (FieldConstants.Blue.trenchLeft.contains(position)) {
         return Zone.LEFT_TRENCH;
@@ -164,5 +166,11 @@ public class AreaManager {
       return true;
     }
     return false;
+  }
+
+    public static boolean contains(FieldRectangle2d rectangle, Translation2d point
+  ){
+// Check if within bounding box
+    return 0 == (rectangle.getMeasureDistance(point).abs(null));
   }
 }
