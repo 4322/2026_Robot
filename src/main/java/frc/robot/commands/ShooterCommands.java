@@ -82,6 +82,6 @@ public class ShooterCommands {
         () -> {
           shooter.setAutoShoot(enabled);
           Logger.recordOutput("Shooter/command", "toggleAutoShoot");
-        });
+        }, shooter);
   }
 }
