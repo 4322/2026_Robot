@@ -100,6 +100,9 @@ public class Robot extends LoggedRobot {
   public static PathPlannerPath L_2SWEEP_F;
   public static PathPlannerPath L_2SWEEP_H;
 
+  public static PathPlannerPath R_ROutpost_A;
+  public static PathPlannerPath R_ROutpost_B;
+
   public Robot() {
     Logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME); // Set a metadata value
     Logger.recordMetadata("BuildDate", BuildConstants.BUILD_DATE);
@@ -266,6 +269,10 @@ public class Robot extends LoggedRobot {
       R_2SWEEP_E = PathPlannerPath.fromPathFile("R_2Sweep_E");
       R_2SWEEP_F = PathPlannerPath.fromPathFile("R_2Sweep_F");
       R_2SWEEP_H = PathPlannerPath.fromPathFile("R_2Sweep_H");
+
+      R_ROutpost_A = PathPlannerPath.fromPathFile("R_ROutpost_A");
+      R_ROutpost_B = PathPlannerPath.fromPathFile("R_ROutpost_B");
+
       L_NeutralL_Intake_Mid_Flip = R_NeutralR_Intake_Mid_Flip.mirrorPath();
       L_NeutralLMid_To_ShootL = R_NeutralRMid_To_ShootR.mirrorPath();
       L_NeutralL_Intake_To_Mid = R_NeutralR_Intake_To_Mid.mirrorPath();
