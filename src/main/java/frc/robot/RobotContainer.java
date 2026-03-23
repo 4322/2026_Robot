@@ -21,7 +21,6 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.autonomous.AutonomousSelector;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.IntakeCommands;
-import frc.robot.commands.ShooterCommands;
 import frc.robot.constants.Constants;
 import frc.robot.constants.FieldConstants;
 import frc.robot.generated.TunerConstants;
@@ -107,9 +106,6 @@ public class RobotContainer {
 
   // Controller
   public static final CommandXboxController controller = new CommandXboxController(0);
-
-  private final Trigger inNonShootingArea;
-  private final Trigger autoAbleToShoot;
 
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> testCommandChooser;
@@ -366,12 +362,6 @@ public class RobotContainer {
     testCommandChooser.addOption(
         "Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
 
-    // Triggers
-    inNonShootingArea =
-        new Trigger(() -> !AreaManager.isShootingArea(drive.getTurretPose().getTranslation()));
-
-    autoAbleToShoot =
-        new Trigger(() -> shooter.autoShootEnabled() && DriverStation.isAutonomousEnabled());
 
     // Configure the button bindings
     configureButtonBindings();
@@ -407,31 +397,7 @@ public class RobotContainer {
     Shoot - Left Trigger while held (Operator)
     */
 
-    shooter.setDefaultCommand(ShooterCommands.idle(shooter));
-    controller.b().whileTrue(ShooterCommands.unjam(shooter));
-    controller.leftTrigger().whileTrue(ShooterCommands.trenchOverride(hood));
 
-    if (Constants.turretLocked) {
-      controller
-          .rightTrigger()
-          .whileTrue(
-              ShooterCommands.aimAndShoot(shooter, drive).onlyIf(inNonShootingArea.negate()));
-    } else {
-      controller
-          .rightTrigger()
-          .whileTrue(ShooterCommands.shoot(shooter).onlyIf(inNonShootingArea.negate()));
-      controller.a().whileTrue(ShooterCommands.shootFixed(shooter));
-    }
-
-    inNonShootingArea
-        .and(() -> !shooter.isInIdle())
-        .and(autoAbleToShoot.negate())
-        .whileTrue(ShooterCommands.idle(shooter));
-
-    autoAbleToShoot.onTrue(
-        ShooterCommands.unjam(shooter)
-            .withTimeout(Constants.Autonomous.unjamTimeSec)
-            .andThen(ShooterCommands.shoot(shooter).until(autoAbleToShoot.negate())));
 
     intake.setDefaultCommand(IntakeCommands.setIdle(intake));
 

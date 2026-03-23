@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Robot;
 import frc.robot.commands.IntakeCommands;
-import frc.robot.commands.ShooterCommands;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.led.LED;
@@ -36,7 +35,6 @@ public class RSweepBump extends SequentialCommandGroup {
             IntakeCommands.setIntaking(intake),
             new SequentialCommandGroup(
                 AutoBuilder.followPath(Robot.R_2SWEEP_A),
-                AutoBuilder.followPath(Robot.R_2SWEEP_B),
-                ShooterCommands.setAutoShoot(shooter, true))));
+                AutoBuilder.followPath(Robot.R_2SWEEP_B))));
   }
 }

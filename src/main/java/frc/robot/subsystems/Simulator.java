@@ -860,7 +860,6 @@ public class Simulator extends SubsystemBase {
       events = teleopEvents;
     }
     drive.setPose(new Pose2d(0, 0, Rotation2d.kZero));
-    shooter.setAutoShoot(false);
     resetScenario();
   }
 
