@@ -10,14 +10,12 @@ public class Turret {
   private TurretIO io;
   private TurretIOInputsAutoLogged inputs = new TurretIOInputsAutoLogged();
   private Double desiredDeg = 0.0;
-  private double unwindDeg = 0.0;
-  private double prevDeg = Constants.Turret.midPointPhysicalDeg;
   private boolean needsUnwindFinish = false;
+  private double prevDeg = Constants.Turret.midPointPhysicalDeg;
 
   public enum turretState {
     DISABLED,
     SET_TURRET_ANGLE,
-    UNWIND
   }
 
   public turretState state = turretState.SET_TURRET_ANGLE;
@@ -34,7 +32,6 @@ public class Turret {
     Logger.recordOutput("Turret/State", state);
     Logger.recordOutput("Turret/needToUnwind", needsToUnwind());
     Logger.recordOutput("Turret/atGoal", isAtGoal());
-    Logger.recordOutput("Turret/BetweenUnwindThreshold", betweenUnwindThreshold());
 
     switch (Constants.turretMode) {
       case DISABLED -> {}
@@ -43,21 +40,6 @@ public class Turret {
         switch (state) {
           case DISABLED -> {
             break;
-          }
-          case UNWIND -> {
-            // Meant to unwind turret to a bound of mid point
-            // This goes to the angle for the turret to unwind to
-            if (desiredDeg != null) {
-              io.setAngle(unwindDeg);
-              if ((MathUtil.isNear(inputs.turretDegs, Constants.Turret.midPointPhysicalDeg, 90)
-                      && isAtGoal())
-                  || betweenUnwindThreshold()) {
-                state = turretState.SET_TURRET_ANGLE;
-              }
-            } else {
-              io.setAngle(prevDeg);
-            }
-            Logger.recordOutput("Turret/adjustedDeg", unwindDeg);
           }
           case SET_TURRET_ANGLE -> {
             if (desiredDeg != null) {
@@ -71,57 +53,34 @@ public class Turret {
     }
   }
 
-  public void requestAngle(Double angle, boolean safeToUnwind) {
+  public void requestAngle(Double angle) {
     this.desiredDeg = angle;
-    Logger.recordOutput("Turret/desiredDeg", desiredDeg);
-    if (Constants.turretLocked) {
+    if (Constants.turretLocked || desiredDeg == null) {
+      return;
+    }
+    if(needsUnwindFinish) {
       return;
     }
 
-    // Null represents a zone that returns no angle
-    if (needsUnwindFinish) {
-      state = turretState.UNWIND;
-      if (betweenUnwindThreshold()) {
-        needsUnwindFinish = false;
-      }
-    } else if (desiredDeg != null) {
-      desiredDeg = getClosestTargetAngle(desiredDeg, inputs.turretDegs);
+    if (desiredDeg != null) {
+      desiredDeg = calculateAngle(desiredDeg, inputs.turretDegs);
       prevDeg = desiredDeg;
     } else {
-      // Made it so we stay in same place we did before it was null
       desiredDeg = prevDeg;
     }
-
-    // Code that is meant to set the degree of turret is unwind cases
-
-    // setInMidpoint is a placehodler to reprsent a mod method
-    // Meant to reduce desired degree to a number that is between +- 90 of mid
-
+    Logger.recordOutput("Turret/desiredDeg", desiredDeg);
   }
 
   private double getTargetAngleInMidpoint() {
     Logger.recordOutput("Shooter/currentMethod", "getTargetAngleInMidpoint()");
-    // The below code uses the desired angle and subtracts the midpoint
-    // As to set the desired angle to reference 0 as to see the differnce between
-    // The midpoint and desired angle so we can see how much angle we can reduce the angle by
-    // as to get to the id
-    if (Math.abs(desiredDeg - Constants.Turret.midPointPhysicalDeg) > 360) {
-      double mod = ((desiredDeg - Constants.Turret.midPointPhysicalDeg) % 360) + 180;
-      double modInverse = Math.abs(desiredDeg - mod) / 360;
-      return (desiredDeg > 0) ? desiredDeg - (360 * modInverse) : desiredDeg + (360 * mod);
-    } else {
-      return (desiredDeg > 0) ? desiredDeg - 360 : desiredDeg + 360;
-    }
+    return (desiredDeg - Constants.Turret.midPointPhysicalDeg) > 360 ? desiredDeg - 360
+        : (desiredDeg - Constants.Turret.midPointPhysicalDeg) < -360 ? desiredDeg + 360
+            : desiredDeg;
   }
 
   public boolean needsToUnwind() {
     return (inputs.turretDegs >= Constants.Turret.maxUnwindLimitDeg
         || inputs.turretDegs <= Constants.Turret.minUnwindLimitDeg);
-  }
-
-  public boolean betweenUnwindThreshold() {
-    return (inputs.turretDegs >= (unwindDeg - Constants.Turret.goalToleranceDeg)
-        || inputs.turretDegs <= (unwindDeg + Constants.Turret.goalToleranceDeg));
   }
 
   public boolean isAtGoal() {
@@ -133,8 +92,6 @@ public class Turret {
           Constants.Turret.goalToleranceLockedDeg);
     } else if (Constants.turretMode == Constants.SubsystemMode.DISABLED) {
       return true;
-    } else if (state == turretState.UNWIND) {
-      return MathUtil.isNear(desiredDeg, inputs.turretDegs, 6);
     } else {
       return MathUtil.isNear(desiredDeg, inputs.turretDegs, Constants.Turret.goalToleranceDeg);
     }
@@ -144,16 +101,16 @@ public class Turret {
     state = turretState.SET_TURRET_ANGLE;
   }
 
-  public void unwind(boolean safeToUnwind) {
-    if (state == turretState.SET_TURRET_ANGLE && safeToUnwind) {
-      needsUnwindFinish = true;
+  public void unwind(boolean needsUnwindFinish) {
+    this.needsUnwindFinish = needsUnwindFinish;
+    if(needsUnwindFinish) {
       desiredDeg =
           (MathUtil.isNear(Constants.Turret.midPointPhysicalDeg, desiredDeg, 90))
               ? desiredDeg
               : getTargetAngleInMidpoint();
-      unwindDeg = desiredDeg;
-      state = turretState.UNWIND;
-    }
+    }  
+      prevDeg = desiredDeg;
+      Logger.recordOutput("Turret/unwindDesiredDeg", prevDeg);
   }
 
   public double getAngle() {
@@ -168,7 +125,7 @@ public class Turret {
     io.setBrakeMode(mode);
   }
 
-  private double getClosestTargetAngle(double targetAngle, double currentAngle) {
+  private double calculateAngle(double targetAngle, double currentAngle) {
     // Sets minInclusive based on desired degree aka if +-180 % 180, the remainder is 0
     // So if it's 0 we don't know our desired angle, since it could +- 180
     // Then to fix this minInclusive is evaluated if our difference between our target angle

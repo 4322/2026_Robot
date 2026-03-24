@@ -102,7 +102,7 @@ public class Shooter extends SubsystemBase {
       flywheel.requestGoal(targetFlywheelSpeedRPS);
       hood.requestGoal(targetHoodAngleDeg);
 
-      turret.requestAngle(targetTurretAngleDeg, true);
+      turret.requestAngle(targetTurretAngleDeg);
 
       tunnel.requestGoal(targetTunnelSpeedRPS);
       spindexer.requestGoal(targetIndexerSpeedRPS);
@@ -140,7 +140,7 @@ public class Shooter extends SubsystemBase {
       }
       case IDLE -> {
         spindexer.requestIdle();
-        turret.requestAngle(targetTurretAngleDeg, true);
+        turret.requestAngle(targetTurretAngleDeg);
         if (spindexer.isStopped()) {
           tunnel.requestIdle();
         } else {
@@ -160,14 +160,14 @@ public class Shooter extends SubsystemBase {
       case STOP -> {
         flywheel.requestGoal(0);
         hood.requestGoal(targetHoodAngleDeg);
-        turret.requestAngle(targetTurretAngleDeg, true);
+        turret.requestAngle(targetTurretAngleDeg);
         spindexer.requestIdle();
         tunnel.requestIdle();
       }
       case UNWIND -> {
         spindexer.requestIdle();
         if (!tunnel.isStopped() && !spindexer.isStopped()) {
-          turret.requestAngle(targetTurretAngleDeg, false);
+          turret.requestAngle(targetTurretAngleDeg);
         }
         hood.requestGoal(targetHoodAngleDeg);
 
@@ -180,7 +180,7 @@ public class Shooter extends SubsystemBase {
           }
         }
         // In case for some reason we end up in this state when turret is locked
-        if ((turret.isAtGoal() && turret.betweenUnwindThreshold() && !turret.needsToUnwind())
+        if ((turret.isAtGoal() && !turret.needsToUnwind())
             || Constants.turretLocked) {
           unwindComplete = true;
           turret.unwind(false);
@@ -190,12 +190,12 @@ public class Shooter extends SubsystemBase {
         spindexer.requestIdle();
         flywheel.requestGoal(targetFlywheelSpeedRPS);
         hood.requestGoal(targetHoodAngleDeg);
-        turret.requestAngle(targetTurretAngleDeg, true);
+        turret.requestAngle(targetTurretAngleDeg);
       }
       case SHOOT -> {
         flywheel.requestGoal(targetFlywheelSpeedRPS);
         hood.requestGoal(targetHoodAngleDeg);
-        turret.requestAngle(targetTurretAngleDeg, false);
+        turret.requestAngle(targetTurretAngleDeg);
         tunnel.requestGoal(targetTunnelSpeedRPS);
         if (tunnel.getVelocity() > Constants.Tunnel.minPercentVelocity * targetTunnelSpeedRPS) {
           spindexer.requestGoal(targetIndexerSpeedRPS);
