@@ -19,19 +19,19 @@ public class Shoot extends Command {
   @Override
   public void execute() {
     outake.setOutakeShoot();
-    if (outake.isHoodAtPosition() && outake.isFlywheelAtSpeed() && outake.isTurretAtPosition()) {
+    if (outake.isHoodAtPosition() && outake.isFlywheelAtSpeed() && outake.isTurretAtPosition() && !RobotContainer.controller.b().getAsBoolean()) {
       ballPath.setBallPathShoot();
-    } else {
+    } else if (!RobotContainer.controller.b().getAsBoolean()){
       ballPath.setBallPathIdle();
+    } else {
+       ballPath.setBallPathUnjam();
     }
   }
 
   @Override
   public void end(boolean interrupted) {
-    if (!RobotContainer.controller.b().getAsBoolean()) {
       ballPath.setBallPathIdle();
       outake.setOutakeIdle();
-    }
   }
 
   @Override
