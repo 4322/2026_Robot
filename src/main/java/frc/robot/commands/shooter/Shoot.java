@@ -19,9 +19,12 @@ public class Shoot extends Command {
   @Override
   public void execute() {
     outake.setOutakeShoot();
-    if (outake.isHoodAtPosition() && outake.isFlywheelAtSpeed() && outake.isTurretAtPosition() && !RobotContainer.controller.b().getAsBoolean()) {
+    if (outake.isHoodAtPosition()
+        && outake.isFlywheelAtSpeed()
+        && outake.isTurretAtPosition()
+        && !RobotContainer.controller.b().getAsBoolean()) {
       ballPath.setBallPathShoot();
-    } else if (!RobotContainer.controller.b().getAsBoolean()){
+    } else if (!RobotContainer.controller.b().getAsBoolean()) {
       ballPath.setBallPathIdle();
     } else {
       ballPath.setBallPathUnjam();
@@ -30,8 +33,8 @@ public class Shoot extends Command {
 
   @Override
   public void end(boolean interrupted) {
-      ballPath.setBallPathIdle();
-      outake.setOutakeIdle();
+    ballPath.setBallPathIdle();
+    outake.setOutakeIdle();
   }
 
   @Override
@@ -39,7 +42,7 @@ public class Shoot extends Command {
     // In non shooting zone or manually inhibited
     return (!outake.isDriveInShootingArea() && DriverStation.isTeleopEnabled())
         || !RobotContainer.controller.rightTrigger().getAsBoolean()
-        || outake.restrictAllianceShoot() 
+        || outake.restrictAllianceShoot()
         || outake.isTurretNeedToUnwind();
   }
 }

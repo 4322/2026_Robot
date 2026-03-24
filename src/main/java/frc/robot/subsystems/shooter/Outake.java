@@ -14,8 +14,6 @@ import frc.robot.subsystems.shooter.areaManager.AreaManager.Zone;
 import frc.robot.subsystems.shooter.firingManager.FiringManager.FiringSolution;
 import frc.robot.subsystems.shooter.flywheel.Flywheel;
 import frc.robot.subsystems.shooter.hood.Hood;
-import frc.robot.subsystems.shooter.spindexer.Spindexer;
-import frc.robot.subsystems.shooter.tunnel.Tunnel;
 import frc.robot.subsystems.shooter.turret.Turret;
 import frc.robot.subsystems.vision.visionGlobalPose.VisionGlobalPose;
 import frc.robot.util.GeomUtil;
@@ -151,8 +149,6 @@ public class Outake extends SubsystemBase {
     this.currentFiringSolution = firingSolution;
   }
 
- 
-
   public boolean restrictAllianceShoot() {
     return AreaManager.getZoneOfPosition(drive.getRobotPose().getTranslation())
             == Zone.ALLIANCE_ZONE
@@ -162,7 +158,6 @@ public class Outake extends SubsystemBase {
   public boolean isDriveInShootingArea() {
     return AreaManager.isShootingArea(drive.getRobotPose().getTranslation());
   }
-
 
   public boolean isFlywheelAtSpeed() {
     return flywheel.atTargetVelocity();

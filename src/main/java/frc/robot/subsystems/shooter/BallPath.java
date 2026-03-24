@@ -83,7 +83,8 @@ public class BallPath extends SubsystemBase {
         // Tunnel and/or spindexer get up to speed
         tunnel.requestGoal(currentFiringSolution.tunnelSpeedRPS());
         if (tunnel.getVelocity()
-            > Constants.Tunnel.minPercentVelocity * currentFiringSolution.tunnelSpeedRPS() || tunnelAlreadyStarted) {
+                > Constants.Tunnel.minPercentVelocity * currentFiringSolution.tunnelSpeedRPS()
+            || tunnelAlreadyStarted) {
           spindexer.requestGoal(currentFiringSolution.indexerSpeedRPS());
           tunnelAlreadyStarted = true;
         } else {
@@ -91,7 +92,7 @@ public class BallPath extends SubsystemBase {
         }
       }
       case UNJAM -> {
-         tunnelAlreadyStarted = false;
+        tunnelAlreadyStarted = false;
         tunnel.requestGoal(Constants.Tunnel.unjamRPS);
         spindexer.requestGoal(Constants.Spindexer.unjamRPS);
       }

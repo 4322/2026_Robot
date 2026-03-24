@@ -40,9 +40,10 @@ public class Flywheel {
     if (!(Math.abs(inputs.mechanismRPS - inputs.requestedMechanismRPS)
         < Constants.Flywheel.mechanismToleranceRPS)) {
       hardwareTimer.start();
-    } else {   
+    } else {
       hardwareTimer.stop();
-      hardwareTimer.reset();}
+      hardwareTimer.reset();
+    }
     if (hardwareTimer.hasElapsed(
         Outake.isScoring()
             ? Constants.Flywheel.scoringHardwareCheckTime

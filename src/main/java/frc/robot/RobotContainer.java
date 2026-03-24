@@ -13,9 +13,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.autonomous.AutonomousSelector;
@@ -420,12 +418,8 @@ public class RobotContainer {
                       controller.setRumble(GenericHID.RumbleType.kLeftRumble, 0.0);
                     }));
 
-     controller
-        .rightTrigger()
-        .whileTrue(shoot.repeatedly());
-     controller
-        .rightTrigger()
-        .onFalse(idle);
+    controller.rightTrigger().whileTrue(shoot.repeatedly());
+    controller.rightTrigger().onFalse(idle);
   }
 
   /**
