@@ -99,6 +99,9 @@ public class Turret {
   public void setTurretAngleState() {
     state = turretState.SET_TURRET_ANGLE;
   }
+  public boolean isTurretFinishedUnwind() {
+    return finishedUnwind;
+  }
 
   public void unwind(boolean needsUnwindFinish) {
     if (needsUnwindFinish) {
@@ -107,9 +110,11 @@ public class Turret {
               ? desiredDeg
               : getTargetAngleInMidpoint();
     }
+    this.finishedUnwind = needsUnwindFinish;
     prevDeg = desiredDeg;
     Logger.recordOutput("Turret/unwindDesiredDeg", prevDeg);
   }
+
 
   public double getAngle() {
     if (Constants.turretLocked) {
