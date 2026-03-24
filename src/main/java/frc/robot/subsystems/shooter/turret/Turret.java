@@ -5,6 +5,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.RobotContainer;
 import frc.robot.constants.Constants;
+import frc.robot.subsystems.shooter.Outake;
 import frc.robot.util.ClockUtil;
 import org.littletonrobotics.junction.Logger;
 
@@ -130,7 +131,7 @@ public class Turret {
       if (!MathUtil.isNear(desiredDeg, inputs.turretDegs, Constants.Turret.goalToleranceDeg)){
         hardwareTimer.start();
       } 
-      if (hardwareTimer.hasElapsed(true? Constants.Hood.hardwareCheckTime : 0.2)){
+      if (hardwareTimer.hasElapsed(Outake.isScoring() ?Constants.Turret.scoringHardwareCheckTime: Constants.Turret.passingHardwareCheckTime)){
         hardwareTimer.stop();
         hardwareTimer.reset();
         return true;

@@ -136,6 +136,8 @@ public final class Constants {
     public static final double supplyCurrentLimit = 40;
     public static final InvertedValue motorInvert = InvertedValue.Clockwise_Positive;
     public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
+    public static final double scoringHardwareCheckTime = 0.5;
+    public static final double passingHardwareCheckTime = 0.25;
 
     // max RPS for a burst is 75 due to drop in battery voltage
     public static final double kS = 0.28;
@@ -163,6 +165,8 @@ public final class Constants {
 
     public static final double motionMagicCruiseVelocity = 3.5;
     public static final double motionMagicAcceleration = 14.0;
+    public static final double scoringHardwareCheckTime = 0.5;
+    public static final double passingHardwareCheckTime = 0.25;
 
     public static final double statorCurrentLimit = 60; // HACK set limits
     public static final double supplyCurrentLimit = 40; // set limits
@@ -196,7 +200,8 @@ public final class Constants {
     public static final double safeAngleDeg = 0;
     public static final double kSPulsewidthUp = 80;
     public static final double kSPulsewidthDown = 45;
-    public static final double hardwareCheckTime = 0.5;
+    public static final double scoringHardwareCheckTime = 0.5;
+    public static final double passingHardwareCheckTime = 0.25;
     public static final double kV = 0;
     public static final double kP = 0.04;
     public static final double kI = 0.03;

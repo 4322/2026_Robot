@@ -32,7 +32,13 @@ public class Outake extends SubsystemBase {
     SHOOT // Spindexer and tunnel get up to speed
   }
 
+  public static enum ShootGoal{
+    PASSING,
+    SCORING
+  }
+
    private ShooterState outakeState = ShooterState.DISABLED;
+    private static ShootGoal shooting = ShootGoal.SCORING;
 
   private Flywheel flywheel;
   private Hood hood;
@@ -68,7 +74,11 @@ public class Outake extends SubsystemBase {
 
   @Override
   public void periodic() {
-
+    if (AreaManager.getZoneOfPosition(drive.getRobotPose().getTranslation()) == Zone.ALLIANCE_ZONE){
+      shooting = ShootGoal.SCORING;
+    } else{
+      shooting = ShootGoal.PASSING;
+    }
     if (Constants.firingManagerMode == Constants.SubsystemMode.TUNING) {
       flywheel.requestGoal(currentFiringSolution.flywheelSpeedRPS());
       hood.requestGoal(currentFiringSolution.hoodAngle());
@@ -146,7 +156,7 @@ public class Outake extends SubsystemBase {
     outakeState = ShooterState.SHOOT;
   }
 
-
+  
 
   public void setOutakeIdle() {
     if (ballPathStopped()){
@@ -185,6 +195,10 @@ public class Outake extends SubsystemBase {
 
   public boolean isHoodAtPosition() {
     return hood.isAtGoal();
+  }
+
+  public static boolean isScoring(){
+    return shooting == ShootGoal.SCORING;
   }
 
   public boolean isTurretAtPosition() {

@@ -41,7 +41,6 @@ public class Hood {
 
   public void periodic() {
 
-
     io.updateInputs(inputs);
     Logger.processInputs("Hood", inputs);
 
@@ -135,7 +134,8 @@ public class Hood {
       if (!pidController.atSetpoint()){
         hardwareTimer.start();
       } 
-      if (hardwareTimer.hasElapsed(true? Constants.Hood.hardwareCheckTime : 0.2)){
+      
+    if (hardwareTimer.hasElapsed(Outake.isScoring() ?Constants.Hood.scoringHardwareCheckTime: Constants.Hood.passingHardwareCheckTime)){
         hardwareTimer.stop();
         hardwareTimer.reset();
         return true;

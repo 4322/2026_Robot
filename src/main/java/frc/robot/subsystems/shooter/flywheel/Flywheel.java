@@ -1,6 +1,8 @@
 package frc.robot.subsystems.shooter.flywheel;
 
 import frc.robot.constants.Constants;
+import frc.robot.subsystems.shooter.Outake;
+
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.wpilibj.Timer;
@@ -41,7 +43,7 @@ public class Flywheel {
         < Constants.Flywheel.mechanismToleranceRPS)){
           hardwareTimer.start();
         }
-  if (hardwareTimer.hasElapsed(true? Constants.Hood.hardwareCheckTime : 0.2)){
+  if (hardwareTimer.hasElapsed(Outake.isScoring() ?Constants.Flywheel.scoringHardwareCheckTime: Constants.Flywheel.passingHardwareCheckTime)){
         hardwareTimer.stop();
         hardwareTimer.reset();
         return true;
