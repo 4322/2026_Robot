@@ -57,12 +57,13 @@ public class IntakeCommands {
   }
 
   public static Command toggleOff(Intake intake) {
-    return Commands.runOnce(() -> {
-      if (intake.getPrevState() == Intake.IntakeState.INTAKING) {
-        intake.requestIntake();
-      } else {
-        intake.requestIdle();
-      }
-    });
+    return Commands.runOnce(
+        () -> {
+          if (intake.getPrevState() == Intake.IntakeState.INTAKING) {
+            intake.requestIntake();
+          } else {
+            intake.requestIdle();
+          }
+        });
   }
 }

@@ -435,15 +435,9 @@ public class RobotContainer {
 
     controller.leftBumper().onTrue(IntakeCommands.toggleIntake(intake, controller));
 
-    controller
-        .x() // TODO change to actual button
-        .onTrue(IntakeCommands.eject(intake))
-        .onFalse(IntakeCommands.toggleOff(intake));
+    controller.x().onTrue(IntakeCommands.eject(intake)).onFalse(IntakeCommands.toggleOff(intake));
 
-    controller
-        .a()
-        .onTrue(IntakeCommands.smoosh(intake))
-        .onFalse(IntakeCommands.toggleOff(intake));
+    controller.a().onTrue(IntakeCommands.smoosh(intake)).onFalse(IntakeCommands.toggleOff(intake));
   }
 
   /**
