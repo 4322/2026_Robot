@@ -24,21 +24,16 @@ import frc.robot.util.GeomUtil;
 import frc.robot.util.HubShiftUtil;
 import org.littletonrobotics.junction.Logger;
 
-public class Shooter extends SubsystemBase {
+public class BallPath extends SubsystemBase {
 
   public enum ShooterState {
     DISABLED,
     IDLE, // Spindexer stopped, flywheel at full speed, tunnel at full speed
-    UNWIND,
-    PRESHOOT, // Flywheel gets up to speed; Turret/hood aim
     SHOOT, // Spindexer and tunnel get up to speed
-    TRENCH,
     UNJAM,
-    STOP // Everything but flywheel stopped
   }
 
   private ShooterState ballState = ShooterState.DISABLED;
-   private ShooterState outakeState = ShooterState.DISABLED;
 
   private Flywheel flywheel;
   private Hood hood;
@@ -53,7 +48,7 @@ public class Shooter extends SubsystemBase {
 
   private FiringSolution currentFiringSolution;
 
-  public Shooter(
+  public BallPath(
       Flywheel flywheel,
       Hood hood,
       Spindexer spindexer,
@@ -76,17 +71,8 @@ public class Shooter extends SubsystemBase {
   public void periodic() {
 
     if (Constants.firingManagerMode == Constants.SubsystemMode.TUNING) {
-      flywheel.requestGoal(currentFiringSolution.flywheelSpeedRPS());
-      hood.requestGoal(currentFiringSolution.hoodAngle());
-
-      turret.requestAngle(currentFiringSolution.turretAngleDeg(), true);
-
       tunnel.requestGoal(currentFiringSolution.tunnelSpeedRPS());
       spindexer.requestGoal(currentFiringSolution.indexerSpeedRPS());
-      flywheel.periodic();
-      spindexer.periodic();
-      tunnel.periodic();
-      hood.periodic();
       if (!Constants.turretLocked) {
         turret.periodic();
       }
@@ -96,19 +82,7 @@ public class Shooter extends SubsystemBase {
 
       ballState = ShooterState.DISABLED;
     }
-    switch (outakeState){
-      case DISABLED ->{}
-      case IDLE -> {
-      hood.requestGoal(Constants.Hood.safeAngleDeg);
-      tunnel.requestIdle();
-      flywheel.requestGoal(Constants.Flywheel.idleRPS);
-      }
-      case SHOOT ->{
-        turret.requestAngle(currentFiringSolution.turretAngleDeg(), false);
-        flywheel.requestGoal(currentFiringSolution.flywheelSpeedRPS());
-        hood.requestGoal(currentFiringSolution.hoodAngle());
-      }
-    }
+   
     switch (ballState) {
       case DISABLED -> {}
       case IDLE -> {
@@ -133,17 +107,11 @@ public class Shooter extends SubsystemBase {
         spindexer.requestGoal(Constants.Spindexer.unjamRPS);
       }
     }
-
-    flywheel.periodic();
+  
     spindexer.periodic();
     tunnel.periodic();
-    hood.periodic();
 
-    if (!Constants.turretLocked) {
-      turret.periodic();
-    }
 
-    led.requestTurretUnwinding(ballState == ShooterState.UNWIND);
 
   
     Logger.recordOutput("Shooter/spindexerStopped", spindexer.isStopped());
@@ -171,28 +139,21 @@ public class Shooter extends SubsystemBase {
         });
   }
 
-  public ShooterState getOutakeState() {
-    return outakeState;
-  }
-
+ 
   public ShooterState getBallPathState() {
     return ballState;
   }
 
-  public void setOutakeState(ShooterState newState) {
-    if (outakeState == newState) {
-      return;
-    }
-    outakeState = newState;
+  public void setBallPathShoot() {
+    ballState = ShooterState.SHOOT;
   }
 
-   public void setBallPathState(ShooterState newState) {
-    if (ballState == newState) {
-      return;
-    }
-    ballState = newState;
+  public void setBallPathIdle() {
+    ballState = ShooterState.IDLE;
   }
-
+  public void setBallPathUnjam() {
+    ballState = ShooterState.UNJAM;
+  }
   public void setFiringSolution(FiringSolution firingSolution) {
     this.currentFiringSolution = firingSolution;
   }
@@ -205,7 +166,14 @@ public class Shooter extends SubsystemBase {
     return tunnel.isStopped();
   }
 
-  public boolean ballOutakeStopped(){
+  public boolean restrictAllianceShoot(){
+  return AreaManager.getZoneOfPosition(drive.getRobotPose().getTranslation()) == Zone.ALLIANCE_ZONE
+        && !HubShiftUtil.getShiftedShiftInfo().active();
+  }
+ public boolean isDriveInShootingArea() {
+    return AreaManager.isShootingArea(drive.getRobotPose().getTranslation());
+  }
+  public boolean ballPathStopped(){
     return tunnel.isStopped() && spindexer.isStopped();
   }
 

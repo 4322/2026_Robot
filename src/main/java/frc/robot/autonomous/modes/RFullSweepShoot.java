@@ -13,12 +13,12 @@ import frc.robot.commands.IntakeCommands;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.led.LED;
-import frc.robot.subsystems.shooter.Shooter;
+import frc.robot.subsystems.shooter.Outake;
 import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetection;
 import org.littletonrobotics.junction.Logger;
 
 public class RFullSweepShoot extends SequentialCommandGroup {
-  public RFullSweepShoot(Drive drive, LED led, Intake intake, Shooter shooter) {
+  public RFullSweepShoot(Drive drive, LED led, Intake intake, Outake shooter) {
     PathPlannerPath path = Robot.R_StartR_To_NeutralR_Intake;
     Pose2d startPoseBlue = path.getStartingHolonomicPose().get();
     Pose2d startPoseRed = path.flipPath().getStartingHolonomicPose().get();

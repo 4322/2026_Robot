@@ -13,12 +13,12 @@ import frc.robot.commands.IntakeCommands;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.led.LED;
-import frc.robot.subsystems.shooter.Shooter;
+import frc.robot.subsystems.shooter.Outake;
 import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetection;
 
 public class RDisruptSweepShoot extends SequentialCommandGroup {
 
-  public RDisruptSweepShoot(Drive drive, LED led, Intake intake, Shooter shooter) {
+  public RDisruptSweepShoot(Drive drive, LED led, Intake intake, Outake shooter) {
     PathPlannerPath path = Robot.R_StartR_To_NeutralR_Intake_Disrupt;
     Pose2d startPoseBlue = path.getStartingHolonomicPose().get();
     Pose2d startPoseRed = path.flipPath().getStartingHolonomicPose().get();
@@ -47,7 +47,7 @@ public class RDisruptSweepShoot extends SequentialCommandGroup {
       LED led,
       Intake intake,
       VisionObjectDetection visionObjectDetection,
-      Shooter shooter) {
+      Outake shooter) {
     PathPlannerPath path = Robot.R_StartR_To_NeutralR_Intake_Disrupt;
     Pose2d startPoseBlue = path.getStartingHolonomicPose().get();
     Pose2d startPoseRed = path.flipPath().getStartingHolonomicPose().get();

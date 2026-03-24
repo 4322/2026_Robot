@@ -12,11 +12,11 @@ import frc.robot.commands.IntakeCommands;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.led.LED;
-import frc.robot.subsystems.shooter.Shooter;
+import frc.robot.subsystems.shooter.Outake;
 import org.littletonrobotics.junction.Logger;
 
 public class CDepotOutpost extends SequentialCommandGroup {
-  public CDepotOutpost(Drive drive, LED led, Intake intake, Shooter shooter) {
+  public CDepotOutpost(Drive drive, LED led, Intake intake, Outake shooter) {
     PathPlannerPath path = Robot.C_Start_To_Depot;
     Pose2d startPoseBlue = path.getStartingHolonomicPose().get();
     Pose2d startPoseRed = path.flipPath().getStartingHolonomicPose().get();

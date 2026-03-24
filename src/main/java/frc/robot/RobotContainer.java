@@ -44,7 +44,7 @@ import frc.robot.subsystems.led.LED;
 import frc.robot.subsystems.led.LEDIO;
 import frc.robot.subsystems.led.LEDIOCANdle;
 import frc.robot.subsystems.led.LEDIOSim;
-import frc.robot.subsystems.shooter.Shooter;
+import frc.robot.subsystems.shooter.Outake;
 import frc.robot.subsystems.shooter.areaManager.AreaManager;
 import frc.robot.subsystems.shooter.flywheel.Flywheel;
 import frc.robot.subsystems.shooter.flywheel.FlywheelIO;
@@ -86,7 +86,7 @@ public class RobotContainer {
 
   private static VisionGlobalPose visionGlobalPose;
   private static VisionObjectDetection visionObjectDetection;
-  public static Shooter shooter;
+  public static Outake shooter;
   private static Flywheel flywheel;
   private static Hood hood;
   private static Spindexer spindexer;
@@ -199,7 +199,7 @@ public class RobotContainer {
                 : new Turret(new TurretIOTalonFx());
 
         shooter =
-            new Shooter(flywheel, hood, spindexer, tunnel, turret, visionGlobalPose, drive, led);
+            new Outake(flywheel, hood, spindexer, tunnel, turret, visionGlobalPose, drive, led);
 
         rollers =
             Constants.rollerMode == Constants.SubsystemMode.DISABLED
@@ -295,7 +295,7 @@ public class RobotContainer {
                 : new Turret(new TurretIOSim());
 
         shooter =
-            new Shooter(flywheel, hood, spindexer, tunnel, turret, visionGlobalPose, drive, led);
+            new Outake(flywheel, hood, spindexer, tunnel, turret, visionGlobalPose, drive, led);
 
         deployer =
             Constants.deployerMode == Constants.SubsystemMode.DISABLED
@@ -334,7 +334,7 @@ public class RobotContainer {
         tunnel = new Tunnel(new TunnelIO() {});
         turret = new Turret(new TurretIO() {});
         shooter =
-            new Shooter(flywheel, hood, spindexer, tunnel, turret, visionGlobalPose, drive, led);
+            new Outake(flywheel, hood, spindexer, tunnel, turret, visionGlobalPose, drive, led);
         rollers = new Rollers(new RollersIO() {});
         deployer = new Deployer(new DeployerIO() {});
         intake = new Intake(deployer, rollers);
@@ -432,9 +432,7 @@ public class RobotContainer {
         new AutonomousSelector(drive, hood, turret, shooter, visionObjectDetection, led, intake);
   }
 
-  public static boolean isDriveInShootingArea() {
-    return AreaManager.isShootingArea(drive.getRobotPose().getTranslation());
-  }
+ 
 
   public void setBrakeMode(boolean brake) {
     deployer.setBrakeMode(brake);

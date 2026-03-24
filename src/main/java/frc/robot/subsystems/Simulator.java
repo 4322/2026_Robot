@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
 import frc.robot.autonomous.AutonomousSelector.AutoName;
 import frc.robot.subsystems.drive.Drive;
-import frc.robot.subsystems.shooter.Shooter;
+import frc.robot.subsystems.shooter.Outake;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -633,9 +633,9 @@ public class Simulator extends SubsystemBase {
   boolean momentaryPOV;
 
   private final Drive drive;
-  private final Shooter shooter;
+  private final Outake shooter;
 
-  public Simulator(Drive drive, Shooter shooter) {
+  public Simulator(Drive drive, Outake shooter) {
     this.drive = drive;
     this.shooter = shooter;
 

@@ -12,12 +12,12 @@ import frc.robot.commands.IntakeCommands;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.led.LED;
-import frc.robot.subsystems.shooter.Shooter;
+import frc.robot.subsystems.shooter.Outake;
 import frc.robot.subsystems.shooter.hood.Hood;
 
 public class LHalfSweepShoot extends SequentialCommandGroup {
 
-  public LHalfSweepShoot(Drive drive, LED led, Intake intake, Shooter shooter, Hood hood) {
+  public LHalfSweepShoot(Drive drive, LED led, Intake intake, Outake shooter, Hood hood) {
     PathPlannerPath path = Robot.L_StartL_To_NeutralL_Intake;
     Pose2d startPoseBlue = path.getStartingHolonomicPose().get();
     Pose2d startPoseRed = path.flipPath().getStartingHolonomicPose().get();
