@@ -49,14 +49,6 @@ public class Deployer {
     }
   }
 
-  public boolean isSmooshed() {
-    if (Constants.deployerMode == SubsystemMode.DISABLED) {
-      return true;
-    } else {
-      return inputs.angleDeg >= Constants.Deployer.smooshDeg - Constants.Deployer.tolerance;
-    }
-  }
-
   public void setState(DeployerState state) {
     this.state = state;
   }

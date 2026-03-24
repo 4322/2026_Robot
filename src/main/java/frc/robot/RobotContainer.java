@@ -438,6 +438,11 @@ public class RobotContainer {
         .x() // TODO change to actual button
         .onTrue(IntakeCommands.eject(intake))
         .onFalse(IntakeCommands.idle(intake));
+
+    controller
+        .x() // TODO change to actual button
+        .onTrue(IntakeCommands.smoosh(intake))
+        .onFalse(IntakeCommands.idle(intake));
   }
 
   /**
