@@ -41,7 +41,6 @@ public class BallPath extends SubsystemBase {
   private Turret turret;
   private Drive drive;
   private LED led;
-  private boolean tunnelAlreadyStarted;
 
   private boolean fixedPositionShooting = false;
 
@@ -73,7 +72,7 @@ public class BallPath extends SubsystemBase {
     switch (ballState) {
       case DISABLED -> {}
       case IDLE -> {
-        tunnelAlreadyStarted = false;
+
         spindexer.requestIdle();
         if (spindexer.isStopped()) {
           tunnel.requestIdle();
@@ -84,17 +83,12 @@ public class BallPath extends SubsystemBase {
       case SHOOT -> {
         // Tunnel and/or spindexer get up to speed
         tunnel.requestGoal(currentFiringSolution.tunnelSpeedRPS());
-        if (tunnel.getVelocity()
-                > Constants.Tunnel.minPercentVelocity * currentFiringSolution.tunnelSpeedRPS()
-            || tunnelAlreadyStarted) {
-          spindexer.requestGoal(currentFiringSolution.indexerSpeedRPS());
-          tunnelAlreadyStarted = true;
-        } else {
-          spindexer.requestIdle();
-        }
+        spindexer.requestGoal(currentFiringSolution.indexerSpeedRPS());
+
+    
       }
       case UNJAM -> {
-        tunnelAlreadyStarted = false;
+
         tunnel.requestGoal(Constants.Tunnel.unjamRPS);
         spindexer.requestGoal(Constants.Spindexer.unjamRPS);
       }
