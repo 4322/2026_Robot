@@ -48,11 +48,4 @@ public class IntakeCommands {
           intake.requestEject();
         });
   }
-
-  public static Command smoosh(Intake intake) {
-    return Commands.runOnce(
-        () -> {
-          intake.requestSmoosh();
-        });
-  }
 }
