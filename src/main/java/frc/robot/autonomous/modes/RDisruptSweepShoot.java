@@ -8,7 +8,6 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Robot;
-import frc.robot.commands.AutoIntake;
 import frc.robot.commands.IntakeCommands;
 import frc.robot.commands.ShooterCommands;
 import frc.robot.subsystems.drive.Drive;
@@ -44,33 +43,4 @@ public class RDisruptSweepShoot extends SequentialCommandGroup {
                 ShooterCommands.setAutoShoot(shooter, true))));
   }
 
-  public RDisruptSweepShoot(
-      Drive drive,
-      LED led,
-      Intake intake,
-      VisionObjectDetection visionObjectDetection,
-      Shooter shooter) {
-    PathPlannerPath path = Robot.R_StartR_To_NeutralR_Intake_Disrupt;
-    Pose2d startPoseBlue = path.getStartingHolonomicPose().get();
-    Pose2d startPoseRed = path.flipPath().getStartingHolonomicPose().get();
-
-    setName("R_DISRUPT_SWEEP_SHOOT_OD");
-    addCommands(
-        new InstantCommand(
-            () -> {
-              if (Robot.alliance == Alliance.Blue) {
-                drive.setPose(startPoseBlue);
-              } else {
-                drive.setPose(startPoseRed);
-              }
-            }),
-        new ParallelCommandGroup(IntakeCommands.intake(intake)),
-        new SequentialCommandGroup(
-            AutoBuilder.followPath(Robot.R_StartR_To_NeutralR_Intake_Disrupt),
-            AutoBuilder.followPath(Robot.R_NeutralR_Intake_Full_Disrupt),
-            AutoBuilder.followPath(Robot.R_NeutralR_Intake_Full_Disrupt_Flip),
-            new ParallelCommandGroup(
-                new AutoIntake(drive, visionObjectDetection, led, intake, false),
-                AutoBuilder.followPath(Robot.R_NeutralRMid_To_ShootR))));
-  }
 }
