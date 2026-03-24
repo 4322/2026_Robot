@@ -406,7 +406,7 @@ public class RobotContainer {
 
     controller.x().whileTrue(IntakeCommands.setEject(intake));
 
-    controller.b().whileTrue(unjam.unless(ballPath.getBallIdle()));
+    controller.b().whileTrue(unjam.onlyIf(ballPath.getBallIdle()));
 
     controller
         .leftBumper()
