@@ -40,11 +40,10 @@ public class Outake extends SubsystemBase {
 
   private Flywheel flywheel;
   private Hood hood;
-  private Spindexer spindexer;
-  private Tunnel tunnel;
   private Turret turret;
   private Drive drive;
   private LED led;
+  private BallPath ballPath;
 
   private boolean fixedPositionShooting = false;
 
@@ -59,8 +58,6 @@ public class Outake extends SubsystemBase {
       LED led) {
     this.flywheel = flywheel;
     this.hood = hood;
-    this.spindexer = spindexer;
-    this.tunnel = tunnel;
     this.turret = turret;
     this.led = led;
     this.drive = drive;
@@ -96,7 +93,7 @@ public class Outake extends SubsystemBase {
       case DISABLED -> {}
       case IDLE -> {
         hood.requestGoal(Constants.Hood.safeAngleDeg);
-        tunnel.requestIdle();
+        turret.requestAngle(currentFiringSolution.turretAngleDeg(), false);
         flywheel.requestGoal(Constants.Flywheel.idleRPS);
       }
       case SHOOT -> {
@@ -111,8 +108,6 @@ public class Outake extends SubsystemBase {
       turret.periodic();
     }
 
-    Logger.recordOutput("Shooter/spindexerStopped", spindexer.isStopped());
-    Logger.recordOutput("Shooter/tunnelStopped", tunnel.isStopped());
     Logger.recordOutput("Shooter/flywheelAtSpeed", flywheel.atTargetVelocity());
     Logger.recordOutput("Shooter/hoodAtPosition", hood.isAtGoal());
     Logger.recordOutput("Shooter/turretAtPosition", turret.isAtGoal());
@@ -147,7 +142,7 @@ public class Outake extends SubsystemBase {
   }
 
   public void setOutakeIdle() {
-    if (ballPathStopped()) {
+    if (ballPath.ballPathStopped()) {
       outakeState = ShooterState.IDLE;
     }
   }
@@ -156,13 +151,7 @@ public class Outake extends SubsystemBase {
     this.currentFiringSolution = firingSolution;
   }
 
-  public boolean isSpindexerStopped() {
-    return spindexer.isStopped();
-  }
-
-  public boolean isTunnelStopped() {
-    return tunnel.isStopped();
-  }
+ 
 
   public boolean restrictAllianceShoot() {
     return AreaManager.getZoneOfPosition(drive.getRobotPose().getTranslation())
@@ -174,9 +163,6 @@ public class Outake extends SubsystemBase {
     return AreaManager.isShootingArea(drive.getRobotPose().getTranslation());
   }
 
-  public boolean ballPathStopped() {
-    return tunnel.isStopped() && spindexer.isStopped();
-  }
 
   public boolean isFlywheelAtSpeed() {
     return flywheel.atTargetVelocity();
