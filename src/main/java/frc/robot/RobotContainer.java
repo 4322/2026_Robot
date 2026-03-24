@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.autonomous.AutonomousSelector;
@@ -21,6 +22,7 @@ import frc.robot.commands.DriveCommands;
 import frc.robot.commands.IntakeCommands;
 import frc.robot.commands.shooter.Idle;
 import frc.robot.commands.shooter.Shoot;
+import frc.robot.commands.shooter.Unjam;
 import frc.robot.constants.Constants;
 import frc.robot.constants.FieldConstants;
 import frc.robot.generated.TunerConstants;
@@ -96,6 +98,7 @@ public class RobotContainer {
   private static Turret turret;
   private static Shoot shoot;
   private static Idle idle;
+  private static Unjam unjam;
 
   public static Intake intake;
   private static LED led;
@@ -403,6 +406,8 @@ public class RobotContainer {
     intake.setDefaultCommand(IntakeCommands.setIdle(intake));
 
     controller.x().whileTrue(IntakeCommands.setEject(intake));
+
+    controller.b().whileTrue(unjam.unless(ballPath.getBallIdle()));
 
     controller
         .leftBumper()

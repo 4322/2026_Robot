@@ -19,6 +19,9 @@ import frc.robot.subsystems.shooter.tunnel.Tunnel;
 import frc.robot.subsystems.shooter.turret.Turret;
 import frc.robot.util.GeomUtil;
 import frc.robot.util.HubShiftUtil;
+
+import java.util.function.BooleanSupplier;
+
 import org.littletonrobotics.junction.Logger;
 
 public class BallPath extends SubsystemBase {
@@ -28,6 +31,7 @@ public class BallPath extends SubsystemBase {
     IDLE, // Spindexer stopped, flywheel at full speed, tunnel at full speed
     SHOOT, // Spindexer and tunnel get up to speed
     UNJAM,
+    UNWIND
   }
 
   private ShooterState ballState = ShooterState.DISABLED;
@@ -96,6 +100,10 @@ public class BallPath extends SubsystemBase {
         tunnel.requestGoal(Constants.Tunnel.unjamRPS);
         spindexer.requestGoal(Constants.Spindexer.unjamRPS);
       }
+      case UNWIND -> {
+        spindexer.requestIdle();
+        tunnel.requestIdle();
+      }
     }
 
     spindexer.periodic();
@@ -143,6 +151,14 @@ public class BallPath extends SubsystemBase {
   public void setBallPathUnjam() {
     ballState = ShooterState.UNJAM;
   }
+
+    public void setBallPathUnwind() {
+    ballState = ShooterState.UNWIND;
+  }
+
+  public BooleanSupplier getBallIdle() {
+      return ()-> ballState == ShooterState.IDLE;
+    }
 
   public void setFiringSolution(FiringSolution firingSolution) {
     this.currentFiringSolution = firingSolution;

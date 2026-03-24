@@ -18,6 +18,9 @@ import frc.robot.subsystems.shooter.turret.Turret;
 import frc.robot.subsystems.vision.visionGlobalPose.VisionGlobalPose;
 import frc.robot.util.GeomUtil;
 import frc.robot.util.HubShiftUtil;
+
+import java.util.function.BooleanSupplier;
+
 import org.littletonrobotics.junction.Logger;
 
 public class Outake extends SubsystemBase {
@@ -25,7 +28,8 @@ public class Outake extends SubsystemBase {
   public enum ShooterState {
     DISABLED,
     IDLE, // Spindexer stopped, flywheel at full speed, tunnel at full speed
-    SHOOT // Spindexer and tunnel get up to speed
+    SHOOT, // Spindexer and tunnel get up to speed
+    UNWIND
   }
 
   public static enum ShootGoal {
@@ -98,7 +102,7 @@ public class Outake extends SubsystemBase {
         turret.requestAngle(currentFiringSolution.turretAngleDeg(), true);
         flywheel.requestGoal(currentFiringSolution.flywheelSpeedRPS());
         hood.requestGoal(currentFiringSolution.hoodAngle());
-      }
+      } 
     }
     flywheel.periodic();
     hood.periodic();
@@ -142,6 +146,17 @@ public class Outake extends SubsystemBase {
   public void setOutakeIdle() {
     if (ballPath.ballPathStopped()) {
       outakeState = ShooterState.IDLE;
+    }
+  }
+
+    public BooleanSupplier getOutakeIdle() {
+      return ()-> outakeState == ShooterState.IDLE;
+    }
+  
+
+  public void setOutakeUnwind() {
+    if (ballPath.ballPathStopped()) {
+      outakeState = ShooterState.UNWIND;
     }
   }
 
