@@ -19,9 +19,7 @@ import frc.robot.subsystems.shooter.tunnel.Tunnel;
 import frc.robot.subsystems.shooter.turret.Turret;
 import frc.robot.util.GeomUtil;
 import frc.robot.util.HubShiftUtil;
-
 import java.util.function.BooleanSupplier;
-
 import org.littletonrobotics.junction.Logger;
 
 public class BallPath extends SubsystemBase {
@@ -152,13 +150,13 @@ public class BallPath extends SubsystemBase {
     ballState = ShooterState.UNJAM;
   }
 
-    public void setBallPathUnwind() {
+  public void setBallPathUnwind() {
     ballState = ShooterState.UNWIND;
   }
 
   public BooleanSupplier getBallIdle() {
-      return ()-> ballState == ShooterState.IDLE;
-    }
+    return () -> ballState == ShooterState.IDLE;
+  }
 
   public void setFiringSolution(FiringSolution firingSolution) {
     this.currentFiringSolution = firingSolution;
