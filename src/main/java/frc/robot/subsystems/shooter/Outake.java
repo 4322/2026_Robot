@@ -47,7 +47,7 @@ public class Outake extends SubsystemBase {
 
   private boolean fixedPositionShooting = false;
 
-  private FiringSolution currentFiringSolution;
+  private FiringSolution firingSolution;
 
   public Outake(
       Flywheel flywheel,
@@ -55,13 +55,14 @@ public class Outake extends SubsystemBase {
       Turret turret,
       VisionGlobalPose visionGlobalPose,
       Drive drive,
+      FiringSolution firingSolution,
       LED led) {
     this.flywheel = flywheel;
     this.hood = hood;
     this.turret = turret;
     this.led = led;
     this.drive = drive;
-    this.currentFiringSolution = null;
+    this.firingSolution = firingSolution;
   }
 
   @Override
@@ -73,10 +74,10 @@ public class Outake extends SubsystemBase {
       shooting = ShootGoal.PASSING;
     }
     if (Constants.firingManagerMode == Constants.SubsystemMode.TUNING) {
-      flywheel.requestGoal(currentFiringSolution.flywheelSpeedRPS());
-      hood.requestGoal(currentFiringSolution.hoodAngle());
+      flywheel.requestGoal(firingSolution.flywheelSpeedRPS());
+      hood.requestGoal(firingSolution.hoodAngle());
 
-      turret.requestAngle(currentFiringSolution.turretAngleDeg(), true);
+      turret.requestAngle(firingSolution.turretAngleDeg(), true);
       flywheel.periodic();
 
       hood.periodic();
@@ -93,13 +94,13 @@ public class Outake extends SubsystemBase {
       case DISABLED -> {}
       case IDLE -> {
         hood.requestGoal(Constants.Hood.safeAngleDeg);
-        turret.requestAngle(currentFiringSolution.turretAngleDeg(), true);
+        turret.requestAngle(firingSolution.turretAngleDeg(), true);
         flywheel.requestGoal(Constants.Flywheel.idleRPS);
       }
       case SHOOT -> {
-        turret.requestAngle(currentFiringSolution.turretAngleDeg(), true);
-        flywheel.requestGoal(currentFiringSolution.flywheelSpeedRPS());
-        hood.requestGoal(currentFiringSolution.hoodAngle());
+        turret.requestAngle(firingSolution.turretAngleDeg(), true);
+        flywheel.requestGoal(firingSolution.flywheelSpeedRPS());
+        hood.requestGoal(firingSolution.hoodAngle());
       }
     }
     flywheel.periodic();
@@ -111,15 +112,15 @@ public class Outake extends SubsystemBase {
     Logger.recordOutput("Shooter/flywheelAtSpeed", flywheel.atTargetVelocity());
     Logger.recordOutput("Shooter/hoodAtPosition", hood.isAtGoal());
     Logger.recordOutput("Shooter/turretAtPosition", turret.isAtGoal());
-    Logger.recordOutput("Shooter/TargetHoodAngleDeg", currentFiringSolution.hoodAngle());
-    Logger.recordOutput("Shooter/TargetFlywheelSpeedRPS", currentFiringSolution.flywheelSpeedRPS());
-    Logger.recordOutput("Shooter/TargetTurretAngleDeg", currentFiringSolution.turretAngleDeg());
-    Logger.recordOutput("Shooter/TargetTunnelSpeedRPS", currentFiringSolution.tunnelSpeedRPS());
-    Logger.recordOutput("Shooter/TargetIndexerSpeedRPS", currentFiringSolution.indexerSpeedRPS());
+    Logger.recordOutput("Shooter/TargetHoodAngleDeg", firingSolution.hoodAngle());
+    Logger.recordOutput("Shooter/TargetFlywheelSpeedRPS", firingSolution.flywheelSpeedRPS());
+    Logger.recordOutput("Shooter/TargetTurretAngleDeg", firingSolution.turretAngleDeg());
+    Logger.recordOutput("Shooter/TargetTunnelSpeedRPS", firingSolution.tunnelSpeedRPS());
+    Logger.recordOutput("Shooter/TargetIndexerSpeedRPS", firingSolution.indexerSpeedRPS());
     Logger.recordOutput("Shooter/CurrentTurretPose", drive.getTurretPose(turret.getAngle()));
     Logger.recordOutput(
         "Shooter/TargetTurretPose",
-        GeomUtil.pose2dToPose3d(drive.getTurretPose(currentFiringSolution.turretAngleDeg()), 0.4));
+        GeomUtil.pose2dToPose3d(drive.getTurretPose(firingSolution.turretAngleDeg()), 0.4));
     Logger.recordOutput(
         "Shooter/ComponentPoses",
         new Pose3d[] {
@@ -127,8 +128,7 @@ public class Outake extends SubsystemBase {
               new Pose2d(
                   Constants.Turret.originToTurret,
                   new Rotation2d(
-                      Units.degreesToRadians(currentFiringSolution.turretAngleDeg())
-                          - 4 * Math.PI / 3)),
+                      Units.degreesToRadians(firingSolution.turretAngleDeg()) - 4 * Math.PI / 3)),
               0.22)
         });
   }
@@ -158,7 +158,7 @@ public class Outake extends SubsystemBase {
   }
 
   public void setFiringSolution(FiringSolution firingSolution) {
-    this.currentFiringSolution = firingSolution;
+    this.firingSolution = firingSolution;
   }
 
   public boolean restrictAllianceShoot() {

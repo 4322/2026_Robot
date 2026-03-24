@@ -47,6 +47,7 @@ import frc.robot.subsystems.led.LEDIOCANdle;
 import frc.robot.subsystems.led.LEDIOSim;
 import frc.robot.subsystems.shooter.BallPath;
 import frc.robot.subsystems.shooter.Outake;
+import frc.robot.subsystems.shooter.firingManager.FiringManager.FiringSolution;
 import frc.robot.subsystems.shooter.flywheel.Flywheel;
 import frc.robot.subsystems.shooter.flywheel.FlywheelIO;
 import frc.robot.subsystems.shooter.flywheel.FlywheelIOSim;
@@ -109,6 +110,7 @@ public class RobotContainer {
   public static AutonomousSelector autonomousSelector;
 
   private static Field2d field;
+  private FiringSolution firingSolution;
 
   // Controller
   public static final CommandXboxController controller = new CommandXboxController(0);
@@ -204,8 +206,8 @@ public class RobotContainer {
                 ? new Turret(new TurretIO() {})
                 : new Turret(new TurretIOTalonFx());
 
-        outake = new Outake(flywheel, hood, turret, visionGlobalPose, drive, led);
-        ballPath = new BallPath(spindexer, tunnel, led);
+        outake = new Outake(flywheel, hood, turret, visionGlobalPose, drive, firingSolution, led);
+        ballPath = new BallPath(spindexer, tunnel, firingSolution, led);
 
         rollers =
             Constants.rollerMode == Constants.SubsystemMode.DISABLED
@@ -300,8 +302,8 @@ public class RobotContainer {
                 ? new Turret(new TurretIO() {})
                 : new Turret(new TurretIOSim());
 
-        outake = new Outake(flywheel, hood, turret, visionGlobalPose, drive, led);
-        ballPath = new BallPath(spindexer, tunnel, led);
+        outake = new Outake(flywheel, hood, turret, visionGlobalPose, drive, firingSolution, led);
+        ballPath = new BallPath(spindexer, tunnel, firingSolution, led);
 
         deployer =
             Constants.deployerMode == Constants.SubsystemMode.DISABLED
@@ -339,8 +341,8 @@ public class RobotContainer {
         spindexer = new Spindexer(new SpindexerIO() {});
         tunnel = new Tunnel(new TunnelIO() {});
         turret = new Turret(new TurretIO() {});
-        outake = new Outake(flywheel, hood, turret, visionGlobalPose, drive, led);
-        ballPath = new BallPath(spindexer, tunnel, led);
+        outake = new Outake(flywheel, hood, turret, visionGlobalPose, drive, firingSolution, led);
+        ballPath = new BallPath(spindexer, tunnel, firingSolution, led);
         rollers = new Rollers(new RollersIO() {});
         deployer = new Deployer(new DeployerIO() {});
         intake = new Intake(deployer, rollers);
@@ -406,7 +408,7 @@ public class RobotContainer {
 
     controller.x().whileTrue(IntakeCommands.setEject(intake));
 
-    controller.b().whileTrue(unjam.onlyIf(ballPath.getBallIdle()));
+    // controller.b().whileTrue(unjam.onlyIf(ballPath.getBallIdle()));
 
     controller
         .leftBumper()
@@ -422,8 +424,8 @@ public class RobotContainer {
                       controller.setRumble(GenericHID.RumbleType.kLeftRumble, 0.0);
                     }));
 
-    controller.rightTrigger().whileTrue(shoot.repeatedly());
-    controller.rightTrigger().onFalse(idle);
+    // controller.rightTrigger().whileTrue(shoot.repeatedly());
+    // controller.rightTrigger().onFalse(idle);
   }
 
   /**

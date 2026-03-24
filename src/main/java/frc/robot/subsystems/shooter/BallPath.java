@@ -44,11 +44,13 @@ public class BallPath extends SubsystemBase {
 
   private boolean fixedPositionShooting = false;
 
-  private FiringSolution currentFiringSolution;
+  private FiringSolution firingSolution;
 
-  public BallPath(Spindexer spindexer, Tunnel tunnel, LED led) {
+  public BallPath(Spindexer spindexer, Tunnel tunnel, FiringSolution firingSolution, LED led) {
     this.spindexer = spindexer;
     this.tunnel = tunnel;
+    this.firingSolution = firingSolution;
+
     this.led = led;
   }
 
@@ -56,8 +58,8 @@ public class BallPath extends SubsystemBase {
   public void periodic() {
 
     if (Constants.firingManagerMode == Constants.SubsystemMode.TUNING) {
-      tunnel.requestGoal(currentFiringSolution.tunnelSpeedRPS());
-      spindexer.requestGoal(currentFiringSolution.indexerSpeedRPS());
+      tunnel.requestGoal(firingSolution.tunnelSpeedRPS());
+      spindexer.requestGoal(firingSolution.indexerSpeedRPS());
 
       spindexer.periodic();
       tunnel.periodic();
@@ -72,23 +74,19 @@ public class BallPath extends SubsystemBase {
     switch (ballState) {
       case DISABLED -> {}
       case IDLE -> {
-
         spindexer.requestIdle();
         if (spindexer.isStopped()) {
           tunnel.requestIdle();
         } else {
-          tunnel.requestGoal(currentFiringSolution.tunnelSpeedRPS());
+          tunnel.requestGoal(firingSolution.tunnelSpeedRPS());
         }
       }
       case SHOOT -> {
         // Tunnel and/or spindexer get up to speed
-        tunnel.requestGoal(currentFiringSolution.tunnelSpeedRPS());
-        spindexer.requestGoal(currentFiringSolution.indexerSpeedRPS());
-
-    
+        tunnel.requestGoal(firingSolution.tunnelSpeedRPS());
+        spindexer.requestGoal(firingSolution.indexerSpeedRPS());
       }
       case UNJAM -> {
-
         tunnel.requestGoal(Constants.Tunnel.unjamRPS);
         spindexer.requestGoal(Constants.Spindexer.unjamRPS);
       }
@@ -106,15 +104,15 @@ public class BallPath extends SubsystemBase {
     Logger.recordOutput("Shooter/flywheelAtSpeed", flywheel.atTargetVelocity());
     Logger.recordOutput("Shooter/hoodAtPosition", hood.isAtGoal());
     Logger.recordOutput("Shooter/turretAtPosition", turret.isAtGoal());
-    Logger.recordOutput("Shooter/TargetHoodAngleDeg", currentFiringSolution.hoodAngle());
-    Logger.recordOutput("Shooter/TargetFlywheelSpeedRPS", currentFiringSolution.flywheelSpeedRPS());
-    Logger.recordOutput("Shooter/TargetTurretAngleDeg", currentFiringSolution.turretAngleDeg());
-    Logger.recordOutput("Shooter/TargetTunnelSpeedRPS", currentFiringSolution.tunnelSpeedRPS());
-    Logger.recordOutput("Shooter/TargetIndexerSpeedRPS", currentFiringSolution.indexerSpeedRPS());
+    Logger.recordOutput("Shooter/TargetHoodAngleDeg", firingSolution.hoodAngle());
+    Logger.recordOutput("Shooter/TargetFlywheelSpeedRPS", firingSolution.flywheelSpeedRPS());
+    Logger.recordOutput("Shooter/TargetTurretAngleDeg", firingSolution.turretAngleDeg());
+    Logger.recordOutput("Shooter/TargetTunnelSpeedRPS", firingSolution.tunnelSpeedRPS());
+    Logger.recordOutput("Shooter/TargetIndexerSpeedRPS", firingSolution.indexerSpeedRPS());
     Logger.recordOutput("Shooter/CurrentTurretPose", drive.getTurretPose(turret.getAngle()));
     Logger.recordOutput(
         "Shooter/TargetTurretPose",
-        GeomUtil.pose2dToPose3d(drive.getTurretPose(currentFiringSolution.turretAngleDeg()), 0.4));
+        GeomUtil.pose2dToPose3d(drive.getTurretPose(firingSolution.turretAngleDeg()), 0.4));
     Logger.recordOutput(
         "Shooter/ComponentPoses",
         new Pose3d[] {
@@ -122,8 +120,7 @@ public class BallPath extends SubsystemBase {
               new Pose2d(
                   Constants.Turret.originToTurret,
                   new Rotation2d(
-                      Units.degreesToRadians(currentFiringSolution.turretAngleDeg())
-                          - 4 * Math.PI / 3)),
+                      Units.degreesToRadians(firingSolution.turretAngleDeg()) - 4 * Math.PI / 3)),
               0.22)
         });
   }
@@ -153,7 +150,7 @@ public class BallPath extends SubsystemBase {
   }
 
   public void setFiringSolution(FiringSolution firingSolution) {
-    this.currentFiringSolution = firingSolution;
+    this.firingSolution = firingSolution;
   }
 
   public boolean isSpindexerStopped() {
