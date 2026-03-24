@@ -39,6 +39,7 @@ public class Shoot extends Command {
     // In non shooting zone or manually inhibited
     return (!outake.isDriveInShootingArea() && DriverStation.isTeleopEnabled())
         || !RobotContainer.controller.rightTrigger().getAsBoolean()
-        || outake.restrictAllianceShoot();
+        || outake.restrictAllianceShoot() 
+        || outake.isTurretNeedToUnwind();
   }
 }

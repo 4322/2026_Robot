@@ -93,11 +93,11 @@ public class Outake extends SubsystemBase {
       case DISABLED -> {}
       case IDLE -> {
         hood.requestGoal(Constants.Hood.safeAngleDeg);
-        turret.requestAngle(currentFiringSolution.turretAngleDeg(), false);
+        turret.requestAngle(currentFiringSolution.turretAngleDeg(), true);
         flywheel.requestGoal(Constants.Flywheel.idleRPS);
       }
       case SHOOT -> {
-        turret.requestAngle(currentFiringSolution.turretAngleDeg(), false);
+        turret.requestAngle(currentFiringSolution.turretAngleDeg(), true);
         flywheel.requestGoal(currentFiringSolution.flywheelSpeedRPS());
         hood.requestGoal(currentFiringSolution.hoodAngle());
       }
