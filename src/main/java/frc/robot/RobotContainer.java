@@ -8,7 +8,6 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -16,7 +15,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.autonomous.AutonomousSelector;
 import frc.robot.commands.DriveCommands;
@@ -46,7 +44,6 @@ import frc.robot.subsystems.led.LEDIOCANdle;
 import frc.robot.subsystems.led.LEDIOSim;
 import frc.robot.subsystems.shooter.BallPath;
 import frc.robot.subsystems.shooter.Outake;
-import frc.robot.subsystems.shooter.areaManager.AreaManager;
 import frc.robot.subsystems.shooter.flywheel.Flywheel;
 import frc.robot.subsystems.shooter.flywheel.FlywheelIO;
 import frc.robot.subsystems.shooter.flywheel.FlywheelIOSim;
@@ -201,10 +198,8 @@ public class RobotContainer {
                 ? new Turret(new TurretIO() {})
                 : new Turret(new TurretIOTalonFx());
 
-        outake =
-            new Outake(flywheel, hood, turret, visionGlobalPose, drive, led);
-        ballPath =
-            new BallPath(spindexer, tunnel, led);
+        outake = new Outake(flywheel, hood, turret, visionGlobalPose, drive, led);
+        ballPath = new BallPath(spindexer, tunnel, led);
 
         rollers =
             Constants.rollerMode == Constants.SubsystemMode.DISABLED
@@ -299,11 +294,8 @@ public class RobotContainer {
                 ? new Turret(new TurretIO() {})
                 : new Turret(new TurretIOSim());
 
-        outake =
-            new Outake(flywheel, hood, turret, visionGlobalPose, drive, led);
-        ballPath =
-            new BallPath(spindexer, tunnel, led);
-        
+        outake = new Outake(flywheel, hood, turret, visionGlobalPose, drive, led);
+        ballPath = new BallPath(spindexer, tunnel, led);
 
         deployer =
             Constants.deployerMode == Constants.SubsystemMode.DISABLED
@@ -341,10 +333,8 @@ public class RobotContainer {
         spindexer = new Spindexer(new SpindexerIO() {});
         tunnel = new Tunnel(new TunnelIO() {});
         turret = new Turret(new TurretIO() {});
-        outake =
-            new Outake(flywheel, hood, turret, visionGlobalPose, drive, led);
-        ballPath =
-            new BallPath(spindexer, tunnel, led);
+        outake = new Outake(flywheel, hood, turret, visionGlobalPose, drive, led);
+        ballPath = new BallPath(spindexer, tunnel, led);
         rollers = new Rollers(new RollersIO() {});
         deployer = new Deployer(new DeployerIO() {});
         intake = new Intake(deployer, rollers);
@@ -371,7 +361,6 @@ public class RobotContainer {
         "Drive SysId (Dynamic Forward)", drive.sysIdDynamic(SysIdRoutine.Direction.kForward));
     testCommandChooser.addOption(
         "Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
-
 
     // Configure the button bindings
     configureButtonBindings();
@@ -407,8 +396,6 @@ public class RobotContainer {
     Shoot - Left Trigger while held (Operator)
     */
 
-
-
     intake.setDefaultCommand(IntakeCommands.setIdle(intake));
 
     controller.x().whileTrue(IntakeCommands.setEject(intake));
@@ -441,8 +428,6 @@ public class RobotContainer {
     autonomousSelector =
         new AutonomousSelector(drive, hood, turret, outake, visionObjectDetection, led, intake);
   }
-
- 
 
   public void setBrakeMode(boolean brake) {
     deployer.setBrakeMode(brake);

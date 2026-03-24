@@ -25,7 +25,6 @@ public class AutoIntake extends Command {
   private boolean autodrive;
   private LED led;
   private Intake intake;
-  
 
   public AutoIntake(
       Drive drive,

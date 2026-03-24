@@ -9,34 +9,36 @@ import frc.robot.subsystems.shooter.Outake;
 public class Shoot extends Command {
   private Outake outake;
   private BallPath ballPath;
-    public Shoot(Outake outake, BallPath ballPath) {
-      this.outake = outake;
-      this.ballPath = ballPath;
-      addRequirements(outake);
-    }
-    
-    @Override
-    public void execute() {
-      outake.setOutakeShoot();
-      if (outake.isHoodAtPosition() && outake.isFlywheelAtSpeed() && outake.isTurretAtPosition()){
-      ballPath.setBallPathShoot();
-      } else {
-      ballPath.setBallPathIdle();
-      }
-    }
 
-    
-    @Override
-    public void end(boolean interrupted) {
-      if (!RobotContainer.controller.b().getAsBoolean()){
+  public Shoot(Outake outake, BallPath ballPath) {
+    this.outake = outake;
+    this.ballPath = ballPath;
+    addRequirements(outake);
+  }
+
+  @Override
+  public void execute() {
+    outake.setOutakeShoot();
+    if (outake.isHoodAtPosition() && outake.isFlywheelAtSpeed() && outake.isTurretAtPosition()) {
+      ballPath.setBallPathShoot();
+    } else {
+      ballPath.setBallPathIdle();
+    }
+  }
+
+  @Override
+  public void end(boolean interrupted) {
+    if (!RobotContainer.controller.b().getAsBoolean()) {
       ballPath.setBallPathIdle();
       outake.setOutakeIdle();
-      }
     }
-    
-    @Override
-    public boolean isFinished() {
-      // In non shooting zone or manually inhibited
-      return (!outake.isDriveInShootingArea() && DriverStation.isTeleopEnabled()) || !RobotContainer.controller.rightTrigger().getAsBoolean() || outake.restrictAllianceShoot();
-    }
+  }
+
+  @Override
+  public boolean isFinished() {
+    // In non shooting zone or manually inhibited
+    return (!outake.isDriveInShootingArea() && DriverStation.isTeleopEnabled())
+        || !RobotContainer.controller.rightTrigger().getAsBoolean()
+        || outake.restrictAllianceShoot();
+  }
 }

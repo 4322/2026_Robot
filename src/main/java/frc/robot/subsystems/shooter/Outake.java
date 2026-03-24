@@ -6,13 +6,11 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Robot;
 import frc.robot.constants.Constants;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.led.LED;
 import frc.robot.subsystems.shooter.areaManager.AreaManager;
 import frc.robot.subsystems.shooter.areaManager.AreaManager.Zone;
-import frc.robot.subsystems.shooter.firingManager.FiringManager;
 import frc.robot.subsystems.shooter.firingManager.FiringManager.FiringSolution;
 import frc.robot.subsystems.shooter.flywheel.Flywheel;
 import frc.robot.subsystems.shooter.hood.Hood;
@@ -32,13 +30,13 @@ public class Outake extends SubsystemBase {
     SHOOT // Spindexer and tunnel get up to speed
   }
 
-  public static enum ShootGoal{
+  public static enum ShootGoal {
     PASSING,
     SCORING
   }
 
-   private ShooterState outakeState = ShooterState.DISABLED;
-    private static ShootGoal shooting = ShootGoal.SCORING;
+  private ShooterState outakeState = ShooterState.DISABLED;
+  private static ShootGoal shooting = ShootGoal.SCORING;
 
   private Flywheel flywheel;
   private Hood hood;
@@ -47,7 +45,6 @@ public class Outake extends SubsystemBase {
   private Turret turret;
   private Drive drive;
   private LED led;
-
 
   private boolean fixedPositionShooting = false;
 
@@ -72,9 +69,10 @@ public class Outake extends SubsystemBase {
 
   @Override
   public void periodic() {
-    if (AreaManager.getZoneOfPosition(drive.getRobotPose().getTranslation()) == Zone.ALLIANCE_ZONE){
+    if (AreaManager.getZoneOfPosition(drive.getRobotPose().getTranslation())
+        == Zone.ALLIANCE_ZONE) {
       shooting = ShootGoal.SCORING;
-    } else{
+    } else {
       shooting = ShootGoal.PASSING;
     }
     if (Constants.firingManagerMode == Constants.SubsystemMode.TUNING) {
@@ -94,19 +92,18 @@ public class Outake extends SubsystemBase {
 
       outakeState = ShooterState.DISABLED;
     }
-    switch (outakeState){
-      case DISABLED ->{}
+    switch (outakeState) {
+      case DISABLED -> {}
       case IDLE -> {
-      hood.requestGoal(Constants.Hood.safeAngleDeg);
-      tunnel.requestIdle();
-      flywheel.requestGoal(Constants.Flywheel.idleRPS);
+        hood.requestGoal(Constants.Hood.safeAngleDeg);
+        tunnel.requestIdle();
+        flywheel.requestGoal(Constants.Flywheel.idleRPS);
       }
-      case SHOOT ->{
-      turret.requestAngle(currentFiringSolution.turretAngleDeg(), false);
-      flywheel.requestGoal(currentFiringSolution.flywheelSpeedRPS());
-      hood.requestGoal(currentFiringSolution.hoodAngle());
-      } 
-    
+      case SHOOT -> {
+        turret.requestAngle(currentFiringSolution.turretAngleDeg(), false);
+        flywheel.requestGoal(currentFiringSolution.flywheelSpeedRPS());
+        hood.requestGoal(currentFiringSolution.hoodAngle());
+      }
     }
     flywheel.periodic();
     hood.periodic();
@@ -114,9 +111,6 @@ public class Outake extends SubsystemBase {
       turret.periodic();
     }
 
-
-
-  
     Logger.recordOutput("Shooter/spindexerStopped", spindexer.isStopped());
     Logger.recordOutput("Shooter/tunnelStopped", tunnel.isStopped());
     Logger.recordOutput("Shooter/flywheelAtSpeed", flywheel.atTargetVelocity());
@@ -137,7 +131,9 @@ public class Outake extends SubsystemBase {
           GeomUtil.pose2dToPose3d(
               new Pose2d(
                   Constants.Turret.originToTurret,
-                  new Rotation2d(Units.degreesToRadians(currentFiringSolution.turretAngleDeg()) - 4 * Math.PI / 3)),
+                  new Rotation2d(
+                      Units.degreesToRadians(currentFiringSolution.turretAngleDeg())
+                          - 4 * Math.PI / 3)),
               0.22)
         });
   }
@@ -146,25 +142,19 @@ public class Outake extends SubsystemBase {
     return outakeState;
   }
 
-
-
   public void setOutakeShoot() {
     outakeState = ShooterState.SHOOT;
   }
 
-  
-
   public void setOutakeIdle() {
-    if (ballPathStopped()){
-    outakeState = ShooterState.IDLE;
+    if (ballPathStopped()) {
+      outakeState = ShooterState.IDLE;
     }
   }
-
 
   public void setFiringSolution(FiringSolution firingSolution) {
     this.currentFiringSolution = firingSolution;
   }
-   
 
   public boolean isSpindexerStopped() {
     return spindexer.isStopped();
@@ -174,14 +164,17 @@ public class Outake extends SubsystemBase {
     return tunnel.isStopped();
   }
 
-  public boolean restrictAllianceShoot(){
-  return AreaManager.getZoneOfPosition(drive.getRobotPose().getTranslation()) == Zone.ALLIANCE_ZONE
+  public boolean restrictAllianceShoot() {
+    return AreaManager.getZoneOfPosition(drive.getRobotPose().getTranslation())
+            == Zone.ALLIANCE_ZONE
         && !HubShiftUtil.getShiftedShiftInfo().active();
   }
- public boolean isDriveInShootingArea() {
+
+  public boolean isDriveInShootingArea() {
     return AreaManager.isShootingArea(drive.getRobotPose().getTranslation());
   }
-  public boolean ballPathStopped(){
+
+  public boolean ballPathStopped() {
     return tunnel.isStopped() && spindexer.isStopped();
   }
 
@@ -193,7 +186,7 @@ public class Outake extends SubsystemBase {
     return hood.isAtGoal();
   }
 
-  public static boolean isScoring(){
+  public static boolean isScoring() {
     return shooting == ShootGoal.SCORING;
   }
 
@@ -201,7 +194,7 @@ public class Outake extends SubsystemBase {
     return turret.isAtGoal();
   }
 
-   public boolean isTurretNeedToUnwind() {
+  public boolean isTurretNeedToUnwind() {
     return turret.needsToUnwind();
   }
-} 
+}

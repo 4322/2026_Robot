@@ -120,7 +120,7 @@ public class Turret {
   public boolean isAtGoal() {
     if (Constants.turretLocked) {
       // desired turret angle is required robot heading when turret is locked
-    
+
       return MathUtil.isNear(
           desiredDeg,
           RobotContainer.drive.getRotation().getDegrees(),
@@ -128,15 +128,18 @@ public class Turret {
     } else if (Constants.turretMode == Constants.SubsystemMode.DISABLED) {
       return true;
     } else {
-      if (!MathUtil.isNear(desiredDeg, inputs.turretDegs, Constants.Turret.goalToleranceDeg)){
+      if (!MathUtil.isNear(desiredDeg, inputs.turretDegs, Constants.Turret.goalToleranceDeg)) {
         hardwareTimer.start();
-      } 
-      if (hardwareTimer.hasElapsed(Outake.isScoring() ?Constants.Turret.scoringHardwareCheckTime: Constants.Turret.passingHardwareCheckTime)){
+      }
+      if (hardwareTimer.hasElapsed(
+          Outake.isScoring()
+              ? Constants.Turret.scoringHardwareCheckTime
+              : Constants.Turret.passingHardwareCheckTime)) {
         hardwareTimer.stop();
         hardwareTimer.reset();
         return true;
       } else {
-      return MathUtil.isNear(desiredDeg, inputs.turretDegs, Constants.Turret.goalToleranceDeg);
+        return MathUtil.isNear(desiredDeg, inputs.turretDegs, Constants.Turret.goalToleranceDeg);
       }
     }
   }

@@ -6,20 +6,17 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Robot;
 import frc.robot.constants.Constants;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.led.LED;
 import frc.robot.subsystems.shooter.areaManager.AreaManager;
 import frc.robot.subsystems.shooter.areaManager.AreaManager.Zone;
-import frc.robot.subsystems.shooter.firingManager.FiringManager;
 import frc.robot.subsystems.shooter.firingManager.FiringManager.FiringSolution;
 import frc.robot.subsystems.shooter.flywheel.Flywheel;
 import frc.robot.subsystems.shooter.hood.Hood;
 import frc.robot.subsystems.shooter.spindexer.Spindexer;
 import frc.robot.subsystems.shooter.tunnel.Tunnel;
 import frc.robot.subsystems.shooter.turret.Turret;
-import frc.robot.subsystems.vision.visionGlobalPose.VisionGlobalPose;
 import frc.robot.util.GeomUtil;
 import frc.robot.util.HubShiftUtil;
 import org.littletonrobotics.junction.Logger;
@@ -43,15 +40,11 @@ public class BallPath extends SubsystemBase {
   private Drive drive;
   private LED led;
 
-
   private boolean fixedPositionShooting = false;
 
   private FiringSolution currentFiringSolution;
 
-  public BallPath(
-      Spindexer spindexer,
-      Tunnel tunnel,
-      LED led) {
+  public BallPath(Spindexer spindexer, Tunnel tunnel, LED led) {
     this.spindexer = spindexer;
     this.tunnel = tunnel;
     this.led = led;
@@ -66,14 +59,14 @@ public class BallPath extends SubsystemBase {
 
       spindexer.periodic();
       tunnel.periodic();
-    
+
       return;
     }
     if (DriverStation.isDisabled()) {
 
       ballState = ShooterState.DISABLED;
     }
-   
+
     switch (ballState) {
       case DISABLED -> {}
       case IDLE -> {
@@ -87,24 +80,22 @@ public class BallPath extends SubsystemBase {
       case SHOOT -> {
         // Tunnel and/or spindexer get up to speed
         tunnel.requestGoal(currentFiringSolution.tunnelSpeedRPS());
-        if (tunnel.getVelocity() > Constants.Tunnel.minPercentVelocity * currentFiringSolution.tunnelSpeedRPS()) {
+        if (tunnel.getVelocity()
+            > Constants.Tunnel.minPercentVelocity * currentFiringSolution.tunnelSpeedRPS()) {
           spindexer.requestGoal(currentFiringSolution.indexerSpeedRPS());
         } else {
           spindexer.requestIdle();
         }
       }
-      case UNJAM -> { 
+      case UNJAM -> {
         tunnel.requestGoal(Constants.Tunnel.unjamRPS);
         spindexer.requestGoal(Constants.Spindexer.unjamRPS);
       }
     }
-  
+
     spindexer.periodic();
     tunnel.periodic();
 
-
-
-  
     Logger.recordOutput("Shooter/spindexerStopped", spindexer.isStopped());
     Logger.recordOutput("Shooter/tunnelStopped", tunnel.isStopped());
     Logger.recordOutput("Shooter/flywheelAtSpeed", flywheel.atTargetVelocity());
@@ -125,12 +116,13 @@ public class BallPath extends SubsystemBase {
           GeomUtil.pose2dToPose3d(
               new Pose2d(
                   Constants.Turret.originToTurret,
-                  new Rotation2d(Units.degreesToRadians(currentFiringSolution.turretAngleDeg()) - 4 * Math.PI / 3)),
+                  new Rotation2d(
+                      Units.degreesToRadians(currentFiringSolution.turretAngleDeg())
+                          - 4 * Math.PI / 3)),
               0.22)
         });
   }
 
- 
   public ShooterState getBallPathState() {
     return ballState;
   }
@@ -142,9 +134,11 @@ public class BallPath extends SubsystemBase {
   public void setBallPathIdle() {
     ballState = ShooterState.IDLE;
   }
+
   public void setBallPathUnjam() {
     ballState = ShooterState.UNJAM;
   }
+
   public void setFiringSolution(FiringSolution firingSolution) {
     this.currentFiringSolution = firingSolution;
   }
@@ -157,18 +151,22 @@ public class BallPath extends SubsystemBase {
     return tunnel.isStopped();
   }
 
-  public boolean restrictAllianceShoot(){
-  return AreaManager.getZoneOfPosition(drive.getRobotPose().getTranslation()) == Zone.ALLIANCE_ZONE
+  public boolean restrictAllianceShoot() {
+    return AreaManager.getZoneOfPosition(drive.getRobotPose().getTranslation())
+            == Zone.ALLIANCE_ZONE
         && !HubShiftUtil.getShiftedShiftInfo().active();
   }
 
-  public boolean getInAllianceZone(){
-    return AreaManager.getZoneOfPosition(drive.getRobotPose().getTranslation()) == Zone.ALLIANCE_ZONE;
+  public boolean getInAllianceZone() {
+    return AreaManager.getZoneOfPosition(drive.getRobotPose().getTranslation())
+        == Zone.ALLIANCE_ZONE;
   }
- public boolean isDriveInShootingArea() {
+
+  public boolean isDriveInShootingArea() {
     return AreaManager.isShootingArea(drive.getRobotPose().getTranslation());
   }
-  public boolean ballPathStopped(){
+
+  public boolean ballPathStopped() {
     return tunnel.isStopped() && spindexer.isStopped();
   }
 

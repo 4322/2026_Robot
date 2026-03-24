@@ -1,11 +1,9 @@
 package frc.robot.subsystems.shooter.flywheel;
 
+import edu.wpi.first.wpilibj.Timer;
 import frc.robot.constants.Constants;
 import frc.robot.subsystems.shooter.Outake;
-
 import org.littletonrobotics.junction.Logger;
-
-import edu.wpi.first.wpilibj.Timer;
 
 public class Flywheel {
   private FlywheelIO io;
@@ -39,18 +37,21 @@ public class Flywheel {
   }
 
   public boolean atTargetVelocity() {
-  if (!(Math.abs(inputs.mechanismRPS - inputs.requestedMechanismRPS)
-        < Constants.Flywheel.mechanismToleranceRPS)){
-          hardwareTimer.start();
-        }
-  if (hardwareTimer.hasElapsed(Outake.isScoring() ?Constants.Flywheel.scoringHardwareCheckTime: Constants.Flywheel.passingHardwareCheckTime)){
-        hardwareTimer.stop();
-        hardwareTimer.reset();
-        return true;
-      } else {
-    return Math.abs(inputs.mechanismRPS - inputs.requestedMechanismRPS)
-        < Constants.Flywheel.mechanismToleranceRPS;
-      }
+    if (!(Math.abs(inputs.mechanismRPS - inputs.requestedMechanismRPS)
+        < Constants.Flywheel.mechanismToleranceRPS)) {
+      hardwareTimer.start();
+    }
+    if (hardwareTimer.hasElapsed(
+        Outake.isScoring()
+            ? Constants.Flywheel.scoringHardwareCheckTime
+            : Constants.Flywheel.passingHardwareCheckTime)) {
+      hardwareTimer.stop();
+      hardwareTimer.reset();
+      return true;
+    } else {
+      return Math.abs(inputs.mechanismRPS - inputs.requestedMechanismRPS)
+          < Constants.Flywheel.mechanismToleranceRPS;
+    }
   }
 
   public double getVelocity() {

@@ -131,16 +131,19 @@ public class Hood {
     } else if (Constants.currentMode == Constants.Mode.SIM) {
       return true; // TODO temporary until we get hood sim working
     } else {
-      if (!pidController.atSetpoint()){
+      if (!pidController.atSetpoint()) {
         hardwareTimer.start();
-      } 
-      
-    if (hardwareTimer.hasElapsed(Outake.isScoring() ?Constants.Hood.scoringHardwareCheckTime: Constants.Hood.passingHardwareCheckTime)){
+      }
+
+      if (hardwareTimer.hasElapsed(
+          Outake.isScoring()
+              ? Constants.Hood.scoringHardwareCheckTime
+              : Constants.Hood.passingHardwareCheckTime)) {
         hardwareTimer.stop();
         hardwareTimer.reset();
         return true;
       } else {
-      return pidController.atSetpoint();
+        return pidController.atSetpoint();
       }
     }
   }
