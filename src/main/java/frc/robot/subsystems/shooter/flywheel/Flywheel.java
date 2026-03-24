@@ -3,10 +3,13 @@ package frc.robot.subsystems.shooter.flywheel;
 import frc.robot.constants.Constants;
 import org.littletonrobotics.junction.Logger;
 
+import edu.wpi.first.wpilibj.Timer;
+
 public class Flywheel {
   private FlywheelIO io;
   private FlywheelIOInputsAutoLogged inputs = new FlywheelIOInputsAutoLogged();
   private double ballsShot = 0;
+  private Timer hardwareTimer = new Timer();
 
   public Flywheel(FlywheelIO io) {
     this.io = io;
@@ -34,8 +37,18 @@ public class Flywheel {
   }
 
   public boolean atTargetVelocity() {
+  if (!(Math.abs(inputs.mechanismRPS - inputs.requestedMechanismRPS)
+        < Constants.Flywheel.mechanismToleranceRPS)){
+          hardwareTimer.start();
+        }
+  if (hardwareTimer.hasElapsed(true? Constants.Hood.hardwareCheckTime : 0.2)){
+        hardwareTimer.stop();
+        hardwareTimer.reset();
+        return true;
+      } else {
     return Math.abs(inputs.mechanismRPS - inputs.requestedMechanismRPS)
         < Constants.Flywheel.mechanismToleranceRPS;
+      }
   }
 
   public double getVelocity() {

@@ -2,6 +2,7 @@ package frc.robot.subsystems.shooter.turret;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.Timer;
 import frc.robot.RobotContainer;
 import frc.robot.constants.Constants;
 import frc.robot.util.ClockUtil;
@@ -12,6 +13,7 @@ public class Turret {
   private TurretIOInputsAutoLogged inputs = new TurretIOInputsAutoLogged();
   private Double desiredDeg = 0.0;
   private boolean minInclusive = false;
+  private Timer hardwareTimer = new Timer();
 
   public enum turretState {
     DISABLED,
@@ -117,6 +119,7 @@ public class Turret {
   public boolean isAtGoal() {
     if (Constants.turretLocked) {
       // desired turret angle is required robot heading when turret is locked
+    
       return MathUtil.isNear(
           desiredDeg,
           RobotContainer.drive.getRotation().getDegrees(),
@@ -124,7 +127,16 @@ public class Turret {
     } else if (Constants.turretMode == Constants.SubsystemMode.DISABLED) {
       return true;
     } else {
+      if (!MathUtil.isNear(desiredDeg, inputs.turretDegs, Constants.Turret.goalToleranceDeg)){
+        hardwareTimer.start();
+      } 
+      if (hardwareTimer.hasElapsed(true? Constants.Hood.hardwareCheckTime : 0.2)){
+        hardwareTimer.stop();
+        hardwareTimer.reset();
+        return true;
+      } else {
       return MathUtil.isNear(desiredDeg, inputs.turretDegs, Constants.Turret.goalToleranceDeg);
+      }
     }
   }
 

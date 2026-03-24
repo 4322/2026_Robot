@@ -16,9 +16,13 @@ public class Shoot extends Command {
     }
     
     @Override
-    public void initialize() {
-      ballPath.setBallPathShoot();
+    public void execute() {
       outake.setOutakeShoot();
+      if (outake.isHoodAtPosition() && outake.isFlywheelAtSpeed() && outake.isTurretAtPosition()){
+      ballPath.setBallPathShoot();
+      } else {
+      ballPath.setBallPathIdle();
+      }
     }
 
     

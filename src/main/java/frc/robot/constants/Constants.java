@@ -196,6 +196,7 @@ public final class Constants {
     public static final double safeAngleDeg = 0;
     public static final double kSPulsewidthUp = 80;
     public static final double kSPulsewidthDown = 45;
+    public static final double hardwareCheckTime = 0.5;
     public static final double kV = 0;
     public static final double kP = 0.04;
     public static final double kI = 0.03;

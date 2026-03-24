@@ -73,9 +73,10 @@ public class BallPath extends SubsystemBase {
     if (Constants.firingManagerMode == Constants.SubsystemMode.TUNING) {
       tunnel.requestGoal(currentFiringSolution.tunnelSpeedRPS());
       spindexer.requestGoal(currentFiringSolution.indexerSpeedRPS());
-      if (!Constants.turretLocked) {
-        turret.periodic();
-      }
+
+      spindexer.periodic();
+      tunnel.periodic();
+    
       return;
     }
     if (DriverStation.isDisabled()) {
@@ -169,6 +170,10 @@ public class BallPath extends SubsystemBase {
   public boolean restrictAllianceShoot(){
   return AreaManager.getZoneOfPosition(drive.getRobotPose().getTranslation()) == Zone.ALLIANCE_ZONE
         && !HubShiftUtil.getShiftedShiftInfo().active();
+  }
+
+  public boolean getInAllianceZone(){
+    return AreaManager.getZoneOfPosition(drive.getRobotPose().getTranslation()) == Zone.ALLIANCE_ZONE;
   }
  public boolean isDriveInShootingArea() {
     return AreaManager.isShootingArea(drive.getRobotPose().getTranslation());

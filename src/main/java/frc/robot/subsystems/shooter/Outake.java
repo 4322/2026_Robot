@@ -74,12 +74,8 @@ public class Outake extends SubsystemBase {
       hood.requestGoal(currentFiringSolution.hoodAngle());
 
       turret.requestAngle(currentFiringSolution.turretAngleDeg(), true);
-
-      tunnel.requestGoal(currentFiringSolution.tunnelSpeedRPS());
-      spindexer.requestGoal(currentFiringSolution.indexerSpeedRPS());
       flywheel.periodic();
-      spindexer.periodic();
-      tunnel.periodic();
+
       hood.periodic();
       if (!Constants.turretLocked) {
         turret.periodic();
@@ -162,6 +158,7 @@ public class Outake extends SubsystemBase {
   public void setFiringSolution(FiringSolution firingSolution) {
     this.currentFiringSolution = firingSolution;
   }
+   
 
   public boolean isSpindexerStopped() {
     return spindexer.isStopped();
