@@ -404,6 +404,7 @@ public class RobotContainer {
     Trench Override Hood - Left Trigger while held (Driver)
     Unjam Shooter - B while held (Driver)
     Shoot - Left Trigger while held (Operator)
+    Smoosh - A while held (Driver)
     */
 
     shooter.setDefaultCommand(ShooterCommands.idle(shooter));
@@ -437,12 +438,12 @@ public class RobotContainer {
     controller
         .x() // TODO change to actual button
         .onTrue(IntakeCommands.eject(intake))
-        .onFalse(IntakeCommands.idle(intake));
+        .onFalse(IntakeCommands.toggleOff(intake));
 
     controller
-        .x() // TODO change to actual button
+        .a()
         .onTrue(IntakeCommands.smoosh(intake))
-        .onFalse(IntakeCommands.idle(intake));
+        .onFalse(IntakeCommands.toggleOff(intake));
   }
 
   /**

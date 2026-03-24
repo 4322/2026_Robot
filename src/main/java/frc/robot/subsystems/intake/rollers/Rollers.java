@@ -12,6 +12,7 @@ public class Rollers {
     DEPLOY,
     INTAKE,
     EJECT,
+    SMOOSH,
     DISABLED
   }
 
@@ -46,6 +47,9 @@ public class Rollers {
       }
       case EJECT -> {
         rollersIO.setVoltage(Constants.Rollers.voltageEject);
+      }
+      case SMOOSH -> {
+        rollersIO.setVoltage(Constants.Rollers.voltageSmoosh);
       }
     }
   }
