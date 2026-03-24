@@ -49,22 +49,12 @@ public class BallPath extends SubsystemBase {
   private FiringSolution currentFiringSolution;
 
   public BallPath(
-      Flywheel flywheel,
-      Hood hood,
       Spindexer spindexer,
       Tunnel tunnel,
-      Turret turret,
-      VisionGlobalPose visionGlobalPose,
-      Drive drive,
       LED led) {
-    this.flywheel = flywheel;
-    this.hood = hood;
     this.spindexer = spindexer;
     this.tunnel = tunnel;
-    this.turret = turret;
     this.led = led;
-    this.drive = drive;
-    this.currentFiringSolution = null;
   }
 
   @Override

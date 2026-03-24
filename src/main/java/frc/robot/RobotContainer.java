@@ -44,6 +44,7 @@ import frc.robot.subsystems.led.LED;
 import frc.robot.subsystems.led.LEDIO;
 import frc.robot.subsystems.led.LEDIOCANdle;
 import frc.robot.subsystems.led.LEDIOSim;
+import frc.robot.subsystems.shooter.BallPath;
 import frc.robot.subsystems.shooter.Outake;
 import frc.robot.subsystems.shooter.areaManager.AreaManager;
 import frc.robot.subsystems.shooter.flywheel.Flywheel;
@@ -86,7 +87,9 @@ public class RobotContainer {
 
   private static VisionGlobalPose visionGlobalPose;
   private static VisionObjectDetection visionObjectDetection;
-  public static Outake shooter;
+  public static Outake outake;
+  public static BallPath ballPath;
+
   private static Flywheel flywheel;
   private static Hood hood;
   private static Spindexer spindexer;
@@ -198,8 +201,10 @@ public class RobotContainer {
                 ? new Turret(new TurretIO() {})
                 : new Turret(new TurretIOTalonFx());
 
-        shooter =
-            new Outake(flywheel, hood, spindexer, tunnel, turret, visionGlobalPose, drive, led);
+        outake =
+            new Outake(flywheel, hood, turret, visionGlobalPose, drive, led);
+        ballPath =
+            new BallPath(spindexer, tunnel, led);
 
         rollers =
             Constants.rollerMode == Constants.SubsystemMode.DISABLED
@@ -294,8 +299,11 @@ public class RobotContainer {
                 ? new Turret(new TurretIO() {})
                 : new Turret(new TurretIOSim());
 
-        shooter =
-            new Outake(flywheel, hood, spindexer, tunnel, turret, visionGlobalPose, drive, led);
+        outake =
+            new Outake(flywheel, hood, turret, visionGlobalPose, drive, led);
+        ballPath =
+            new BallPath(spindexer, tunnel, led);
+        
 
         deployer =
             Constants.deployerMode == Constants.SubsystemMode.DISABLED
@@ -307,7 +315,7 @@ public class RobotContainer {
                 : new Rollers(new RollersIOSim());
         intake = new Intake(deployer, rollers);
 
-        new Simulator(drive, shooter);
+        new Simulator(drive, outake);
       }
 
       default -> {
@@ -333,8 +341,10 @@ public class RobotContainer {
         spindexer = new Spindexer(new SpindexerIO() {});
         tunnel = new Tunnel(new TunnelIO() {});
         turret = new Turret(new TurretIO() {});
-        shooter =
-            new Outake(flywheel, hood, spindexer, tunnel, turret, visionGlobalPose, drive, led);
+        outake =
+            new Outake(flywheel, hood, turret, visionGlobalPose, drive, led);
+        ballPath =
+            new BallPath(spindexer, tunnel, led);
         rollers = new Rollers(new RollersIO() {});
         deployer = new Deployer(new DeployerIO() {});
         intake = new Intake(deployer, rollers);
@@ -429,7 +439,7 @@ public class RobotContainer {
 
   public void configureAutonomousSelector() {
     autonomousSelector =
-        new AutonomousSelector(drive, hood, turret, shooter, visionObjectDetection, led, intake);
+        new AutonomousSelector(drive, hood, turret, outake, visionObjectDetection, led, intake);
   }
 
  

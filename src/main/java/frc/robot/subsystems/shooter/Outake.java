@@ -56,8 +56,6 @@ public class Outake extends SubsystemBase {
   public Outake(
       Flywheel flywheel,
       Hood hood,
-      Spindexer spindexer,
-      Tunnel tunnel,
       Turret turret,
       VisionGlobalPose visionGlobalPose,
       Drive drive,
@@ -110,8 +108,6 @@ public class Outake extends SubsystemBase {
       } 
     
     }
-   
-
     flywheel.periodic();
     hood.periodic();
     if (!Constants.turretLocked) {
@@ -204,4 +200,8 @@ public class Outake extends SubsystemBase {
   public boolean isTurretAtPosition() {
     return turret.isAtGoal();
   }
-}
+
+   public boolean isTurretNeedToUnwind() {
+    return turret.needsToUnwind();
+  }
+} 
