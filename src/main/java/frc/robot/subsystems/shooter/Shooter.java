@@ -37,7 +37,8 @@ public class Shooter extends SubsystemBase {
     STOP // Everything but flywheel stopped
   }
 
-  private ShooterState state = ShooterState.DISABLED;
+  private ShooterState ballState = ShooterState.DISABLED;
+   private ShooterState outakeState = ShooterState.DISABLED;
 
   private Flywheel flywheel;
   private Hood hood;
@@ -46,6 +47,7 @@ public class Shooter extends SubsystemBase {
   private Turret turret;
   private Drive drive;
   private LED led;
+
 
   private boolean fixedPositionShooting = false;
 
@@ -92,52 +94,33 @@ public class Shooter extends SubsystemBase {
     }
     if (DriverStation.isDisabled()) {
 
-      state = ShooterState.DISABLED;
+      ballState = ShooterState.DISABLED;
     }
-
-    switch (state) {
-      case DISABLED -> {}
-      case TRENCH -> {
-        // Immediately force subsystems to safe positions and stop everything
-        hood.requestGoal(Constants.Hood.safeAngleDeg);
-        spindexer.requestIdle();
-        tunnel.requestIdle();
-        flywheel.requestGoal(Constants.Flywheel.idleRPS);
-      }
+    switch (outakeState){
+      case DISABLED ->{}
       case IDLE -> {
-        // Subsystems track target; flywheel at idle speed
+      hood.requestGoal(Constants.Hood.safeAngleDeg);
+      tunnel.requestIdle();
+      flywheel.requestGoal(Constants.Flywheel.idleRPS);
+      }
+      case SHOOT ->{
+        turret.requestAngle(currentFiringSolution.turretAngleDeg(), false);
+        flywheel.requestGoal(currentFiringSolution.flywheelSpeedRPS());
+        hood.requestGoal(currentFiringSolution.hoodAngle());
+      }
+    }
+    switch (ballState) {
+      case DISABLED -> {}
+      case IDLE -> {
         spindexer.requestIdle();
-        turret.requestAngle(currentFiringSolution.turretAngleDeg(), true);
         if (spindexer.isStopped()) {
           tunnel.requestIdle();
         } else {
           tunnel.requestGoal(currentFiringSolution.tunnelSpeedRPS());
         }
-        if (tunnel.isStopped()) {
-          flywheel.requestGoal(Constants.Flywheel.idleRPS);
-        }
-      }
-      case STOP -> {
-        // Subsystems track target; everything else stopped
-        flywheel.requestGoal(0);
-        hood.requestGoal(currentFiringSolution.hoodAngle());
-        turret.requestAngle(currentFiringSolution.turretAngleDeg(), true);
-        spindexer.requestIdle();
-        tunnel.requestIdle();
-      }
-      case PRESHOOT -> {
-        // Subsystems track target
-        spindexer.requestIdle();
-        tunnel.requestIdle();
-        flywheel.requestGoal(currentFiringSolution.flywheelSpeedRPS());
-        hood.requestGoal(currentFiringSolution.hoodAngle());
-        turret.requestAngle(currentFiringSolution.turretAngleDeg(), true);
       }
       case SHOOT -> {
         // Tunnel and/or spindexer get up to speed
-        flywheel.requestGoal(currentFiringSolution.flywheelSpeedRPS());
-        hood.requestGoal(currentFiringSolution.hoodAngle());
-        turret.requestAngle(currentFiringSolution.turretAngleDeg(), false);
         tunnel.requestGoal(currentFiringSolution.tunnelSpeedRPS());
         if (tunnel.getVelocity() > Constants.Tunnel.minPercentVelocity * currentFiringSolution.tunnelSpeedRPS()) {
           spindexer.requestGoal(currentFiringSolution.indexerSpeedRPS());
@@ -145,11 +128,7 @@ public class Shooter extends SubsystemBase {
           spindexer.requestIdle();
         }
       }
-      case UNJAM -> { // TODO figure out best way to unjam
-        // Tunnel/spindexer in reverse
-        flywheel.requestGoal(currentFiringSolution.flywheelSpeedRPS());
-        hood.requestGoal(currentFiringSolution.hoodAngle());
-        turret.requestAngle(currentFiringSolution.turretAngleDeg(), false);
+      case UNJAM -> { 
         tunnel.requestGoal(Constants.Tunnel.unjamRPS);
         spindexer.requestGoal(Constants.Spindexer.unjamRPS);
       }
@@ -164,7 +143,7 @@ public class Shooter extends SubsystemBase {
       turret.periodic();
     }
 
-    led.requestTurretUnwinding(state == ShooterState.UNWIND);
+    led.requestTurretUnwinding(ballState == ShooterState.UNWIND);
 
   
     Logger.recordOutput("Shooter/spindexerStopped", spindexer.isStopped());
@@ -192,15 +171,26 @@ public class Shooter extends SubsystemBase {
         });
   }
 
-  public ShooterState getState() {
-    return state;
+  public ShooterState getOutakeState() {
+    return outakeState;
   }
 
-  public void setState(ShooterState newState) {
-    if (state == newState) {
+  public ShooterState getBallPathState() {
+    return ballState;
+  }
+
+  public void setOutakeState(ShooterState newState) {
+    if (outakeState == newState) {
       return;
     }
-    state = newState;
+    outakeState = newState;
+  }
+
+   public void setBallPathState(ShooterState newState) {
+    if (ballState == newState) {
+      return;
+    }
+    ballState = newState;
   }
 
   public void setFiringSolution(FiringSolution firingSolution) {
@@ -213,6 +203,10 @@ public class Shooter extends SubsystemBase {
 
   public boolean isTunnelStopped() {
     return tunnel.isStopped();
+  }
+
+  public boolean ballOutakeStopped(){
+    return tunnel.isStopped() && spindexer.isStopped();
   }
 
   public boolean isFlywheelAtSpeed() {
