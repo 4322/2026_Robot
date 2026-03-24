@@ -130,13 +130,14 @@ public class Turret {
     } else {
       if (!MathUtil.isNear(desiredDeg, inputs.turretDegs, Constants.Turret.goalToleranceDeg)) {
         hardwareTimer.start();
+      } else {
+        hardwareTimer.stop();
+        hardwareTimer.reset();
       }
       if (hardwareTimer.hasElapsed(
           Outake.isScoring()
               ? Constants.Turret.scoringHardwareCheckTime
               : Constants.Turret.passingHardwareCheckTime)) {
-        hardwareTimer.stop();
-        hardwareTimer.reset();
         return true;
       } else {
         return MathUtil.isNear(desiredDeg, inputs.turretDegs, Constants.Turret.goalToleranceDeg);

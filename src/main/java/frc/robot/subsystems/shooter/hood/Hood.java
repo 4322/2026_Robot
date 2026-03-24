@@ -133,14 +133,14 @@ public class Hood {
     } else {
       if (!pidController.atSetpoint()) {
         hardwareTimer.start();
-      }
+      } else {  
+        hardwareTimer.stop();
+        hardwareTimer.reset();}
 
       if (hardwareTimer.hasElapsed(
           Outake.isScoring()
               ? Constants.Hood.scoringHardwareCheckTime
               : Constants.Hood.passingHardwareCheckTime)) {
-        hardwareTimer.stop();
-        hardwareTimer.reset();
         return true;
       } else {
         return pidController.atSetpoint();

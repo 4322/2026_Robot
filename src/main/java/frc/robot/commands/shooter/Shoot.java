@@ -24,7 +24,7 @@ public class Shoot extends Command {
     } else if (!RobotContainer.controller.b().getAsBoolean()){
       ballPath.setBallPathIdle();
     } else {
-       ballPath.setBallPathUnjam();
+      ballPath.setBallPathUnjam();
     }
   }
 
