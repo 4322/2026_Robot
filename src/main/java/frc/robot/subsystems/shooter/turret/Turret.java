@@ -10,7 +10,6 @@ public class Turret {
   private TurretIO io;
   private TurretIOInputsAutoLogged inputs = new TurretIOInputsAutoLogged();
   private Double desiredDeg = 0.0;
-  private boolean needsUnwindFinish = false;
   private double prevDeg = Constants.Turret.midPointPhysicalDeg;
 
   public enum turretState {
@@ -58,9 +57,6 @@ public class Turret {
     if (Constants.turretLocked || desiredDeg == null) {
       return;
     }
-    if(needsUnwindFinish) {
-      return;
-    }
 
     if (desiredDeg != null) {
       desiredDeg = calculateAngle(desiredDeg, inputs.turretDegs);
@@ -102,7 +98,6 @@ public class Turret {
   }
 
   public void unwind(boolean needsUnwindFinish) {
-    this.needsUnwindFinish = needsUnwindFinish;
     if(needsUnwindFinish) {
       desiredDeg =
           (MathUtil.isNear(Constants.Turret.midPointPhysicalDeg, desiredDeg, 90))
