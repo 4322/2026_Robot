@@ -233,6 +233,7 @@ public final class Constants {
     // postive degrees when extending
     public static final double retractDeg = 7; // allow for net (starting config = 3.87)
     public static final double extendDeg = 125.6; // fully against the bumper = 127.8
+    public static final double smooshDeg = (extendDeg + retractDeg) / 2.0;
     public static final double maxGravityDegrees = 125 - 180; // range is +/- 90 degrees
     public static final int motorId = 25;
     public static final double statorCurrentLimit = 60;

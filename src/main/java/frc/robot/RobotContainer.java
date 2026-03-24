@@ -14,7 +14,6 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -33,6 +32,7 @@ import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.intake.Intake.IntakeState;
 import frc.robot.subsystems.intake.deployer.Deployer;
 import frc.robot.subsystems.intake.deployer.DeployerIO;
 import frc.robot.subsystems.intake.deployer.DeployerIOSim;
@@ -433,23 +433,12 @@ public class RobotContainer {
             .withTimeout(Constants.Autonomous.unjamTimeSec)
             .andThen(ShooterCommands.shoot(shooter).until(autoAbleToShoot.negate())));
 
-    intake.setDefaultCommand(IntakeCommands.setIdle(intake));
-
-    controller.x().whileTrue(IntakeCommands.setEject(intake));
-
     controller
         .leftBumper()
-        .toggleOnTrue(IntakeCommands.setIntaking(intake))
         .onTrue(
-            Commands.run(
-                    () -> {
-                      controller.setRumble(GenericHID.RumbleType.kLeftRumble, 0.5);
-                    })
-                .withTimeout(0.5)
-                .finallyDo(
-                    () -> {
-                      controller.setRumble(GenericHID.RumbleType.kLeftRumble, 0.0);
-                    }));
+            IntakeCommands.intake(intake).onlyIf(() -> intake.getState() != IntakeState.INTAKING))
+        .onTrue(
+            IntakeCommands.idle(intake).onlyIf(() -> intake.getState() == IntakeState.INTAKING));
   }
 
   /**

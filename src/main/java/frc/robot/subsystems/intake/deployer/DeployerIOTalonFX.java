@@ -131,7 +131,7 @@ public class DeployerIOTalonFX implements DeployerIO {
   }
 
   @Override
-  public void enableBrakeMode(boolean mode) {
+  public void setBrakeMode(boolean mode) {
     deployerMotor.setNeutralMode(mode ? NeutralModeValue.Brake : NeutralModeValue.Coast);
   }
 }

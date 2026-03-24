@@ -23,37 +23,30 @@ public class Rollers {
 
   public void periodic() {
     rollersIO.updateInputs(inputs);
-    Logger.processInputs("Rollers", inputs);
-
-    switch (Constants.rollerMode) {
-      case TUNING -> {}
-      case DISABLED -> {}
-      case NORMAL -> {
-        switch (state) {
-          case DISABLED -> {}
-          case DEPLOY -> {
-            rollersIO.setVoltage(Constants.Rollers.voltageDeploy);
-          }
-          case IDLE -> {
-            rollersIO.setVoltage(Constants.Rollers.voltageIdle);
-          }
-          case INTAKE -> {
-            rollersIO.setVoltage(Constants.Rollers.voltageIntake);
-          }
-          case EJECT -> {
-            rollersIO.setVoltage(Constants.Rollers.voltageEject);
-          }
-        }
-        Logger.recordOutput("Rollers/state", state);
-      }
-    }
   }
 
   public void setBrakeMode(boolean enable) {
     rollersIO.enableBrakeMode(enable);
   }
 
-  public void setState(RollersState newState) {
-    state = newState;
+  public void setState(RollersState state) {
+    Logger.recordOutput("Rollers/State", state);
+    switch (state) {
+      case DISABLED -> {
+        rollersIO.stopMotor();
+      }
+      case DEPLOY -> {
+        rollersIO.setVoltage(Constants.Rollers.voltageDeploy);
+      }
+      case IDLE -> {
+        rollersIO.stopMotor();
+      }
+      case INTAKE -> {
+        rollersIO.setVoltage(Constants.Rollers.voltageIntake);
+      }
+      case EJECT -> {
+        rollersIO.setVoltage(Constants.Rollers.voltageEject);
+      }
+    }
   }
 }

@@ -35,7 +35,7 @@ public class RDisruptSweepShoot extends SequentialCommandGroup {
               }
             }),
         new ParallelCommandGroup(
-            IntakeCommands.setIntaking(intake),
+            IntakeCommands.intake(intake),
             new SequentialCommandGroup(
                 AutoBuilder.followPath(Robot.R_StartR_To_NeutralR_Intake_Disrupt),
                 AutoBuilder.followPath(Robot.R_NeutralR_Intake_Full_Disrupt),
@@ -64,7 +64,7 @@ public class RDisruptSweepShoot extends SequentialCommandGroup {
                 drive.setPose(startPoseRed);
               }
             }),
-        new ParallelCommandGroup(IntakeCommands.setIntaking(intake)),
+        new ParallelCommandGroup(IntakeCommands.intake(intake)),
         new SequentialCommandGroup(
             AutoBuilder.followPath(Robot.R_StartR_To_NeutralR_Intake_Disrupt),
             AutoBuilder.followPath(Robot.R_NeutralR_Intake_Full_Disrupt),

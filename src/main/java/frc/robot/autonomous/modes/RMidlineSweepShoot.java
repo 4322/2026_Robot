@@ -34,7 +34,7 @@ public class RMidlineSweepShoot extends SequentialCommandGroup {
               }
             }),
         new ParallelCommandGroup(
-            IntakeCommands.setIntaking(intake),
+            IntakeCommands.intake(intake),
             new SequentialCommandGroup(
                 AutoBuilder.followPath(Robot.R_StartR_To_NeutralR_Intake_Midline),
                 AutoBuilder.followPath(Robot.R_NeutralR_Intake_Full_Midline),

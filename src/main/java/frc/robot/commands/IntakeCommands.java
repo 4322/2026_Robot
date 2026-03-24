@@ -1,47 +1,54 @@
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.intake.Intake;
-import frc.robot.subsystems.intake.Intake.IntakeState;
-import org.littletonrobotics.junction.Logger;
 
 public class IntakeCommands {
-
-  public static Command setRetract(Intake intake) {
-    return Commands.run(
+  public static Command idle(Intake intake) {
+    return Commands.runOnce(
         () -> {
-          intake.setState(IntakeState.RETRACT);
-        },
-        intake);
+          intake.requestIdle();
+        });
   }
 
-  public static Command setEject(Intake intake) {
-    return Commands.run(
+  public static Command intake(Intake intake) {
+    return Commands.runOnce(
         () -> {
-          intake.setState(IntakeState.EJECT);
-        },
-        intake);
+          intake.requestIntake();
+        });
   }
 
-  public static Command setIdle(Intake intake) {
-    return Commands.run(
-        () -> {
-          Logger.recordOutput("Intake/Commands/setIdle", true);
-          intake.setState(IntakeState.IDLE);
-        },
-        intake);
-  }
-
-  public static Command setIntaking(Intake intake) {
-    return Commands.run(
+  public static Command intake(Intake intake, CommandXboxController controller) {
+    return Commands.runOnce(
             () -> {
-              intake.setState(IntakeState.INTAKING);
-              Logger.recordOutput("Intake/Commands/setIntaking", true);
-            },
-            intake)
+              intake.requestIntake();
+            })
         .andThen(
-            new InstantCommand(() -> Logger.recordOutput("Intake/Commands/setIntaking", false)));
+            Commands.run(
+                    () -> {
+                      controller.setRumble(GenericHID.RumbleType.kLeftRumble, 0.5);
+                    })
+                .withTimeout(0.5)
+                .finallyDo(
+                    () -> {
+                      controller.setRumble(GenericHID.RumbleType.kLeftRumble, 0.0);
+                    }));
+  }
+
+  public static Command eject(Intake intake) {
+    return Commands.runOnce(
+        () -> {
+          intake.requestEject();
+        });
+  }
+
+  public static Command smoosh(Intake intake) {
+    return Commands.runOnce(
+        () -> {
+          intake.requestSmoosh();
+        });
   }
 }

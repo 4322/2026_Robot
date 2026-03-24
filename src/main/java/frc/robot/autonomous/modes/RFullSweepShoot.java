@@ -35,7 +35,7 @@ public class RFullSweepShoot extends SequentialCommandGroup {
               }
             }),
         new ParallelCommandGroup(
-            IntakeCommands.setIntaking(intake),
+            IntakeCommands.intake(intake),
             new SequentialCommandGroup(
                 AutoBuilder.followPath(Robot.R_StartR_To_NeutralR_Intake),
                 AutoBuilder.followPath(Robot.R_NeutralR_Intake_Full),
@@ -62,7 +62,7 @@ public class RFullSweepShoot extends SequentialCommandGroup {
                 drive.setPose(startPoseRed);
               }
             }),
-        new ParallelCommandGroup(IntakeCommands.setIntaking(intake)),
+        new ParallelCommandGroup(IntakeCommands.intake(intake)),
         new SequentialCommandGroup(
             AutoBuilder.followPath(Robot.R_StartR_To_NeutralR_Intake),
             AutoBuilder.followPath(Robot.R_NeutralR_Intake_Full),

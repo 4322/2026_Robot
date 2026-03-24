@@ -11,8 +11,7 @@ public class Deployer {
   public enum DeployerState {
     DISABLED,
     EXTEND,
-    RETRACT,
-    // UNJAM TODO
+    SMOOSH
   }
 
   private DeployerState state = DeployerState.DISABLED;
@@ -25,27 +24,21 @@ public class Deployer {
     deployerIO.updateInputs(inputs);
     Logger.processInputs("Deployer", inputs);
     Logger.recordOutput("Deployer/state", state);
-    switch (Constants.deployerMode) {
-      case DISABLED -> {}
-      case TUNING -> {}
-      case NORMAL -> {
-        switch (state) {
-          case DISABLED -> {
-            break;
-          }
-          case EXTEND -> {
-            deployerIO.setPosition(Constants.Deployer.extendDeg);
-          }
-          case RETRACT -> {
-            // deployerIO.setPosition(Constants.Deployer.retractDeg);
-          }
-        }
+    switch (state) {
+      case DISABLED -> {
+        break;
+      }
+      case EXTEND -> {
+        deployerIO.setPosition(Constants.Deployer.extendDeg);
+      }
+      case SMOOSH -> {
+        deployerIO.setPosition(Constants.Deployer.smooshDeg);
       }
     }
   }
 
   public void setBrakeMode(boolean mode) {
-    deployerIO.enableBrakeMode(mode);
+    deployerIO.setBrakeMode(mode);
   }
 
   public boolean isExtended() {
@@ -56,7 +49,7 @@ public class Deployer {
     }
   }
 
-  public void setGoal(DeployerState state) {
+  public void setState(DeployerState state) {
     this.state = state;
   }
 
