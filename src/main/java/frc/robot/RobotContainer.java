@@ -32,7 +32,6 @@ import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import frc.robot.subsystems.intake.Intake;
-import frc.robot.subsystems.intake.Intake.IntakeState;
 import frc.robot.subsystems.intake.deployer.Deployer;
 import frc.robot.subsystems.intake.deployer.DeployerIO;
 import frc.robot.subsystems.intake.deployer.DeployerIOSim;
@@ -433,12 +432,17 @@ public class RobotContainer {
             .withTimeout(Constants.Autonomous.unjamTimeSec)
             .andThen(ShooterCommands.shoot(shooter).until(autoAbleToShoot.negate())));
 
+    controller.leftBumper().onTrue(IntakeCommands.toggleIntake(intake, controller));
+
     controller
-        .leftBumper()
-        .onTrue(
-            IntakeCommands.intake(intake).onlyIf(() -> intake.getState() != IntakeState.INTAKING))
-        .onTrue(
-            IntakeCommands.idle(intake).onlyIf(() -> intake.getState() == IntakeState.INTAKING));
+        .x() // TODO change to actual button
+        .onTrue(IntakeCommands.eject(intake))
+        .onFalse(IntakeCommands.idle(intake));
+
+    controller
+        .x() // TODO change to actual button
+        .onTrue(IntakeCommands.smoosh(intake))
+        .onFalse(IntakeCommands.idle(intake));
   }
 
   /**

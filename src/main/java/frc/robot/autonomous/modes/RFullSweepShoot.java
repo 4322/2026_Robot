@@ -14,7 +14,6 @@ import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.led.LED;
 import frc.robot.subsystems.shooter.Shooter;
-import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetection;
 import org.littletonrobotics.junction.Logger;
 
 public class RFullSweepShoot extends SequentialCommandGroup {

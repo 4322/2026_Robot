@@ -21,21 +21,25 @@ public class IntakeCommands {
         });
   }
 
-  public static Command intake(Intake intake, CommandXboxController controller) {
-    return Commands.runOnce(
-            () -> {
-              intake.requestIntake();
-            })
-        .andThen(
-            Commands.run(
-                    () -> {
-                      controller.setRumble(GenericHID.RumbleType.kLeftRumble, 0.5);
-                    })
-                .withTimeout(0.5)
-                .finallyDo(
-                    () -> {
-                      controller.setRumble(GenericHID.RumbleType.kLeftRumble, 0.0);
-                    }));
+  public static Command toggleIntake(Intake intake, CommandXboxController controller) {
+    if (intake.getState() != Intake.IntakeState.INTAKING) {
+      return Commands.runOnce(() -> intake.requestIntake())
+          .andThen(
+              Commands.run(
+                      () -> {
+                        controller.setRumble(GenericHID.RumbleType.kLeftRumble, 0.5);
+                      })
+                  .withTimeout(0.25)
+                  .finallyDo(
+                      () -> {
+                        controller.setRumble(GenericHID.RumbleType.kLeftRumble, 0.0);
+                      }));
+    } else {
+      return Commands.runOnce(
+          () -> {
+            intake.requestIdle();
+          });
+    }
   }
 
   public static Command eject(Intake intake) {

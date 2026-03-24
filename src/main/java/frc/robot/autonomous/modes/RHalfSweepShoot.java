@@ -15,7 +15,6 @@ import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.led.LED;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.shooter.hood.Hood;
-import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetection;
 
 public class RHalfSweepShoot extends SequentialCommandGroup {
 
