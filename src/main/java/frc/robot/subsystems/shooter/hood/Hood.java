@@ -39,11 +39,12 @@ public class Hood {
     pidController.setTolerance(toleranceDeg.get());
   }
 
-  public void periodic() {
-
+  public void inputsPeriodic() {
     io.updateInputs(inputs);
     Logger.processInputs("Hood", inputs);
+  }
 
+  public void outputsPeriodic() {
     switch (Constants.hoodMode) {
       case DISABLED -> {
         homed = true;
