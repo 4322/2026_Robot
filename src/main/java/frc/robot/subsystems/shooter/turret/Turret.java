@@ -1,11 +1,10 @@
 package frc.robot.subsystems.shooter.turret;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
 import frc.robot.RobotContainer;
 import frc.robot.constants.Constants;
-import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.util.ClockUtil;
 import org.littletonrobotics.junction.Logger;
 
@@ -15,6 +14,7 @@ public class Turret {
   public boolean needsToUnwind = false;
   private Double desiredDeg = 0.0;
   private double prevDeg = 0.0;
+  private Timer hardwareTimer = new Timer();
 
   public enum turretState {
     DISABLED,
@@ -25,10 +25,10 @@ public class Turret {
 
   public Turret(TurretIO io) {
     this.io = io;
-    //Temporary until we can, 
+    // Temporary until we can,
     io.updateInputs(inputs);
     io.setPosition(getRotation());
-    //Upper method sets the position of the turret in rotations
+    // Upper method sets the position of the turret in rotations
     // manual homing to the rear
   }
 
@@ -184,12 +184,12 @@ public class Turret {
   }
 
   private double getRotation() {
-    if(state == turretState.DISABLED) {
+    if (state == turretState.DISABLED) {
       return 0.5;
     }
-    //----------------------
-    //This is only in use due to the fact CRT is not working, aka the 0.5
-    //----------------------
+    // ----------------------
+    // This is only in use due to the fact CRT is not working, aka the 0.5
+    // ----------------------
     // Based off of 4522's "brute force" solver:
     // https://www.chiefdelphi.com/uploads/short-url/vvrM1V1pqvDnnZfHtAhS02mBVIi.pdf
     // This is only capable of calculating rotation in the 0-360 degree range.
