@@ -26,28 +26,29 @@ public class IntakeCommands {
   }
 
   public static Command toggleIntake(Intake intake, CommandXboxController controller) {
-    return new ConditionalCommand(
-        new ConditionalCommand(
-            // Deploy if not extended
-            Commands.runOnce(() -> intake.setState(IntakeState.DEPLOY)),
-            Commands.runOnce(() -> intake.setState(IntakeState.INTAKING))
-                .andThen(
-                    Commands.run(
-                            () -> {
-                              controller.setRumble(GenericHID.RumbleType.kLeftRumble, 0.5);
-                            })
-                        .withTimeout(0.25)
-                        .finallyDo(
-                            () -> {
-                              controller.setRumble(GenericHID.RumbleType.kLeftRumble, 0.0);
-                            })),
-            () -> !intake.isExtended()),
-        // Set to idle if not deploying or intaking
+    Command deployCommand = Commands.runOnce(() -> intake.setState(IntakeState.DEPLOY));
+    Command intakeCommand =
+        Commands.runOnce(() -> intake.setState(IntakeState.INTAKING))
+            .andThen(
+                Commands.run(
+                        () -> {
+                          controller.setRumble(GenericHID.RumbleType.kLeftRumble, 0.5);
+                        })
+                    .withTimeout(0.25)
+                    .finallyDo(
+                        () -> {
+                          controller.setRumble(GenericHID.RumbleType.kLeftRumble, 0.0);
+                        }));
+    Command idleCommand =
         Commands.runOnce(
                 () -> {
                   intake.setState(IntakeState.IDLE);
                 })
-            .onlyIf(() -> intake.hasExtended()),
+            .onlyIf(() -> intake.hasExtended());
+
+    return new ConditionalCommand(
+        new ConditionalCommand(deployCommand, intakeCommand, () -> !intake.hasExtended()),
+        idleCommand,
         () ->
             (!intake.hasExtended())
                 || (intake.getState() != IntakeState.INTAKING && intake.hasExtended()));
