@@ -67,6 +67,4 @@ public class ShooterCommands {
             shooter)
         .finallyDo(() -> shooter.unjamOverride(false));
   }
-
-  
 }
