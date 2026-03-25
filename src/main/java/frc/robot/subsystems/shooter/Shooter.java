@@ -224,10 +224,10 @@ public class Shooter extends SubsystemBase {
       tunnel.requestIdle();
     }
 
-    flywheel.periodic();
-    spindexer.periodic();
-    tunnel.periodic();
-    hood.periodic();
+    flywheel.outputsPeriodic();
+    spindexer.outputsPeriodic();
+    tunnel.outputsPeriodic();
+    hood.outputsPeriodic();
 
     if (!Constants.turretLocked) {
       turret.outputsPeriodic();
