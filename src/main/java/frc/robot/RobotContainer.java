@@ -453,10 +453,6 @@ public class RobotContainer {
         new AutonomousSelector(drive, hood, turret, shooter, visionObjectDetection, led, intake);
   }
 
-  public static boolean isDriveInShootingArea() {
-    return AreaManager.isShootingArea(drive.getRobotPose().getTranslation());
-  }
-
   public void setBrakeMode(boolean brake) {
     deployer.setBrakeMode(brake);
     flywheel.enableBrakeMode(brake);
