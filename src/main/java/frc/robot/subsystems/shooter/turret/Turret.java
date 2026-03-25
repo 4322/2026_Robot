@@ -26,9 +26,12 @@ public class Turret {
     // Removed set postion code
   }
 
-  public void periodic() {
+  public void inputsPeriodic() {
     io.updateInputs(inputs);
     Logger.processInputs("Turret", inputs);
+  }
+
+  public void outputsPeriodic() {
     Logger.recordOutput("Turret/State", state);
     Logger.recordOutput("Turret/needToUnwind", needsToUnwind());
     Logger.recordOutput("Turret/atGoal", isAtGoal());

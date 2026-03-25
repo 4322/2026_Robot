@@ -22,10 +22,12 @@ public class Spindexer {
     this.io = io;
   }
 
-  public void periodic() {
+  public void inputsPeriodic() {
     io.updateInputs(inputs);
     Logger.processInputs("Spindexer", inputs);
+  }
 
+  public void outputsPeriodic() {
     switch (Constants.spindexerMode) {
       case TUNING -> {}
       case NORMAL -> {
