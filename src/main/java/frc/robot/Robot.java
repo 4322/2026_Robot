@@ -372,6 +372,8 @@ public class Robot extends LoggedRobot {
     // the Command-based framework to work.
     CommandScheduler.getInstance().run();
 
+    RobotContainer.shooter.outputsPeriodic();
+
     RobotContainer.intake.periodicOutputs();
 
     // Return to non-RT thread priority (do not modify the first argument)
