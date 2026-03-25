@@ -3,9 +3,12 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.Intake.IntakeState;
+import org.littletonrobotics.junction.Logger;
 
 public class IntakeCommands {
   public static Command idle(Intake intake) {
@@ -25,11 +28,18 @@ public class IntakeCommands {
   }
 
   public static Command toggleIntake(Intake intake, CommandXboxController controller) {
-    if (intake.getState() == IntakeState.DISABLED) {
-      return Commands.runOnce(() -> intake.setState(IntakeState.DEPLOY));
+    return new ConditionalCommand(
+      , 
+      , 
+      );
 
-    } else if (intake.getState() != IntakeState.INTAKING && intake.hasExtended()) {
+
+    Logger.recordOutput("Intake/Commands/state", intake.getState());
+    if (intake.getState() != IntakeState.INTAKING && intake.hasExtended()) {
       return Commands.runOnce(() -> intake.setState(IntakeState.INTAKING))
+          .andThen(
+              new InstantCommand(
+                  () -> Logger.recordOutput("Intake/Commands/ToggleIntake", "Intaking")))
           .andThen(
               Commands.run(
                       () -> {
@@ -41,11 +51,21 @@ public class IntakeCommands {
                         controller.setRumble(GenericHID.RumbleType.kLeftRumble, 0.0);
                       }));
 
+    } else if (!intake.hasExtended()) {
+      return Commands.runOnce(() -> intake.setState(IntakeState.DEPLOY))
+          .andThen(
+              new InstantCommand(
+                  () -> {
+                    Logger.recordOutput("Intake/Commands/ToggleIntake", "Deploy");
+                  }));
+
     } else {
       return Commands.runOnce(
               () -> {
                 intake.setState(IntakeState.IDLE);
               })
+          .andThen(
+              new InstantCommand(() -> Logger.recordOutput("Intake/Commands/ToggleIntake", "Idle")))
           .onlyIf(() -> intake.hasExtended());
     }
   }

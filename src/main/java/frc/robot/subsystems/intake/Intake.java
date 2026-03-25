@@ -30,21 +30,15 @@ public class Intake extends SubsystemBase {
 
   @Override
   public void periodic() {
-    Logger.recordOutput("Intake/State", state);
     rollers.inputsPeriodic();
     deployer.inputsPeriodic();
-
-    periodicOutputs();
-
-    /* Currently unused
-     * deployer.outputsPeriodic();
-     * rollers.outputsPeriodic();
-     */
-
-    Logger.recordOutput("Intake/hasExtended", hasExtended);
   }
 
-  private void periodicOutputs() {
+  public void periodicOutputs() {
+    if (deployer.isExtended() && state == IntakeState.DEPLOY) {
+      hasExtended = true;
+      state = IntakeState.INTAKING;
+    }
     switch (state) {
       case DISABLED -> {
         deployer.setState(DeployerState.DISABLED);
@@ -54,10 +48,6 @@ public class Intake extends SubsystemBase {
       case DEPLOY -> {
         deployer.setState(DeployerState.EXTEND);
         rollers.setState(RollersState.DEPLOY);
-        if (deployer.isExtended()) {
-          hasExtended = true;
-          state = IntakeState.INTAKING;
-        }
       }
       case IDLE -> {
         deployer.setState(DeployerState.EXTEND);
@@ -76,6 +66,12 @@ public class Intake extends SubsystemBase {
         rollers.setState(RollersState.SMOOSH);
       }
     }
+
+    deployer.outputsPeriodic();
+    rollers.outputsPeriodic();
+
+    Logger.recordOutput("Intake/State", state);
+    Logger.recordOutput("Intake/hasExtended", hasExtended);
   }
 
   public IntakeState getState() {
@@ -86,10 +82,14 @@ public class Intake extends SubsystemBase {
     return prevState;
   }
 
+  public boolean isDisabled() {
+    return state == IntakeState.DISABLED;
+  }
+
   public void setState(IntakeState state) {
+    Logger.recordOutput("Intake/setState", state);
     prevState = this.state;
     this.state = state;
-    periodicOutputs();
   }
 
   public boolean isExtended() {
