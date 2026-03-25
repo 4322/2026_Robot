@@ -1,5 +1,7 @@
 package frc.robot.subsystems.shooter.turret;
 
+import edu.wpi.first.math.util.Units;
+
 public class TurretIOSim implements TurretIO {
   private double requestedVoltage = 0;
   private double requestedAngle = 0;
@@ -45,5 +47,10 @@ public class TurretIOSim implements TurretIO {
   @Override
   public void setAngle(double angleDeg) {
     this.requestedAngle = angleDeg;
+  }
+
+  @Override
+  public void setPosition(double position) {
+    this.currentAngle = Units.rotationsToDegrees(position);
   }
 }

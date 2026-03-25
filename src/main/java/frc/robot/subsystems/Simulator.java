@@ -23,7 +23,7 @@ import java.util.Map;
 import org.littletonrobotics.junction.Logger;
 
 public class Simulator extends SubsystemBase {
-  private static final RegressTests regressTest = RegressTests.SUBSYSTEM_TEST_BOTH;
+  private static final RegressTests regressTest = RegressTests.TURRET;
   public static AutoName autoScenario;
   private TeleopScenario teleopScenario;
   private List<TeleAnomaly> teleAnomalies;
@@ -530,6 +530,11 @@ public class Simulator extends SubsystemBase {
               "Spin",
               EventType.MOVE_JOYSTICK_TURN,
               new Pose2d(0.0, 0.3, Rotation2d.kZero)),
+          new SimEvent(
+              t += 20.0,
+              "Spin",
+              EventType.MOVE_JOYSTICK_TURN,
+              new Pose2d(0.0, -0.3, Rotation2d.kZero)),
           new SimEvent(t += 20.0, "Final Movement", EventType.END_OF_SCENARIO));
       case Slowly_Up_down -> List.of(
           new SimEvent(

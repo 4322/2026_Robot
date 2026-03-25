@@ -68,8 +68,7 @@ public class TunnelIOTalonFx implements TunnelIO {
 
   @Override
   public void stop() {
-    lastRequestedVelocity = 0;
-    motor.setControl(velocityRequest.withVelocity(0).withEnableFOC(true));
+    motor.stopMotor();
   }
 
   @Override
