@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.autonomous.AutonomousSelector;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.IntakeCommands;
+import frc.robot.commands.Shoot;
 import frc.robot.commands.ShooterCommands;
 import frc.robot.constants.Constants;
 import frc.robot.constants.FieldConstants;
@@ -419,19 +420,11 @@ public class RobotContainer {
     } else {
       controller
           .rightTrigger()
-          .whileTrue(ShooterCommands.shoot(shooter).onlyIf(inNonShootingArea.negate()));
+          .whileTrue(new Shoot(shooter));
       controller.a().whileTrue(ShooterCommands.shootFixed(shooter));
     }
 
-    inNonShootingArea
-        .and(() -> !shooter.isInIdle())
-        .and(autoAbleToShoot.negate())
-        .whileTrue(ShooterCommands.idle(shooter));
 
-    autoAbleToShoot.onTrue(
-        ShooterCommands.unjam(shooter)
-            .withTimeout(Constants.Autonomous.unjamTimeSec)
-            .andThen(ShooterCommands.shoot(shooter).until(autoAbleToShoot.negate())));
 
     intake.setDefaultCommand(IntakeCommands.setIdle(intake));
 

@@ -8,6 +8,7 @@ public class Tunnel {
   private TunnelIO io;
   private TunnelIOInputsAutoLogged inputs = new TunnelIOInputsAutoLogged();
   private double requestedSpeed = -1;
+    private boolean unjaming;
 
   public enum TunnelStates {
     DISABLED,
@@ -52,12 +53,21 @@ public class Tunnel {
 
   public void requestIdle() {
     state = TunnelStates.IDLE;
+    if (!unjaming){
     requestedSpeed = 0;
+     }
+  }
+
+  public void unjamOverride(boolean unjaming) {
+    this.unjaming = unjaming;
+    requestedSpeed = Constants.Tunnel.unjamRPS;
   }
 
   public void requestGoal(double speed) {
     state = TunnelStates.INDEXING;
+    if (!unjaming){
     requestedSpeed = speed;
+    }
   }
 
   public void enableBrakeMode(boolean enable) {

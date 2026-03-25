@@ -31,7 +31,6 @@ public class Shooter extends SubsystemBase {
     UNWIND,
     PRESHOOT, // Flywheel gets up to speed; Turret/hood aim
     SHOOT, // Spindexer and tunnel get up to speed
-    TRENCH,
     UNJAM,
     STOP // Everything but flywheel stopped
   }
@@ -51,7 +50,7 @@ public class Shooter extends SubsystemBase {
   private double targetFlywheelSpeedRPS;
   private double targetTurretAngleDeg;
   private double targetTunnelSpeedRPS;
-  private double targetIndexerSpeedRPS;
+  private double targetSpindexerSpeedRPS;
 
   private boolean unwindComplete = false;
   private boolean inIdle = true;
@@ -97,9 +96,7 @@ public class Shooter extends SubsystemBase {
     }
     calculateFiringSolution();
     if (!fixedPositionShooting && !DriverStation.isAutonomousEnabled()) {
-      if (AreaManager.isHoodDangerZone(drive.getTurretPosition())) {
-        state = ShooterState.TRENCH;
-      }
+     
       if (AreaManager.isTrench(drive.getTurretPosition())) {
         state = ShooterState.IDLE;
       }
@@ -113,7 +110,7 @@ public class Shooter extends SubsystemBase {
       turret.requestAngle(targetTurretAngleDeg, true);
 
       tunnel.requestGoal(targetTunnelSpeedRPS);
-      spindexer.requestGoal(targetIndexerSpeedRPS);
+      spindexer.requestGoal(targetSpindexerSpeedRPS);
 
       flywheel.outputsPeriodic();
       hood.outputsPeriodic();
@@ -130,6 +127,11 @@ public class Shooter extends SubsystemBase {
       state = ShooterState.DISABLED;
     }
 
+  if (turret.needsToUnwind()) {
+    targetTunnelSpeedRPS = 0;
+    targetSpindexerSpeedRPS = 0;
+    }
+
     if (turret.needsToUnwind() && tunnel.isStopped() && spindexer.isStopped()) {
       state = ShooterState.UNWIND;
     }
@@ -141,20 +143,10 @@ public class Shooter extends SubsystemBase {
           state = ShooterState.IDLE;
         }
       }
-      case TRENCH -> {
-        hood.requestGoal(Constants.Hood.safeAngleDeg);
-        spindexer.requestIdle();
-        tunnel.requestIdle();
-        flywheel.requestGoal(Constants.Flywheel.idleRPS);
-        targetFlywheelSpeedRPS = Constants.Flywheel.idleRPS;
-        if (!AreaManager.isTrench(drive.getTurretPosition())
-            && !AreaManager.isHoodDangerZone(drive.getTurretPosition())) {
-          state = ShooterState.IDLE;
-        }
-      }
       case IDLE -> {
         spindexer.requestIdle();
         turret.requestAngle(targetTurretAngleDeg, true);
+        hood.requestGoal(Constants.Hood.safeAngleDeg);
         if (spindexer.isStopped()) {
           tunnel.requestIdle();
         } else {
@@ -163,13 +155,7 @@ public class Shooter extends SubsystemBase {
         if (tunnel.isStopped()) {
           flywheel.requestGoal(Constants.Flywheel.idleRPS);
         }
-
-        if (AreaManager.isTrench(drive.getTurretPosition())) {
-          hood.requestGoal(Constants.Hood.safeAngleDeg);
-        } else {
-          Logger.recordOutput("Shooter/isHoodDangerZone", false);
-          hood.requestGoal(targetHoodAngleDeg);
-        }
+        
       }
       case STOP -> {
         flywheel.requestGoal(0);
@@ -194,6 +180,7 @@ public class Shooter extends SubsystemBase {
         // In case for some reason we end up in this state when turret is locked
         if (turret.isAtGoal() || Constants.turretLocked) {
           unwindComplete = true;
+          state = prevstate;
         }
       }
       case PRESHOOT -> {
@@ -207,22 +194,12 @@ public class Shooter extends SubsystemBase {
         hood.requestGoal(targetHoodAngleDeg);
         turret.requestAngle(targetTurretAngleDeg, false);
         tunnel.requestGoal(targetTunnelSpeedRPS);
-        if (tunnel.getVelocity() > Constants.Tunnel.minPercentVelocity * targetTunnelSpeedRPS) {
-          spindexer.requestGoal(targetIndexerSpeedRPS);
-        } else {
-          spindexer.requestIdle();
-        }
-      }
-      case UNJAM -> {
-        tunnel.requestGoal(Constants.Tunnel.unjamRPS);
-        spindexer.requestGoal(Constants.Spindexer.unjamRPS);
+        spindexer.requestGoal(targetSpindexerSpeedRPS);
+
       }
     }
 
-    if (turret.needsToUnwind()) {
-      spindexer.requestIdle();
-      tunnel.requestIdle();
-    }
+  
 
     flywheel.outputsPeriodic();
     spindexer.outputsPeriodic();
@@ -246,7 +223,7 @@ public class Shooter extends SubsystemBase {
     Logger.recordOutput("Shooter/TargetFlywheelSpeedRPS", targetFlywheelSpeedRPS);
     Logger.recordOutput("Shooter/TargetTurretAngleDeg", targetTurretAngleDeg);
     Logger.recordOutput("Shooter/TargetTunnelSpeedRPS", targetTunnelSpeedRPS);
-    Logger.recordOutput("Shooter/TargetIndexerSpeedRPS", targetIndexerSpeedRPS);
+    Logger.recordOutput("Shooter/TargetIndexerSpeedRPS", targetSpindexerSpeedRPS);
     Logger.recordOutput("Shooter/CurrentTurretPose", drive.getTurretPose(turret.getAngle()));
     Logger.recordOutput(
         "Shooter/TargetTurretPose",
@@ -267,7 +244,7 @@ public class Shooter extends SubsystemBase {
       targetHoodAngleDeg = Constants.fixedSolutionBlue.hoodAngle();
       targetFlywheelSpeedRPS = Constants.fixedSolutionBlue.flywheelSpeedRPS();
       targetTunnelSpeedRPS = Constants.fixedSolutionBlue.tunnelSpeedRPS();
-      targetIndexerSpeedRPS = Constants.fixedSolutionBlue.indexerSpeedRPS();
+      targetSpindexerSpeedRPS = Constants.fixedSolutionBlue.indexerSpeedRPS();
       if (Robot.alliance == DriverStation.Alliance.Blue) {
         targetTurretAngleDeg = Constants.fixedSolutionBlue.turretAngleDeg();
       } else {
@@ -284,7 +261,7 @@ public class Shooter extends SubsystemBase {
       targetFlywheelSpeedRPS = firingSolution.flywheelSpeedRPS();
       targetTurretAngleDeg = firingSolution.turretAngleDeg();
       targetTunnelSpeedRPS = firingSolution.tunnelSpeedRPS();
-      targetIndexerSpeedRPS = firingSolution.indexerSpeedRPS();
+      targetSpindexerSpeedRPS = firingSolution.indexerSpeedRPS();
     }
   }
 
@@ -352,6 +329,15 @@ public class Shooter extends SubsystemBase {
 
   public void setAutoShoot(boolean enabled) {
     autoShootEnabled = enabled;
+  }
+
+  public void unjamOverride(boolean unjaming){
+    tunnel.unjamOverride(unjaming);
+    spindexer.unjamOverride(unjaming);
+  }
+
+   public void trenchOverride(boolean unjaming){
+  hood.trenchOverride(unjaming);
   }
 
   public static boolean isScoring() {

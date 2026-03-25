@@ -9,6 +9,7 @@ public class Spindexer {
   private SpindexerIOInputsAutoLogged inputs = new SpindexerIOInputsAutoLogged();
 
   private double requestedSpeed = -1;
+  private boolean unjaming;
 
   public enum SpindexerStates {
     DISABLED,
@@ -54,12 +55,21 @@ public class Spindexer {
 
   public void requestIdle() {
     state = SpindexerStates.IDLE;
+    if (!unjaming){
     requestedSpeed = 0;
+    }
   }
 
   public void requestGoal(double speed) {
     state = SpindexerStates.INDEXING;
+    if (!unjaming){
     requestedSpeed = speed;
+    }
+  }
+
+  public void unjamOverride(boolean unjaming) {
+    this.unjaming = unjaming;
+    requestedSpeed = Constants.Tunnel.unjamRPS;
   }
 
   public void enableBrakeMode(boolean enable) {

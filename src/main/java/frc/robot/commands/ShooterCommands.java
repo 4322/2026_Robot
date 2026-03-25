@@ -2,24 +2,18 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.RobotContainer;
 import frc.robot.constants.Constants;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.shooter.Shooter;
+import frc.robot.subsystems.shooter.areaManager.AreaManager;
 import frc.robot.subsystems.shooter.hood.Hood;
 import org.littletonrobotics.junction.Logger;
 
 public class ShooterCommands {
 
-  public static Command shoot(Shooter shooter) {
-    return Commands.run(
-        () -> {
-          shooter.requestShoot(false, true);
-          Logger.recordOutput("Shooter/command", "shoot");
-        },
-        shooter);
-  }
 
   public static Command shootFixed(Shooter shooter) {
     return Commands.run(
@@ -38,7 +32,8 @@ public class ShooterCommands {
             () -> -RobotContainer.controller.getLeftX(),
             () -> Rotation2d.fromDegrees(shooter.getTargetTurretAngleDeg()),
             Constants.Turret.originToTurret),
-        shoot(shooter));
+      new Shoot(shooter)
+      );
   }
 
   public static Command idle(Shooter shooter) {
@@ -59,22 +54,22 @@ public class ShooterCommands {
         shooter);
   }
 
-  public static Command trenchOverride(Hood hood) {
+  public static Command trenchOverride(Shooter shooter) {
     return Commands.run(
             () -> {
-              hood.trenchOverride(true);
+              shooter.trenchOverride(true);
               Logger.recordOutput("Shooter/command", "trenchOverride");
             })
-        .finallyDo(() -> hood.trenchOverride(false));
+        .finallyDo(() -> shooter.trenchOverride(false));
   }
 
   public static Command unjam(Shooter shooter) {
     return Commands.run(
         () -> {
-          shooter.requestUnjam();
+          shooter.unjamOverride(true);
           Logger.recordOutput("Shooter/command", "unjam");
         },
-        shooter);
+        shooter).finallyDo(() -> shooter.unjamOverride(false));
   }
 
   public static Command setAutoShoot(Shooter shooter, boolean enabled) {
