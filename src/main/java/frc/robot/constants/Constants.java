@@ -90,6 +90,10 @@ public final class Constants {
   public static class Drive {
     public static final int gyroID = 0;
     public static boolean zeroTurnEncoders = false; // for initial swerve homing only
+    public static double driveSupplyCurrentLimit = 45;
+    public static double driveSupplyCurrentLowerLimit = 40; // don't pop main breaker
+    public static double driveSupplyCurrentLowerTime = 1.0;
+    public static double turnSupplyCurrentLimit = 30;
   }
 
   public static class Spindexer {
