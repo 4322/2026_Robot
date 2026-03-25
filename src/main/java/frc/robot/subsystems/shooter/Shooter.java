@@ -311,8 +311,6 @@ public class Shooter extends SubsystemBase {
     }
   }
 
-
-
   public boolean isInIdle() {
     return inIdle;
   }
