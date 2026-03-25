@@ -83,6 +83,14 @@ public class Shooter extends SubsystemBase {
 
   @Override
   public void periodic() {
+    flywheel.inputsPeriodic();
+    hood.inputsPeriodic();
+    tunnel.inputsPeriodic();
+    spindexer.inputsPeriodic();
+
+    if (!Constants.turretLocked) {
+      turret.inputsPeriodic();
+    }
     calculateFiringSolution();
     if (!fixedPositionShooting && !DriverStation.isAutonomousEnabled()) {
       if (AreaManager.isHoodDangerZone(drive.getTurretPosition())) {
@@ -94,6 +102,7 @@ public class Shooter extends SubsystemBase {
     }
 
     if (Constants.firingManagerMode == Constants.SubsystemMode.TUNING) {
+
       flywheel.requestGoal(targetFlywheelSpeedRPS);
       hood.requestGoal(targetHoodAngleDeg);
 
@@ -101,12 +110,14 @@ public class Shooter extends SubsystemBase {
 
       tunnel.requestGoal(targetTunnelSpeedRPS);
       spindexer.requestGoal(targetIndexerSpeedRPS);
-      flywheel.periodic();
-      spindexer.periodic();
-      tunnel.periodic();
-      hood.periodic();
+
+      flywheel.outputsPeriodic();
+      hood.outputsPeriodic();
+      tunnel.outputsPeriodic();
+      spindexer.outputsPeriodic();
+
       if (!Constants.turretLocked) {
-        turret.periodic();
+        turret.outputsPeriodic();
       }
       return;
     }
@@ -200,13 +211,13 @@ public class Shooter extends SubsystemBase {
       }
     }
 
-    flywheel.periodic();
-    spindexer.periodic();
-    tunnel.periodic();
-    hood.periodic();
+    flywheel.outputsPeriodic();
+    hood.outputsPeriodic();
+    tunnel.outputsPeriodic();
+    spindexer.outputsPeriodic();
 
     if (!Constants.turretLocked) {
-      turret.periodic();
+      turret.outputsPeriodic();
     }
 
     led.requestTurretUnwinding(state == ShooterState.UNWIND);
