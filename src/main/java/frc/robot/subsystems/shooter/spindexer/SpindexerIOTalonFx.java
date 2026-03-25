@@ -69,6 +69,7 @@ public class SpindexerIOTalonFx implements SpindexerIO {
 
   @Override
   public void stop() {
+    lastRequestedVelocity = 0;
     motor.stopMotor();
   }
 
