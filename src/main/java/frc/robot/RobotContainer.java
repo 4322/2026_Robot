@@ -410,7 +410,7 @@ public class RobotContainer {
 
     shooter.setDefaultCommand(ShooterCommands.idle(shooter));
     controller.b().whileTrue(ShooterCommands.unjam(shooter));
-    controller.leftTrigger().whileTrue(ShooterCommands.trenchOverride(hood));
+    controller.leftTrigger().whileTrue(ShooterCommands.trenchOverride(shooter));
 
     if (Constants.turretLocked) {
       controller
