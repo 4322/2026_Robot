@@ -409,7 +409,6 @@ public class RobotContainer {
     Shoot - Left Trigger while held (Operator)
     */
 
-    shooter.setDefaultCommand(ShooterCommands.idle(shooter));
     controller.b().whileTrue(ShooterCommands.unjam(shooter));
     controller.leftTrigger().whileTrue(ShooterCommands.trenchOverride(shooter));
 
@@ -422,8 +421,6 @@ public class RobotContainer {
       controller.rightTrigger().whileTrue(new Shoot(shooter));
       controller.a().whileTrue(new ShootFixed(shooter));
     }
-
-    intake.setDefaultCommand(IntakeCommands.setIdle(intake));
 
     controller.x().whileTrue(IntakeCommands.setEject(intake));
 
