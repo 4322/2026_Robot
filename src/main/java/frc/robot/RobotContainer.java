@@ -22,6 +22,7 @@ import frc.robot.autonomous.AutonomousSelector;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.IntakeCommands;
 import frc.robot.commands.Shoot;
+import frc.robot.commands.ShootFixed;
 import frc.robot.commands.ShooterCommands;
 import frc.robot.constants.Constants;
 import frc.robot.constants.FieldConstants;
@@ -419,7 +420,7 @@ public class RobotContainer {
               ShooterCommands.aimAndShoot(shooter, drive).onlyIf(inNonShootingArea.negate()));
     } else {
       controller.rightTrigger().whileTrue(new Shoot(shooter));
-      controller.a().whileTrue(ShooterCommands.shootFixed(shooter));
+      controller.a().whileTrue(new ShootFixed(shooter));
     }
 
     intake.setDefaultCommand(IntakeCommands.setIdle(intake));

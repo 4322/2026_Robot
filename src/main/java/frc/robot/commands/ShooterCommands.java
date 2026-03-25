@@ -11,15 +11,6 @@ import org.littletonrobotics.junction.Logger;
 
 public class ShooterCommands {
 
-  public static Command shootFixed(Shooter shooter) {
-    return Commands.run(
-        () -> {
-          shooter.requestShoot(true, true);
-          Logger.recordOutput("Shooter/command", "shootFixed");
-        },
-        shooter);
-  }
-
   public static Command aimAndShoot(Shooter shooter, Drive drive) {
     return Commands.parallel(
         DriveCommands.joystickDriveAtAngle(

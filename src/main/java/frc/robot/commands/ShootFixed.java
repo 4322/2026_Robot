@@ -1,7 +1,6 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.RobotContainer;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.shooter.areaManager.AreaManager;
@@ -33,6 +32,4 @@ public class ShootFixed extends Command {
   public void end(boolean interrupted) {
     shooter.requestIdle();
   }
-
- 
 }
