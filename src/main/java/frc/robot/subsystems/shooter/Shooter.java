@@ -210,11 +210,7 @@ public class Shooter extends SubsystemBase {
         hood.requestGoal(targetHoodAngleDeg);
         turret.requestAngle(targetTurretAngleDeg);
         tunnel.requestGoal(targetTunnelSpeedRPS);
-        if (tunnel.getVelocity() > Constants.Tunnel.minPercentVelocity * targetTunnelSpeedRPS) {
-          spindexer.requestGoal(targetIndexerSpeedRPS);
-        } else {
-          spindexer.requestIdle();
-        }
+        spindexer.requestGoal(targetIndexerSpeedRPS);
       }
       case UNJAM -> {
         tunnel.requestGoal(Constants.Tunnel.unjamRPS);
