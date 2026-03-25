@@ -50,8 +50,8 @@ public class Shooter extends SubsystemBase {
   private double targetTurretAngleDeg;
   private double targetTunnelSpeedRPS;
   private double targetSpindexerSpeedRPS;
-
-  private boolean unwindComplete = false;
+  private boolean unwindComplete = true;
+  private boolean isUnwinding = false;
   private boolean inIdle = true;
   private boolean fixedPositionShooting = false;
   private boolean isScoring = true;
@@ -121,11 +121,10 @@ public class Shooter extends SubsystemBase {
     }
 
     if (turret.needsToUnwind()) {
-      targetTunnelSpeedRPS = 0;
       targetSpindexerSpeedRPS = 0;
     }
 
-    if (turret.needsToUnwind() && tunnel.isStopped() && spindexer.isStopped()) {
+    if ((turret.needsToUnwind() && spindexer.isStopped()) || turret.isUnwinding()) {
       state = ShooterState.UNWIND;
       unwindComplete = false;
     }
