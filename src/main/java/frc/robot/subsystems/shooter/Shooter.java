@@ -88,6 +88,9 @@ public class Shooter extends SubsystemBase {
     hood.inputsPeriodic();
     tunnel.inputsPeriodic();
     spindexer.inputsPeriodic();
+  }
+
+  public void outputsPeriodic() {
 
     if (!Constants.turretLocked) {
       turret.inputsPeriodic();
@@ -229,8 +232,6 @@ public class Shooter extends SubsystemBase {
     if (!Constants.turretLocked) {
       turret.outputsPeriodic();
     }
-
-    led.requestTurretUnwinding(state == ShooterState.UNWIND);
 
     Logger.recordOutput("Shooter/State", state.toString());
     Logger.recordOutput("Shooter/unwindComplete", unwindComplete);
