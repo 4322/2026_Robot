@@ -601,8 +601,8 @@ public class Simulator extends SubsystemBase {
       case INTAKE_TEST -> List.of(
           new SimEvent(
               t += 0.1, "Start pose", EventType.SET_POSE, new FieldPose2d(2, 2, Rotation2d.kZero)),
-          new SimEvent(t += 0.5, "Start intaking", EventType.HOLD_LEFT_BUMPER),
-          new SimEvent(t += 2.0, "Stop intaking", EventType.RELEASE_LEFT_BUMPER),
+          new SimEvent(t += 0.5, "Deploy/Intake", EventType.HOLD_LEFT_BUMPER),
+          new SimEvent(t += 0.5, "Deploy/Intake Release", EventType.RELEASE_LEFT_BUMPER),
           new SimEvent(t += 0.5, "Start ejecting", EventType.HOLD_X),
           new SimEvent(t += 2.0, "Stop ejecting", EventType.RELEASE_X),
           new SimEvent(t += 0.5, "Start smooshing", EventType.HOLD_A),

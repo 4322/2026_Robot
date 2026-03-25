@@ -14,27 +14,18 @@ public class Deployer {
     SMOOSH
   }
 
-  private DeployerState state = DeployerState.DISABLED;
-
   public Deployer(DeployerIO deployerIO) {
     this.deployerIO = deployerIO;
   }
 
-  public void periodic() {
+  public void inputsPeriodic() {
     deployerIO.updateInputs(inputs);
     Logger.processInputs("Deployer", inputs);
-    Logger.recordOutput("Deployer/state", state);
-    switch (state) {
-      case DISABLED -> {
-        break;
-      }
-      case EXTEND -> {
-        deployerIO.setPosition(Constants.Deployer.extendDeg);
-      }
-      case SMOOSH -> {
-        deployerIO.setPosition(Constants.Deployer.smooshDeg);
-      }
-    }
+  }
+
+  // Called at end of command processing in intake
+  public void outputsPeriodic() {
+    // Nothing here currently
   }
 
   public void setBrakeMode(boolean mode) {
@@ -50,7 +41,18 @@ public class Deployer {
   }
 
   public void setState(DeployerState state) {
-    this.state = state;
+    Logger.recordOutput("Deployer/state", state);
+    switch (state) {
+      case DISABLED -> {
+        break;
+      }
+      case EXTEND -> {
+        deployerIO.setPosition(Constants.Deployer.extendDeg);
+      }
+      case SMOOSH -> {
+        deployerIO.setPosition(Constants.Deployer.smooshDeg);
+      }
+    }
   }
 
   public boolean isStowed() {

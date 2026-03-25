@@ -22,8 +22,14 @@ public class Rollers {
     this.rollersIO = rollersIO;
   }
 
-  public void periodic() {
+  public void inputsPeriodic() {
     rollersIO.updateInputs(inputs);
+    Logger.processInputs("Rollers", inputs);
+  }
+
+  // Called at end of command processing in intake
+  public void outputsPeriodic() {
+    // Nothing here currently
   }
 
   public void setBrakeMode(boolean enable) {

@@ -10,20 +10,25 @@ import frc.robot.subsystems.intake.Intake.IntakeState;
 public class IntakeCommands {
   public static Command idle(Intake intake) {
     return Commands.runOnce(
-        () -> {
-          intake.setState(IntakeState.IDLE);
-        });
+            () -> {
+              intake.setState(IntakeState.IDLE);
+            })
+        .onlyIf(() -> intake.hasExtended());
   }
 
   public static Command intake(Intake intake) {
     return Commands.runOnce(
-        () -> {
-          intake.setState(IntakeState.INTAKING);
-        });
+            () -> {
+              intake.setState(IntakeState.INTAKING);
+            })
+        .onlyIf(() -> intake.hasExtended());
   }
 
   public static Command toggleIntake(Intake intake, CommandXboxController controller) {
-    if (intake.getState() != IntakeState.INTAKING) {
+    if (intake.getState() == IntakeState.DISABLED) {
+      return Commands.runOnce(() -> intake.setState(IntakeState.DEPLOY));
+
+    } else if (intake.getState() != IntakeState.INTAKING && intake.hasExtended()) {
       return Commands.runOnce(() -> intake.setState(IntakeState.INTAKING))
           .andThen(
               Commands.run(
@@ -35,11 +40,13 @@ public class IntakeCommands {
                       () -> {
                         controller.setRumble(GenericHID.RumbleType.kLeftRumble, 0.0);
                       }));
+
     } else {
       return Commands.runOnce(
-          () -> {
-            intake.setState(IntakeState.IDLE);
-          });
+              () -> {
+                intake.setState(IntakeState.IDLE);
+              })
+          .onlyIf(() -> intake.hasExtended());
     }
   }
 
@@ -56,17 +63,18 @@ public class IntakeCommands {
             () -> {
               intake.setState(IntakeState.SMOOSH);
             })
-        .onlyIf(() -> intake.isExtended());
+        .onlyIf(() -> intake.hasExtended());
   }
 
   public static Command toggleOff(Intake intake) {
     return Commands.runOnce(
-        () -> {
-          if (intake.getPrevState() == Intake.IntakeState.INTAKING) {
-            intake.setState(IntakeState.INTAKING);
-          } else {
-            intake.setState(IntakeState.IDLE);
-          }
-        });
+            () -> {
+              if (intake.getPrevState() == Intake.IntakeState.INTAKING) {
+                intake.setState(IntakeState.INTAKING);
+              } else {
+                intake.setState(IntakeState.IDLE);
+              }
+            })
+        .onlyIf(() -> intake.hasExtended());
   }
 }

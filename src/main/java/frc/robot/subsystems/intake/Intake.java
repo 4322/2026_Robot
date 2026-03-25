@@ -1,6 +1,5 @@
 package frc.robot.subsystems.intake;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.intake.deployer.Deployer;
 import frc.robot.subsystems.intake.deployer.Deployer.DeployerState;
@@ -13,6 +12,7 @@ public class Intake extends SubsystemBase {
   private final Rollers rollers;
   private IntakeState state = IntakeState.DISABLED;
   private IntakeState prevState = IntakeState.DISABLED;
+  private boolean hasExtended = false;
 
   public Intake(Deployer deployer, Rollers rollers) {
     this.deployer = deployer;
@@ -31,18 +31,33 @@ public class Intake extends SubsystemBase {
   @Override
   public void periodic() {
     Logger.recordOutput("Intake/State", state);
+    rollers.inputsPeriodic();
+    deployer.inputsPeriodic();
+
+    periodicOutputs();
+
+    /* Currently unused
+     * deployer.outputsPeriodic();
+     * rollers.outputsPeriodic();
+     */
+
+    Logger.recordOutput("Intake/hasExtended", hasExtended);
+  }
+
+  private void periodicOutputs() {
     switch (state) {
       case DISABLED -> {
         deployer.setState(DeployerState.DISABLED);
         rollers.setState(RollersState.DISABLED);
-        if (DriverStation.isEnabled()) {
-          prevState = state;
-          state = IntakeState.DEPLOY;
-        }
+        hasExtended = false;
       }
       case DEPLOY -> {
         deployer.setState(DeployerState.EXTEND);
         rollers.setState(RollersState.DEPLOY);
+        if (deployer.isExtended()) {
+          hasExtended = true;
+          state = IntakeState.INTAKING;
+        }
       }
       case IDLE -> {
         deployer.setState(DeployerState.EXTEND);
@@ -61,9 +76,6 @@ public class Intake extends SubsystemBase {
         rollers.setState(RollersState.SMOOSH);
       }
     }
-
-    deployer.periodic();
-    rollers.periodic();
   }
 
   public IntakeState getState() {
@@ -77,10 +89,16 @@ public class Intake extends SubsystemBase {
   public void setState(IntakeState state) {
     prevState = this.state;
     this.state = state;
+    periodicOutputs();
   }
 
   public boolean isExtended() {
     return deployer.isExtended();
+  }
+
+  // Has extended from deployment; hasn't gotten stuck in net
+  public boolean hasExtended() {
+    return hasExtended;
   }
 
   public void setBrakeMode(boolean enable) {
