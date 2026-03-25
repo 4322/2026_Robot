@@ -83,6 +83,17 @@ public class Shooter extends SubsystemBase {
 
   @Override
   public void periodic() {
+    flywheel.inputsPeriodic();
+    hood.inputsPeriodic();
+    tunnel.inputsPeriodic();
+    spindexer.inputsPeriodic();
+  }
+
+  public void outputsPeriodic() {
+
+    if (!Constants.turretLocked) {
+      turret.inputsPeriodic();
+    }
     calculateFiringSolution();
     if (!fixedPositionShooting && !DriverStation.isAutonomousEnabled()) {
       if (AreaManager.isHoodDangerZone(drive.getTurretPosition())) {
@@ -94,6 +105,7 @@ public class Shooter extends SubsystemBase {
     }
 
     if (Constants.firingManagerMode == Constants.SubsystemMode.TUNING) {
+
       flywheel.requestGoal(targetFlywheelSpeedRPS);
       hood.requestGoal(targetHoodAngleDeg);
 
@@ -101,12 +113,14 @@ public class Shooter extends SubsystemBase {
 
       tunnel.requestGoal(targetTunnelSpeedRPS);
       spindexer.requestGoal(targetIndexerSpeedRPS);
-      flywheel.periodic();
-      spindexer.periodic();
-      tunnel.periodic();
-      hood.periodic();
+
+      flywheel.outputsPeriodic();
+      hood.outputsPeriodic();
+      tunnel.outputsPeriodic();
+      spindexer.outputsPeriodic();
+
       if (!Constants.turretLocked) {
-        turret.periodic();
+        turret.outputsPeriodic();
       }
       return;
     }
@@ -188,11 +202,7 @@ public class Shooter extends SubsystemBase {
         hood.requestGoal(targetHoodAngleDeg);
         turret.requestAngle(targetTurretAngleDeg, false);
         tunnel.requestGoal(targetTunnelSpeedRPS);
-        if (tunnel.getVelocity() > Constants.Tunnel.minPercentVelocity * targetTunnelSpeedRPS) {
-          spindexer.requestGoal(targetIndexerSpeedRPS);
-        } else {
-          spindexer.requestIdle();
-        }
+        spindexer.requestGoal(targetIndexerSpeedRPS);
       }
       case UNJAM -> {
         tunnel.requestGoal(Constants.Tunnel.unjamRPS);
@@ -200,16 +210,16 @@ public class Shooter extends SubsystemBase {
       }
     }
 
-    flywheel.periodic();
-    spindexer.periodic();
-    tunnel.periodic();
-    hood.periodic();
+    led.requestTurretUnwinding(state == ShooterState.UNWIND);
+
+    flywheel.outputsPeriodic();
+    hood.outputsPeriodic();
+    tunnel.outputsPeriodic();
+    spindexer.outputsPeriodic();
 
     if (!Constants.turretLocked) {
-      turret.periodic();
+      turret.outputsPeriodic();
     }
-
-    led.requestTurretUnwinding(state == ShooterState.UNWIND);
 
     Logger.recordOutput("Shooter/State", state.toString());
     Logger.recordOutput("Shooter/unwindComplete", unwindComplete);

@@ -180,8 +180,8 @@ public final class Constants {
     public static final int CANCoderOneOffsetCount = 3784; // in locked position
     public static final int CANCoderTwoOffsetCount = 1194; // in locked position
     public static final double turretGearRatio = 27;
-    public static final double minPhysicalLimitDeg = -150;
-    public static final double maxPhysicalLimitDeg = 510;
+    public static final double minPhysicalLimitDeg = -180;
+    public static final double maxPhysicalLimitDeg = 540;
     public static final double midPointPhysicalDeg =
         (minPhysicalLimitDeg + maxPhysicalLimitDeg) / 2.0;
     public static final double unwindToleranceDeg = 30.0;

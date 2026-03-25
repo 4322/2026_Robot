@@ -12,11 +12,12 @@ public class Flywheel {
     this.io = io;
   }
 
-  public void periodic() {
+  public void inputsPeriodic() {
     io.updateInputs(inputs);
     Logger.processInputs("Flywheel", inputs);
-    Logger.recordOutput("Flywheel/BallsShot", ballsShot);
   }
+
+  public void outputsPeriodic() {}
 
   public void requestGoal(double velocity) {
     switch (Constants.flywheelMode) {
