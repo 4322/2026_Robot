@@ -14,11 +14,6 @@ public class Intake extends SubsystemBase {
   private IntakeState state = IntakeState.DISABLED;
   private IntakeState prevState = IntakeState.DISABLED;
 
-  private boolean requestIdle = false;
-  private boolean requestIntake = false;
-  private boolean requestEject = false;
-  private boolean requestSmoosh = false;
-
   public Intake(Deployer deployer, Rollers rollers) {
     this.deployer = deployer;
     this.rollers = rollers;
@@ -48,113 +43,27 @@ public class Intake extends SubsystemBase {
       case DEPLOY -> {
         deployer.setState(DeployerState.EXTEND);
         rollers.setState(RollersState.DEPLOY);
-
-        if (deployer.isExtended()) {
-          if (requestIntake) {
-            prevState = state;
-            state = IntakeState.INTAKING;
-          } else if (requestEject) {
-            prevState = state;
-            state = IntakeState.EJECT;
-          } else if (requestSmoosh) {
-            prevState = state;
-            state = IntakeState.SMOOSH;
-          } else {
-            prevState = state;
-            state = IntakeState.IDLE;
-          }
-        }
       }
       case IDLE -> {
         deployer.setState(DeployerState.EXTEND);
         rollers.setState(RollersState.IDLE);
-
-        if (requestIntake) {
-          prevState = state;
-          state = IntakeState.INTAKING;
-        } else if (requestEject) {
-          prevState = state;
-          state = IntakeState.EJECT;
-        } else if (requestSmoosh /* TODO && ball path not unjamming && outtake in shoot*/) {
-          prevState = state;
-          state = IntakeState.SMOOSH;
-        }
       }
       case INTAKING -> {
         deployer.setState(DeployerState.EXTEND);
         rollers.setState(RollersState.INTAKE);
-
-        if (requestIdle) {
-          prevState = state;
-          state = IntakeState.IDLE;
-        } else if (requestEject) {
-          prevState = state;
-          state = IntakeState.EJECT;
-        } else if (requestSmoosh) {
-          prevState = state;
-          state = IntakeState.SMOOSH;
-        }
       }
       case EJECT -> {
         deployer.setState(DeployerState.EXTEND);
         rollers.setState(RollersState.EJECT);
-
-        if (requestIdle) {
-          prevState = state;
-          state = IntakeState.IDLE;
-        } else if (requestIntake) {
-          prevState = state;
-          state = IntakeState.INTAKING;
-        } else if (requestSmoosh) {
-          state = IntakeState.SMOOSH;
-        }
       }
       case SMOOSH -> {
         deployer.setState(DeployerState.SMOOSH);
         rollers.setState(RollersState.SMOOSH);
-
-        if (requestIdle) {
-          prevState = state;
-          state = IntakeState.IDLE;
-        } else if (requestIntake) {
-          prevState = state;
-          state = IntakeState.INTAKING;
-        } else if (requestEject) {
-          prevState = state;
-          state = IntakeState.EJECT;
-        }
       }
     }
 
     deployer.periodic();
     rollers.periodic();
-  }
-
-  private void unsetRequests() {
-    requestIdle = false;
-    requestIntake = false;
-    requestEject = false;
-    requestSmoosh = false;
-  }
-
-  public void requestIdle() {
-    unsetRequests();
-    requestIdle = true;
-  }
-
-  public void requestIntake() {
-    unsetRequests();
-    requestIntake = true;
-  }
-
-  public void requestEject() {
-    unsetRequests();
-    requestEject = true;
-  }
-
-  public void requestSmoosh() {
-    unsetRequests();
-    requestSmoosh = true;
   }
 
   public IntakeState getState() {
@@ -163,6 +72,15 @@ public class Intake extends SubsystemBase {
 
   public IntakeState getPrevState() {
     return prevState;
+  }
+
+  public void setState(IntakeState state) {
+    prevState = this.state;
+    this.state = state;
+  }
+
+  public boolean isExtended() {
+    return deployer.isExtended();
   }
 
   public void setBrakeMode(boolean enable) {
