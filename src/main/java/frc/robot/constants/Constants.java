@@ -63,6 +63,9 @@ public final class Constants {
   public static final boolean backRightCameraEnable = true;
   public static final boolean backLeftCameraEnable = true;
 
+  public static final double scoringHardwareCheckTime = 0.5;
+  public static final double passingHardwareCheckTime = 0.25;
+
   { // set dependent operational modes
     if (firingManagerMode == SubsystemMode.TUNING) {
       shootOnTheMoveEnabled = false;

@@ -4,6 +4,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.constants.Constants;
+import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.util.LoggedTunableNumber;
 import org.littletonrobotics.junction.Logger;
 
@@ -29,6 +30,7 @@ public class Hood {
   private boolean homed = false;
   private boolean trenchOverride = false;
   private PIDController pidController = new PIDController(kP.get(), kI.get(), kD.get());
+  private Timer hardwareTimer = new Timer();
 
   public Hood(HoodIO io) {
     this.io = io;
@@ -129,7 +131,21 @@ public class Hood {
     } else if (Constants.currentMode == Constants.Mode.SIM) {
       return true; // TODO temporary until we get hood sim working
     } else {
-      return pidController.atSetpoint();
+      if (!pidController.atSetpoint()) {
+        hardwareTimer.start();
+      } else {
+        hardwareTimer.stop();
+        hardwareTimer.reset();
+      }
+
+      if (hardwareTimer.hasElapsed(
+          Shooter.isScoring()
+              ? Constants.scoringHardwareCheckTime
+              : Constants.passingHardwareCheckTime)) {
+        return true;
+      } else {
+        return pidController.atSetpoint();
+      }
     }
   }
 

@@ -15,7 +15,7 @@ public class ShooterCommands {
   public static Command shoot(Shooter shooter) {
     return Commands.run(
         () -> {
-          shooter.requestShoot(false);
+          shooter.requestShoot(false, true);
           Logger.recordOutput("Shooter/command", "shoot");
         },
         shooter);
@@ -24,7 +24,7 @@ public class ShooterCommands {
   public static Command shootFixed(Shooter shooter) {
     return Commands.run(
         () -> {
-          shooter.requestShoot(true);
+          shooter.requestShoot(true, true);
           Logger.recordOutput("Shooter/command", "shootFixed");
         },
         shooter);

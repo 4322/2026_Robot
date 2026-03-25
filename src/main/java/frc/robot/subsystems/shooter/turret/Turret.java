@@ -2,8 +2,10 @@ package frc.robot.subsystems.shooter.turret;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.Timer;
 import frc.robot.RobotContainer;
 import frc.robot.constants.Constants;
+import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.util.ClockUtil;
 import org.littletonrobotics.junction.Logger;
 
@@ -12,6 +14,7 @@ public class Turret {
   private TurretIOInputsAutoLogged inputs = new TurretIOInputsAutoLogged();
   private Double desiredDeg = 0.0;
   private boolean minInclusive = false;
+  private Timer hardwareTimer = new Timer();
 
   public enum turretState {
     DISABLED,
@@ -124,7 +127,21 @@ public class Turret {
     } else if (Constants.turretMode == Constants.SubsystemMode.DISABLED) {
       return true;
     } else {
-      return MathUtil.isNear(desiredDeg, inputs.turretDegs, Constants.Turret.goalToleranceDeg);
+      if (!MathUtil.isNear(desiredDeg, inputs.turretDegs, Constants.Turret.goalToleranceDeg)) {
+        hardwareTimer.start();
+      } else {
+        hardwareTimer.stop();
+        hardwareTimer.reset();
+      }
+
+      if (hardwareTimer.hasElapsed(
+          Shooter.isScoring()
+              ? Constants.scoringHardwareCheckTime
+              : Constants.passingHardwareCheckTime)) {
+        return true;
+      } else {
+        return MathUtil.isNear(desiredDeg, inputs.turretDegs, Constants.Turret.goalToleranceDeg);
+      }
     }
   }
 

@@ -21,7 +21,6 @@ import frc.robot.subsystems.shooter.tunnel.Tunnel;
 import frc.robot.subsystems.shooter.turret.Turret;
 import frc.robot.subsystems.vision.visionGlobalPose.VisionGlobalPose;
 import frc.robot.util.GeomUtil;
-import frc.robot.util.HubShiftUtil;
 import org.littletonrobotics.junction.Logger;
 
 public class Shooter extends SubsystemBase {
@@ -38,6 +37,7 @@ public class Shooter extends SubsystemBase {
   }
 
   private ShooterState state = ShooterState.DISABLED;
+  private ShooterState prevstate = ShooterState.DISABLED;
 
   private Flywheel flywheel;
   private Hood hood;
@@ -56,6 +56,7 @@ public class Shooter extends SubsystemBase {
   private boolean unwindComplete = false;
   private boolean inIdle = true;
   private boolean fixedPositionShooting = false;
+  private static boolean isScoring;
 
   private boolean autoShootEnabled = false;
 
@@ -113,6 +114,10 @@ public class Shooter extends SubsystemBase {
     if (DriverStation.isDisabled()) {
 
       state = ShooterState.DISABLED;
+    }
+
+    if (turret.needsToUnwind() && tunnel.isStopped() && spindexer.isStopped()) {
+      state = ShooterState.UNWIND;
     }
 
     switch (state) {
@@ -200,6 +205,11 @@ public class Shooter extends SubsystemBase {
       }
     }
 
+    if (turret.needsToUnwind()) {
+      spindexer.requestIdle();
+      tunnel.requestIdle();
+    }
+
     flywheel.periodic();
     spindexer.periodic();
     tunnel.periodic();
@@ -270,70 +280,51 @@ public class Shooter extends SubsystemBase {
     return state;
   }
 
-  public void requestShoot(boolean fixedPosition) {
+  public void requestShoot(boolean fixedPosition, boolean isScoring) {
+    prevstate = ShooterState.SHOOT;
+    this.isScoring = isScoring;
     inIdle = false;
     fixedPositionShooting = fixedPosition;
     Logger.recordOutput("Shooter/currentMethod", "requestShoot()");
     if (Constants.firingManagerMode == Constants.SubsystemMode.TUNING) {
       return;
     }
-    // If in alliance zone and shift not active
-    if (AreaManager.getZoneOfPosition(drive.getRobotPose().getTranslation()) == Zone.ALLIANCE_ZONE
-        && !HubShiftUtil.getShiftedShiftInfo().active()) {
-      if (Constants.turretLocked) {
-        state = ShooterState.STOP;
-        return;
-      }
-      // Don't shoot if inactive
-      if (turret.needsToUnwind()) {
-        unwindComplete = false;
-        state = ShooterState.UNWIND;
-      }
-      if (state == ShooterState.UNWIND && unwindComplete) {
-        unwindComplete = false;
-        state = ShooterState.IDLE;
-      }
-
-    } else {
-      // Otherwise start shooting sequence
-      if (state == ShooterState.PRESHOOT
-          || state == ShooterState.IDLE
-          || state == ShooterState.UNJAM
-          || state == ShooterState.STOP
-          || (state == ShooterState.UNWIND && unwindComplete)) {
-        unwindComplete = false;
-        // don't check goals until initial requests have been sent
-        if (state == ShooterState.PRESHOOT) {
-          if (hood.isAtGoal() && flywheel.atTargetVelocity() && turret.isAtGoal()) {
-            state = ShooterState.SHOOT;
-          }
-        } else {
-          state = ShooterState.PRESHOOT;
+    // Otherwise start shooting sequence
+    if (state == ShooterState.PRESHOOT
+        || state == ShooterState.IDLE
+        || state == ShooterState.UNJAM
+        || state == ShooterState.STOP
+        || (state == ShooterState.UNWIND && unwindComplete)) {
+      unwindComplete = false;
+      // don't check goals until initial requests have been sent
+      if (state == ShooterState.PRESHOOT) {
+        if (hood.isAtGoal() && flywheel.atTargetVelocity() && turret.isAtGoal()) {
+          state = ShooterState.SHOOT;
         }
-
       } else {
-        // Seperate if to prevent warnings DO NOT COMBINE
-        if (!Constants.turretLocked) {
-          if (turret.needsToUnwind()) {
-            unwindComplete = false;
-            state = ShooterState.UNWIND;
-          }
-        }
+        state = ShooterState.PRESHOOT;
+        prevstate = ShooterState.PRESHOOT;
       }
     }
   }
 
   public void requestIdle() {
+    prevstate = ShooterState.IDLE;
     inIdle = true;
     Logger.recordOutput("Shooter/currentMethod", "requestIdle()");
-    state = ShooterState.IDLE;
+    if (!unwindComplete) {
+      state = ShooterState.IDLE;
+    }
     // TODO deal with UNWIND state
   }
 
   public void requestStop() {
+    prevstate = ShooterState.STOP;
     inIdle = true;
     Logger.recordOutput("Shooter/currentMethod", "requestStop()");
-    state = ShooterState.STOP;
+    if (!unwindComplete) {
+      state = ShooterState.STOP;
+    }
     // TODO deal with UNWIND state
   }
 
@@ -349,6 +340,10 @@ public class Shooter extends SubsystemBase {
 
   public void setAutoShoot(boolean enabled) {
     autoShootEnabled = enabled;
+  }
+
+  public static boolean isScoring() {
+    return isScoring;
   }
 
   public boolean autoShootEnabled() {
