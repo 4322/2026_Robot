@@ -315,10 +315,6 @@ public class Shooter extends SubsystemBase {
     return inIdle;
   }
 
-  public void setAutoShoot(boolean enabled) {
-    autoShootEnabled = enabled;
-  }
-
   public void unjamOverride(boolean unjaming) {
     tunnel.unjamOverride(unjaming);
     spindexer.unjamOverride(unjaming);

@@ -68,12 +68,5 @@ public class ShooterCommands {
         .finallyDo(() -> shooter.unjamOverride(false));
   }
 
-  public static Command setAutoShoot(Shooter shooter, boolean enabled) {
-    return Commands.runOnce(
-        () -> {
-          shooter.setAutoShoot(enabled);
-          Logger.recordOutput("Shooter/command", "toggleAutoShoot");
-        },
-        shooter);
-  }
+  
 }

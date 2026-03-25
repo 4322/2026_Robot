@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Robot;
 import frc.robot.commands.IntakeCommands;
+import frc.robot.commands.Shoot;
 import frc.robot.commands.ShooterCommands;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.intake.Intake;
@@ -41,6 +42,6 @@ public class LHalfSweepShoot extends SequentialCommandGroup {
                 AutoBuilder.followPath(Robot.L_NeutralL_Intake_To_Mid),
                 AutoBuilder.followPath(Robot.L_NeutralL_Intake_Mid_Flip),
                 AutoBuilder.followPath(Robot.L_NeutralLMid_To_ShootL),
-                ShooterCommands.setAutoShoot(shooter, true))));
+                 new Shoot(shooter))));
   }
 }
