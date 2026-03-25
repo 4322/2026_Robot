@@ -24,9 +24,10 @@ public class Turret {
 
   public Turret(TurretIO io) {
     this.io = io;
-    io.setPosition(0.5);
+    //Temporary until we can, 
     io.updateInputs(inputs);
-    // io.setPosition(getRotation()); // busted
+    io.setPosition(getRotation());
+    //Upper method sets the position of the turret in rotations
     // manual homing to the rear
   }
 
@@ -49,7 +50,7 @@ public class Turret {
             if (!DriverStation.isDisabled()) {
               state = turretState.SET_TURRET_ANGLE;
             } else {
-              io.setPosition(0.5);
+              io.setPosition(getRotation());
             }
             break;
           }
@@ -70,7 +71,7 @@ public class Turret {
     if (Constants.turretLocked) {
       return;
     } else if (state == turretState.DISABLED) {
-      desiredDeg = Units.rotationsToDegrees(0.5);
+      desiredDeg = getRotation();
       prevDeg = desiredDeg;
     }
     if (state == turretState.SET_TURRET_ANGLE) {
@@ -168,7 +169,12 @@ public class Turret {
   }
 
   private double getRotation() {
-
+    if(state == turretState.DISABLED) {
+      return 0.5;
+    }
+    //----------------------
+    //This is only in use due to the fact CRT is not working, aka the 0.5
+    //----------------------
     // Based off of 4522's "brute force" solver:
     // https://www.chiefdelphi.com/uploads/short-url/vvrM1V1pqvDnnZfHtAhS02mBVIi.pdf
     // This is only capable of calculating rotation in the 0-360 degree range.
