@@ -8,6 +8,7 @@ import org.littletonrobotics.junction.Logger;
 public class Flywheel {
   private FlywheelIO io;
   private FlywheelIOInputsAutoLogged inputs = new FlywheelIOInputsAutoLogged();
+  private Shooter shooter;
   private double ballsShot = 0;
   private Timer hardwareTimer = new Timer();
 
@@ -47,7 +48,7 @@ public class Flywheel {
     }
 
     if (hardwareTimer.hasElapsed(
-        Shooter.isScoring()
+        shooter.isScoring()
             ? Constants.scoringHardwareCheckTime
             : Constants.passingHardwareCheckTime)) {
       return true;

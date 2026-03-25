@@ -26,6 +26,7 @@ public class Hood {
   private HoodIOInputsAutoLogged inputs = new HoodIOInputsAutoLogged();
   private double requestedAngleDeg;
   private Timer homingTimer = new Timer();
+  private Shooter shooter;
   private double pidVelocity;
   private boolean homed = false;
   private boolean trenchOverride = false;
@@ -140,7 +141,7 @@ public class Hood {
       }
 
       if (hardwareTimer.hasElapsed(
-          Shooter.isScoring()
+          shooter.isScoring()
               ? Constants.scoringHardwareCheckTime
               : Constants.passingHardwareCheckTime)) {
         return true;

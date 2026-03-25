@@ -55,7 +55,7 @@ public class Shooter extends SubsystemBase {
   private boolean unwindComplete = false;
   private boolean inIdle = true;
   private boolean fixedPositionShooting = false;
-  private static boolean isScoring;
+  private boolean isScoring;
 
   private boolean autoShootEnabled = false;
 
@@ -300,7 +300,6 @@ public class Shooter extends SubsystemBase {
     if (!unwindComplete) {
       state = ShooterState.IDLE;
     }
-    // TODO deal with UNWIND state
   }
 
   public void requestStop() {
@@ -310,14 +309,9 @@ public class Shooter extends SubsystemBase {
     if (!unwindComplete) {
       state = ShooterState.STOP;
     }
-    // TODO deal with UNWIND state
   }
 
-  public void requestUnjam() {
-    Logger.recordOutput("Shooter/currentMethod", "requestUnjam(");
-    state = ShooterState.UNJAM;
-    // TODO deal with UNWIND state
-  }
+
 
   public boolean isInIdle() {
     return inIdle;
@@ -336,7 +330,7 @@ public class Shooter extends SubsystemBase {
     hood.trenchOverride(unjaming);
   }
 
-  public static boolean isScoring() {
+  public boolean isScoring() {
     return isScoring;
   }
 

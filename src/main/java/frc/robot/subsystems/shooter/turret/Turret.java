@@ -15,6 +15,7 @@ public class Turret {
   private Double desiredDeg = 0.0;
   private boolean minInclusive = false;
   private Timer hardwareTimer = new Timer();
+  private Shooter shooter;
 
   public enum turretState {
     DISABLED,
@@ -104,7 +105,7 @@ public class Turret {
       }
 
       if (hardwareTimer.hasElapsed(
-          Shooter.isScoring()
+          shooter.isScoring()
               ? Constants.scoringHardwareCheckTime
               : Constants.passingHardwareCheckTime)) {
         return true;
