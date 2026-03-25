@@ -1,11 +1,10 @@
 package frc.robot.subsystems.shooter.turret;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
 import frc.robot.RobotContainer;
 import frc.robot.constants.Constants;
-import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.util.ClockUtil;
 import org.littletonrobotics.junction.Logger;
 
@@ -15,6 +14,10 @@ public class Turret {
   public boolean needsToUnwind = false;
   private Double desiredDeg = 0.0;
   private double prevDeg = 0.0;
+  private double timerSetpoint = 0;
+  private Timer setpointFallbackTimer = new Timer();
+  private boolean fallbackToleranceEnabled = false;
+  private Boolean isScoring = null;
 
   public enum turretState {
     DISABLED,
@@ -25,10 +28,10 @@ public class Turret {
 
   public Turret(TurretIO io) {
     this.io = io;
-    //Temporary until we can, 
+    // Temporary until we can,
     io.updateInputs(inputs);
     io.setPosition(getRotation());
-    //Upper method sets the position of the turret in rotations
+    // Upper method sets the position of the turret in rotations
     // manual homing to the rear
   }
 
@@ -63,11 +66,49 @@ public class Turret {
             }
           }
         }
+
+        if (Constants.doubleToleranceEnabled) {
+          // Check for change in setpoint to reset running timer
+          if (timerSetpoint != desiredDeg) {
+            timerSetpoint = desiredDeg;
+            setpointFallbackTimer.stop();
+            setpointFallbackTimer.reset();
+          }
+          // If in regular tolerance, reset timer
+          else if (setpointFallbackTimer.isRunning()
+              && MathUtil.isNear(
+                  inputs.turretDegs, desiredDeg, Constants.Turret.goalToleranceDeg)) {
+            setpointFallbackTimer.stop();
+            setpointFallbackTimer.reset();
+          }
+          // Start timer upon entering larger tolerance
+          else if (MathUtil.isNear(
+              inputs.turretDegs, desiredDeg, Constants.Turret.fallbackToleranceDeg)) {
+            setpointFallbackTimer.start();
+          }
+
+          // Different time thresholds based on scoring vs passing
+          if (isScoring != null) {
+            if (isScoring.booleanValue()
+                && setpointFallbackTimer.hasElapsed(Constants.scoringDoubleToleranceTime)) {
+              fallbackToleranceEnabled = true;
+            } else if (!isScoring.booleanValue()
+                && setpointFallbackTimer.hasElapsed(Constants.passingDoubleToleranceTime)) {
+              fallbackToleranceEnabled = true;
+            } else {
+              fallbackToleranceEnabled = false;
+            }
+          } else {
+            fallbackToleranceEnabled = false;
+          }
+        }
+
+        Logger.recordOutput("Turret/usingFallbackTolerance", fallbackToleranceEnabled);
       }
     }
   }
 
-  public void requestAngle(Double angle) {
+  public void requestAngle(Double angle, Boolean isScoring) {
     this.desiredDeg = angle;
     if (Constants.turretLocked) {
       return;
@@ -83,6 +124,7 @@ public class Turret {
         desiredDeg = prevDeg;
       }
     }
+    this.isScoring = isScoring;
     Logger.recordOutput("Turret/desiredDeg", desiredDeg);
   }
 
@@ -108,18 +150,9 @@ public class Turret {
     } else if (Constants.turretMode == Constants.SubsystemMode.DISABLED) {
       return true;
     } else {
-      if (!MathUtil.isNear(desiredDeg, inputs.turretDegs, Constants.Turret.goalToleranceDeg)) {
-        hardwareTimer.start();
-      } else {
-        hardwareTimer.stop();
-        hardwareTimer.reset();
-      }
-
-      if (hardwareTimer.hasElapsed(
-          shooter.isScoring()
-              ? Constants.scoringHardwareCheckTime
-              : Constants.passingHardwareCheckTime)) {
-        return true;
+      if (fallbackToleranceEnabled) {
+        return MathUtil.isNear(
+            desiredDeg, inputs.turretDegs, Constants.Turret.fallbackToleranceDeg);
       } else {
         return MathUtil.isNear(desiredDeg, inputs.turretDegs, Constants.Turret.goalToleranceDeg);
       }
@@ -147,6 +180,7 @@ public class Turret {
     }
     needsToUnwind = needsUnwindFinish;
     prevDeg = desiredDeg;
+    this.isScoring = null;
     Logger.recordOutput("Turret/unwindDesiredDeg", prevDeg);
   }
 
@@ -184,12 +218,12 @@ public class Turret {
   }
 
   private double getRotation() {
-    if(state == turretState.DISABLED) {
+    if (state == turretState.DISABLED) {
       return 0.5;
     }
-    //----------------------
-    //This is only in use due to the fact CRT is not working, aka the 0.5
-    //----------------------
+    // ----------------------
+    // This is only in use due to the fact CRT is not working, aka the 0.5
+    // ----------------------
     // Based off of 4522's "brute force" solver:
     // https://www.chiefdelphi.com/uploads/short-url/vvrM1V1pqvDnnZfHtAhS02mBVIi.pdf
     // This is only capable of calculating rotation in the 0-360 degree range.

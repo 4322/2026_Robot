@@ -63,8 +63,9 @@ public final class Constants {
   public static final boolean backRightCameraEnable = true;
   public static final boolean backLeftCameraEnable = true;
 
-  public static final double scoringHardwareCheckTime = 0.5;
-  public static final double passingHardwareCheckTime = 0.25;
+  public static final boolean doubleToleranceEnabled = true;
+  public static final double scoringDoubleToleranceTime = 0.5;
+  public static final double passingDoubleToleranceTime = 0.25;
 
   { // set dependent operational modes
     if (firingManagerMode == SubsystemMode.TUNING) {
@@ -148,7 +149,8 @@ public final class Constants {
     public static final double kD = 0;
 
     public static final double motorToMechanismRatio = 1;
-    public static final double mechanismToleranceRPS = 4.0;
+    public static final double mechanismFallbackToleranceRPS = 4.0;
+    public static final double mechanismToleranceRPS = 2.0;
     public static final int idleRPS = 0; // normally 15
 
     public static final int canandcolorId = 0;
@@ -172,6 +174,7 @@ public final class Constants {
     public static final InvertedValue motorInvert = InvertedValue.CounterClockwise_Positive;
     public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
     public static final double goalToleranceDeg = 1.0;
+    public static final double fallbackToleranceDeg = 2.0;
     public static final double goalToleranceLockedDeg = 2.0;
     public static final int CANCoderOneRatio = 5;
     public static final int CANCoderTwoRatio = 9;
@@ -206,6 +209,7 @@ public final class Constants {
     public static final double kD = 0.0;
     public static final int idleVelocity = 0;
     public static final double toleranceDeg = 3;
+    public static final double fallbackToleranceDeg = 4;
     public static final double homingVelocityThresholdRPS = 0.01;
     public static final double homingVelocity = -0.4;
     public static final double holdDownVelocity = -0.2;

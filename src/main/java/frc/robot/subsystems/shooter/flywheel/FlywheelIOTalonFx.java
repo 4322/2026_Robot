@@ -98,8 +98,6 @@ public class FlywheelIOTalonFx implements FlywheelIO {
     inputs.motorConnected = motor.isConnected();
     inputs.followerMotorConnected = followerMotor.isConnected();
 
-    inputs.requestedMechanismRPS = lastRequestedVelocity;
-
     inputs.mechanismRPS = motor.getVelocity().getValueAsDouble();
     inputs.followerMechanismRPS = followerMotor.getVelocity().getValueAsDouble();
 
@@ -137,7 +135,7 @@ public class FlywheelIOTalonFx implements FlywheelIO {
 
   @Override
   public void stop() {
-   motor.stopMotor();
+    motor.stopMotor();
   }
 
   @Override

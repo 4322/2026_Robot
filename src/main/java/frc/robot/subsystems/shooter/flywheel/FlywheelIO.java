@@ -10,8 +10,6 @@ public interface FlywheelIO {
   public static class FlywheelIOInputs {
     public boolean motorConnected = false;
     public boolean followerMotorConnected = false;
-    public double requestedMechanismRPS = 0.0;
-    public double followerRequestedMechanismRPS = 0.0;
     public double mechanismRPS = 0.0;
     public double followerMechanismRPS = 0.0;
     public double appliedVolts = 0.0;

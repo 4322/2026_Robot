@@ -15,8 +15,6 @@ public class FlywheelIOSim implements FlywheelIO {
     simVelocity();
     inputs.mechanismRPS = mechanismRotationsPerSec;
     inputs.followerMechanismRPS = mechanismRotationsPerSec;
-    inputs.requestedMechanismRPS = targetVelocity;
-    inputs.followerRequestedMechanismRPS = targetVelocity;
   }
 
   @Override
