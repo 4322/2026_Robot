@@ -55,7 +55,7 @@ public class Turret {
 
   public void requestAngle(Double angle) {
     this.desiredDeg = angle;
-    if (Constants.turretLocked || desiredDeg == null) {
+    if (Constants.turretLocked) {
       return;
     }
 
@@ -70,11 +70,9 @@ public class Turret {
 
   private double getTargetAngleInMidpoint() {
     Logger.recordOutput("Shooter/currentMethod", "getTargetAngleInMidpoint()");
-    return (desiredDeg - Constants.Turret.midPointPhysicalDeg) > 360
+    return (desiredDeg - Constants.Turret.midPointPhysicalDeg) > 0
         ? desiredDeg - 360
-        : (desiredDeg - Constants.Turret.midPointPhysicalDeg) < -360
-            ? desiredDeg + 360
-            : desiredDeg;
+        : (desiredDeg - Constants.Turret.midPointPhysicalDeg) < 0 ? desiredDeg + 360 : desiredDeg;
   }
 
   public boolean needsToUnwind() {
@@ -100,8 +98,12 @@ public class Turret {
     state = turretState.SET_TURRET_ANGLE;
   }
 
+  public boolean isTurretAtUnwindLimit() {
+    return MathUtil.isNear(Constants.Turret.midPointPhysicalDeg, desiredDeg, 90);
+  }
+
   public boolean isTurretFinishedUnwind() {
-    return finishedUnwind;
+    return !finishedUnwind;
   }
 
   public void unwind(boolean needsUnwindFinish) {
