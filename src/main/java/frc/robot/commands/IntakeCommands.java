@@ -4,11 +4,9 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.Intake.IntakeState;
-import org.littletonrobotics.junction.Logger;
 
 public class IntakeCommands {
   public static Command idle(Intake intake) {
@@ -30,16 +28,9 @@ public class IntakeCommands {
   public static Command toggleIntake(Intake intake, CommandXboxController controller) {
     return new ConditionalCommand(
         new ConditionalCommand(
-            Commands.runOnce(() -> intake.setState(IntakeState.DEPLOY))
-                .andThen(
-                    new InstantCommand(
-                        () -> {
-                          Logger.recordOutput("Intake/Commands/ToggleIntake", "Deploy");
-                        })),
+            // Deploy if not extented
+            Commands.runOnce(() -> intake.setState(IntakeState.DEPLOY)),
             Commands.runOnce(() -> intake.setState(IntakeState.INTAKING))
-                .andThen(
-                    new InstantCommand(
-                        () -> Logger.recordOutput("Intake/Commands/ToggleIntake", "Intaking")))
                 .andThen(
                     Commands.run(
                             () -> {
@@ -51,13 +42,11 @@ public class IntakeCommands {
                               controller.setRumble(GenericHID.RumbleType.kLeftRumble, 0.0);
                             })),
             () -> !intake.isExtended()),
+        // Set to idle if not deploying or intaking
         Commands.runOnce(
                 () -> {
                   intake.setState(IntakeState.IDLE);
                 })
-            .andThen(
-                new InstantCommand(
-                    () -> Logger.recordOutput("Intake/Commands/ToggleIntake", "Idle")))
             .onlyIf(() -> intake.hasExtended()),
         () ->
             (!intake.hasExtended())
