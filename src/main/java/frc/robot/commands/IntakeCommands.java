@@ -29,45 +29,39 @@ public class IntakeCommands {
 
   public static Command toggleIntake(Intake intake, CommandXboxController controller) {
     return new ConditionalCommand(
-      , 
-      , 
-      );
-
-
-    Logger.recordOutput("Intake/Commands/state", intake.getState());
-    if (intake.getState() != IntakeState.INTAKING && intake.hasExtended()) {
-      return Commands.runOnce(() -> intake.setState(IntakeState.INTAKING))
-          .andThen(
-              new InstantCommand(
-                  () -> Logger.recordOutput("Intake/Commands/ToggleIntake", "Intaking")))
-          .andThen(
-              Commands.run(
-                      () -> {
-                        controller.setRumble(GenericHID.RumbleType.kLeftRumble, 0.5);
-                      })
-                  .withTimeout(0.25)
-                  .finallyDo(
-                      () -> {
-                        controller.setRumble(GenericHID.RumbleType.kLeftRumble, 0.0);
-                      }));
-
-    } else if (!intake.hasExtended()) {
-      return Commands.runOnce(() -> intake.setState(IntakeState.DEPLOY))
-          .andThen(
-              new InstantCommand(
-                  () -> {
-                    Logger.recordOutput("Intake/Commands/ToggleIntake", "Deploy");
-                  }));
-
-    } else {
-      return Commands.runOnce(
-              () -> {
-                intake.setState(IntakeState.IDLE);
-              })
-          .andThen(
-              new InstantCommand(() -> Logger.recordOutput("Intake/Commands/ToggleIntake", "Idle")))
-          .onlyIf(() -> intake.hasExtended());
-    }
+        new ConditionalCommand(
+            Commands.runOnce(() -> intake.setState(IntakeState.DEPLOY))
+                .andThen(
+                    new InstantCommand(
+                        () -> {
+                          Logger.recordOutput("Intake/Commands/ToggleIntake", "Deploy");
+                        })),
+            Commands.runOnce(() -> intake.setState(IntakeState.INTAKING))
+                .andThen(
+                    new InstantCommand(
+                        () -> Logger.recordOutput("Intake/Commands/ToggleIntake", "Intaking")))
+                .andThen(
+                    Commands.run(
+                            () -> {
+                              controller.setRumble(GenericHID.RumbleType.kLeftRumble, 0.5);
+                            })
+                        .withTimeout(0.25)
+                        .finallyDo(
+                            () -> {
+                              controller.setRumble(GenericHID.RumbleType.kLeftRumble, 0.0);
+                            })),
+            () -> !intake.isExtended()),
+        Commands.runOnce(
+                () -> {
+                  intake.setState(IntakeState.IDLE);
+                })
+            .andThen(
+                new InstantCommand(
+                    () -> Logger.recordOutput("Intake/Commands/ToggleIntake", "Idle")))
+            .onlyIf(() -> intake.hasExtended()),
+        () ->
+            (!intake.hasExtended())
+                || (intake.getState() != IntakeState.INTAKING && intake.hasExtended()));
   }
 
   public static Command eject(Intake intake) {
