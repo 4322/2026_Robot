@@ -1,6 +1,8 @@
 package frc.robot.subsystems.shooter.turret;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.RobotContainer;
 import frc.robot.constants.Constants;
 import frc.robot.util.ClockUtil;
@@ -9,21 +11,23 @@ import org.littletonrobotics.junction.Logger;
 public class Turret {
   private TurretIO io;
   private TurretIOInputsAutoLogged inputs = new TurretIOInputsAutoLogged();
+  public boolean needsToUnwind = false;
   private Double desiredDeg = 0.0;
-  public boolean finishedUnwind = false;
-  private double prevDeg = Constants.Turret.midPointPhysicalDeg;
+  private double prevDeg = 0.0;
 
   public enum turretState {
     DISABLED,
     SET_TURRET_ANGLE,
   }
 
-  public turretState state = turretState.SET_TURRET_ANGLE;
+  public turretState state = turretState.DISABLED;
 
   public Turret(TurretIO io) {
     this.io = io;
+    io.setPosition(0.5);
     io.updateInputs(inputs);
-    // Removed set postion code
+    // io.setPosition(getRotation()); // busted
+    // manual homing to the rear
   }
 
   public void inputsPeriodic() {
@@ -42,6 +46,11 @@ public class Turret {
       case NORMAL -> {
         switch (state) {
           case DISABLED -> {
+            if (!DriverStation.isDisabled()) {
+              state = turretState.SET_TURRET_ANGLE;
+            } else {
+              io.setPosition(0.5);
+            }
             break;
           }
           case SET_TURRET_ANGLE -> {
@@ -60,13 +69,17 @@ public class Turret {
     this.desiredDeg = angle;
     if (Constants.turretLocked) {
       return;
-    }
-
-    if (desiredDeg != null) {
-      desiredDeg = calculateAngle(desiredDeg, inputs.turretDegs);
+    } else if (state == turretState.DISABLED) {
+      desiredDeg = Units.rotationsToDegrees(0.5);
       prevDeg = desiredDeg;
-    } else {
-      desiredDeg = prevDeg;
+    }
+    if (state == turretState.SET_TURRET_ANGLE) {
+      if (desiredDeg != null) {
+        desiredDeg = calculateAngle(desiredDeg, inputs.turretDegs);
+        prevDeg = desiredDeg;
+      } else {
+        desiredDeg = prevDeg;
+      }
     }
     Logger.recordOutput("Turret/desiredDeg", desiredDeg);
   }
@@ -101,12 +114,12 @@ public class Turret {
     state = turretState.SET_TURRET_ANGLE;
   }
 
-  public boolean isTurretAtUnwindLimit() {
-    return MathUtil.isNear(Constants.Turret.midPointPhysicalDeg, desiredDeg, 90);
+  public boolean atTurretAtUnwindLimit() {
+    return MathUtil.isNear(Constants.Turret.midPointPhysicalDeg, desiredDeg, 180);
   }
 
-  public boolean isTurretFinishedUnwind() {
-    return !finishedUnwind;
+  public boolean isUnwinding() {
+    return needsToUnwind;
   }
 
   public void unwind(boolean needsUnwindFinish) {
@@ -116,7 +129,7 @@ public class Turret {
               ? desiredDeg
               : getTargetAngleInMidpoint();
     }
-    this.finishedUnwind = needsUnwindFinish;
+    needsToUnwind = needsUnwindFinish;
     prevDeg = desiredDeg;
     Logger.recordOutput("Turret/unwindDesiredDeg", prevDeg);
   }
