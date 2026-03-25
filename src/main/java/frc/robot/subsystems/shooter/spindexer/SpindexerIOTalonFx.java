@@ -22,7 +22,8 @@ public class SpindexerIOTalonFx implements SpindexerIO {
     config.CurrentLimits.StatorCurrentLimitEnable = true;
     config.CurrentLimits.SupplyCurrentLimit = Constants.Spindexer.supplyCurrentLimit;
     config.CurrentLimits.SupplyCurrentLimitEnable = true;
-    config.CurrentLimits.SupplyCurrentLowerTime = 0;
+    config.CurrentLimits.SupplyCurrentLowerLimit = Constants.Spindexer.supplyCurrentLowerLimit;
+    config.CurrentLimits.SupplyCurrentLowerTime = Constants.Spindexer.supplyCurrentLowerTime;
 
     config.MotorOutput.Inverted = Constants.Spindexer.motorInvert;
     config.MotorOutput.NeutralMode = Constants.Spindexer.neutralMode;
