@@ -270,7 +270,7 @@ public class Shooter extends SubsystemBase {
         || state == ShooterState.IDLE
         || state == ShooterState.UNJAM
         || state == ShooterState.STOP
-        || (state == ShooterState.UNWIND)&& unwindComplete)) {
+        || (state == ShooterState.UNWIND))&& unwindComplete) {
       if (state == ShooterState.PRESHOOT) {
         if (hood.isAtGoal() && flywheel.atTargetVelocity() && turret.isAtGoal()) {
           state = ShooterState.SHOOT;
