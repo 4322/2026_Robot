@@ -19,7 +19,7 @@ public class ShooterCommands {
             () -> -RobotContainer.controller.getLeftX(),
             () -> Rotation2d.fromDegrees(shooter.getTargetTurretAngleDeg()),
             Constants.Turret.originToTurret),
-        new Shoot(shooter));
+        new Shoot(shooter, drive));
   }
 
   public static Command idle(Shooter shooter) {

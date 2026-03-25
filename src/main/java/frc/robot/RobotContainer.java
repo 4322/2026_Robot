@@ -418,7 +418,7 @@ public class RobotContainer {
           .whileTrue(
               ShooterCommands.aimAndShoot(shooter, drive).onlyIf(inNonShootingArea.negate()));
     } else {
-      controller.rightTrigger().whileTrue(new Shoot(shooter));
+      controller.rightTrigger().whileTrue(new Shoot(shooter, drive));
       controller.a().whileTrue(new ShootFixed(shooter));
     }
 

@@ -4,13 +4,13 @@ import edu.wpi.first.math.util.Units;
 
 public class TurretIOSim implements TurretIO {
   private double requestedVoltage = 0;
-  private double requestedAngle = 0;
+  private double requestedAngle = Units.rotationsToDegrees(0.5);
 
   private double voltage = 0;
-  private double currentAngle = 0;
+  private double currentAngle = Units.rotationsToDegrees(0.5);
   private double undefinedVoltage = -20;
 
-  private double fastRate = 1;
+  private double fastRate = 1.0;
 
   @Override
   public void updateInputs(TurretIOInputs inputs) {

@@ -1,6 +1,7 @@
 package frc.robot.subsystems.shooter.turret;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.RobotContainer;
@@ -115,7 +116,7 @@ public class Turret {
     if (Constants.turretLocked) {
       return;
     } else if (state == turretState.DISABLED) {
-      desiredDeg = getRotation();
+      desiredDeg = Units.rotationsToDegrees(getRotation());
       prevDeg = desiredDeg;
     }
     if (state == turretState.SET_TURRET_ANGLE) {
@@ -176,7 +177,7 @@ public class Turret {
   public void unwind(boolean needsUnwindFinish) {
     if (needsUnwindFinish) {
       desiredDeg =
-          (MathUtil.isNear(Constants.Turret.midPointPhysicalDeg, desiredDeg, 90))
+          (MathUtil.isNear(Constants.Turret.midPointPhysicalDeg, desiredDeg, 180))
               ? desiredDeg
               : getTargetAngleInMidpoint();
     }

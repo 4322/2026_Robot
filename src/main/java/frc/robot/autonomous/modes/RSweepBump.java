@@ -37,6 +37,6 @@ public class RSweepBump extends SequentialCommandGroup {
             new SequentialCommandGroup(
                 AutoBuilder.followPath(Robot.R_2SWEEP_A),
                 AutoBuilder.followPath(Robot.R_2SWEEP_B),
-                new Shoot(shooter))));
+                new Shoot(shooter, drive))));
   }
 }

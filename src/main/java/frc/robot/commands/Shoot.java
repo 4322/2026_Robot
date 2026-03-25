@@ -10,8 +10,9 @@ public class Shoot extends Command {
   private Shooter shooter;
   private Drive drive;
 
-  public Shoot(Shooter shooter) {
+  public Shoot(Shooter shooter, Drive drive) {
     this.shooter = shooter;
+    this.drive = drive;
   }
 
   @Override
