@@ -9,6 +9,20 @@ import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.Intake.IntakeState;
 
 public class IntakeCommands {
+  private static Command transitionToIntake(Intake intake, CommandXboxController controller) {
+    return intake(intake)
+        .andThen(
+            Commands.run(
+                    () -> {
+                      controller.setRumble(GenericHID.RumbleType.kLeftRumble, 0.5);
+                    })
+                .withTimeout(0.25)
+                .finallyDo(
+                    () -> {
+                      controller.setRumble(GenericHID.RumbleType.kLeftRumble, 0.0);
+                    }));
+  }
+
   public static Command idle(Intake intake) {
     return Commands.runOnce(
             () -> {
@@ -19,39 +33,20 @@ public class IntakeCommands {
 
   public static Command intake(Intake intake) {
     return Commands.runOnce(
-            () -> {
-              intake.setState(IntakeState.INTAKING);
-            })
-        .onlyIf(() -> intake.hasExtended());
+        () -> {
+          intake.setState(IntakeState.INTAKING);
+        });
   }
 
   public static Command toggleIntake(Intake intake, CommandXboxController controller) {
-    Command deployCommand = Commands.runOnce(() -> intake.setState(IntakeState.DEPLOY));
-    Command intakeCommand =
-        Commands.runOnce(() -> intake.setState(IntakeState.INTAKING))
-            .andThen(
-                Commands.run(
-                        () -> {
-                          controller.setRumble(GenericHID.RumbleType.kLeftRumble, 0.5);
-                        })
-                    .withTimeout(0.25)
-                    .finallyDo(
-                        () -> {
-                          controller.setRumble(GenericHID.RumbleType.kLeftRumble, 0.0);
-                        }));
-    Command idleCommand =
-        Commands.runOnce(
-                () -> {
-                  intake.setState(IntakeState.IDLE);
-                })
-            .onlyIf(() -> intake.hasExtended());
-
     return new ConditionalCommand(
-        new ConditionalCommand(deployCommand, intakeCommand, () -> !intake.hasExtended()),
-        idleCommand,
-        () ->
-            (!intake.hasExtended())
-                || (intake.getState() != IntakeState.INTAKING && intake.hasExtended()));
+        transitionToIntake(intake, controller)
+            .onlyIf(
+                () ->
+                    intake.getState() == IntakeState.IDLE
+                        || intake.getState() == IntakeState.DISABLED),
+        idle(intake),
+        () -> intake.getState() != IntakeState.INTAKING);
   }
 
   public static Command eject(Intake intake) {

@@ -35,10 +35,7 @@ public class Intake extends SubsystemBase {
   }
 
   public void periodicOutputs() {
-    if (deployer.isExtended() && state == IntakeState.DEPLOY) {
-      hasExtended = true;
-      state = IntakeState.INTAKING;
-    }
+
     switch (state) {
       case DISABLED -> {
         deployer.setState(DeployerState.DISABLED);
@@ -48,14 +45,26 @@ public class Intake extends SubsystemBase {
       case DEPLOY -> {
         deployer.setState(DeployerState.EXTEND);
         rollers.setState(RollersState.DEPLOY);
+        if (deployer.isExtended()) {
+          hasExtended = true;
+          state = IntakeState.INTAKING;
+        }
       }
       case IDLE -> {
-        deployer.setState(DeployerState.EXTEND);
-        rollers.setState(RollersState.IDLE);
+        if (!hasExtended) {
+          state = IntakeState.DEPLOY;
+        } else {
+          deployer.setState(DeployerState.EXTEND);
+          rollers.setState(RollersState.IDLE);
+        }
       }
       case INTAKING -> {
-        deployer.setState(DeployerState.EXTEND);
-        rollers.setState(RollersState.INTAKE);
+        if (!hasExtended) {
+          state = IntakeState.DEPLOY;
+        } else {
+          deployer.setState(DeployerState.EXTEND);
+          rollers.setState(RollersState.INTAKE);
+        }
       }
       case EJECT -> {
         deployer.setState(DeployerState.EXTEND);
