@@ -28,7 +28,7 @@ public class IntakeCommands {
   public static Command toggleIntake(Intake intake, CommandXboxController controller) {
     return new ConditionalCommand(
         new ConditionalCommand(
-            // Deploy if not extented
+            // Deploy if not extended
             Commands.runOnce(() -> intake.setState(IntakeState.DEPLOY)),
             Commands.runOnce(() -> intake.setState(IntakeState.INTAKING))
                 .andThen(
