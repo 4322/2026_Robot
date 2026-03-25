@@ -7,11 +7,11 @@ import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.shooter.areaManager.AreaManager;
 import frc.robot.subsystems.shooter.areaManager.AreaManager.Zone;
 
-public class Shoot extends Command {
+public class ShootFixed extends Command {
   private Shooter shooter;
   private Drive drive;
 
-  public Shoot(Shooter shooter) {
+  public ShootFixed(Shooter shooter) {
     this.shooter = shooter;
   }
 
@@ -22,9 +22,9 @@ public class Shoot extends Command {
     } else {
       if (AreaManager.getZoneOfPosition(drive.getRobotPose().getTranslation())
           == Zone.ALLIANCE_ZONE) {
-        shooter.requestShoot(false, true);
+        shooter.requestShoot(true, true);
       } else {
-        shooter.requestShoot(false, false);
+        shooter.requestShoot(true, false);
       }
     }
   }
@@ -34,5 +34,5 @@ public class Shoot extends Command {
     shooter.requestIdle();
   }
 
-
+ 
 }
