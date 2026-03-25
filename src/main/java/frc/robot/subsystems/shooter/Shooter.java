@@ -96,7 +96,7 @@ public class Shooter extends SubsystemBase {
     }
     calculateFiringSolution();
     if (!fixedPositionShooting && !DriverStation.isAutonomousEnabled()) {
-     
+
       if (AreaManager.isTrench(drive.getTurretPosition())) {
         state = ShooterState.IDLE;
       }
@@ -127,9 +127,9 @@ public class Shooter extends SubsystemBase {
       state = ShooterState.DISABLED;
     }
 
-  if (turret.needsToUnwind()) {
-    targetTunnelSpeedRPS = 0;
-    targetSpindexerSpeedRPS = 0;
+    if (turret.needsToUnwind()) {
+      targetTunnelSpeedRPS = 0;
+      targetSpindexerSpeedRPS = 0;
     }
 
     if (turret.needsToUnwind() && tunnel.isStopped() && spindexer.isStopped()) {
@@ -155,7 +155,6 @@ public class Shooter extends SubsystemBase {
         if (tunnel.isStopped()) {
           flywheel.requestGoal(Constants.Flywheel.idleRPS);
         }
-        
       }
       case STOP -> {
         flywheel.requestGoal(0);
@@ -195,11 +194,8 @@ public class Shooter extends SubsystemBase {
         turret.requestAngle(targetTurretAngleDeg, false);
         tunnel.requestGoal(targetTunnelSpeedRPS);
         spindexer.requestGoal(targetSpindexerSpeedRPS);
-
       }
     }
-
-  
 
     flywheel.outputsPeriodic();
     spindexer.outputsPeriodic();
@@ -331,13 +327,13 @@ public class Shooter extends SubsystemBase {
     autoShootEnabled = enabled;
   }
 
-  public void unjamOverride(boolean unjaming){
+  public void unjamOverride(boolean unjaming) {
     tunnel.unjamOverride(unjaming);
     spindexer.unjamOverride(unjaming);
   }
 
-   public void trenchOverride(boolean unjaming){
-  hood.trenchOverride(unjaming);
+  public void trenchOverride(boolean unjaming) {
+    hood.trenchOverride(unjaming);
   }
 
   public static boolean isScoring() {

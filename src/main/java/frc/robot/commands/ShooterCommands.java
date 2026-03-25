@@ -2,18 +2,14 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.RobotContainer;
 import frc.robot.constants.Constants;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.shooter.Shooter;
-import frc.robot.subsystems.shooter.areaManager.AreaManager;
-import frc.robot.subsystems.shooter.hood.Hood;
 import org.littletonrobotics.junction.Logger;
 
 public class ShooterCommands {
-
 
   public static Command shootFixed(Shooter shooter) {
     return Commands.run(
@@ -32,8 +28,7 @@ public class ShooterCommands {
             () -> -RobotContainer.controller.getLeftX(),
             () -> Rotation2d.fromDegrees(shooter.getTargetTurretAngleDeg()),
             Constants.Turret.originToTurret),
-      new Shoot(shooter)
-      );
+        new Shoot(shooter));
   }
 
   public static Command idle(Shooter shooter) {
@@ -65,11 +60,12 @@ public class ShooterCommands {
 
   public static Command unjam(Shooter shooter) {
     return Commands.run(
-        () -> {
-          shooter.unjamOverride(true);
-          Logger.recordOutput("Shooter/command", "unjam");
-        },
-        shooter).finallyDo(() -> shooter.unjamOverride(false));
+            () -> {
+              shooter.unjamOverride(true);
+              Logger.recordOutput("Shooter/command", "unjam");
+            },
+            shooter)
+        .finallyDo(() -> shooter.unjamOverride(false));
   }
 
   public static Command setAutoShoot(Shooter shooter, boolean enabled) {

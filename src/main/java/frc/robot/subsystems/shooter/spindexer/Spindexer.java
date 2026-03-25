@@ -55,15 +55,15 @@ public class Spindexer {
 
   public void requestIdle() {
     state = SpindexerStates.IDLE;
-    if (!unjaming){
-    requestedSpeed = 0;
+    if (!unjaming) {
+      requestedSpeed = 0;
     }
   }
 
   public void requestGoal(double speed) {
     state = SpindexerStates.INDEXING;
-    if (!unjaming){
-    requestedSpeed = speed;
+    if (!unjaming) {
+      requestedSpeed = speed;
     }
   }
 
