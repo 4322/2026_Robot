@@ -458,7 +458,6 @@ public class RobotContainer {
     flywheel.enableBrakeMode(brake);
     hood.enableBrakeMode(brake);
     spindexer.enableBrakeMode(brake);
-    tunnel.enableBrakeMode(brake);
     turret.setBrakeMode(brake);
   }
 }

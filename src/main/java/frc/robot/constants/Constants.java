@@ -119,7 +119,7 @@ public final class Constants {
     public static final double statorCurrentLimit = 60;
     public static final double supplyCurrentLimit = 40;
     public static final InvertedValue motorInvert = InvertedValue.CounterClockwise_Positive;
-    public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
+    public static final NeutralModeValue neutralMode = NeutralModeValue.Coast;
     public static final double kS = 0.31;
     public static final double kV = 0.19;
     public static final double kP = 0;
