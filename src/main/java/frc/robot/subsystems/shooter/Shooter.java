@@ -10,8 +10,6 @@ import frc.robot.Robot;
 import frc.robot.constants.Constants;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.led.LED;
-import frc.robot.subsystems.shooter.areaManager.AreaManager;
-import frc.robot.subsystems.shooter.areaManager.AreaManager.Zone;
 import frc.robot.subsystems.shooter.firingManager.FiringManager;
 import frc.robot.subsystems.shooter.firingManager.FiringManager.FiringSolution;
 import frc.robot.subsystems.shooter.flywheel.Flywheel;
@@ -55,7 +53,7 @@ public class Shooter extends SubsystemBase {
   private boolean unwindComplete = false;
   private boolean inIdle = true;
   private boolean fixedPositionShooting = false;
-  private boolean isScoring;
+  private boolean isScoring = true;
 
   private boolean autoShootEnabled = false;
 
@@ -95,12 +93,7 @@ public class Shooter extends SubsystemBase {
       turret.inputsPeriodic();
     }
     calculateFiringSolution();
-    if (!fixedPositionShooting && !DriverStation.isAutonomousEnabled()) {
 
-      if (AreaManager.isTrench(drive.getTurretTranslation())) {
-        state = ShooterState.IDLE;
-      }
-    }
 
     if (Constants.firingManagerMode == Constants.SubsystemMode.TUNING) {
 
@@ -134,6 +127,7 @@ public class Shooter extends SubsystemBase {
 
     if (turret.needsToUnwind() && tunnel.isStopped() && spindexer.isStopped()) {
       state = ShooterState.UNWIND;
+      unwindComplete = false;
     }
 
     switch (state) {
@@ -177,7 +171,7 @@ public class Shooter extends SubsystemBase {
           }
         }
         // In case for some reason we end up in this state when turret is locked
-        if (turret.isAtGoal() || Constants.turretLocked) {
+        if ((turret.isAtGoal()) || Constants.turretLocked) {
           unwindComplete = true;
           state = prevstate;
         }
@@ -210,8 +204,6 @@ public class Shooter extends SubsystemBase {
     Logger.recordOutput("Shooter/unwindComplete", unwindComplete);
     Logger.recordOutput("Shooter/spindexerStopped", spindexer.isStopped());
     Logger.recordOutput("Shooter/tunnelStopped", tunnel.isStopped());
-    Logger.recordOutput(
-        "Shooter/currentZone", AreaManager.getZoneOfPosition(drive.getTurretTranslation()));
     Logger.recordOutput("Shooter/flywheelAtSpeed", flywheel.atTargetVelocity());
     Logger.recordOutput("Shooter/hoodAtPosition", hood.isAtGoal());
     Logger.recordOutput("Shooter/turretAtPosition", turret.isAtGoal());
@@ -251,8 +243,7 @@ public class Shooter extends SubsystemBase {
           FiringManager.getFiringSolution(
               drive.getTurretPose(),
               drive.getVelocity(),
-              AreaManager.getZoneOfPosition(drive.getTurretTranslation()) == Zone.ALLIANCE_ZONE
-                  || AreaManager.isTrench(drive.getTurretTranslation()));
+             isScoring);
       targetHoodAngleDeg = firingSolution.hoodAngle();
       targetFlywheelSpeedRPS = firingSolution.flywheelSpeedRPS();
       targetTurretAngleDeg = firingSolution.turretAngleDeg();
@@ -275,13 +266,11 @@ public class Shooter extends SubsystemBase {
       return;
     }
     // Otherwise start shooting sequence
-    if (state == ShooterState.PRESHOOT
+    if ((state == ShooterState.PRESHOOT
         || state == ShooterState.IDLE
         || state == ShooterState.UNJAM
         || state == ShooterState.STOP
-        || (state == ShooterState.UNWIND && unwindComplete)) {
-      unwindComplete = false;
-      // don't check goals until initial requests have been sent
+        || (state == ShooterState.UNWIND)&& unwindComplete)) {
       if (state == ShooterState.PRESHOOT) {
         if (hood.isAtGoal() && flywheel.atTargetVelocity() && turret.isAtGoal()) {
           state = ShooterState.SHOOT;

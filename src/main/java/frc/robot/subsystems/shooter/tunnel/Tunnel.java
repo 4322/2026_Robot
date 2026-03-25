@@ -13,7 +13,8 @@ public class Tunnel {
   public enum TunnelStates {
     DISABLED,
     IDLE,
-    INDEXING
+    INDEXING,
+    UNJAM
   }
 
   private TunnelStates state = TunnelStates.DISABLED;
@@ -52,8 +53,8 @@ public class Tunnel {
   }
 
   public void requestIdle() {
-    state = TunnelStates.IDLE;
     if (!unjaming) {
+      state = TunnelStates.IDLE;
       requestedSpeed = 0;
     }
   }
@@ -64,8 +65,8 @@ public class Tunnel {
   }
 
   public void requestGoal(double speed) {
-    state = TunnelStates.INDEXING;
     if (!unjaming) {
+      state = TunnelStates.INDEXING;
       requestedSpeed = speed;
     }
   }

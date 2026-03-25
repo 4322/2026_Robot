@@ -14,7 +14,8 @@ public class Spindexer {
   public enum SpindexerStates {
     DISABLED,
     IDLE,
-    INDEXING
+    INDEXING,
+    UNJAM
   }
 
   private SpindexerStates state = SpindexerStates.DISABLED;
@@ -42,6 +43,9 @@ public class Spindexer {
             io.stop();
           }
           case INDEXING -> {
+            io.setTargetMechanismRotations(requestedSpeed);
+          }
+          case UNJAM -> {
             io.setTargetMechanismRotations(requestedSpeed);
           }
         }
