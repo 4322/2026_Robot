@@ -16,11 +16,10 @@ public class Shoot extends Command {
 
   @Override
   public void execute() {
-    if (!AreaManager.isShootingArea(drive.getRobotPose().getTranslation())) {
+    if (!AreaManager.isShootingArea(drive.getTurretTranslation())) {
       shooter.requestIdle();
     } else {
-      if (AreaManager.getZoneOfPosition(drive.getRobotPose().getTranslation())
-          == Zone.ALLIANCE_ZONE) {
+      if (AreaManager.getZoneOfPosition(drive.getTurretTranslation()) == Zone.ALLIANCE_ZONE) {
         shooter.requestShoot(false, true);
       } else {
         shooter.requestShoot(false, false);

@@ -97,7 +97,7 @@ public class Shooter extends SubsystemBase {
     calculateFiringSolution();
     if (!fixedPositionShooting && !DriverStation.isAutonomousEnabled()) {
 
-      if (AreaManager.isTrench(drive.getTurretPosition())) {
+      if (AreaManager.isTrench(drive.getTurretTranslation())) {
         state = ShooterState.IDLE;
       }
     }
@@ -211,7 +211,7 @@ public class Shooter extends SubsystemBase {
     Logger.recordOutput("Shooter/spindexerStopped", spindexer.isStopped());
     Logger.recordOutput("Shooter/tunnelStopped", tunnel.isStopped());
     Logger.recordOutput(
-        "Shooter/currentZone", AreaManager.getZoneOfPosition(drive.getTurretPosition()));
+        "Shooter/currentZone", AreaManager.getZoneOfPosition(drive.getTurretTranslation()));
     Logger.recordOutput("Shooter/flywheelAtSpeed", flywheel.atTargetVelocity());
     Logger.recordOutput("Shooter/hoodAtPosition", hood.isAtGoal());
     Logger.recordOutput("Shooter/turretAtPosition", turret.isAtGoal());
@@ -251,8 +251,8 @@ public class Shooter extends SubsystemBase {
           FiringManager.getFiringSolution(
               drive.getTurretPose(),
               drive.getVelocity(),
-              AreaManager.getZoneOfPosition(drive.getTurretPosition()) == Zone.ALLIANCE_ZONE
-                  || AreaManager.isTrench(drive.getTurretPosition()));
+              AreaManager.getZoneOfPosition(drive.getTurretTranslation()) == Zone.ALLIANCE_ZONE
+                  || AreaManager.isTrench(drive.getTurretTranslation()));
       targetHoodAngleDeg = firingSolution.hoodAngle();
       targetFlywheelSpeedRPS = firingSolution.flywheelSpeedRPS();
       targetTurretAngleDeg = firingSolution.turretAngleDeg();
