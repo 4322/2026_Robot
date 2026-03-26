@@ -13,6 +13,7 @@ public class Turret {
   private TurretIOInputsAutoLogged inputs = new TurretIOInputsAutoLogged();
   public boolean needsToUnwind = false;
   private Double desiredDeg = 0.0;
+  private Double azimuth = 0.0;
   private double prevDeg = 0.0;
   private double timerSetpoint = 0;
   private Timer setpointFallbackTimer = new Timer();
@@ -120,6 +121,7 @@ public class Turret {
 
   public void requestAngle(Double angle, Boolean isScoring) {
     this.desiredDeg = angle;
+    azimuth = desiredDeg;
     if (Constants.turretLocked) {
       return;
     }
@@ -127,6 +129,14 @@ public class Turret {
     if (state == turretState.SET_TURRET_ANGLE) {
       if (desiredDeg != null) {
         desiredDeg = calculateAngle(desiredDeg, inputs.turretDegs);
+        if (needsToUnwind()) {
+          desiredDeg =
+              desiredDeg >= Constants.Turret.maxPhysicalLimitDeg
+                  ? Constants.Turret.maxPhysicalLimitDeg
+                  : desiredDeg <= Constants.Turret.minPhysicalLimitDeg
+                      ? Constants.Turret.minPhysicalLimitDeg
+                      : desiredDeg;
+        }
         prevDeg = desiredDeg;
       } else {
         desiredDeg = prevDeg;
@@ -171,7 +181,7 @@ public class Turret {
   }
 
   public boolean requestAtUnwindLimit() {
-    return MathUtil.isNear(Constants.Turret.midPointPhysicalDeg, desiredDeg, 180);
+    return MathUtil.isNear(Constants.Turret.midPointPhysicalDeg, desiredDeg, 180.1);
   }
 
   public boolean isUnwinding() {
@@ -180,8 +190,11 @@ public class Turret {
 
   public void unwind(boolean needsUnwindFinish) {
     if (needsUnwindFinish) {
+      if (needsToUnwind()) {
+        desiredDeg = calculateAngle(azimuth, inputs.turretDegs);
+      }
       desiredDeg =
-          (MathUtil.isNear(Constants.Turret.midPointPhysicalDeg, desiredDeg, 180))
+          (MathUtil.isNear(Constants.Turret.midPointPhysicalDeg, desiredDeg, 180.1))
               ? desiredDeg
               : getTargetAngleInMidpoint();
     }
