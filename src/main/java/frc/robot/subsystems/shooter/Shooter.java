@@ -268,6 +268,15 @@ public class Shooter extends SubsystemBase {
               drive.getVelocity(),
               AreaManager.getZoneOfPosition(drive.getTurretPosition()) == Zone.ALLIANCE_ZONE
                   || AreaManager.isTrench(drive.getTurretPosition()));
+
+      // If hood isn't at goal anymore after entering shoot state, do flywheel compensation
+      if (state == ShooterState.SHOOT && !hood.isAtGoal()) {
+        firingSolution = FiringManager.adjustForHoodOffset(firingSolution, targetHoodAngleDeg);
+        Logger.recordOutput("Shooter/adjustingForHoodOffset", true);
+      } else {
+        Logger.recordOutput("Shooter/adjustingForHoodOffset", false);
+      }
+
       targetHoodAngleDeg = firingSolution.hoodAngle();
       targetFlywheelSpeedRPS = firingSolution.flywheelSpeedRPS();
       targetTurretAngleDeg = firingSolution.turretAngleDeg();
