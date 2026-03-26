@@ -22,12 +22,14 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.constants.Constants;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.util.LoggedTunableNumber;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
@@ -80,7 +82,7 @@ public class DriveCommands {
           // Apply rotation deadband
           double omega = MathUtil.applyDeadband(omegaSupplier.getAsDouble(), DEADBAND);
 
-          // Square rotation value for more precise control
+          // Cube rotation value for more precise control
           omega = Math.copySign(omega * omega, omega);
 
           // Convert to field relative speeds & send command
@@ -89,6 +91,54 @@ public class DriveCommands {
                   linearVelocity.getX() * drive.getMaxLinearSpeedMetersPerSec(),
                   linearVelocity.getY() * drive.getMaxLinearSpeedMetersPerSec(),
                   omega * drive.getMaxAngularSpeedRadPerSec());
+          boolean isFlipped =
+              DriverStation.getAlliance().isPresent()
+                  && DriverStation.getAlliance().get() == Alliance.Red;
+          drive.runVelocity(
+              ChassisSpeeds.fromFieldRelativeSpeeds(
+                  speeds,
+                  isFlipped
+                      ? drive.getRotation().plus(new Rotation2d(Math.PI))
+                      : drive.getRotation()));
+        },
+        drive);
+  }
+
+  public static Command joystickDriveWhileShooting(
+      Drive drive,
+      DoubleSupplier xSupplier,
+      DoubleSupplier ySupplier,
+      DoubleSupplier omegaSupplier,
+      BooleanSupplier isScoring) {
+    return Commands.run(
+        () -> {
+          // Get linear velocity
+          Translation2d linearVelocity =
+              getLinearVelocityFromJoysticks(xSupplier.getAsDouble(), ySupplier.getAsDouble());
+
+          // Apply rotation deadband
+          double omega = MathUtil.applyDeadband(omegaSupplier.getAsDouble(), DEADBAND);
+
+          // Cube rotation value for more precise control
+          omega = Math.copySign(omega * omega, omega);
+
+          // Convert to field relative speeds & send command
+          double linearVelocityScaling = drive.getMaxLinearSpeedMetersPerSec();
+          double angularVelocityScaling = drive.getMaxAngularSpeedRadPerSec();
+
+          if (isScoring.getAsBoolean()) {
+            linearVelocityScaling *= Constants.Drive.maxLinearSpeedPercentShooting;
+            angularVelocityScaling *= Constants.Drive.maxAngularSpeedPercentShooting;
+          } else {
+            linearVelocityScaling *= Constants.Drive.maxLinearSpeedPercentPassing;
+            angularVelocityScaling *= Constants.Drive.maxAngularSpeedPercentPassing;
+          }
+
+          ChassisSpeeds speeds =
+              new ChassisSpeeds(
+                  linearVelocity.getX() * linearVelocityScaling,
+                  linearVelocity.getY() * linearVelocityScaling,
+                  omega * angularVelocityScaling);
           boolean isFlipped =
               DriverStation.getAlliance().isPresent()
                   && DriverStation.getAlliance().get() == Alliance.Red;

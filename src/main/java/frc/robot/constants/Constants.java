@@ -98,6 +98,11 @@ public final class Constants {
     public static double driveSupplyCurrentLowerLimit = 40;
     public static double driveSupplyCurrentLowerTime = 1.0;
     public static double turnSupplyCurrentLimit = 30;
+
+    public static double maxLinearSpeedPercentShooting = 0.5;
+    public static double maxAngularSpeedPercentShooting = 0.5;
+    public static double maxLinearSpeedPercentPassing = 0.8;
+    public static double maxAngularSpeedPercentPassing = 0.8;
   }
 
   public static class Spindexer {
