@@ -42,6 +42,6 @@ public class RSweepBump extends SequentialCommandGroup {
                 ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake),
                 new SequentialCommandGroup(
                     new WaitCommand(Constants.Autonomous.smooshDelayDoubleFirstPass),
-                    IntakeCommands.setAutoSmoosh(intake, true)))));
+                    IntakeCommands.autoSmoosh(intake)))));
   }
 }

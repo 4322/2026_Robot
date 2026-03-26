@@ -47,7 +47,8 @@ public class Deployer {
     if (Constants.deployerMode == SubsystemMode.DISABLED) {
       return true;
     } else {
-      return inputs.angleDeg >= Constants.Deployer.smooshDeg - Constants.Deployer.tolerance;
+      return inputs.angleDeg >= Constants.Deployer.smooshDeg - Constants.Deployer.tolerance
+          && inputs.angleDeg <= Constants.Deployer.smooshDeg + Constants.Deployer.tolerance;
     }
   }
 

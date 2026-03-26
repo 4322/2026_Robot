@@ -19,8 +19,6 @@ public class Intake extends SubsystemBase {
   private Timer deployCheckTimer = new Timer();
   private double initialDeployerAngle = 0;
   private boolean alreadyDeployedCheckFailed = false;
-  private boolean autoSmoosh = false;
-  private boolean smooshingIn = true;
 
   public Intake(Deployer deployer, Rollers rollers) {
     this.deployer = deployer;
@@ -52,7 +50,6 @@ public class Intake extends SubsystemBase {
       case STARING_CONFIG -> {
         deployer.setState(DeployerState.DISABLED);
         rollers.setState(RollersState.DISABLED);
-        autoSmoosh = false;
       }
       case DEPLOY -> {
         deployer.setState(DeployerState.EXTEND);
@@ -104,28 +101,7 @@ public class Intake extends SubsystemBase {
         rollers.setState(RollersState.EJECT);
       }
       case SMOOSH -> {
-        if (autoSmoosh) {
-          // If we ended auto while auto smooshing, return back to idle once teleop begins
-          if (!DriverStation.isAutonomous()) {
-            autoSmoosh = false;
-            state = IntakeState.IDLE;
-          }
-
-          if (smooshingIn) {
-            deployer.setState(DeployerState.SMOOSH);
-          } else {
-            deployer.setState(DeployerState.EXTEND);
-          }
-
-          if (deployer.isSmooshed() && smooshingIn) {
-            smooshingIn = false;
-          } else if (deployer.isExtended() && !smooshingIn) {
-            smooshingIn = true;
-          }
-
-        } else {
-          deployer.setState(DeployerState.SMOOSH);
-        }
+        deployer.setState(DeployerState.SMOOSH);
         rollers.setState(RollersState.SMOOSH);
       }
     }
@@ -135,8 +111,6 @@ public class Intake extends SubsystemBase {
 
     Logger.recordOutput("Intake/CurrentState", state);
     Logger.recordOutput("Intake/hasExtended", hasExtended);
-    Logger.recordOutput("Intake/autoSmoosh", autoSmoosh);
-    Logger.recordOutput("Intake/smooshingIn", smooshingIn);
   }
 
   public IntakeState getState() {
@@ -151,11 +125,14 @@ public class Intake extends SubsystemBase {
     Logger.recordOutput("Intake/RequestedState", state);
     prevState = this.state;
     this.state = state;
-    smooshingIn = true;
   }
 
   public boolean isExtended() {
     return deployer.isExtended();
+  }
+
+  public boolean isSmooshed() {
+    return deployer.isSmooshed();
   }
 
   // Has extended from deployment; hasn't gotten stuck in net
@@ -166,10 +143,5 @@ public class Intake extends SubsystemBase {
   public void setBrakeMode(boolean enable) {
     deployer.setBrakeMode(enable);
     rollers.setBrakeMode(enable);
-  }
-
-  public void setAutoSmoosh(boolean enabled) {
-    Logger.recordOutput("Intake/RequestedAutoSmoosh", enabled);
-    autoSmoosh = enabled;
   }
 }

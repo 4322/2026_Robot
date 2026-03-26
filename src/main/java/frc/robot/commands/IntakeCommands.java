@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -77,18 +78,13 @@ public class IntakeCommands {
         .onlyIf(() -> intake.hasExtended());
   }
 
-  public static Command setAutoSmoosh(Intake intake, boolean enabled) {
-    return new ConditionalCommand(
-        Commands.runOnce(
+  public static Command autoSmoosh(Intake intake) {
+    return Commands.run(
             () -> {
               intake.setState(IntakeState.SMOOSH);
-              intake.setAutoSmoosh(true);
-            }),
-        Commands.runOnce(
-                () -> {
-                  intake.setAutoSmoosh(false);
-                })
-            .andThen(toggleOff(intake)),
-        () -> enabled);
+            })
+        .onlyIf(() -> intake.hasExtended())
+        .until(() -> intake.isSmooshed() || !DriverStation.isAutonomous())
+        .andThen(toggleOff(intake));
   }
 }
