@@ -96,20 +96,21 @@ public class FlywheelIOTalonFx implements FlywheelIO {
 
   @Override
   public void updateInputs(FlywheelIOInputs inputs) {
-    inputs.motorConnected = motor.isConnected();
-    inputs.followerMotorConnected = followerMotor.isConnected();
+    inputs.leaderMotorConnected = motor.isConnected();
+    inputs.leaderMechanismRPS = motor.getVelocity().getValueAsDouble();
+    inputs.leaderAppliedVolts = motor.getMotorVoltage().getValueAsDouble();
+    inputs.leaderTempCelsius = motor.getDeviceTemp().getValueAsDouble();
+    inputs.leaderStatorCurrentAmps = motor.getStatorCurrent().getValueAsDouble();
+    inputs.leaderSupplyCurrentAmps = motor.getSupplyCurrent().getValueAsDouble();
 
-    inputs.mechanismRPS = motor.getVelocity().getValueAsDouble();
+    inputs.followerMotorConnected = followerMotor.isConnected();    
     inputs.followerMechanismRPS = followerMotor.getVelocity().getValueAsDouble();
-
-    inputs.appliedVolts = motor.getMotorVoltage().getValueAsDouble();
-    inputs.motorTempCelsius = motor.getDeviceTemp().getValueAsDouble();
     inputs.followerMotorTempCelsius = followerMotor.getDeviceTemp().getValueAsDouble();
-    inputs.followerBusCurrentAmps = followerMotor.getSupplyCurrent().getValueAsDouble();
-    inputs.leaderStatorAmps = motor.getStatorCurrent().getValueAsDouble();
-    inputs.followerStatorAmps = followerMotor.getStatorCurrent().getValueAsDouble();
+    inputs.followerSupplyCurrentAmps = followerMotor.getSupplyCurrent().getValueAsDouble();
+    inputs.followerStatorCurrentAmps = followerMotor.getStatorCurrent().getValueAsDouble();
     inputs.followerAppliedVolts = followerMotor.getMotorVoltage().getValueAsDouble();
-    inputs.busCurrentAmps = motor.getSupplyCurrent().getValueAsDouble();
+    
+
     if (Constants.Flywheel.canAndColorEnabled) {
       inputs.color = new Color(canandcolor.getRed(), canandcolor.getGreen(), canandcolor.getBlue());
       inputs.proximity = canandcolor.getProximity();

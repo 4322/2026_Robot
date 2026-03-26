@@ -37,7 +37,7 @@ public class Flywheel {
           // If in regular tolerance, reset timer
           else if (setpointFallbackTimer.isRunning()
               && MathUtil.isNear(
-                  inputs.mechanismRPS,
+                  inputs.leaderMechanismRPS,
                   requestedSetpoint,
                   Constants.Flywheel.mechanismToleranceRPS)) {
             setpointFallbackTimer.stop();
@@ -45,7 +45,7 @@ public class Flywheel {
           }
           // Start timer upon entering larger tolerance
           else if (MathUtil.isNear(
-              inputs.mechanismRPS,
+              inputs.leaderMechanismRPS,
               requestedSetpoint,
               Constants.Flywheel.mechanismFallbackToleranceRPS)) {
             setpointFallbackTimer.start();
@@ -91,10 +91,10 @@ public class Flywheel {
 
   public boolean isAtGoal() {
     if (fallbackToleranceEnabled) {
-      return Math.abs(inputs.mechanismRPS - requestedSetpoint)
+      return Math.abs(inputs.leaderMechanismRPS - requestedSetpoint)
           < Constants.Flywheel.mechanismFallbackToleranceRPS;
     } else {
-      return Math.abs(inputs.mechanismRPS - requestedSetpoint)
+      return Math.abs(inputs.leaderMechanismRPS - requestedSetpoint)
           < Constants.Flywheel.mechanismToleranceRPS;
     }
   }

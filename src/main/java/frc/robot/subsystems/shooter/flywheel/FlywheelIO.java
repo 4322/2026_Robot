@@ -8,18 +8,18 @@ public interface FlywheelIO {
 
   @AutoLog
   public static class FlywheelIOInputs {
-    public boolean motorConnected = false;
+    public boolean leaderMotorConnected = false;
     public boolean followerMotorConnected = false;
-    public double mechanismRPS = 0.0;
+    public double leaderMechanismRPS = 0.0;
     public double followerMechanismRPS = 0.0;
-    public double appliedVolts = 0.0;
+    public double leaderAppliedVolts = 0.0;
     public double followerAppliedVolts = 0.0;
-    public double motorTempCelsius = 0.0;
-    public double busCurrentAmps = 0.0;
+    public double leaderTempCelsius = 0.0;
+    public double leaderSupplyCurrentAmps = 0.0;
     public double followerMotorTempCelsius = 0.0;
-    public double followerBusCurrentAmps = 0.0;
-    public double leaderStatorAmps = 0.0;
-    public double followerStatorAmps = 0.0;
+    public double followerSupplyCurrentAmps = 0.0;
+    public double leaderStatorCurrentAmps = 0.0;
+    public double followerStatorCurrentAmps = 0.0;
 
     public boolean sensorConnected = false;
     public Color color = new Color(0, 0, 0);
