@@ -49,6 +49,7 @@ public class Shooter extends SubsystemBase {
   private double targetTurretAngleDeg;
   private double targetTunnelSpeedRPS;
   private double targetSpindexerSpeedRPS;
+  private boolean doUnwind = false;
   private boolean fixedPositionShooting = false;
   private boolean isScoring = true;
 
@@ -109,6 +110,8 @@ public class Shooter extends SubsystemBase {
       return;
     }
     if (DriverStation.isDisabled() && state != ShooterState.STARTING_CONFIG) {
+      // Reset variable in case disabling during unwind
+      doUnwind = false;
       state = ShooterState.DISABLED;
     }
 
@@ -162,18 +165,19 @@ public class Shooter extends SubsystemBase {
           // Since requested turret angle is constantly updating while we're unwinding
           // turret will attempt to go to requested setpoint within certain range of physical
           // midpoint
-          turret.unwind(true);
+          doUnwind = true;
         }
 
         // TODO: Change check to when turret is within 90 degrees from physical midpoint
         // Don't need to check if turret is exactly at goal, just within range
         if ((turret.isAtGoal() && turret.requestAtUnwindLimit()) || Constants.turretLocked) {
-          turret.unwind(false);
+          doUnwind = false;
           // Exit unwind state when completed
           // In next loop cycle if no command sends shooter request,
           // shooter will go to last requested state before unwind started
           state = requestedState;
         }
+        turret.unwind(doUnwind);
       }
       case PRESHOOT -> {
         spindexer.requestIdle();
