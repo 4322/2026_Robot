@@ -43,6 +43,6 @@ public class RHalfSweepShoot extends SequentialCommandGroup {
                 AutoBuilder.followPath(Robot.R_NeutralR_Intake_Mid_Flip),
                 AutoBuilder.followPath(Robot.R_NeutralRMid_To_ShootR),
                 new WaitCommand(Constants.Autonomous.smooshDelaySinglePass),
-                IntakeCommands.setAutoSmoosh(intake, true))));
+                IntakeCommands.autoSmoosh(intake))));
   }
 }

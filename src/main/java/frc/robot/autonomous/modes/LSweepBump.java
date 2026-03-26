@@ -40,6 +40,6 @@ public class LSweepBump extends SequentialCommandGroup {
                 AutoBuilder.followPath(Robot.L_2SWEEP_B),
                 ShooterCommands.setAutoShoot(shooter, true),
                 new WaitCommand(Constants.Autonomous.smooshDelaySinglePass),
-                IntakeCommands.setAutoSmoosh(intake, true))));
+                IntakeCommands.autoSmoosh(intake))));
   }
 }
