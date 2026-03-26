@@ -93,8 +93,6 @@ public class DeployerIOTalonFX implements DeployerIO {
 
     inputs.angleDeg = Units.rotationsToDegrees(deployerMotor.getPosition().getValueAsDouble());
 
-    inputs.requestedPosDeg = requestedPosDeg;
-
     inputs.motorDegreesPerSec =
         Units.rotationsToDegrees(deployerMotor.getVelocity().getValueAsDouble());
 
@@ -133,5 +131,10 @@ public class DeployerIOTalonFX implements DeployerIO {
   @Override
   public void setBrakeMode(boolean mode) {
     deployerMotor.setNeutralMode(mode ? NeutralModeValue.Brake : NeutralModeValue.Coast);
+  }
+
+  @Override
+  public void seedPosition(double newAngleDeg) {
+    deployerMotor.setPosition(Units.degreesToRotations(newAngleDeg));
   }
 }

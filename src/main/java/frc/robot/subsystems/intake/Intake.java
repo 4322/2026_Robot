@@ -1,7 +1,9 @@
 package frc.robot.subsystems.intake;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.constants.Constants;
 import frc.robot.subsystems.intake.deployer.Deployer;
 import frc.robot.subsystems.intake.deployer.Deployer.DeployerState;
 import frc.robot.subsystems.intake.rollers.Rollers;
@@ -14,6 +16,9 @@ public class Intake extends SubsystemBase {
   private IntakeState state = IntakeState.STARING_CONFIG;
   private IntakeState prevState = IntakeState.STARING_CONFIG;
   private boolean hasExtended = false;
+  private Timer deployCheckTimer = new Timer();
+  private double initialDeployerAngle = 0;
+  private boolean alreadyDeployedCheckFailed = false;
   private boolean autoSmoosh = false;
   private boolean smooshingIn = true;
 
@@ -24,6 +29,7 @@ public class Intake extends SubsystemBase {
 
   public enum IntakeState {
     STARING_CONFIG,
+    DEPLOY,
     IDLE,
     EJECT,
     SMOOSH,
@@ -48,29 +54,50 @@ public class Intake extends SubsystemBase {
         rollers.setState(RollersState.DISABLED);
         autoSmoosh = false;
       }
-      case IDLE -> {
-        if (!hasExtended) {
-          deployer.setState(DeployerState.EXTEND);
-          rollers.setState(RollersState.DEPLOY);
-          if (deployer.isExtended()) {
-            hasExtended = true;
+      case DEPLOY -> {
+        deployer.setState(DeployerState.EXTEND);
+        rollers.setState(RollersState.DEPLOY);
+
+        if (!alreadyDeployedCheckFailed) {
+          if (!deployCheckTimer.isRunning()) {
+            initialDeployerAngle = deployer.getAngle();
+            deployCheckTimer.start();
           }
-        } else {
-          deployer.setState(DeployerState.EXTEND);
-          rollers.setState(RollersState.IDLE);
+
+          if (deployCheckTimer.hasElapsed(1)) {
+            double currentDeployerAngle = deployer.getAngle();
+            // Deployer is up against bumper and isn't moving
+            if (currentDeployerAngle < Constants.Deployer.alreadyDeployedMaxDeg
+                && Math.abs(initialDeployerAngle - currentDeployerAngle)
+                    < Constants.Deployer.alreadyDeployedMoveThreshold) {
+              // Add one sensor rotation to current reported position
+              deployer.seedPosition(
+                  currentDeployerAngle + (360 / Constants.Deployer.sensorToMechanismRatio));
+              hasExtended = true;
+              state = prevState;
+            } else {
+              alreadyDeployedCheckFailed = true;
+            }
+            deployCheckTimer.stop();
+            deployCheckTimer.reset();
+          }
+        }
+
+        if (deployer.isExtended()) {
+          hasExtended = true;
+          state = prevState;
+          alreadyDeployedCheckFailed = true;
+          deployCheckTimer.stop();
+          deployCheckTimer.reset();
         }
       }
+      case IDLE -> {
+        deployer.setState(DeployerState.EXTEND);
+        rollers.setState(RollersState.IDLE);
+      }
       case INTAKING -> {
-        if (!hasExtended) {
-          deployer.setState(DeployerState.EXTEND);
-          rollers.setState(RollersState.DEPLOY);
-          if (deployer.isExtended()) {
-            hasExtended = true;
-          }
-        } else {
-          deployer.setState(DeployerState.EXTEND);
-          rollers.setState(RollersState.INTAKE);
-        }
+        deployer.setState(DeployerState.EXTEND);
+        rollers.setState(RollersState.INTAKE);
       }
       case EJECT -> {
         deployer.setState(DeployerState.EXTEND);
