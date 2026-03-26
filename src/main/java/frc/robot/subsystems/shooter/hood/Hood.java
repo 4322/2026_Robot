@@ -119,6 +119,7 @@ public class Hood {
 
   private void setGoal(double angle) {
     requestedAngleDeg = angle;
+    setVelocity();
     Logger.recordOutput("Hood/goalDegree", requestedAngleDeg);
   }
 
