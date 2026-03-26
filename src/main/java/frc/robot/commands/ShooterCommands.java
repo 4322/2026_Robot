@@ -6,12 +6,26 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.RobotContainer;
 import frc.robot.constants.Constants;
 import frc.robot.subsystems.drive.Drive;
+import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.shooter.Shooter;
 import org.littletonrobotics.junction.Logger;
 
 public class ShooterCommands {
 
-  public static Command aimAndShoot(Shooter shooter, Drive drive) {
+  public static Command autoShoot(Shooter shooter, Drive drive, Intake intake) {
+    return new Shoot(shooter, drive).onlyIf(() -> intake.hasExtended());
+  }
+
+  // Used in auto
+  public static Command autoShootNoAreaCheck(Shooter shooter, Drive drive, Intake intake) {
+    return new Shoot(shooter, drive, true).onlyIf(() -> intake.hasExtended());
+  }
+
+  public static Command fixedShoot(Shooter shooter, Drive drive, Intake intake) {
+    return new ShootFixed(shooter).onlyIf(() -> intake.hasExtended());
+  }
+
+  public static Command aimAndShoot(Shooter shooter, Drive drive, Intake intake) {
     return Commands.parallel(
         DriveCommands.joystickDriveAtAngle(
             drive,
@@ -19,16 +33,17 @@ public class ShooterCommands {
             () -> -RobotContainer.controller.getLeftX(),
             () -> Rotation2d.fromDegrees(shooter.getTargetTurretAngleDeg()),
             Constants.Turret.originToTurret),
-        new Shoot(shooter, drive));
+        autoShoot(shooter, drive, intake));
   }
 
-  public static Command idle(Shooter shooter) {
+  public static Command idle(Shooter shooter, Intake intake) {
     return Commands.run(
-        () -> {
-          shooter.requestIdle();
-          Logger.recordOutput("Shooter/command", "idle");
-        },
-        shooter);
+            () -> {
+              shooter.requestIdle();
+              Logger.recordOutput("Shooter/command", "idle");
+            },
+            shooter)
+        .onlyIf(() -> intake.hasExtended());
   }
 
   public static Command stop(Shooter shooter) {

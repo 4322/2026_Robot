@@ -18,8 +18,6 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.autonomous.AutonomousSelector;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.IntakeCommands;
-import frc.robot.commands.Shoot;
-import frc.robot.commands.ShootFixed;
 import frc.robot.commands.ShooterCommands;
 import frc.robot.constants.Constants;
 import frc.robot.constants.FieldConstants;
@@ -400,10 +398,10 @@ public class RobotContainer {
     controller.leftTrigger().whileTrue(ShooterCommands.trenchOverride(shooter));
 
     if (Constants.turretLocked) {
-      controller.rightTrigger().whileTrue(ShooterCommands.aimAndShoot(shooter, drive));
+      controller.rightTrigger().whileTrue(ShooterCommands.aimAndShoot(shooter, drive, intake));
     } else {
-      controller.rightTrigger().whileTrue(new Shoot(shooter, drive));
-      controller.a().whileTrue(new ShootFixed(shooter));
+      controller.rightTrigger().whileTrue(ShooterCommands.autoShoot(shooter, drive, intake));
+      controller.a().whileTrue(ShooterCommands.fixedShoot(shooter, drive, intake));
     }
 
     controller.x().onTrue(IntakeCommands.eject(intake)).onFalse(IntakeCommands.toggleOff(intake));

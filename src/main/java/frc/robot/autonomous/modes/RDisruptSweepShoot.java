@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Robot;
 import frc.robot.commands.IntakeCommands;
-import frc.robot.commands.Shoot;
+import frc.robot.commands.ShooterCommands;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.led.LED;
@@ -39,6 +39,6 @@ public class RDisruptSweepShoot extends SequentialCommandGroup {
                 AutoBuilder.followPath(Robot.R_NeutralR_Intake_Full_Disrupt),
                 AutoBuilder.followPath(Robot.R_NeutralR_Intake_Full_Disrupt_Flip),
                 AutoBuilder.followPath(Robot.R_NeutralRMid_To_ShootR),
-                new Shoot(shooter, drive, true))));
+                ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake))));
   }
 }
