@@ -2,7 +2,6 @@ package frc.robot.subsystems.shooter.tunnel;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.constants.Constants;
-
 import org.littletonrobotics.junction.Logger;
 
 public class Tunnel {
@@ -69,8 +68,7 @@ public class Tunnel {
     if (unjamOverride) {
       state = TunnelStates.UNJAM;
       requestedSpeed = Constants.Tunnel.unjamRPS;
-    }
-    else {
+    } else {
       // Default to idle when unjam isn't desired
       state = TunnelStates.IDLE;
       requestedSpeed = 0;
