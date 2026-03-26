@@ -23,7 +23,7 @@ import java.util.Map;
 import org.littletonrobotics.junction.Logger;
 
 public class Simulator extends SubsystemBase {
-  private static final RegressTests regressTest = RegressTests.SUBSYSTEM_TEST_BOTH;
+  private static final RegressTests regressTest = RegressTests.INTAKE_TEST;
   public static AutoName autoScenario;
   private TeleopScenario teleopScenario;
   private List<TeleAnomaly> teleAnomalies;
@@ -44,7 +44,8 @@ public class Simulator extends SubsystemBase {
     AUTO,
     TURRET,
     ALL_AUTOS,
-    ZONES
+    ZONES,
+    INTAKE_TEST
   }
 
   private enum TeleAnomaly {
@@ -64,7 +65,8 @@ public class Simulator extends SubsystemBase {
     AUTO_ROTATE,
     TURRET,
     Slowly_Up_down,
-    ZONES
+    ZONES,
+    INTAKE_TEST
   }
 
   private enum EventType {
@@ -270,6 +272,8 @@ public class Simulator extends SubsystemBase {
       case ZONES -> List.of(
           new RegressionTest("Zones Blue", TeleopScenario.ZONES, Alliance.Blue),
           new RegressionTest("Zones Red", TeleopScenario.ZONES, Alliance.Red));
+      case INTAKE_TEST -> List.of(
+          new RegressionTest("Intake Test", TeleopScenario.INTAKE_TEST, Alliance.Blue));
 
       default -> List.of();
     };
@@ -594,6 +598,24 @@ public class Simulator extends SubsystemBase {
               new FieldPose2d(3.7, 6.5, Rotation2d.kZero)),
           new SimEvent(t += 0.1, "Fixed Shoot", EventType.HOLD_RIGHT_BUMPER),
           new SimEvent(t += 5, "End", EventType.END_OF_SCENARIO));
+      case INTAKE_TEST -> List.of(
+          new SimEvent(
+              t += 0.1, "Start pose", EventType.SET_POSE, new FieldPose2d(2, 2, Rotation2d.kZero)),
+          new SimEvent(t += 0.5, "Deploy/Intake", EventType.HOLD_LEFT_BUMPER),
+          new SimEvent(t += 0.5, "Deploy/Intake Release", EventType.RELEASE_LEFT_BUMPER),
+          new SimEvent(t += 0.5, "IntakeOff", EventType.HOLD_LEFT_BUMPER),
+          new SimEvent(t += 0.5, "IntakeOff Release", EventType.RELEASE_LEFT_BUMPER),
+          new SimEvent(t += 0.5, "Start ejecting", EventType.HOLD_X),
+          new SimEvent(t += 2.0, "Stop ejecting", EventType.RELEASE_X),
+          new SimEvent(t += 0.5, "Start smooshing", EventType.HOLD_A),
+          new SimEvent(t += 2.0, "Stop smooshing", EventType.RELEASE_A),
+          new SimEvent(t += 0.5, "Start intaking", EventType.HOLD_LEFT_BUMPER),
+          new SimEvent(t += 0.5, "Start ejecting while intaking", EventType.HOLD_X),
+          new SimEvent(t += 2.0, "Stop ejecting", EventType.RELEASE_X),
+          new SimEvent(t += 0.5, "Start smooshing while intaking", EventType.HOLD_A),
+          new SimEvent(t += 2.0, "Stop smooshing", EventType.RELEASE_A),
+          new SimEvent(t += 0.5, "Stop intaking", EventType.RELEASE_LEFT_BUMPER),
+          new SimEvent(t += 0.1, "End", EventType.END_OF_SCENARIO));
 
       default -> List.of();
     };
