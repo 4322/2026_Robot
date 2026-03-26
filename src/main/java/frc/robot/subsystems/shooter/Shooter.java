@@ -91,7 +91,7 @@ public class Shooter extends SubsystemBase {
     if (Constants.firingManagerMode == Constants.SubsystemMode.TUNING) {
 
       flywheel.requestGoal(targetFlywheelSpeedRPS, null);
-      hood.requestGoal(targetHoodAngleDeg, null);
+      hood.requestGoal(targetHoodAngleDeg);
 
       turret.requestAngle(targetTurretAngleDeg, null);
 
@@ -132,7 +132,7 @@ public class Shooter extends SubsystemBase {
       case IDLE -> {
         spindexer.requestIdle();
         turret.requestAngle(targetTurretAngleDeg, null);
-        hood.requestGoal(Constants.Hood.safeAngleDeg, null);
+        hood.requestGoal(Constants.Hood.safeAngleDeg);
         if (spindexer.isStopped()) {
           tunnel.requestIdle();
         } else {
@@ -144,14 +144,14 @@ public class Shooter extends SubsystemBase {
       }
       case STOP -> {
         flywheel.requestGoal(0, null);
-        hood.requestGoal(targetHoodAngleDeg, null);
+        hood.requestGoal(targetHoodAngleDeg);
         turret.requestAngle(targetTurretAngleDeg, null);
         spindexer.requestIdle();
         tunnel.requestIdle();
       }
       case UNWIND -> {
         // Keep requesting target states while waiting for unwind
-        hood.requestGoal(targetHoodAngleDeg, null);
+        hood.requestGoal(targetHoodAngleDeg);
         flywheel.requestGoal(targetFlywheelSpeedRPS, null);
         // Keep sending turret angle requests and unwind logic will continuously adjust target
         // setpoint within range of physical midpoint
@@ -178,12 +178,12 @@ public class Shooter extends SubsystemBase {
       case PRESHOOT -> {
         spindexer.requestIdle();
         flywheel.requestGoal(targetFlywheelSpeedRPS, isScoring);
-        hood.requestGoal(targetHoodAngleDeg, isScoring);
+        hood.requestGoal(targetHoodAngleDeg);
         turret.requestAngle(targetTurretAngleDeg, isScoring);
       }
       case SHOOT -> {
         flywheel.requestGoal(targetFlywheelSpeedRPS, isScoring);
-        hood.requestGoal(targetHoodAngleDeg, isScoring);
+        hood.requestGoal(targetHoodAngleDeg);
         turret.requestAngle(targetTurretAngleDeg, isScoring);
         tunnel.requestGoal(targetTunnelSpeedRPS);
         spindexer.requestGoal(targetSpindexerSpeedRPS);

@@ -1,6 +1,5 @@
 package frc.robot.subsystems.shooter.hood;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
@@ -32,10 +31,6 @@ public class Hood {
   private boolean homed = false;
   private boolean trenchOverride = false;
   private PIDController pidController = new PIDController(kP.get(), kI.get(), kD.get());
-  private Timer setpointFallbackTimer = new Timer();
-  private double timerSetpoint = 0;
-  private boolean fallbackToleranceEnabled = false;
-  private Boolean isScoring = null;
 
   public Hood(HoodIO io) {
     this.io = io;
@@ -68,7 +63,7 @@ public class Hood {
               hashCode(), () -> pidController.setIZone(kIZone.get()), kIZone);
           LoggedTunableNumber.ifChanged(
               hashCode(), () -> pidController.setTolerance(toleranceDeg.get()), toleranceDeg);
-          requestGoal(tuningGoalDeg.get(), null);
+          requestGoal(tuningGoalDeg.get());
 
           pidVelocity = pidController.calculate(inputs.degrees, requestedAngleDeg);
 
@@ -107,54 +102,17 @@ public class Hood {
           homingTimer.stop();
           homingTimer.reset();
         }
-
-        if (Constants.doubleToleranceEnabled) {
-          // Check for change in setpoint to reset running timer
-          if (timerSetpoint != requestedAngleDeg) {
-            timerSetpoint = requestedAngleDeg;
-            setpointFallbackTimer.stop();
-            setpointFallbackTimer.reset();
-          }
-          // If in regular tolerance, reset timer
-          else if (setpointFallbackTimer.isRunning()
-              && MathUtil.isNear(inputs.degrees, requestedAngleDeg, Constants.Hood.toleranceDeg)) {
-            setpointFallbackTimer.stop();
-            setpointFallbackTimer.reset();
-          }
-          // Start timer upon entering larger tolerance
-          else if (MathUtil.isNear(
-              inputs.degrees, requestedAngleDeg, Constants.Hood.fallbackToleranceDeg)) {
-            setpointFallbackTimer.start();
-          }
-
-          // Different time thresholds based on scoring vs passing
-          if (isScoring != null) {
-            if (isScoring.booleanValue()
-                && setpointFallbackTimer.hasElapsed(Constants.scoringDoubleToleranceTime)) {
-              fallbackToleranceEnabled = true;
-            } else if (!isScoring.booleanValue()
-                && setpointFallbackTimer.hasElapsed(Constants.passingDoubleToleranceTime)) {
-              fallbackToleranceEnabled = true;
-            } else {
-              fallbackToleranceEnabled = false;
-            }
-          } else {
-            fallbackToleranceEnabled = false;
-          }
-        }
       }
     }
     Logger.recordOutput("Hood/Timer", homingTimer.get());
     Logger.recordOutput("Hood/homed", homed);
     Logger.recordOutput("Hood/isAtGoal", isAtGoal());
-    Logger.recordOutput("Hood/usingFallbackTolerance", fallbackToleranceEnabled);
   }
 
-  public void requestGoal(double angle, Boolean isScoring) {
+  public void requestGoal(double angle) {
     if (!trenchOverride) {
       setGoal(angle);
     }
-    this.isScoring = isScoring;
   }
 
   private void setGoal(double angle) {
@@ -166,7 +124,6 @@ public class Hood {
   public void trenchOverride(boolean override) {
     setGoal(Constants.Hood.safeAngleDeg);
     trenchOverride = override;
-    this.isScoring = null;
   }
 
   public void rehome() {
@@ -179,11 +136,7 @@ public class Hood {
     } else if (Constants.currentMode == Constants.Mode.SIM) {
       return true; // TODO temporary until we get hood sim working
     } else {
-      if (fallbackToleranceEnabled) {
-        return Math.abs(inputs.degrees - requestedAngleDeg) < Constants.Hood.fallbackToleranceDeg;
-      } else {
-        return pidController.atSetpoint();
-      }
+      return pidController.atSetpoint();
     }
   }
 

@@ -9,7 +9,7 @@ public class DoNothing extends SequentialCommandGroup {
   public DoNothing(Hood hood) {
     setName("DO_NOTHING");
     addCommands(
-        new InstantCommand(() -> hood.requestGoal(0.0, null)),
+        new InstantCommand(() -> hood.requestGoal(0.0)),
         new InstantCommand(() -> Logger.recordOutput("Autonomous/AutoStarted", "DoNothing")));
   }
 }
