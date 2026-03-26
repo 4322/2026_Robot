@@ -131,11 +131,10 @@ public class Turret {
         desiredDeg = calculateAngle(desiredDeg, inputs.turretDegs);
         if (needsToUnwind()) {
           desiredDeg =
-              desiredDeg >= Constants.Turret.maxPhysicalLimitDeg
-                  ? Constants.Turret.maxPhysicalLimitDeg
-                  : desiredDeg <= Constants.Turret.minPhysicalLimitDeg
-                      ? Constants.Turret.minPhysicalLimitDeg
-                      : desiredDeg;
+              MathUtil.clamp(
+                  desiredDeg,
+                  Constants.Turret.minPhysicalLimitDeg,
+                  Constants.Turret.maxPhysicalLimitDeg);
         }
         prevDeg = desiredDeg;
       } else {
