@@ -221,13 +221,14 @@ public final class Constants {
     public static final double voltageIntake = 6;
     public static final double voltageEject = -6;
     public static final double voltageDeploy = -1;
+    public static final double voltageIdle = 0;
+    public static final double voltageSmoosh = 3; // TODO
     public static final int leaderMotorId = 1;
     public static final int followerMotorId = 5;
     public static final double statorCurrentLimit = 60;
     public static final double supplyCurrentLimit = 40;
     public static final NeutralModeValue neutralMode = NeutralModeValue.Coast;
     public static final InvertedValue leaderMotorInvert = InvertedValue.Clockwise_Positive;
-    public static final double voltageIdle = 0;
   }
 
   public class Deployer {
@@ -235,6 +236,7 @@ public final class Constants {
     // postive degrees when extending
     public static final double retractDeg = 7; // allow for net (starting config = 3.87)
     public static final double extendDeg = 125.6; // fully against the bumper = 127.8
+    public static final double smooshDeg = (extendDeg + retractDeg) / 2.0;
     public static final double maxGravityDegrees = 125 - 180; // range is +/- 90 degrees
     public static final int motorId = 25;
     public static final double statorCurrentLimit = 60;

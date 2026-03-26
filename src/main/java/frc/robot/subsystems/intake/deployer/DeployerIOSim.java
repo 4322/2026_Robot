@@ -37,7 +37,7 @@ public class DeployerIOSim implements DeployerIO {
   }
 
   @Override
-  public void enableBrakeMode(boolean mode) {}
+  public void setBrakeMode(boolean mode) {}
 
   @Override
   public void stop() {}

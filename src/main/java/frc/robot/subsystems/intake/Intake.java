@@ -11,7 +11,8 @@ public class Intake extends SubsystemBase {
   private final Deployer deployer;
   private final Rollers rollers;
   private IntakeState state = IntakeState.DISABLED;
-  private boolean wasExtended;
+  private IntakeState prevState = IntakeState.DISABLED;
+  private boolean hasExtended = false;
 
   public Intake(Deployer deployer, Rollers rollers) {
     this.deployer = deployer;
@@ -20,69 +21,96 @@ public class Intake extends SubsystemBase {
 
   public enum IntakeState {
     DISABLED,
-    RETRACT,
-    EJECT,
     IDLE,
-    INTAKING,
-    // aadd unjamstill blue and not a priority in docs as of current so TODO
+    EJECT,
+    SMOOSH,
+    INTAKING
   }
 
   @Override
   public void periodic() {
-    Logger.recordOutput("Intake/State", state);
+    rollers.inputsPeriodic();
+    deployer.inputsPeriodic();
+  }
+
+  public void periodicOutputs() {
+
     switch (state) {
       case DISABLED -> {
-        break;
-      }
-      case RETRACT -> {
-        deployer.setGoal(DeployerState.RETRACT);
-        rollers.setState(RollersState.IDLE);
-      }
-      case EJECT -> {
-        rollers.setState(RollersState.EJECT);
+        deployer.setState(DeployerState.DISABLED);
+        rollers.setState(RollersState.DISABLED);
+        hasExtended = false;
       }
       case IDLE -> {
-        if (deployer.isExtended()) {
-          wasExtended = true;
-          rollers.setState(RollersState.IDLE);
-        } else {
-          deployer.setGoal(DeployerState.EXTEND);
-          if (!wasExtended) {
-            // untangle from the net
-            rollers.setState(RollersState.DEPLOY);
+        if (!hasExtended) {
+          deployer.setState(DeployerState.EXTEND);
+          rollers.setState(RollersState.DEPLOY);
+          if (deployer.isExtended()) {
+            hasExtended = true;
           }
+        } else {
+          deployer.setState(DeployerState.EXTEND);
+          rollers.setState(RollersState.IDLE);
         }
       }
       case INTAKING -> {
-        if (deployer.isExtended()) {
-          wasExtended = true;
-          rollers.setState(RollersState.INTAKE);
-        } else {
-          deployer.setGoal(DeployerState.EXTEND);
-          if (!wasExtended) {
-            // untangle from the net
-            rollers.setState(RollersState.DEPLOY);
+        if (!hasExtended) {
+          deployer.setState(DeployerState.EXTEND);
+          rollers.setState(RollersState.DEPLOY);
+          if (deployer.isExtended()) {
+            hasExtended = true;
           }
+        } else {
+          deployer.setState(DeployerState.EXTEND);
+          rollers.setState(RollersState.INTAKE);
         }
       }
+      case EJECT -> {
+        deployer.setState(DeployerState.EXTEND);
+        rollers.setState(RollersState.EJECT);
+      }
+      case SMOOSH -> {
+        deployer.setState(DeployerState.SMOOSH);
+        rollers.setState(RollersState.SMOOSH);
+      }
     }
-    deployer.periodic();
-    rollers.periodic();
-  }
 
-  public void setState(IntakeState desiredState) {
-    state = desiredState;
+    deployer.outputsPeriodic();
+    rollers.outputsPeriodic();
+
+    Logger.recordOutput("Intake/CurrentState", state);
+    Logger.recordOutput("Intake/hasExtended", hasExtended);
   }
 
   public IntakeState getState() {
     return state;
   }
 
+  public IntakeState getPrevState() {
+    return prevState;
+  }
+
+  public boolean isDisabled() {
+    return state == IntakeState.DISABLED;
+  }
+
+  public void setState(IntakeState state) {
+    Logger.recordOutput("Intake/RequestedState", state);
+    prevState = this.state;
+    this.state = state;
+  }
+
   public boolean isExtended() {
     return deployer.isExtended();
   }
 
-  public void enableBrakeMode(boolean enable) {
+  // Has extended from deployment; hasn't gotten stuck in net
+  public boolean hasExtended() {
+    return hasExtended;
+  }
+
+  public void setBrakeMode(boolean enable) {
     deployer.setBrakeMode(enable);
+    rollers.setBrakeMode(enable);
   }
 }
