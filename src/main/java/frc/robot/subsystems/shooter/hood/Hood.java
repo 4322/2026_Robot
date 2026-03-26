@@ -107,7 +107,7 @@ public class Hood {
       } else {
         velocity = slowVelocity.get();
       }
-    } else {
+    } else if (lastVelocity < 0) {
       if (inputs.degrees < requestedAngleDeg) {
         velocity = 0;
       } else {

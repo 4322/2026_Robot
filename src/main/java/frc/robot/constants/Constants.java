@@ -209,7 +209,7 @@ public final class Constants {
         0.5; // don't exceed 1.0 to avoid hitting the trench
     public static final double largeToleranceDeg = 12.0;
     public static final double mediumToleranceDeg = 4.0;
-    public static final int kSPulseWidth = 50; // power to hold hood position
+    public static final int kSPulseWidth = 70; // power to hold hood position
   }
 
   public static class Control {
