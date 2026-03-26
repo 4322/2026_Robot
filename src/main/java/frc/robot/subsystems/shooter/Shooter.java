@@ -164,7 +164,8 @@ public class Shooter extends SubsystemBase {
           turret.unwind(true);
         }
 
-        // Finished when turret within 180 degree range of physical midpoint
+        // TODO: Change check to when turret is within 90 degrees from physical midpoint
+        // Don't need to check if turret is exactly at goal, just within range
         if ((turret.isAtGoal() && turret.requestAtUnwindLimit()) || Constants.turretLocked) {
           turret.unwind(false);
           // Exit unwind state when completed
