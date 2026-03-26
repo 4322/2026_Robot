@@ -9,7 +9,7 @@ public class Spindexer {
   private SpindexerIOInputsAutoLogged inputs = new SpindexerIOInputsAutoLogged();
 
   private double requestedSpeed = -1;
-  private boolean unjaming;
+  private boolean unjamOverride;
 
   public enum SpindexerStates {
     DISABLED,
@@ -46,7 +46,7 @@ public class Spindexer {
             io.setTargetMechanismRotations(requestedSpeed);
           }
           case UNJAM -> {
-            io.setTargetMechanismRotations(requestedSpeed);
+            io.setTargetMechanismRotations(Constants.Spindexer.unjamRPS);
           }
         }
       }
@@ -58,22 +58,30 @@ public class Spindexer {
   }
 
   public void requestIdle() {
-    state = SpindexerStates.IDLE;
-    if (!unjaming) {
+    if (!unjamOverride) {
+      state = SpindexerStates.IDLE;
       requestedSpeed = 0;
     }
   }
 
   public void requestGoal(double speed) {
-    state = SpindexerStates.INDEXING;
-    if (!unjaming) {
+    if (!unjamOverride) {
+      state = SpindexerStates.INDEXING;
       requestedSpeed = speed;
     }
   }
 
-  public void unjamOverride(boolean unjaming) {
-    this.unjaming = unjaming;
-    requestedSpeed = Constants.Tunnel.unjamRPS;
+  public void unjamOverride(boolean unjamOverride) {
+    this.unjamOverride = unjamOverride;
+    if (unjamOverride) {
+      state = SpindexerStates.UNJAM;
+      requestedSpeed = Constants.Spindexer.unjamRPS;
+    }
+    else {
+      // Default to idle when unjam isn't desired
+      state = SpindexerStates.IDLE;
+      requestedSpeed = 0;
+    }
   }
 
   public void enableBrakeMode(boolean enable) {

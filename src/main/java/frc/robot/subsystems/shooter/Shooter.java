@@ -303,9 +303,9 @@ public class Shooter extends SubsystemBase {
     return inIdle;
   }
 
-  public void unjamOverride(boolean unjaming) {
-    tunnel.unjamOverride(unjaming);
-    spindexer.unjamOverride(unjaming);
+  public void unjamOverride(boolean unjamOverride) {
+    tunnel.unjamOverride(unjamOverride);
+    spindexer.unjamOverride(unjamOverride);
   }
 
   public void trenchOverride(boolean unjaming) {

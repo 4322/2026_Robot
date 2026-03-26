@@ -2,13 +2,14 @@ package frc.robot.subsystems.shooter.tunnel;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.constants.Constants;
+
 import org.littletonrobotics.junction.Logger;
 
 public class Tunnel {
   private TunnelIO io;
   private TunnelIOInputsAutoLogged inputs = new TunnelIOInputsAutoLogged();
   private double requestedSpeed = -1;
-  private boolean unjaming;
+  private boolean unjamOverride;
 
   public enum TunnelStates {
     DISABLED,
@@ -31,6 +32,7 @@ public class Tunnel {
   public void outputsPeriodic() {
     switch (Constants.tunnelMode) {
       case TUNING -> {}
+      case DISABLED -> {}
       case NORMAL -> {
         switch (state) {
           case DISABLED -> {
@@ -44,6 +46,9 @@ public class Tunnel {
           case INDEXING -> {
             io.setTargetMechanismRotations(requestedSpeed);
           }
+          case UNJAM -> {
+            io.setTargetMechanismRotations(Constants.Tunnel.unjamRPS);
+          }
         }
       }
     }
@@ -53,19 +58,27 @@ public class Tunnel {
   }
 
   public void requestIdle() {
-    if (!unjaming) {
+    if (!unjamOverride) {
       state = TunnelStates.IDLE;
       requestedSpeed = 0;
     }
   }
 
-  public void unjamOverride(boolean unjaming) {
-    this.unjaming = unjaming;
-    requestedSpeed = Constants.Tunnel.unjamRPS;
+  public void unjamOverride(boolean unjamOverride) {
+    this.unjamOverride = unjamOverride;
+    if (unjamOverride) {
+      state = TunnelStates.UNJAM;
+      requestedSpeed = Constants.Tunnel.unjamRPS;
+    }
+    else {
+      // Default to idle when unjam isn't desired
+      state = TunnelStates.IDLE;
+      requestedSpeed = 0;
+    }
   }
 
   public void requestGoal(double speed) {
-    if (!unjaming) {
+    if (!unjamOverride) {
       state = TunnelStates.INDEXING;
       requestedSpeed = speed;
     }
