@@ -10,13 +10,13 @@ public class Hood {
   private static final LoggedTunableNumber fastVelocity =
       new LoggedTunableNumber("Hood/fastVelocity", Constants.Hood.fastVelocity);
   private static final LoggedTunableNumber mediumVelocity =
-      new LoggedTunableNumber("Hood/fastVelocity", Constants.Hood.mediumVelocity);
+      new LoggedTunableNumber("Hood/mediumVelocity", Constants.Hood.mediumVelocity);
   private static final LoggedTunableNumber slowVelocity =
       new LoggedTunableNumber("Hood/slowVelocity", Constants.Hood.slowVelocity);
   private static final LoggedTunableNumber largeToleranceDeg =
       new LoggedTunableNumber("Hood/largeToleranceDeg", Constants.Hood.largeToleranceDeg);
   private static final LoggedTunableNumber mediumToleranceDeg =
-      new LoggedTunableNumber("Hood/largeToleranceDeg", Constants.Hood.mediumToleranceDeg);
+      new LoggedTunableNumber("Hood/mediumToleranceDeg", Constants.Hood.mediumToleranceDeg);
   private static final LoggedTunableNumber smallToleranceDeg =
       new LoggedTunableNumber("Hood/smallToleranceDeg", Constants.Hood.smallToleranceDeg);
   private static final LoggedTunableNumber tuningGoalDeg =
@@ -55,7 +55,6 @@ public class Hood {
           io.setPulseWidth((int) tuningPulseWidth.get());
         } else {
           requestGoal(tuningGoalDeg.get());
-          setVelocity();
         }
       }
       case NORMAL -> {
