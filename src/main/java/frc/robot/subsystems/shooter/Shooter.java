@@ -24,6 +24,7 @@ import org.littletonrobotics.junction.Logger;
 public class Shooter extends SubsystemBase {
 
   public enum ShooterState {
+    STARTING_CONFIG,
     DISABLED,
     IDLE, // Spindexer stopped, flywheel at full speed, tunnel at full speed
     UNWIND,
@@ -32,8 +33,8 @@ public class Shooter extends SubsystemBase {
     STOP // Everything but flywheel stopped
   }
 
-  private ShooterState state = ShooterState.DISABLED;
-  private ShooterState prevstate = ShooterState.DISABLED;
+  private ShooterState state = ShooterState.STARTING_CONFIG;
+  private ShooterState prevstate = ShooterState.STARTING_CONFIG;
 
   private Flywheel flywheel;
   private Hood hood;
@@ -114,8 +115,7 @@ public class Shooter extends SubsystemBase {
       }
       return;
     }
-    if (DriverStation.isDisabled()) {
-
+    if (DriverStation.isDisabled() && state != ShooterState.STARTING_CONFIG) {
       state = ShooterState.DISABLED;
     }
 
@@ -129,9 +129,12 @@ public class Shooter extends SubsystemBase {
     }
 
     switch (state) {
+      case STARTING_CONFIG -> {
+        // Intake has to be down first before using shooter
+        // Commands will take state out of starting config only if intake was first deployed
+      }
       case DISABLED -> {
         if (DriverStation.isEnabled()) {
-
           state = ShooterState.IDLE;
         }
       }
