@@ -93,7 +93,8 @@ public class Hood {
     if (Math.abs(inputs.degrees - requestedAngleDeg) < smallToleranceDeg.get()) {
       velocity = 0;
     } else if (inputs.degrees > requestedAngleDeg + largeToleranceDeg.get()
-        || requestedAngleDeg == Constants.Hood.safeAngleDeg) {
+        || (requestedAngleDeg == Constants.Hood.safeAngleDeg
+            && inputs.degrees > Constants.Hood.safeAngleDeg)) {
       velocity = -fastVelocity.get();
     } else if (inputs.degrees < requestedAngleDeg - largeToleranceDeg.get()) {
       velocity = fastVelocity.get();
@@ -128,7 +129,7 @@ public class Hood {
   private void setGoal(double angle) {
     requestedAngleDeg = angle;
     setVelocity();
-    Logger.recordOutput("Hood/goalDegree", requestedAngleDeg);
+    Logger.recordOutput("Hood/goalDegrees", requestedAngleDeg);
   }
 
   public void trenchOverride(boolean override) {
