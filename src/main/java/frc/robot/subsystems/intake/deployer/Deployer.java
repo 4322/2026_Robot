@@ -26,7 +26,9 @@ public class Deployer {
 
   // Called at end of command processing in intake
   public void outputsPeriodic() {
-    // Nothing here currently
+    Logger.recordOutput("Intake/Deployer/isSmooshed", isSmooshed());
+    Logger.recordOutput("Intake/Deployer/isExtended", isExtended());
+    Logger.recordOutput("Intake/Deployer/isStowed", isStowed());
   }
 
   public void setBrakeMode(boolean mode) {
@@ -38,6 +40,14 @@ public class Deployer {
       return true;
     } else {
       return inputs.angleDeg >= Constants.Deployer.extendDeg - Constants.Deployer.tolerance;
+    }
+  }
+
+  public boolean isSmooshed() {
+    if (Constants.deployerMode == SubsystemMode.DISABLED) {
+      return true;
+    } else {
+      return inputs.angleDeg >= Constants.Deployer.smooshDeg - Constants.Deployer.tolerance;
     }
   }
 

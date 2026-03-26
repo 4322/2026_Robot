@@ -7,9 +7,11 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Robot;
 import frc.robot.commands.IntakeCommands;
 import frc.robot.commands.ShooterCommands;
+import frc.robot.constants.Constants;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.led.LED;
@@ -37,6 +39,9 @@ public class RSweepBump extends SequentialCommandGroup {
             new SequentialCommandGroup(
                 AutoBuilder.followPath(Robot.R_2SWEEP_A),
                 AutoBuilder.followPath(Robot.R_2SWEEP_B),
-                ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake))));
+                ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake),
+                new SequentialCommandGroup(
+                    new WaitCommand(Constants.Autonomous.smooshDelayDoubleFirstPass),
+                    IntakeCommands.setAutoSmoosh(intake, true)))));
   }
 }
