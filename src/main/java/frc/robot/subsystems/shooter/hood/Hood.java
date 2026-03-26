@@ -75,7 +75,7 @@ public class Hood {
               hashCode(), () -> pidController.setIZone(kIZone.get()), kIZone);
           LoggedTunableNumber.ifChanged(
               hashCode(), () -> pidController.setTolerance(toleranceDeg.get()), toleranceDeg);
-          requestGoal(tuningGoalDeg.get());
+          requestGoal(tuningGoalDeg.get(), null);
 
           pidVelocity = pidController.calculate(inputs.degrees, requestedAngleDeg);
 

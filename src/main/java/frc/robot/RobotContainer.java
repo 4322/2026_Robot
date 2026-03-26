@@ -8,14 +8,12 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.autonomous.AutonomousSelector;
 import frc.robot.commands.DriveCommands;
@@ -47,7 +45,6 @@ import frc.robot.subsystems.led.LEDIO;
 import frc.robot.subsystems.led.LEDIOCANdle;
 import frc.robot.subsystems.led.LEDIOSim;
 import frc.robot.subsystems.shooter.Shooter;
-import frc.robot.subsystems.shooter.areaManager.AreaManager;
 import frc.robot.subsystems.shooter.flywheel.Flywheel;
 import frc.robot.subsystems.shooter.flywheel.FlywheelIO;
 import frc.robot.subsystems.shooter.flywheel.FlywheelIOSim;
@@ -108,9 +105,6 @@ public class RobotContainer {
 
   // Controller
   public static final CommandXboxController controller = new CommandXboxController(0);
-
-  private final Trigger inNonShootingArea;
-  private final Trigger autoAbleToShoot;
 
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> testCommandChooser;
@@ -367,13 +361,6 @@ public class RobotContainer {
     testCommandChooser.addOption(
         "Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
 
-    // Triggers
-    inNonShootingArea =
-        new Trigger(() -> !AreaManager.isShootingArea(drive.getTurretPose().getTranslation()));
-
-    autoAbleToShoot =
-        new Trigger(() -> shooter.autoShootEnabled() && DriverStation.isAutonomousEnabled());
-
     // Configure the button bindings
     configureButtonBindings();
 
@@ -413,10 +400,7 @@ public class RobotContainer {
     controller.leftTrigger().whileTrue(ShooterCommands.trenchOverride(shooter));
 
     if (Constants.turretLocked) {
-      controller
-          .rightTrigger()
-          .whileTrue(
-              ShooterCommands.aimAndShoot(shooter, drive).onlyIf(inNonShootingArea.negate()));
+      controller.rightTrigger().whileTrue(ShooterCommands.aimAndShoot(shooter, drive));
     } else {
       controller.rightTrigger().whileTrue(new Shoot(shooter, drive));
       controller.a().whileTrue(new ShootFixed(shooter));
