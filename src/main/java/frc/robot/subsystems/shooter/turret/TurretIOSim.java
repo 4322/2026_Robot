@@ -22,7 +22,7 @@ public class TurretIOSim implements TurretIO {
     double velocity = (currentAngle - prevPos) * 50;
 
     inputs.turretDegs = currentAngle;
-    inputs.statorVolts = voltage;
+    inputs.appliedVoltage = voltage;
     inputs.motorRPS = velocity;
   }
 

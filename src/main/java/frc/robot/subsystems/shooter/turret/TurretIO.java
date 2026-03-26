@@ -7,9 +7,10 @@ public interface TurretIO {
   public static class TurretIOInputs {
     public boolean motorConnected = false;
     public double motorRPS = 0.0;
-    public double appliedVolts = 0.0;
-    public double statorVolts = 0.0;
-    public double TempCelsius = 0.0;
+    public double supplyCurrentAmps = 0.0;
+    public double statorCurrentAmps = 0.0;
+    public double appliedVoltage = 0.0;
+    public double tempCelsius = 0.0;
     public int encoderOneCount = 0;
     public int encoderTwoCount = 0;
     public double turretDegs = 0.0;

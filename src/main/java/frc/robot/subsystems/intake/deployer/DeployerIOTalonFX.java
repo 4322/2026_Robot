@@ -88,24 +88,15 @@ public class DeployerIOTalonFX implements DeployerIO {
   @Override
   public void updateInputs(DeployerIOInputs inputs) {
     // Implementation for updating inputs from the TalonFX hardware
-
     inputs.connected = deployerMotor.isConnected();
-
     inputs.angleDeg = Units.rotationsToDegrees(deployerMotor.getPosition().getValueAsDouble());
-
     inputs.motorDegreesPerSec =
         Units.rotationsToDegrees(deployerMotor.getVelocity().getValueAsDouble());
-
-    inputs.busCurrentAmps = deployerMotor.getSupplyCurrent().getValueAsDouble();
-
+    inputs.supplyCurrentAmps = deployerMotor.getSupplyCurrent().getValueAsDouble();
     inputs.statorCurrentAmps = deployerMotor.getStatorCurrent().getValueAsDouble();
-
     inputs.motorTempCelcius = deployerMotor.getDeviceTemp().getValueAsDouble();
-
     inputs.appliedVolts = deployerMotor.getMotorVoltage().getValueAsDouble();
-
     inputs.encoderRotations = canCoder.getAbsolutePosition().getValueAsDouble();
-
     inputs.motorRotations = deployerMotor.getRotorPosition().getValueAsDouble();
   }
 
