@@ -13,7 +13,6 @@ public interface TurretIO {
     public int encoderOneCount = 0;
     public int encoderTwoCount = 0;
     public double turretDegs = 0.0;
-    public double requestedTurretDegs = 0.0;
   }
 
   public default void updateInputs(TurretIOInputs inputs) {}

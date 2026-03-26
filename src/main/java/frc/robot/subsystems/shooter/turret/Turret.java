@@ -136,7 +136,7 @@ public class Turret {
   }
 
   private double getTargetAngleInMidpoint() {
-    Logger.recordOutput("Shooter/currentMethod", "getTargetAngleInMidpoint()");
+    Logger.recordOutput("Turret/currentMethod", "getTargetAngleInMidpoint()");
     return (desiredDeg - Constants.Turret.midPointPhysicalDeg) > 0
         ? desiredDeg - 360
         : (desiredDeg - Constants.Turret.midPointPhysicalDeg) < 0 ? desiredDeg + 360 : desiredDeg;

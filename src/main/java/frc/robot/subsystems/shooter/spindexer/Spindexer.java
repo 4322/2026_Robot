@@ -34,7 +34,7 @@ public class Spindexer {
       case TUNING -> {}
       case NORMAL -> {
         if (DriverStation.isDisabled()) {
-            state = SpindexerStates.DISABLED;
+          state = SpindexerStates.DISABLED;
         }
 
         switch (state) {
