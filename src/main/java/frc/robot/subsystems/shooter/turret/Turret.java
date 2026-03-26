@@ -43,10 +43,6 @@ public class Turret {
   }
 
   public void outputsPeriodic() {
-    Logger.recordOutput("Turret/State", state);
-    Logger.recordOutput("Turret/needToUnwind", needsToUnwind());
-    Logger.recordOutput("Turret/atGoal", isAtGoal());
-
     switch (Constants.turretMode) {
       case DISABLED -> {}
       case TUNING -> {}
@@ -112,6 +108,11 @@ public class Turret {
           }
         }
 
+        Logger.recordOutput("Turret/State", state);
+        Logger.recordOutput("Turret/needToUnwind", needsToUnwind());
+        Logger.recordOutput("Turret/isUnwinding", isUnwinding());
+        Logger.recordOutput("Turret/atGoal", isAtGoal());
+        Logger.recordOutput("Turret/desiredDeg", desiredDeg);
         Logger.recordOutput("Turret/usingFallbackTolerance", fallbackToleranceEnabled);
       }
     }
@@ -132,7 +133,6 @@ public class Turret {
       }
     }
     this.isScoring = isScoring;
-    Logger.recordOutput("Turret/desiredDeg", desiredDeg);
   }
 
   private double getTargetAngleInMidpoint() {
@@ -221,6 +221,7 @@ public class Turret {
     // angle.
     targetAngle =
         ClockUtil.inputModulus(targetAngle - currentAngle, -180, 180, minInclusive) + currentAngle;
+
     return targetAngle;
   }
 
