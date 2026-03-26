@@ -1,5 +1,6 @@
 package frc.robot.subsystems.intake;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.intake.deployer.Deployer;
 import frc.robot.subsystems.intake.deployer.Deployer.DeployerState;
@@ -10,8 +11,8 @@ import org.littletonrobotics.junction.Logger;
 public class Intake extends SubsystemBase {
   private final Deployer deployer;
   private final Rollers rollers;
-  private IntakeState state = IntakeState.DISABLED;
-  private IntakeState prevState = IntakeState.DISABLED;
+  private IntakeState state = IntakeState.STARING_CONFIG;
+  private IntakeState prevState = IntakeState.STARING_CONFIG;
   private boolean hasExtended = false;
 
   public Intake(Deployer deployer, Rollers rollers) {
@@ -20,7 +21,7 @@ public class Intake extends SubsystemBase {
   }
 
   public enum IntakeState {
-    DISABLED,
+    STARING_CONFIG,
     IDLE,
     EJECT,
     SMOOSH,
@@ -35,11 +36,14 @@ public class Intake extends SubsystemBase {
 
   public void periodicOutputs() {
 
+    if (DriverStation.isDisabled() && state != IntakeState.STARING_CONFIG) {
+      setState(IntakeState.IDLE);
+    }
+
     switch (state) {
-      case DISABLED -> {
+      case STARING_CONFIG -> {
         deployer.setState(DeployerState.DISABLED);
         rollers.setState(RollersState.DISABLED);
-        hasExtended = false;
       }
       case IDLE -> {
         if (!hasExtended) {
@@ -88,10 +92,6 @@ public class Intake extends SubsystemBase {
 
   public IntakeState getPrevState() {
     return prevState;
-  }
-
-  public boolean isDisabled() {
-    return state == IntakeState.DISABLED;
   }
 
   public void setState(IntakeState state) {
