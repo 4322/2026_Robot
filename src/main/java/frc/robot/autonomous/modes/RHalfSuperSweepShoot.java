@@ -47,6 +47,6 @@ public class RHalfSuperSweepShoot extends SequentialCommandGroup {
                 AutoBuilder.followPath(Robot.R_Half_SuperSweep_F),
                 ShooterCommands.setAutoShoot(shooter, true),
                 new WaitCommand(Constants.Autonomous.smooshDelaySinglePass),
-                IntakeCommands.autoSmoosh(intake))));
+                IntakeCommands.setAutoSmoosh(intake, true))));
   }
 }

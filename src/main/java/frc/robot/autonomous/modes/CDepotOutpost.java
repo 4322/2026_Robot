@@ -42,6 +42,6 @@ public class CDepotOutpost extends SequentialCommandGroup {
                 AutoBuilder.followPath(Robot.C_Depot_To_Outpost),
                 ShooterCommands.setAutoShoot(shooter, true),
                 new WaitCommand(Constants.Autonomous.smooshDelaySinglePass),
-                IntakeCommands.autoSmoosh(intake))));
+                IntakeCommands.setAutoSmoosh(intake, true))));
   }
 }

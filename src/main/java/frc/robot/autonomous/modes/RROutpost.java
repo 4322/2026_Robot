@@ -41,6 +41,6 @@ public class RROutpost extends SequentialCommandGroup {
             AutoBuilder.followPath(Robot.R_ROutpost_B),
             ShooterCommands.setAutoShoot(shooter, true),
             new WaitCommand(Constants.Autonomous.smooshDelaySinglePass),
-            IntakeCommands.autoSmoosh(intake)));
+            IntakeCommands.setAutoSmoosh(intake, true)));
   }
 }

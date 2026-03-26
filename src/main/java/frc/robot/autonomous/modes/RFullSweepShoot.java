@@ -43,6 +43,6 @@ public class RFullSweepShoot extends SequentialCommandGroup {
                 AutoBuilder.followPath(Robot.R_Neutral_Mid_To_ShootR),
                 ShooterCommands.setAutoShoot(shooter, true),
                 new WaitCommand(Constants.Autonomous.smooshDelaySinglePass),
-                IntakeCommands.autoSmoosh(intake))));
+                IntakeCommands.setAutoSmoosh(intake, true))));
   }
 }

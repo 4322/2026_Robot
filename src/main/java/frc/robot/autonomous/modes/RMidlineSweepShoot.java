@@ -43,6 +43,6 @@ public class RMidlineSweepShoot extends SequentialCommandGroup {
                 AutoBuilder.followPath(Robot.R_NeutralRMid_To_ShootR),
                 ShooterCommands.setAutoShoot(shooter, true),
                 new WaitCommand(Constants.Autonomous.smooshDelaySinglePass),
-                IntakeCommands.autoSmoosh(intake))));
+                IntakeCommands.setAutoSmoosh(intake, true))));
   }
 }
