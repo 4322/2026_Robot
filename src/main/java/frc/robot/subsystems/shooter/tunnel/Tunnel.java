@@ -33,8 +33,14 @@ public class Tunnel {
       case TUNING -> {}
       case DISABLED -> {}
       case NORMAL -> {
+        if (DriverStation.isDisabled()) {
+          state = TunnelStates.DISABLED;
+        }
+
         switch (state) {
           case DISABLED -> {
+            // Reset variables
+            unjamOverride = false;
             if (DriverStation.isEnabled()) {
               state = TunnelStates.IDLE;
             }

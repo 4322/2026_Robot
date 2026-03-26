@@ -1,7 +1,6 @@
 package frc.robot.subsystems.shooter.turret;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.RobotContainer;
@@ -52,8 +51,17 @@ public class Turret {
       case DISABLED -> {}
       case TUNING -> {}
       case NORMAL -> {
+        if (DriverStation.isDisabled()) {
+          state = turretState.DISABLED;
+        }
+
         switch (state) {
           case DISABLED -> {
+            // If ever disabled during unwind, ensure variable is reset
+            // Ensure turret remains in position upon re-enabling after moving while disabled
+            desiredDeg = inputs.turretDegs;
+            prevDeg = inputs.turretDegs;
+            needsToUnwind = false;
             if (!DriverStation.isDisabled()) {
               state = turretState.SET_TURRET_ANGLE;
             }
@@ -113,10 +121,8 @@ public class Turret {
     this.desiredDeg = angle;
     if (Constants.turretLocked) {
       return;
-    } else if (state == turretState.DISABLED) {
-      desiredDeg = Units.rotationsToDegrees(getRotation());
-      prevDeg = desiredDeg;
     }
+
     if (state == turretState.SET_TURRET_ANGLE) {
       if (desiredDeg != null) {
         desiredDeg = calculateAngle(desiredDeg, inputs.turretDegs);

@@ -33,8 +33,14 @@ public class Spindexer {
     switch (Constants.spindexerMode) {
       case TUNING -> {}
       case NORMAL -> {
+        if (DriverStation.isDisabled()) {
+            state = SpindexerStates.DISABLED;
+        }
+
         switch (state) {
           case DISABLED -> {
+            // Reset variables
+            unjamOverride = false;
             if (DriverStation.isEnabled()) {
               state = SpindexerStates.IDLE;
             }
