@@ -82,6 +82,11 @@ public class HoodIOServo implements HoodIO {
   }
 
   @Override
+  public void setPulseWidth(int pulseWidth) {
+    servo.setPulseWidth(pulseWidth);
+  }
+
+  @Override
   public void setBrakeMode(boolean brake) {
     servo.setEnabled(brake);
   }

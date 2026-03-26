@@ -90,12 +90,18 @@ public final class Constants {
   public static class Drive {
     public static final int gyroID = 0;
     public static boolean zeroTurnEncoders = false; // for initial swerve homing only
+    public static double driveSupplyCurrentLimit = 45; // don't pop main breaker
+    public static double driveSupplyCurrentLowerLimit = 40;
+    public static double driveSupplyCurrentLowerTime = 1.0;
+    public static double turnSupplyCurrentLimit = 30;
   }
 
   public static class Spindexer {
     public static final int spindexerMotorId = 4;
-    public static final double supplyCurrentLimit = 40;
-    public static final double statorCurrentLimit = 60;
+    public static final double supplyCurrentLimit = 60;
+    public static final double supplyCurrentLowerLimit = 40;
+    public static final double supplyCurrentLowerTime = 0.5; // fast start
+    public static final double statorCurrentLimit = 120;
     public static final InvertedValue motorInvert = InvertedValue.CounterClockwise_Positive;
     public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
     public static final double kS = 0.34;
@@ -176,8 +182,8 @@ public final class Constants {
     public static final int CANCoderOneOffsetCount = 3784; // in locked position
     public static final int CANCoderTwoOffsetCount = 1194; // in locked position
     public static final double turretGearRatio = 27;
-    public static final double minPhysicalLimitDeg = -150;
-    public static final double maxPhysicalLimitDeg = 510;
+    public static final double minPhysicalLimitDeg = -180;
+    public static final double maxPhysicalLimitDeg = 540;
     public static final double midPointPhysicalDeg =
         (minPhysicalLimitDeg + maxPhysicalLimitDeg) / 2.0;
     public static final double unwindToleranceDeg = 30.0;
