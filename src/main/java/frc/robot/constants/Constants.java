@@ -200,18 +200,13 @@ public final class Constants {
     public static final int encoderId = 3;
     public static final double gearRatio = 164 / 11.0;
     public static final double safeAngleDeg = 0;
-    public static final double kSPulsewidthUp = 80;
-    public static final double kSPulsewidthDown = 45;
-    public static final double kV = 0;
-    public static final double kP = 0.04;
-    public static final double kI = 0.03;
-    public static final double kIZone = 1.0;
-    public static final double kD = 0.0;
-    public static final int idleVelocity = 0;
-    public static final double toleranceDeg = 3;
     public static final double homingVelocityThresholdRPS = 0.01;
     public static final double homingVelocity = -0.4;
-    public static final double holdDownVelocity = -0.2;
+    public static final double fastVelocity = 1.0;
+    public static final double slowVelocity = 0.25; // no kS compensation, kS can be 0.1 to 0.2
+    public static final double smallToleranceDeg =
+        0.5; // don't exceed 1.0 to avoid hitting the trench
+    public static final double largeToleranceDeg = 4.0;
   }
 
   public static class Control {

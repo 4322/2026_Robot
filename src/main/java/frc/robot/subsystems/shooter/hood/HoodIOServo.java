@@ -69,15 +69,7 @@ public class HoodIOServo implements HoodIO {
   public void setServoVelocity(double velocity) {
     // negative velocity raises hood
     double adjustedVelocity = -MathUtil.clamp(velocity, -1, 1);
-    if (adjustedVelocity == 0) {
-      currentRequested = 1500;
-    } else if (adjustedVelocity < 0) {
-      double range = 500 - Constants.Hood.kSPulsewidthUp;
-      currentRequested = (int) (1500 - Constants.Hood.kSPulsewidthUp + adjustedVelocity * range);
-    } else {
-      double range = 500 - Constants.Hood.kSPulsewidthDown;
-      currentRequested = (int) (1500 + Constants.Hood.kSPulsewidthDown + adjustedVelocity * range);
-    }
+    currentRequested = (int) (1500 - adjustedVelocity * 500);
     servo.setPulseWidth(currentRequested);
   }
 
