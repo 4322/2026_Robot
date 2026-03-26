@@ -56,8 +56,6 @@ public class Turret {
           case DISABLED -> {
             if (!DriverStation.isDisabled()) {
               state = turretState.SET_TURRET_ANGLE;
-            } else {
-              io.setPosition(getRotation());
             }
             break;
           }
@@ -166,12 +164,12 @@ public class Turret {
     state = turretState.SET_TURRET_ANGLE;
   }
 
-  public boolean atTurretAtUnwindLimit() {
+  public boolean requestAtUnwindLimit() {
     return MathUtil.isNear(Constants.Turret.midPointPhysicalDeg, desiredDeg, 180);
   }
 
   public boolean isUnwinding() {
-    return needsToUnwind;
+    return this.needsToUnwind;
   }
 
   public void unwind(boolean needsUnwindFinish) {
@@ -181,7 +179,7 @@ public class Turret {
               ? desiredDeg
               : getTargetAngleInMidpoint();
     }
-    needsToUnwind = needsUnwindFinish;
+    this.needsToUnwind = needsUnwindFinish;
     prevDeg = desiredDeg;
     this.isScoring = null;
     Logger.recordOutput("Turret/unwindDesiredDeg", prevDeg);
