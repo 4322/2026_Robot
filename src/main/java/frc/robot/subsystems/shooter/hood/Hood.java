@@ -21,6 +21,8 @@ public class Hood {
       new LoggedTunableNumber("Hood/toleranceDeg", Constants.Hood.toleranceDeg);
   private static final LoggedTunableNumber tuningGoalDeg =
       new LoggedTunableNumber("Hood/tuningGoalDeg", 0);
+  private static final LoggedTunableNumber tuningPulseWidth =
+      new LoggedTunableNumber("Hood/tuningpulseWidth", 0);
 
   private HoodIO io;
   private HoodIOInputsAutoLogged inputs = new HoodIOInputsAutoLogged();
@@ -64,11 +66,22 @@ public class Hood {
         LoggedTunableNumber.ifChanged(
             hashCode(), () -> pidController.setTolerance(toleranceDeg.get()), toleranceDeg);
         requestGoal(tuningGoalDeg.get(), null);
+        if (tuningPulseWidth.get() != 0) {
+          io.setPulseWidth((int) tuningPulseWidth.get());
+        } else {
+          LoggedTunableNumber.ifChanged(
+              hashCode(), () -> pidController.setPID(kP.get(), kI.get(), kD.get()), kP, kI, kD);
+          LoggedTunableNumber.ifChanged(
+              hashCode(), () -> pidController.setIZone(kIZone.get()), kIZone);
+          LoggedTunableNumber.ifChanged(
+              hashCode(), () -> pidController.setTolerance(toleranceDeg.get()), toleranceDeg);
+          requestGoal(tuningGoalDeg.get());
 
-        pidVelocity = pidController.calculate(inputs.degrees, requestedAngleDeg);
+          pidVelocity = pidController.calculate(inputs.degrees, requestedAngleDeg);
 
-        io.setServoVelocity(pidVelocity);
-        Logger.recordOutput("Hood/requestedServoVelocity", pidVelocity);
+          io.setServoVelocity(pidVelocity);
+          Logger.recordOutput("Hood/requestedServoVelocity", pidVelocity);
+        }
       }
       case NORMAL -> {
         if (Constants.currentMode == Constants.Mode.SIM && !homed) {

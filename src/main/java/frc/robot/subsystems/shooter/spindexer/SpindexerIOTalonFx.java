@@ -19,7 +19,11 @@ public class SpindexerIOTalonFx implements SpindexerIO {
     motor = new TalonFX(Constants.Spindexer.spindexerMotorId, Constants.CANivore.CANBus);
 
     config.CurrentLimits.StatorCurrentLimit = Constants.Spindexer.statorCurrentLimit;
+    config.CurrentLimits.StatorCurrentLimitEnable = true;
     config.CurrentLimits.SupplyCurrentLimit = Constants.Spindexer.supplyCurrentLimit;
+    config.CurrentLimits.SupplyCurrentLimitEnable = true;
+    config.CurrentLimits.SupplyCurrentLowerLimit = Constants.Spindexer.supplyCurrentLowerLimit;
+    config.CurrentLimits.SupplyCurrentLowerTime = Constants.Spindexer.supplyCurrentLowerTime;
 
     config.MotorOutput.Inverted = Constants.Spindexer.motorInvert;
     config.MotorOutput.NeutralMode = Constants.Spindexer.neutralMode;
@@ -69,6 +73,7 @@ public class SpindexerIOTalonFx implements SpindexerIO {
 
   @Override
   public void stop() {
+    lastRequestedVelocity = 0;
     motor.stopMotor();
   }
 
