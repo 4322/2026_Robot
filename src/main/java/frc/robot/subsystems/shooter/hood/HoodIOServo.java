@@ -73,9 +73,9 @@ public class HoodIOServo implements HoodIO {
     // negative velocity raises hood
     double adjustedVelocity = -MathUtil.clamp(velocity, -1, 1);
     int pulseWidth = (int) (adjustedVelocity * 500);
-    if (pulseWidth >= 0 && requestedAngleDeg > Constants.Hood.safeAngleDeg) {
+    if (pulseWidth <= 0 && requestedAngleDeg > Constants.Hood.safeAngleDeg) {
       // hold hood up in position if not in safe position
-      pulseWidth = Math.max(pulseWidth, (int) kSPulseWidth.get());
+      pulseWidth = Math.min(pulseWidth, (int) -kSPulseWidth.get());
     }
     pulseWidth += 1500; // add in zero velocity pulse width
     servo.setPulseWidth(pulseWidth);
