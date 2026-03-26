@@ -59,17 +59,16 @@ public class Hood {
           io.setEncoderHomed();
           homed = true;
         }
+        LoggedTunableNumber.ifChanged(
+            hashCode(), () -> pidController.setPID(kP.get(), kI.get(), kD.get()), kP, kI, kD);
+        LoggedTunableNumber.ifChanged(
+            hashCode(), () -> pidController.setIZone(kIZone.get()), kIZone);
+        LoggedTunableNumber.ifChanged(
+            hashCode(), () -> pidController.setTolerance(toleranceDeg.get()), toleranceDeg);
+        requestGoal(tuningGoalDeg.get(), null);
         if (tuningPulseWidth.get() != 0) {
           io.setPulseWidth((int) tuningPulseWidth.get());
         } else {
-          LoggedTunableNumber.ifChanged(
-              hashCode(), () -> pidController.setPID(kP.get(), kI.get(), kD.get()), kP, kI, kD);
-          LoggedTunableNumber.ifChanged(
-              hashCode(), () -> pidController.setIZone(kIZone.get()), kIZone);
-          LoggedTunableNumber.ifChanged(
-              hashCode(), () -> pidController.setTolerance(toleranceDeg.get()), toleranceDeg);
-          requestGoal(tuningGoalDeg.get(), null);
-
           pidVelocity = pidController.calculate(inputs.degrees, requestedAngleDeg);
 
           io.setServoVelocity(pidVelocity);
