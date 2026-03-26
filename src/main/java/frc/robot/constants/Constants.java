@@ -271,6 +271,8 @@ public final class Constants {
     public static final double RotorToSensorRatio = 12.0;
     public static final double tolerance = 2.0;
     public static final double SesnorOffsetRotations = 0.39; // retract pos > 0.02 to avoid wrapping
+    public static final double alreadyDeployedMaxDeg = 13;
+    public static final double alreadyDeployedMoveThreshold = 3;
   }
 
   public static class FiringParameters {
