@@ -24,7 +24,7 @@ public class Rollers {
 
   public void inputsPeriodic() {
     rollersIO.updateInputs(inputs);
-    Logger.processInputs("Rollers", inputs);
+    Logger.processInputs("Intake/Rollers", inputs);
   }
 
   // Called at end of command processing in intake
@@ -37,7 +37,7 @@ public class Rollers {
   }
 
   public void setState(RollersState state) {
-    Logger.recordOutput("Rollers/State", state);
+    Logger.recordOutput("Intake/Rollers/State", state);
     switch (state) {
       case DISABLED -> {
         rollersIO.stopMotor();

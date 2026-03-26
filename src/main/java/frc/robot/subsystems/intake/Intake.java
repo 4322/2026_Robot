@@ -21,7 +21,6 @@ public class Intake extends SubsystemBase {
 
   public enum IntakeState {
     DISABLED,
-    DEPLOY,
     IDLE,
     EJECT,
     SMOOSH,
@@ -42,17 +41,13 @@ public class Intake extends SubsystemBase {
         rollers.setState(RollersState.DISABLED);
         hasExtended = false;
       }
-      case DEPLOY -> {
-        deployer.setState(DeployerState.EXTEND);
-        rollers.setState(RollersState.DEPLOY);
-        if (deployer.isExtended()) {
-          hasExtended = true;
-          state = IntakeState.INTAKING;
-        }
-      }
       case IDLE -> {
         if (!hasExtended) {
-          state = IntakeState.DEPLOY;
+          deployer.setState(DeployerState.EXTEND);
+          rollers.setState(RollersState.DEPLOY);
+          if (deployer.isExtended()) {
+            hasExtended = true;
+          }
         } else {
           deployer.setState(DeployerState.EXTEND);
           rollers.setState(RollersState.IDLE);
@@ -60,7 +55,11 @@ public class Intake extends SubsystemBase {
       }
       case INTAKING -> {
         if (!hasExtended) {
-          state = IntakeState.DEPLOY;
+          deployer.setState(DeployerState.EXTEND);
+          rollers.setState(RollersState.DEPLOY);
+          if (deployer.isExtended()) {
+            hasExtended = true;
+          }
         } else {
           deployer.setState(DeployerState.EXTEND);
           rollers.setState(RollersState.INTAKE);
@@ -79,7 +78,7 @@ public class Intake extends SubsystemBase {
     deployer.outputsPeriodic();
     rollers.outputsPeriodic();
 
-    Logger.recordOutput("Intake/State", state);
+    Logger.recordOutput("Intake/CurrentState", state);
     Logger.recordOutput("Intake/hasExtended", hasExtended);
   }
 
@@ -96,7 +95,7 @@ public class Intake extends SubsystemBase {
   }
 
   public void setState(IntakeState state) {
-    Logger.recordOutput("Intake/setState", state);
+    Logger.recordOutput("Intake/RequestedState", state);
     prevState = this.state;
     this.state = state;
   }

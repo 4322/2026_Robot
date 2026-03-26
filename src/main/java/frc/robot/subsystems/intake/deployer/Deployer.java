@@ -20,7 +20,7 @@ public class Deployer {
 
   public void inputsPeriodic() {
     deployerIO.updateInputs(inputs);
-    Logger.processInputs("Deployer", inputs);
+    Logger.processInputs("Intake/Deployer", inputs);
   }
 
   // Called at end of command processing in intake
@@ -41,7 +41,7 @@ public class Deployer {
   }
 
   public void setState(DeployerState state) {
-    Logger.recordOutput("Deployer/state", state);
+    Logger.recordOutput("Intake/Deployer/state", state);
     switch (state) {
       case DISABLED -> {
         break;
