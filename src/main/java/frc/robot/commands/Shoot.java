@@ -9,19 +9,29 @@ import frc.robot.subsystems.shooter.areaManager.AreaManager.Zone;
 public class Shoot extends Command {
   private Shooter shooter;
   private Drive drive;
+  private boolean ignoreArea;
 
   public Shoot(Shooter shooter, Drive drive) {
     this.shooter = shooter;
     this.drive = drive;
+    this.ignoreArea = false;
+  }
+
+  public Shoot(Shooter shooter, Drive drive, boolean ignoreArea) {
+    this.shooter = shooter;
+    this.drive = drive;
+    this.ignoreArea = ignoreArea;
   }
 
   @Override
   public void execute() {
-    if (!AreaManager.isShootingArea(drive.getTurretTranslation())
-        || AreaManager.isTrench(drive.getTurretTranslation())) {
+    if ((!AreaManager.isShootingArea(drive.getTurretTranslation())
+            || AreaManager.isTrench(drive.getTurretTranslation()))
+        && !ignoreArea) {
       shooter.requestIdle();
     } else {
-      if (AreaManager.getZoneOfPosition(drive.getTurretTranslation()) == Zone.ALLIANCE_ZONE) {
+      if (AreaManager.getZoneOfPosition(drive.getTurretTranslation()) == Zone.ALLIANCE_ZONE
+          || AreaManager.isTrench(drive.getTurretTranslation())) {
         shooter.requestShoot(false, true);
       } else {
         shooter.requestShoot(false, false);

@@ -5,6 +5,7 @@ import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Robot;
@@ -32,11 +33,11 @@ public class RROutpost extends SequentialCommandGroup {
               }
             }),
         new SequentialCommandGroup(
-            new Shoot(shooter, drive),
-            AutoBuilder.followPath(Robot.R_ROutpost_A),
-            new WaitCommand(4),
-            new Shoot(shooter, drive),
-            AutoBuilder.followPath(Robot.R_ROutpost_B),
-            new Shoot(shooter, drive)));
+            new ParallelCommandGroup(
+                new Shoot(shooter, drive, true),
+                new SequentialCommandGroup(
+                    AutoBuilder.followPath(Robot.R_ROutpost_A),
+                    new WaitCommand(4),
+                    AutoBuilder.followPath(Robot.R_ROutpost_B)))));
   }
 }

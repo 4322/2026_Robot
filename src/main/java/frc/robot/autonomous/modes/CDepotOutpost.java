@@ -38,6 +38,6 @@ public class CDepotOutpost extends SequentialCommandGroup {
             new SequentialCommandGroup(
                 AutoBuilder.followPath(Robot.C_Start_To_Depot),
                 AutoBuilder.followPath(Robot.C_Depot_To_Outpost),
-                new Shoot(shooter, drive))));
+                new Shoot(shooter, drive, true))));
   }
 }

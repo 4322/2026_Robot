@@ -6,6 +6,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Robot;
 import frc.robot.commands.IntakeCommands;
@@ -37,15 +38,13 @@ public class R2Sweep extends SequentialCommandGroup {
             new SequentialCommandGroup(
                 AutoBuilder.followPath(Robot.R_2SWEEP_A),
                 AutoBuilder.followPath(Robot.R_2SWEEP_B),
-                new Shoot(shooter, drive),
-                AutoBuilder.followPath(Robot.R_2SWEEP_CG),
-                new Shoot(shooter, drive),
+                new ParallelRaceGroup(
+                    new Shoot(shooter, drive, true), AutoBuilder.followPath(Robot.L_2SWEEP_CG)),
                 AutoBuilder.followPath(Robot.R_2SWEEP_D),
                 AutoBuilder.followPath(Robot.R_2SWEEP_E),
                 AutoBuilder.followPath(Robot.R_2SWEEP_F),
-                new Shoot(shooter, drive),
-                AutoBuilder.followPath(Robot.R_2SWEEP_CG),
-                new Shoot(shooter, drive),
+                new ParallelRaceGroup(
+                    new Shoot(shooter, drive, true), AutoBuilder.followPath(Robot.L_2SWEEP_CG)),
                 AutoBuilder.followPath(Robot.R_2SWEEP_H))));
   }
 }

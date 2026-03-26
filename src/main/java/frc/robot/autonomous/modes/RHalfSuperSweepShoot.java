@@ -43,6 +43,6 @@ public class RHalfSuperSweepShoot extends SequentialCommandGroup {
                 AutoBuilder.followPath(Robot.R_Half_SuperSweep_D),
                 AutoBuilder.followPath(Robot.R_Half_SuperSweep_E),
                 AutoBuilder.followPath(Robot.R_Half_SuperSweep_F),
-                new Shoot(shooter, drive))));
+                new Shoot(shooter, drive, true))));
   }
 }
