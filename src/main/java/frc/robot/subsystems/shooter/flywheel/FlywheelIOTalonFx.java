@@ -33,6 +33,7 @@ public class FlywheelIOTalonFx implements FlywheelIO {
     config.CurrentLimits.StatorCurrentLimitEnable = true;
     config.CurrentLimits.SupplyCurrentLimit = Constants.Flywheel.supplyCurrentLimit;
     config.CurrentLimits.SupplyCurrentLimitEnable = true;
+    config.CurrentLimits.SupplyCurrentLowerTime = 0;
 
     config.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
     config.Feedback.SensorToMechanismRatio = Constants.Flywheel.motorToMechanismRatio;
@@ -135,6 +136,7 @@ public class FlywheelIOTalonFx implements FlywheelIO {
 
   @Override
   public void stop() {
+    lastRequestedVelocity = 0;
     motor.stopMotor();
   }
 

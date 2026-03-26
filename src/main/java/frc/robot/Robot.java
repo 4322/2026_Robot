@@ -374,6 +374,8 @@ public class Robot extends LoggedRobot {
 
     RobotContainer.shooter.outputsPeriodic();
 
+    RobotContainer.intake.periodicOutputs();
+
     // Return to non-RT thread priority (do not modify the first argument)
     if (Constants.realTimeCommandScheduler) {
       Threads.setCurrentThreadPriority(false, 10);

@@ -33,7 +33,7 @@ public class RSweepBump extends SequentialCommandGroup {
               }
             }),
         new ParallelCommandGroup(
-            IntakeCommands.setIntaking(intake),
+            IntakeCommands.intake(intake),
             new SequentialCommandGroup(
                 AutoBuilder.followPath(Robot.R_2SWEEP_A),
                 AutoBuilder.followPath(Robot.R_2SWEEP_B),

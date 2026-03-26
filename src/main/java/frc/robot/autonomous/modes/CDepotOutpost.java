@@ -34,7 +34,7 @@ public class CDepotOutpost extends SequentialCommandGroup {
               }
             }),
         new ParallelCommandGroup(
-            IntakeCommands.setIntaking(intake),
+            IntakeCommands.intake(intake),
             new SequentialCommandGroup(
                 AutoBuilder.followPath(Robot.C_Start_To_Depot),
                 AutoBuilder.followPath(Robot.C_Depot_To_Outpost),
