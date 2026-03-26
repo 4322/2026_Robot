@@ -268,6 +268,22 @@ public class Shooter extends SubsystemBase {
               drive.getVelocity(),
               AreaManager.getZoneOfPosition(drive.getTurretPosition()) == Zone.ALLIANCE_ZONE
                   || AreaManager.isTrench(drive.getTurretPosition()));
+      
+      Logger.recordOutput("Shooter/OriginalSolution/HoodAngleDeg", firingSolution.hoodAngle());
+      Logger.recordOutput("Shooter/OriginalSolution/FlywheelSpeedRPS", firingSolution.flywheelSpeedRPS());
+      Logger.recordOutput("Shooter/OriginalSolution/TurretAngleDeg", firingSolution.turretAngleDeg());
+
+      // If hood isn't at goal anymore after entering shoot state, do flywheel compensation
+      if (state == ShooterState.SHOOT && !hood.isAtGoal()) {
+        firingSolution = FiringManager.adjustForHoodOffset(firingSolution, targetHoodAngleDeg);
+        Logger.recordOutput("Shooter/CompensatedSolution/HoodAngleDeg", firingSolution.hoodAngle());
+        Logger.recordOutput("Shooter/CompensatedSolution/FlywheelSpeedRPS", firingSolution.flywheelSpeedRPS());
+        Logger.recordOutput("Shooter/CompensatedSolution/TurretAngleDeg", firingSolution.turretAngleDeg());
+        Logger.recordOutput("Shooter/adjustingForHoodOffset", true);
+      } else {
+        Logger.recordOutput("Shooter/adjustingForHoodOffset", false);
+      }
+
       targetHoodAngleDeg = firingSolution.hoodAngle();
       targetFlywheelSpeedRPS = firingSolution.flywheelSpeedRPS();
       targetTurretAngleDeg = firingSolution.turretAngleDeg();

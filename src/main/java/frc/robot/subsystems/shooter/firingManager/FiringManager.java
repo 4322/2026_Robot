@@ -182,6 +182,13 @@ public class FiringManager {
     }
   }
 
+  public static FiringSolution adjustForHoodOffset(
+      FiringSolution calculatedSolution, double hoodAngle) {
+    // TODO: Add algorithm that modifies solution based on calculated hood solution and current hood
+    // angle
+    return calculatedSolution;
+  }
+
   public static double velocityToEffectiveDistance(double velocity, boolean isScoring) {
     return isScoring
         ? Constants.FiringManager.velocityToDistanceMapScoring.get(velocity)
