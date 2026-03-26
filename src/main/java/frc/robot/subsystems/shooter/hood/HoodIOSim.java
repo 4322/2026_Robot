@@ -5,7 +5,6 @@ import edu.wpi.first.math.MathUtil;
 public class HoodIOSim implements HoodIO {
   private double velocity = 0;
   private double rotations = 0;
-  private int currentRequested = 1500;
   private double position = 0;
   private double maxRPM = 0.2;
   private double degreePerSecond = 37;
@@ -13,15 +12,11 @@ public class HoodIOSim implements HoodIO {
 
   @Override
   public void updateInputs(HoodIOInputs inputs) {
-
-    simEstimatedPosition();
-    setServoVelocity(velocity);
     inputs.encoderConnected = true;
-    inputs.currentPulseWidth = currentRequested;
     inputs.encoderRotations = rotations; // Convert degrees to rotations
-    inputs.degrees = position; // Convert rotations to degrees
+    inputs.degrees = position;
     inputs.encoderRPS = velocity;
-    inputs.servoEnabled = true; // Assuming a threshold of 0.1A to determine if the servo is powered
+    inputs.servoEnabled = true;
   }
 
   @Override
@@ -39,8 +34,8 @@ public class HoodIOSim implements HoodIO {
   }
 
   @Override
-  public void setServoVelocity(double velocity) {
-    this.currentRequested = (1500 + ((int) MathUtil.clamp(velocity, -1, 1) * 500));
+  public void setServoVelocity(double velocity, double requestedAngleDeg) {
     this.velocity = ((int) MathUtil.clamp(velocity, -1, 1));
+    simEstimatedPosition();
   }
 }

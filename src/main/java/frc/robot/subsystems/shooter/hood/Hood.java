@@ -60,13 +60,13 @@ public class Hood {
           homed = true;
         }
         if (!homed && DriverStation.isEnabled()) {
-          io.setServoVelocity(Constants.Hood.homingVelocity);
+          io.setServoVelocity(Constants.Hood.homingVelocity, 0);
           homingTimer.start();
           if (Math.abs(inputs.encoderRPS) > Constants.Hood.homingVelocityThresholdRPS) {
             homingTimer.reset();
           } else if (homingTimer.hasElapsed(0.1)) {
             io.setEncoderHomed();
-            io.setServoVelocity(0);
+            io.setServoVelocity(0, 0);
             homed = true;
             homingTimer.stop();
             homingTimer.reset();
@@ -74,7 +74,7 @@ public class Hood {
         } else if (DriverStation.isEnabled()) {
           setVelocity();
         } else {
-          io.setServoVelocity(0);
+          io.setServoVelocity(0, 0);
           homingTimer.stop();
           homingTimer.reset();
         }
@@ -106,7 +106,7 @@ public class Hood {
         velocity = -slowVelocity.get();
       }
     }
-    io.setServoVelocity(velocity);
+    io.setServoVelocity(velocity, requestedAngleDeg);
     lastVelocity = velocity;
     Logger.recordOutput("Hood/requestedServoVelocity", velocity);
   }

@@ -11,12 +11,12 @@ import com.revrobotics.servohub.config.ServoChannelConfig.BehaviorWhenDisabled;
 import com.revrobotics.servohub.config.ServoHubConfig;
 import edu.wpi.first.math.MathUtil;
 import frc.robot.constants.Constants;
+import org.littletonrobotics.junction.Logger;
 
 public class HoodIOServo implements HoodIO {
   private ServoHub servoHub;
   private ServoChannel servo;
   private CANcoder encoder;
-  private int currentRequested = 1500;
 
   private ServoHubConfig config = new ServoHubConfig();
 
@@ -50,7 +50,6 @@ public class HoodIOServo implements HoodIO {
   @Override
   public void updateInputs(HoodIOInputs inputs) {
     inputs.encoderConnected = encoder.isConnected();
-    inputs.currentPulseWidth = currentRequested;
     inputs.encoderRotations =
         encoder.getPosition().getValueAsDouble(); // Convert degrees to rotations
     inputs.degrees =
@@ -66,11 +65,17 @@ public class HoodIOServo implements HoodIO {
   }
 
   @Override
-  public void setServoVelocity(double velocity) {
+  public void setServoVelocity(double velocity, double requestedAngleDeg) {
     // negative velocity raises hood
     double adjustedVelocity = -MathUtil.clamp(velocity, -1, 1);
-    currentRequested = (int) (1500 + adjustedVelocity * 500);
-    servo.setPulseWidth(currentRequested);
+    int pulseWidth = (int) (adjustedVelocity * 500);
+    if (pulseWidth >= 0 && requestedAngleDeg > Constants.Hood.safeAngleDeg) {
+      // hold hood up in position if not in safe position
+      pulseWidth = Math.max(pulseWidth, Constants.Hood.kSPulseWidth);
+    }
+    pulseWidth += 1500; // add in zero velocity pulse width
+    servo.setPulseWidth(pulseWidth);
+    Logger.recordOutput("Hood/pulseWidth", pulseWidth);
   }
 
   @Override
