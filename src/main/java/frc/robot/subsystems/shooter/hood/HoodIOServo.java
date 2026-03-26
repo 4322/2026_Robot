@@ -11,12 +11,16 @@ import com.revrobotics.servohub.config.ServoChannelConfig.BehaviorWhenDisabled;
 import com.revrobotics.servohub.config.ServoHubConfig;
 import edu.wpi.first.math.MathUtil;
 import frc.robot.constants.Constants;
+import frc.robot.util.LoggedTunableNumber;
 import org.littletonrobotics.junction.Logger;
 
 public class HoodIOServo implements HoodIO {
   private ServoHub servoHub;
   private ServoChannel servo;
   private CANcoder encoder;
+
+  private static final LoggedTunableNumber kSPulseWidth =
+      new LoggedTunableNumber("Hood/kSPulseWidth", Constants.Hood.kSPulseWidth);
 
   private ServoHubConfig config = new ServoHubConfig();
 
@@ -71,7 +75,7 @@ public class HoodIOServo implements HoodIO {
     int pulseWidth = (int) (adjustedVelocity * 500);
     if (pulseWidth >= 0 && requestedAngleDeg > Constants.Hood.safeAngleDeg) {
       // hold hood up in position if not in safe position
-      pulseWidth = Math.max(pulseWidth, Constants.Hood.kSPulseWidth);
+      pulseWidth = Math.max(pulseWidth, (int) kSPulseWidth.get());
     }
     pulseWidth += 1500; // add in zero velocity pulse width
     servo.setPulseWidth(pulseWidth);

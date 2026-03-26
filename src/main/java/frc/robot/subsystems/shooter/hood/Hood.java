@@ -9,10 +9,14 @@ import org.littletonrobotics.junction.Logger;
 public class Hood {
   private static final LoggedTunableNumber fastVelocity =
       new LoggedTunableNumber("Hood/fastVelocity", Constants.Hood.fastVelocity);
+  private static final LoggedTunableNumber mediumVelocity =
+      new LoggedTunableNumber("Hood/fastVelocity", Constants.Hood.mediumVelocity);
   private static final LoggedTunableNumber slowVelocity =
       new LoggedTunableNumber("Hood/slowVelocity", Constants.Hood.slowVelocity);
   private static final LoggedTunableNumber largeToleranceDeg =
       new LoggedTunableNumber("Hood/largeToleranceDeg", Constants.Hood.largeToleranceDeg);
+  private static final LoggedTunableNumber mediumToleranceDeg =
+      new LoggedTunableNumber("Hood/largeToleranceDeg", Constants.Hood.mediumToleranceDeg);
   private static final LoggedTunableNumber smallToleranceDeg =
       new LoggedTunableNumber("Hood/smallToleranceDeg", Constants.Hood.smallToleranceDeg);
   private static final LoggedTunableNumber tuningGoalDeg =
@@ -89,10 +93,15 @@ public class Hood {
     double velocity = 0;
     if (Math.abs(inputs.degrees - requestedAngleDeg) < smallToleranceDeg.get()) {
       velocity = 0;
-    } else if (inputs.degrees > requestedAngleDeg + largeToleranceDeg.get()) {
+    } else if (inputs.degrees > requestedAngleDeg + largeToleranceDeg.get()
+        || requestedAngleDeg == Constants.Hood.safeAngleDeg) {
       velocity = -fastVelocity.get();
     } else if (inputs.degrees < requestedAngleDeg - largeToleranceDeg.get()) {
       velocity = fastVelocity.get();
+    } else if (inputs.degrees > requestedAngleDeg + mediumToleranceDeg.get()) {
+      velocity = -mediumVelocity.get();
+    } else if (inputs.degrees < requestedAngleDeg - mediumToleranceDeg.get()) {
+      velocity = mediumVelocity.get();
     } else if (lastVelocity > 0) {
       if (inputs.degrees > requestedAngleDeg) {
         velocity = 0;
