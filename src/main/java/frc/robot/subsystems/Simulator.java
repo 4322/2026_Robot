@@ -527,7 +527,9 @@ public class Simulator extends SubsystemBase {
 
       case TURRET -> List.of(
           // requires turret to be unlocked
-          new SimEvent(t += 0.1, "Start pose", EventType.HOLD_RIGHT_TRIGGER),
+          new SimEvent(t += 0.1, "Start intake", EventType.HOLD_LEFT_BUMPER),
+          new SimEvent(t += 0.1, "Release button", EventType.RELEASE_LEFT_BUMPER),
+          new SimEvent(t += 0.5, "Start shooting", EventType.HOLD_RIGHT_TRIGGER),
           new SimEvent(
               t += 0.1, "Start pose", EventType.SET_POSE, new FieldPose2d(2, 2, Rotation2d.kZero)),
           new SimEvent(
