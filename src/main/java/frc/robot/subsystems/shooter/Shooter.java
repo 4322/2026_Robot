@@ -160,7 +160,8 @@ public class Shooter extends SubsystemBase {
 
         if (spindexer.isStopped()) {
           // Since requested turret angle is constantly updating while we're unwinding
-          // turret will attempt to go to requested setpoint within certain range of physical midpoint
+          // turret will attempt to go to requested setpoint within certain range of physical
+          // midpoint
           turret.unwind(true);
         }
 
@@ -259,13 +260,12 @@ public class Shooter extends SubsystemBase {
       return;
     }
 
-    if (state != ShooterState.SHOOT && state != ShooterState.STARTING_CONFIG && state != ShooterState.DISABLED) {
+    if (state != ShooterState.SHOOT) {
       if (state == ShooterState.PRESHOOT) {
         if (hood.isAtGoal() && flywheel.isAtGoal() && turret.isAtGoal()) {
           state = ShooterState.SHOOT;
         }
-      }
-      else {
+      } else {
         // Never set requested state to SHOOT to ensure after turret unwinds
         // we wait for everything to get to setpoint before starting to shoot again
         state = ShooterState.PRESHOOT;
