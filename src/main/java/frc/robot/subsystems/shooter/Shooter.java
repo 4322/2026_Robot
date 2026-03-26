@@ -29,7 +29,6 @@ public class Shooter extends SubsystemBase {
     UNWIND,
     PRESHOOT, // Flywheel gets up to speed; Turret/hood aim
     SHOOT, // Spindexer and tunnel get up to speed
-    UNJAM,
     STOP // Everything but flywheel stopped
   }
 
@@ -266,7 +265,6 @@ public class Shooter extends SubsystemBase {
     // Otherwise start shooting sequence
     if ((state == ShooterState.PRESHOOT
             || state == ShooterState.IDLE
-            || state == ShooterState.UNJAM
             || state == ShooterState.STOP
             || (state == ShooterState.UNWIND))
         && unwindComplete) {
@@ -308,8 +306,8 @@ public class Shooter extends SubsystemBase {
     spindexer.unjamOverride(unjamOverride);
   }
 
-  public void trenchOverride(boolean unjaming) {
-    hood.trenchOverride(unjaming);
+  public void trenchOverride(boolean unjamOverride) {
+    hood.trenchOverride(unjamOverride);
   }
 
   public boolean isScoring() {
