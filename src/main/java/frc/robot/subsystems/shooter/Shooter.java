@@ -1,43 +1,35 @@
 package frc.robot.subsystems.shooter;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 import frc.robot.constants.Constants;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.led.LED;
-import frc.robot.subsystems.shooter.areaManager.AreaManager;
-import frc.robot.subsystems.shooter.areaManager.AreaManager.Zone;
 import frc.robot.subsystems.shooter.firingManager.FiringManager;
-import frc.robot.subsystems.shooter.firingManager.FiringManager.FiringSolution;
 import frc.robot.subsystems.shooter.flywheel.Flywheel;
 import frc.robot.subsystems.shooter.hood.Hood;
 import frc.robot.subsystems.shooter.spindexer.Spindexer;
 import frc.robot.subsystems.shooter.tunnel.Tunnel;
 import frc.robot.subsystems.shooter.turret.Turret;
 import frc.robot.subsystems.vision.visionGlobalPose.VisionGlobalPose;
-import frc.robot.util.GeomUtil;
-import frc.robot.util.HubShiftUtil;
 import org.littletonrobotics.junction.Logger;
 
 public class Shooter extends SubsystemBase {
 
   public enum ShooterState {
+    STARTING_CONFIG,
     DISABLED,
     IDLE, // Spindexer stopped, flywheel at full speed, tunnel at full speed
     UNWIND,
     PRESHOOT, // Flywheel gets up to speed; Turret/hood aim
     SHOOT, // Spindexer and tunnel get up to speed
-    TRENCH,
-    UNJAM,
     STOP // Everything but flywheel stopped
   }
 
-  private ShooterState state = ShooterState.DISABLED;
+  private ShooterState state = ShooterState.STARTING_CONFIG;
+  private ShooterState requestedState = ShooterState.STARTING_CONFIG;
 
   private Flywheel flywheel;
   private Hood hood;
@@ -51,13 +43,12 @@ public class Shooter extends SubsystemBase {
   private double targetFlywheelSpeedRPS;
   private double targetTurretAngleDeg;
   private double targetTunnelSpeedRPS;
-  private double targetIndexerSpeedRPS;
-
-  private boolean unwindComplete = false;
-  private boolean inIdle = true;
+  private double targetSpindexerSpeedRPS;
+  private boolean doUnwind = false;
   private boolean fixedPositionShooting = false;
-
-  private boolean autoShootEnabled = false;
+  private boolean isScoring = true;
+  private Timer idleTimer = new Timer();
+  private boolean resetIdleTimeout = false;
 
   public Shooter(
       Flywheel flywheel,
@@ -87,32 +78,23 @@ public class Shooter extends SubsystemBase {
     hood.inputsPeriodic();
     tunnel.inputsPeriodic();
     spindexer.inputsPeriodic();
-  }
-
-  public void outputsPeriodic() {
-
     if (!Constants.turretLocked) {
       turret.inputsPeriodic();
     }
+  }
+
+  public void outputsPeriodic() {
     calculateFiringSolution();
-    if (!fixedPositionShooting && !DriverStation.isAutonomousEnabled()) {
-      if (AreaManager.isHoodDangerZone(drive.getTurretPosition())) {
-        state = ShooterState.TRENCH;
-      }
-      if (AreaManager.isTrench(drive.getTurretPosition())) {
-        state = ShooterState.IDLE;
-      }
-    }
 
     if (Constants.firingManagerMode == Constants.SubsystemMode.TUNING) {
 
-      flywheel.requestGoal(targetFlywheelSpeedRPS);
+      flywheel.requestGoal(targetFlywheelSpeedRPS, false);
       hood.requestGoal(targetHoodAngleDeg);
 
-      turret.requestAngle(targetTurretAngleDeg, true);
+      turret.requestAngle(targetTurretAngleDeg, false);
 
       tunnel.requestGoal(targetTunnelSpeedRPS);
-      spindexer.requestGoal(targetIndexerSpeedRPS);
+      spindexer.requestGoal(targetSpindexerSpeedRPS);
 
       flywheel.outputsPeriodic();
       hood.outputsPeriodic();
@@ -124,155 +106,163 @@ public class Shooter extends SubsystemBase {
       }
       return;
     }
-    if (DriverStation.isDisabled()) {
-
+    if (DriverStation.isDisabled() && state != ShooterState.STARTING_CONFIG) {
+      // Reset variable in case disabling during unwind
+      doUnwind = false;
       state = ShooterState.DISABLED;
     }
 
-    switch (state) {
-      case DISABLED -> {
-        if (DriverStation.isEnabled()) {
+    // Turret unwind logic blocks all other incoming state requests from commands
+    // Once unwind is complete, other state requests are allowed and in cases where
+    // no state request is made, goes back to previous state
+    if (turret.needsToUnwind() || turret.isUnwinding()) {
+      state = ShooterState.UNWIND;
+    }
 
-          state = ShooterState.IDLE;
-        }
+    switch (state) {
+      case STARTING_CONFIG -> {
+        // Intake has to be down first before using shooter
+        // Commands will take state out of starting config only if intake was first deployed
       }
-      case TRENCH -> {
-        hood.requestGoal(Constants.Hood.safeAngleDeg);
-        spindexer.requestIdle();
-        tunnel.requestIdle();
-        flywheel.requestGoal(Constants.Flywheel.idleRPS);
-        targetFlywheelSpeedRPS = Constants.Flywheel.idleRPS;
-        if (!AreaManager.isTrench(drive.getTurretPosition())
-            && !AreaManager.isHoodDangerZone(drive.getTurretPosition())) {
+      case DISABLED -> {
+        resetIdleTimeout = true;
+        if (DriverStation.isEnabled()) {
           state = ShooterState.IDLE;
         }
       }
       case IDLE -> {
-        spindexer.requestIdle();
-        turret.requestAngle(targetTurretAngleDeg, true);
-        if (spindexer.isStopped()) {
-          tunnel.requestIdle();
-        } else {
-          tunnel.requestGoal(targetTunnelSpeedRPS);
-        }
-        if (tunnel.isStopped()) {
-          flywheel.requestGoal(Constants.Flywheel.idleRPS);
+        if (resetIdleTimeout) {
+          idleTimer.restart();
+          resetIdleTimeout = false;
         }
 
-        if (AreaManager.isTrench(drive.getTurretPosition())) {
+        spindexer.requestIdle();
+        turret.requestAngle(targetTurretAngleDeg, isScoring);
+
+        if (spindexer.isStopped()) {
+          tunnel.requestIdle();
+        }
+
+        if (idleTimer.hasElapsed(Constants.Flywheel.idleTimeout)) {
+          flywheel.requestGoal(Constants.Flywheel.idleRPS, isScoring);
+        } else {
+          flywheel.requestGoal(targetFlywheelSpeedRPS, isScoring);
+        }
+
+        if (idleTimer.hasElapsed(Constants.Hood.idleTimeout)) {
           hood.requestGoal(Constants.Hood.safeAngleDeg);
         } else {
-          Logger.recordOutput("Shooter/isHoodDangerZone", false);
           hood.requestGoal(targetHoodAngleDeg);
         }
       }
       case STOP -> {
-        flywheel.requestGoal(0);
+        resetIdleTimeout = true;
+        flywheel.requestGoal(0, isScoring);
         hood.requestGoal(targetHoodAngleDeg);
-        turret.requestAngle(targetTurretAngleDeg, true);
+        turret.requestAngle(targetTurretAngleDeg, isScoring);
         spindexer.requestIdle();
         tunnel.requestIdle();
       }
       case UNWIND -> {
+        // Optimization: Keep requesting target states while waiting for unwind if shooting
+        if (requestedState == ShooterState.PRESHOOT) {
+          hood.requestGoal(targetHoodAngleDeg);
+          flywheel.requestGoal(targetFlywheelSpeedRPS, isScoring);
+        }
+
+        // Keep sending turret angle requests and unwind logic will continuously adjust target
+        // setpoint within range of physical midpoint
+        turret.requestAngle(targetTurretAngleDeg, isScoring);
         spindexer.requestIdle();
-        turret.requestAngle(targetTurretAngleDeg, false);
-        hood.requestGoal(targetHoodAngleDeg);
 
         if (spindexer.isStopped()) {
-          tunnel.requestIdle();
-          if (tunnel.isStopped()) {
-            turret.unwind();
-            flywheel.requestGoal(Constants.Flywheel.idleRPS);
-            targetFlywheelSpeedRPS = Constants.Flywheel.idleRPS;
-          }
+          // Since requested turret angle is constantly updating while we're unwinding
+          // turret will attempt to go to requested setpoint within certain range of physical
+          // midpoint
+          doUnwind = true;
         }
-        // In case for some reason we end up in this state when turret is locked
-        if (turret.isAtGoal() || Constants.turretLocked) {
-          unwindComplete = true;
+
+        if (turret.atUnwindLimit() || Constants.turretLocked) {
+          doUnwind = false;
+          // Exit unwind state when completed
+          // In next loop cycle if no command sends shooter request,
+          // shooter will go to last requested state before unwind started
+          state = requestedState;
         }
+        turret.unwind(doUnwind);
       }
       case PRESHOOT -> {
+        resetIdleTimeout = true;
         spindexer.requestIdle();
-        flywheel.requestGoal(targetFlywheelSpeedRPS);
+        flywheel.requestGoal(targetFlywheelSpeedRPS, isScoring);
         hood.requestGoal(targetHoodAngleDeg);
-        turret.requestAngle(targetTurretAngleDeg, true);
+        turret.requestAngle(targetTurretAngleDeg, isScoring);
       }
       case SHOOT -> {
-        flywheel.requestGoal(targetFlywheelSpeedRPS);
+        resetIdleTimeout = true;
+        flywheel.requestGoal(targetFlywheelSpeedRPS, isScoring);
         hood.requestGoal(targetHoodAngleDeg);
-        turret.requestAngle(targetTurretAngleDeg, false);
+        turret.requestAngle(targetTurretAngleDeg, isScoring);
         tunnel.requestGoal(targetTunnelSpeedRPS);
-        spindexer.requestGoal(targetIndexerSpeedRPS);
-      }
-      case UNJAM -> {
-        tunnel.requestGoal(Constants.Tunnel.unjamRPS);
-        spindexer.requestGoal(Constants.Spindexer.unjamRPS);
+        spindexer.requestGoal(targetSpindexerSpeedRPS);
       }
     }
 
-    led.requestTurretUnwinding(state == ShooterState.UNWIND);
-
     flywheel.outputsPeriodic();
-    hood.outputsPeriodic();
-    tunnel.outputsPeriodic();
     spindexer.outputsPeriodic();
+    tunnel.outputsPeriodic();
+    hood.outputsPeriodic();
 
     if (!Constants.turretLocked) {
       turret.outputsPeriodic();
     }
 
     Logger.recordOutput("Shooter/State", state.toString());
-    Logger.recordOutput("Shooter/unwindComplete", unwindComplete);
-    Logger.recordOutput("Shooter/spindexerStopped", spindexer.isStopped());
-    Logger.recordOutput("Shooter/tunnelStopped", tunnel.isStopped());
-    Logger.recordOutput(
-        "Shooter/currentZone", AreaManager.getZoneOfPosition(drive.getTurretPosition()));
-    Logger.recordOutput("Shooter/flywheelAtSpeed", flywheel.atTargetVelocity());
-    Logger.recordOutput("Shooter/hoodAtPosition", hood.isAtGoal());
-    Logger.recordOutput("Shooter/turretAtPosition", turret.isAtGoal());
     Logger.recordOutput("Shooter/TargetHoodAngleDeg", targetHoodAngleDeg);
     Logger.recordOutput("Shooter/TargetFlywheelSpeedRPS", targetFlywheelSpeedRPS);
     Logger.recordOutput("Shooter/TargetTurretAngleDeg", targetTurretAngleDeg);
     Logger.recordOutput("Shooter/TargetTunnelSpeedRPS", targetTunnelSpeedRPS);
-    Logger.recordOutput("Shooter/TargetIndexerSpeedRPS", targetIndexerSpeedRPS);
-    Logger.recordOutput("Shooter/CurrentTurretPose", drive.getTurretPose(turret.getAngle()));
-    Logger.recordOutput(
-        "Shooter/TargetTurretPose",
-        GeomUtil.pose2dToPose3d(drive.getTurretPose(targetTurretAngleDeg), 0.4));
-    Logger.recordOutput(
-        "Shooter/ComponentPoses",
-        new Pose3d[] {
-          GeomUtil.pose2dToPose3d(
-              new Pose2d(
-                  Constants.Turret.originToTurret,
-                  new Rotation2d(Units.degreesToRadians(targetTurretAngleDeg) - 4 * Math.PI / 3)),
-              0.22)
-        });
+    Logger.recordOutput("Shooter/TargetIndexerSpeedRPS", targetSpindexerSpeedRPS);
   }
 
   private void calculateFiringSolution() {
     if (fixedPositionShooting) {
-      targetHoodAngleDeg = Constants.fixedSolutionBlue.hoodAngle();
-      targetFlywheelSpeedRPS = Constants.fixedSolutionBlue.flywheelSpeedRPS();
-      targetTunnelSpeedRPS = Constants.fixedSolutionBlue.tunnelSpeedRPS();
-      targetIndexerSpeedRPS = Constants.fixedSolutionBlue.indexerSpeedRPS();
+      targetHoodAngleDeg = Constants.fixedSolutionBlue.hoodAngle;
+      targetFlywheelSpeedRPS = Constants.fixedSolutionBlue.flywheelSpeedRPS;
+      targetTunnelSpeedRPS = Constants.fixedSolutionBlue.tunnelSpeedRPS;
+      targetSpindexerSpeedRPS = Constants.fixedSolutionBlue.indexerSpeedRPS;
       if (Robot.alliance == DriverStation.Alliance.Blue) {
-        targetTurretAngleDeg = Constants.fixedSolutionBlue.turretAngleDeg();
+        targetTurretAngleDeg = Constants.fixedSolutionBlue.turretAngleDeg;
       } else {
-        targetTurretAngleDeg = Constants.fixedSolutionRed.turretAngleDeg();
+        targetTurretAngleDeg = Constants.fixedSolutionRed.turretAngleDeg;
       }
     } else {
       FiringSolution firingSolution =
-          FiringManager.getFiringSolution(
-              drive.getTurretPose(),
-              drive.getVelocity(),
-              AreaManager.getZoneOfPosition(drive.getTurretPosition()) == Zone.ALLIANCE_ZONE
-                  || AreaManager.isTrench(drive.getTurretPosition()));
-      targetHoodAngleDeg = firingSolution.hoodAngle();
-      targetFlywheelSpeedRPS = firingSolution.flywheelSpeedRPS();
-      targetTurretAngleDeg = firingSolution.turretAngleDeg();
-      targetTunnelSpeedRPS = firingSolution.tunnelSpeedRPS();
-      targetIndexerSpeedRPS = firingSolution.indexerSpeedRPS();
+          FiringManager.getFiringSolution(drive.getTurretPose(), drive.getVelocity(), isScoring);
+
+      Logger.recordOutput("Shooter/OriginalSolution/HoodAngleDeg", firingSolution.hoodAngle);
+      Logger.recordOutput(
+          "Shooter/OriginalSolution/FlywheelSpeedRPS", firingSolution.flywheelSpeedRPS);
+      Logger.recordOutput("Shooter/OriginalSolution/TurretAngleDeg", firingSolution.turretAngleDeg);
+
+      // Do flywheel compensation for hood error once we start shooting
+      if (state == ShooterState.SHOOT) {
+        firingSolution = FiringManager.adjustForHoodOffset(firingSolution, targetHoodAngleDeg);
+        Logger.recordOutput("Shooter/CompensatedSolution/HoodAngleDeg", firingSolution.hoodAngle);
+        Logger.recordOutput(
+            "Shooter/CompensatedSolution/FlywheelSpeedRPS", firingSolution.flywheelSpeedRPS);
+        Logger.recordOutput(
+            "Shooter/CompensatedSolution/TurretAngleDeg", firingSolution.turretAngleDeg);
+        Logger.recordOutput("Shooter/adjustingForHoodOffset", true);
+      } else {
+        Logger.recordOutput("Shooter/adjustingForHoodOffset", false);
+      }
+
+      targetHoodAngleDeg = firingSolution.hoodAngle;
+      targetFlywheelSpeedRPS = firingSolution.flywheelSpeedRPS;
+      targetTurretAngleDeg = firingSolution.turretAngleDeg;
+      targetTunnelSpeedRPS = firingSolution.tunnelSpeedRPS;
+      targetSpindexerSpeedRPS = firingSolution.indexerSpeedRPS;
     }
   }
 
@@ -280,88 +270,55 @@ public class Shooter extends SubsystemBase {
     return state;
   }
 
-  public void requestShoot(boolean fixedPosition) {
-    inIdle = false;
-    fixedPositionShooting = fixedPosition;
+  // Needs to be continuously called in order to start shooting balls
+  public void requestShoot(boolean fixedPosition, boolean isScoring) {
+    this.isScoring = isScoring;
+    this.fixedPositionShooting = fixedPosition;
     Logger.recordOutput("Shooter/currentMethod", "requestShoot()");
     if (Constants.firingManagerMode == Constants.SubsystemMode.TUNING) {
       return;
     }
-    // If in alliance zone and shift not active
-    if (AreaManager.getZoneOfPosition(drive.getRobotPose().getTranslation()) == Zone.ALLIANCE_ZONE
-        && !HubShiftUtil.getShiftedShiftInfo().active()) {
-      if (Constants.turretLocked) {
-        state = ShooterState.STOP;
-        return;
-      }
-      // Don't shoot if inactive
-      if (turret.needsToUnwind()) {
-        unwindComplete = false;
-        state = ShooterState.UNWIND;
-      }
-      if (state == ShooterState.UNWIND && unwindComplete) {
-        unwindComplete = false;
-        state = ShooterState.IDLE;
-      }
 
-    } else {
-      // Otherwise start shooting sequence
-      if (state == ShooterState.PRESHOOT
-          || state == ShooterState.IDLE
-          || state == ShooterState.UNJAM
-          || state == ShooterState.STOP
-          || (state == ShooterState.UNWIND && unwindComplete)) {
-        unwindComplete = false;
-        // don't check goals until initial requests have been sent
-        if (state == ShooterState.PRESHOOT) {
-          if (hood.isAtGoal() && flywheel.atTargetVelocity() && turret.isAtGoal()) {
-            state = ShooterState.SHOOT;
-          }
-        } else {
-          state = ShooterState.PRESHOOT;
+    if (state != ShooterState.SHOOT) {
+      if (state == ShooterState.PRESHOOT) {
+        if (hood.isAtGoal() && flywheel.isAtGoal() && turret.isAtGoal()) {
+          state = ShooterState.SHOOT;
         }
-
       } else {
-        // Seperate if to prevent warnings DO NOT COMBINE
-        if (!Constants.turretLocked) {
-          if (turret.needsToUnwind()) {
-            unwindComplete = false;
-            state = ShooterState.UNWIND;
-          }
-        }
+        // Never set requested state to SHOOT to ensure after turret unwinds
+        // we wait for everything to get to setpoint before starting to shoot again
+        state = ShooterState.PRESHOOT;
+        requestedState = ShooterState.PRESHOOT;
       }
     }
   }
 
   public void requestIdle() {
-    inIdle = true;
-    Logger.recordOutput("Shooter/currentMethod", "requestIdle()");
+    requestedState = ShooterState.IDLE;
     state = ShooterState.IDLE;
-    // TODO deal with UNWIND state
+    Logger.recordOutput("Shooter/currentMethod", "requestIdle()");
   }
 
   public void requestStop() {
-    inIdle = true;
-    Logger.recordOutput("Shooter/currentMethod", "requestStop()");
+    requestedState = ShooterState.STOP;
     state = ShooterState.STOP;
-    // TODO deal with UNWIND state
+    Logger.recordOutput("Shooter/currentMethod", "requestStop()");
   }
 
-  public void requestUnjam() {
-    Logger.recordOutput("Shooter/currentMethod", "requestUnjam(");
-    state = ShooterState.UNJAM;
-    // TODO deal with UNWIND state
+  public void unjamOverride(boolean unjamOverride) {
+    tunnel.unjamOverride(unjamOverride);
+    spindexer.unjamOverride(unjamOverride);
   }
 
-  public boolean isInIdle() {
-    return inIdle;
+  public void trenchOverride(boolean unjamOverride) {
+    hood.trenchOverride(unjamOverride);
   }
 
-  public void setAutoShoot(boolean enabled) {
-    autoShootEnabled = enabled;
+  public boolean isScoring() {
+    return isScoring;
   }
 
-  public boolean autoShootEnabled() {
-    return autoShootEnabled;
+  public double getHoodPositionDegrees() {
+    return hood.getPositionDegrees();
   }
 }

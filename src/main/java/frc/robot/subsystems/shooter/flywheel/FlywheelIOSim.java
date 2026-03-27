@@ -9,14 +9,12 @@ public class FlywheelIOSim implements FlywheelIO {
 
   @Override
   public void updateInputs(FlywheelIOInputs inputs) {
-    inputs.motorConnected = true;
+    inputs.leaderMotorConnected = true;
     inputs.followerMotorConnected = true;
 
     simVelocity();
-    inputs.mechanismRPS = mechanismRotationsPerSec;
+    inputs.leaderMechanismRPS = mechanismRotationsPerSec;
     inputs.followerMechanismRPS = mechanismRotationsPerSec;
-    inputs.requestedMechanismRPS = targetVelocity;
-    inputs.followerRequestedMechanismRPS = targetVelocity;
   }
 
   @Override

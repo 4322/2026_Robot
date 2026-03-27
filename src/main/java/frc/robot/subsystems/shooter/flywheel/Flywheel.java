@@ -1,12 +1,15 @@
 package frc.robot.subsystems.shooter.flywheel;
 
+import edu.wpi.first.wpilibj.Timer;
 import frc.robot.constants.Constants;
 import org.littletonrobotics.junction.Logger;
 
 public class Flywheel {
   private FlywheelIO io;
   private FlywheelIOInputsAutoLogged inputs = new FlywheelIOInputsAutoLogged();
-  private double ballsShot = 0;
+  private double requestedSetpoint = 0;
+  private Timer atGoalTimer = new Timer();
+  private boolean isScoring = false;
 
   public Flywheel(FlywheelIO io) {
     this.io = io;
@@ -14,32 +17,52 @@ public class Flywheel {
 
   public void inputsPeriodic() {
     io.updateInputs(inputs);
-    Logger.processInputs("Flywheel", inputs);
+    Logger.processInputs("Shooter/Flywheel", inputs);
   }
 
-  public void outputsPeriodic() {}
+  public void outputsPeriodic() {
+    switch (Constants.flywheelMode) {
+      case TUNING -> {}
+      case NORMAL -> {
+        updateAtGoalTimer();
+        Logger.recordOutput("Shooter/Flywheel/atGoal", isAtGoal());
+      }
+      case DISABLED -> {}
+    }
+  }
 
-  public void requestGoal(double velocity) {
+  public void requestGoal(double velocity, boolean isScoring) {
     switch (Constants.flywheelMode) {
       case TUNING -> {}
       case NORMAL -> {
         io.setTargetMechanismRPS(velocity);
-        inputs.requestedMechanismRPS = velocity;
+        requestedSetpoint = velocity;
       }
       case DISABLED -> {}
     }
+    this.isScoring = isScoring;
+    Logger.recordOutput("Shooter/Flywheel/RequestedSetpoint", requestedSetpoint);
   }
 
   public void enableBrakeMode(boolean enable) {
     io.enableBrakeMode(enable);
   }
 
-  public boolean atTargetVelocity() {
-    return Math.abs(inputs.mechanismRPS - inputs.requestedMechanismRPS)
-        < Constants.Flywheel.mechanismToleranceRPS;
+  public boolean isAtGoal() {
+    return Math.abs(inputs.leaderMechanismRPS - requestedSetpoint)
+            < Constants.Flywheel.smallToleranceRPS
+        || (isScoring
+            ? atGoalTimer.hasElapsed(Constants.scoringDoubleToleranceTime)
+            : atGoalTimer.hasElapsed(Constants.passingDoubleToleranceTime));
   }
 
-  public double getVelocity() {
-    return inputs.mechanismRPS;
+  private void updateAtGoalTimer() {
+    if (Math.abs(inputs.leaderMechanismRPS - requestedSetpoint)
+        < Constants.Flywheel.largeToleranceRPS) {
+      atGoalTimer.start();
+    } else {
+      atGoalTimer.stop();
+      atGoalTimer.reset();
+    }
   }
 }

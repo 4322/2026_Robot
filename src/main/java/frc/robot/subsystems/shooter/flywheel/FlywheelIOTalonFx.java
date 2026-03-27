@@ -41,11 +41,21 @@ public class FlywheelIOTalonFx implements FlywheelIO {
     config.MotorOutput.Inverted = Constants.Flywheel.motorInvert;
     config.MotorOutput.NeutralMode = Constants.Flywheel.neutralMode;
 
+    config.HardwareLimitSwitch.ReverseLimitEnable = false;
+    config.HardwareLimitSwitch.ForwardLimitEnable = false;
+
     config.Slot0.kS = Constants.Flywheel.kS;
     config.Slot0.kV = Constants.Flywheel.kV;
     config.Slot0.kP = Constants.Flywheel.kP;
     config.Slot0.kI = Constants.Flywheel.kI;
     config.Slot0.kD = Constants.Flywheel.kD;
+
+    // Used for idle RPS to avoid wild PID oscillations when requesting slow RPS
+    config.Slot1.kS = Constants.Flywheel.kS;
+    config.Slot1.kV = Constants.Flywheel.kV;
+    config.Slot1.kP = 0;
+    config.Slot1.kI = 0;
+    config.Slot1.kD = 0;
 
     StatusCode leaderConfigStatus = motor.getConfigurator().apply(config);
     StatusCode followerConfigStatus = motor.getConfigurator().apply(config);
@@ -96,22 +106,20 @@ public class FlywheelIOTalonFx implements FlywheelIO {
 
   @Override
   public void updateInputs(FlywheelIOInputs inputs) {
-    inputs.motorConnected = motor.isConnected();
+    inputs.leaderMotorConnected = motor.isConnected();
+    inputs.leaderMechanismRPS = motor.getVelocity().getValueAsDouble();
+    inputs.leaderAppliedVolts = motor.getMotorVoltage().getValueAsDouble();
+    inputs.leaderTempCelsius = motor.getDeviceTemp().getValueAsDouble();
+    inputs.leaderStatorCurrentAmps = motor.getStatorCurrent().getValueAsDouble();
+    inputs.leaderSupplyCurrentAmps = motor.getSupplyCurrent().getValueAsDouble();
+
     inputs.followerMotorConnected = followerMotor.isConnected();
-
-    inputs.requestedMechanismRPS = lastRequestedVelocity;
-
-    inputs.mechanismRPS = motor.getVelocity().getValueAsDouble();
     inputs.followerMechanismRPS = followerMotor.getVelocity().getValueAsDouble();
-
-    inputs.appliedVolts = motor.getMotorVoltage().getValueAsDouble();
-    inputs.motorTempCelsius = motor.getDeviceTemp().getValueAsDouble();
     inputs.followerMotorTempCelsius = followerMotor.getDeviceTemp().getValueAsDouble();
-    inputs.followerBusCurrentAmps = followerMotor.getSupplyCurrent().getValueAsDouble();
-    inputs.leaderStatorAmps = motor.getStatorCurrent().getValueAsDouble();
-    inputs.followerStatorAmps = followerMotor.getStatorCurrent().getValueAsDouble();
+    inputs.followerSupplyCurrentAmps = followerMotor.getSupplyCurrent().getValueAsDouble();
+    inputs.followerStatorCurrentAmps = followerMotor.getStatorCurrent().getValueAsDouble();
     inputs.followerAppliedVolts = followerMotor.getMotorVoltage().getValueAsDouble();
-    inputs.busCurrentAmps = motor.getSupplyCurrent().getValueAsDouble();
+
     if (Constants.Flywheel.canAndColorEnabled) {
       inputs.color = new Color(canandcolor.getRed(), canandcolor.getGreen(), canandcolor.getBlue());
       inputs.proximity = canandcolor.getProximity();
@@ -129,7 +137,13 @@ public class FlywheelIOTalonFx implements FlywheelIO {
       if (mechanismRPS == 0) {
         motor.stopMotor();
       } else {
-        motor.setControl(velocityRequest.withVelocity(mechanismRPS).withEnableFOC(true));
+        if (mechanismRPS == Constants.Flywheel.idleRPS) {
+          motor.setControl(
+              velocityRequest.withVelocity(mechanismRPS).withEnableFOC(true).withSlot(1));
+        } else {
+          motor.setControl(
+              velocityRequest.withVelocity(mechanismRPS).withEnableFOC(true).withSlot(0));
+        }
       }
     }
 
@@ -138,8 +152,8 @@ public class FlywheelIOTalonFx implements FlywheelIO {
 
   @Override
   public void stop() {
-    lastRequestedVelocity = 0;
     motor.stopMotor();
+    lastRequestedVelocity = 0;
   }
 
   @Override

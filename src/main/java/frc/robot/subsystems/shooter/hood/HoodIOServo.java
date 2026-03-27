@@ -11,12 +11,16 @@ import com.revrobotics.servohub.config.ServoChannelConfig.BehaviorWhenDisabled;
 import com.revrobotics.servohub.config.ServoHubConfig;
 import edu.wpi.first.math.MathUtil;
 import frc.robot.constants.Constants;
+import frc.robot.util.LoggedTunableNumber;
+import org.littletonrobotics.junction.Logger;
 
 public class HoodIOServo implements HoodIO {
   private ServoHub servoHub;
   private ServoChannel servo;
   private CANcoder encoder;
-  private int currentRequested = 1500;
+
+  private static final LoggedTunableNumber kSPulseWidth =
+      new LoggedTunableNumber("Hood/kSPulseWidth", Constants.Hood.kSPulseWidth);
 
   private ServoHubConfig config = new ServoHubConfig();
 
@@ -50,7 +54,6 @@ public class HoodIOServo implements HoodIO {
   @Override
   public void updateInputs(HoodIOInputs inputs) {
     inputs.encoderConnected = encoder.isConnected();
-    inputs.currentPulseWidth = currentRequested;
     inputs.encoderRotations =
         encoder.getPosition().getValueAsDouble(); // Convert degrees to rotations
     inputs.degrees =
@@ -66,19 +69,17 @@ public class HoodIOServo implements HoodIO {
   }
 
   @Override
-  public void setServoVelocity(double velocity) {
+  public void setServoVelocity(double velocity, double requestedAngleDeg) {
     // negative velocity raises hood
     double adjustedVelocity = -MathUtil.clamp(velocity, -1, 1);
-    if (adjustedVelocity == 0) {
-      currentRequested = 1500;
-    } else if (adjustedVelocity < 0) {
-      double range = 500 - Constants.Hood.kSPulsewidthUp;
-      currentRequested = (int) (1500 - Constants.Hood.kSPulsewidthUp + adjustedVelocity * range);
-    } else {
-      double range = 500 - Constants.Hood.kSPulsewidthDown;
-      currentRequested = (int) (1500 + Constants.Hood.kSPulsewidthDown + adjustedVelocity * range);
+    int pulseWidth = (int) (adjustedVelocity * 500);
+    if (pulseWidth <= 0 && requestedAngleDeg > Constants.Hood.safeAngleDeg) {
+      // hold hood up in position if not in safe position
+      pulseWidth = Math.min(pulseWidth, (int) -kSPulseWidth.get());
     }
-    servo.setPulseWidth(currentRequested);
+    pulseWidth += 1500; // add in zero velocity pulse width
+    servo.setPulseWidth(pulseWidth);
+    Logger.recordOutput("Hood/pulseWidth", pulseWidth);
   }
 
   @Override

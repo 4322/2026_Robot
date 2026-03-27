@@ -8,11 +8,13 @@ public class Tunnel {
   private TunnelIO io;
   private TunnelIOInputsAutoLogged inputs = new TunnelIOInputsAutoLogged();
   private double requestedSpeed = -1;
+  private boolean unjamOverride;
 
   public enum TunnelStates {
     DISABLED,
     IDLE,
-    INDEXING
+    INDEXING,
+    UNJAM
   }
 
   private TunnelStates state = TunnelStates.DISABLED;
@@ -23,15 +25,22 @@ public class Tunnel {
 
   public void inputsPeriodic() {
     io.updateInputs(inputs);
-    Logger.processInputs("Tunnel", inputs);
+    Logger.processInputs("Shooter/Tunnel", inputs);
   }
 
   public void outputsPeriodic() {
     switch (Constants.tunnelMode) {
       case TUNING -> {}
+      case DISABLED -> {}
       case NORMAL -> {
+        if (DriverStation.isDisabled()) {
+          state = TunnelStates.DISABLED;
+        }
+
         switch (state) {
           case DISABLED -> {
+            // Reset variables
+            unjamOverride = false;
             if (DriverStation.isEnabled()) {
               state = TunnelStates.IDLE;
             }
@@ -42,22 +51,42 @@ public class Tunnel {
           case INDEXING -> {
             io.setTargetMechanismRotations(requestedSpeed);
           }
+          case UNJAM -> {
+            io.setTargetMechanismRotations(Constants.Tunnel.unjamRPS);
+          }
         }
       }
     }
 
-    Logger.recordOutput("Tunnel/State", state.toString());
-    Logger.recordOutput("Tunnel/RequestedSpeed", requestedSpeed);
+    Logger.recordOutput("Shooter/Tunnel/State", state.toString());
+    Logger.recordOutput("Shooter/Tunnel/RequestedSpeed", requestedSpeed);
+    Logger.recordOutput("Shooter/Tunnel/Stopped", isStopped());
   }
 
   public void requestIdle() {
-    state = TunnelStates.IDLE;
-    requestedSpeed = 0;
+    if (!unjamOverride) {
+      state = TunnelStates.IDLE;
+      requestedSpeed = 0;
+    }
+  }
+
+  public void unjamOverride(boolean unjamOverride) {
+    this.unjamOverride = unjamOverride;
+    if (unjamOverride) {
+      state = TunnelStates.UNJAM;
+      requestedSpeed = Constants.Tunnel.unjamRPS;
+    } else {
+      // Default to idle when unjam isn't desired
+      state = TunnelStates.IDLE;
+      requestedSpeed = 0;
+    }
   }
 
   public void requestGoal(double speed) {
-    state = TunnelStates.INDEXING;
-    requestedSpeed = speed;
+    if (!unjamOverride) {
+      state = TunnelStates.INDEXING;
+      requestedSpeed = speed;
+    }
   }
 
   public void enableBrakeMode(boolean enable) {

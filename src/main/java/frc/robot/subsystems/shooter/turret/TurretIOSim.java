@@ -1,14 +1,16 @@
 package frc.robot.subsystems.shooter.turret;
 
+import edu.wpi.first.math.util.Units;
+
 public class TurretIOSim implements TurretIO {
   private double requestedVoltage = 0;
-  private double requestedAngle = 0;
+  private double requestedAngle = Units.rotationsToDegrees(0.5);
 
   private double voltage = 0;
-  private double currentAngle = 0;
+  private double currentAngle = Units.rotationsToDegrees(0.5);
   private double undefinedVoltage = -20;
 
-  private double fastRate = 1;
+  private double fastRate = 1.0;
 
   @Override
   public void updateInputs(TurretIOInputs inputs) {
@@ -20,7 +22,7 @@ public class TurretIOSim implements TurretIO {
     double velocity = (currentAngle - prevPos) * 50;
 
     inputs.turretDegs = currentAngle;
-    inputs.statorVolts = voltage;
+    inputs.appliedVoltage = voltage;
     inputs.motorRPS = velocity;
   }
 
@@ -45,5 +47,10 @@ public class TurretIOSim implements TurretIO {
   @Override
   public void setAngle(double angleDeg) {
     this.requestedAngle = angleDeg;
+  }
+
+  @Override
+  public void setPosition(double position) {
+    this.currentAngle = Units.rotationsToDegrees(position);
   }
 }
