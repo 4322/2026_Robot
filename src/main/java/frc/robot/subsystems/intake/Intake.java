@@ -16,6 +16,10 @@ public class Intake extends SubsystemBase {
   private IntakeState state = IntakeState.STARING_CONFIG;
   private IntakeState prevState = IntakeState.STARING_CONFIG;
   private boolean hasExtended = false;
+  private Timer deployCheckTimer = new Timer();
+  private double initialDeployerAngle = 0;
+  private boolean alreadyDeployedCheckFailed = false;
+
 
   public Intake(Deployer deployer, Rollers rollers) {
     this.deployer = deployer;
@@ -108,6 +112,7 @@ public class Intake extends SubsystemBase {
 
     Logger.recordOutput("Intake/CurrentState", state);
     Logger.recordOutput("Intake/hasExtended", hasExtended);
+    Logger.recordOutput("Intake/alreadyDeployedCheckFailed", alreadyDeployedCheckFailed);
   }
 
   public IntakeState getState() {
@@ -120,8 +125,13 @@ public class Intake extends SubsystemBase {
 
   public void setState(IntakeState state) {
     Logger.recordOutput("Intake/RequestedState", state);
-    prevState = this.state;
-    this.state = state;
+    if (hasExtended) {
+      prevState = this.state;
+      this.state = state;
+    } else {
+      prevState = state;
+      this.state = IntakeState.DEPLOY;
+    }
   }
 
   public boolean isExtended() {
