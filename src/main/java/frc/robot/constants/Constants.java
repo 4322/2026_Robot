@@ -264,19 +264,19 @@ public final class Constants {
   }
 
   public static class FiringParameters {
-    private final double flywheelRPM;
+    private final double flywheelRPS;
     private final double hoodAngleDeg;
     private final double timeOfFlightSec;
     private final double tunnelRPS;
     private final double indexerRPS;
 
     public FiringParameters(
-        double flywheelRPM,
+        double flywheelRPS,
         double hoodAngleDeg,
         double timeOfFlightSec,
         double tunnelRPS,
         double indexerRPS) {
-      this.flywheelRPM = flywheelRPM;
+      this.flywheelRPS = flywheelRPS;
       this.hoodAngleDeg = hoodAngleDeg;
       this.timeOfFlightSec = timeOfFlightSec;
       this.tunnelRPS = tunnelRPS;
@@ -284,7 +284,7 @@ public final class Constants {
     }
 
     public double getFlywheelRPS() {
-      return flywheelRPM;
+      return flywheelRPS;
     }
 
     public double getTunnelRPS() {
@@ -306,7 +306,7 @@ public final class Constants {
     public static FiringParameters interpolate(
         FiringParameters start, FiringParameters end, double howFar) {
       return new FiringParameters(
-          start.flywheelRPM + (end.flywheelRPM - start.flywheelRPM) * howFar,
+          start.flywheelRPS + (end.flywheelRPS - start.flywheelRPS) * howFar,
           start.hoodAngleDeg + (end.hoodAngleDeg - start.hoodAngleDeg) * howFar,
           start.timeOfFlightSec + (end.timeOfFlightSec - start.timeOfFlightSec) * howFar,
           start.tunnelRPS + (end.tunnelRPS - start.tunnelRPS) * howFar,

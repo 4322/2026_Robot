@@ -28,7 +28,7 @@ public class FiringManager {
   }
 
   private static final LoggedTunableNumber tunableFlywheelSpeedRPS =
-      new LoggedTunableNumber("FiringManager/flywheelSpeedRPM", 0);
+      new LoggedTunableNumber("FiringManager/flywheelSpeedRPS", 0);
   private static final LoggedTunableNumber tunableHoodAngle =
       new LoggedTunableNumber("FiringManager/hoodAngle", 0);
   private static final LoggedTunableNumber tunableTunnelSpeedRPS =
@@ -131,7 +131,7 @@ public class FiringManager {
             ? Constants.FiringManager.firingMapScoring.get(effectiveDistance)
             : Constants.FiringManager.firingMapPassing.get(effectiveDistance);
 
-    Logger.recordOutput("FiringManager/solution/flywheelRPM", solutionParameters.getFlywheelRPS());
+    Logger.recordOutput("FiringManager/solution/flywheelRPS", solutionParameters.getFlywheelRPS());
     Logger.recordOutput("FiringManager/solution/hoodAngle", solutionParameters.getHoodAngleDeg());
     Logger.recordOutput("FiringManager/solution/tunnelRPS", solutionParameters.getTunnelRPS());
     Logger.recordOutput("FiringManager/solution/indexerRPS", solutionParameters.getIndexerRPS());
@@ -139,7 +139,7 @@ public class FiringManager {
 
     if (Constants.firingManagerMode == Constants.SubsystemMode.TUNING) {
       Logger.recordOutput(
-          "FiringManager/requestedTuning/flywheelSpeedRPM", tunableFlywheelSpeedRPS.get());
+          "FiringManager/requestedTuning/flywheelSpeedRPS", tunableFlywheelSpeedRPS.get());
       Logger.recordOutput("FiringManager/requestedTuning/hoodAngle", tunableHoodAngle.get());
       Logger.recordOutput(
           "FiringManager/requestedTuning/tunnelSpeedRPS", tunableTunnelSpeedRPS.get());
