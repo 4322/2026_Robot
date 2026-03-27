@@ -142,7 +142,10 @@ public class ModuleIOTalonFX implements ModuleIO {
             ? InvertedValue.Clockwise_Positive
             : InvertedValue.CounterClockwise_Positive;
     tryUntilOk(5, () -> turnTalon.getConfigurator().apply(turnConfig, 0.25));
-
+    turnConfig.HardwareLimitSwitch.ForwardLimitEnable = false;
+    turnConfig.HardwareLimitSwitch.ReverseLimitEnable = false;
+    driveConfig.HardwareLimitSwitch.ForwardLimitEnable = false;
+    driveConfig.HardwareLimitSwitch.ReverseLimitEnable = false;
     // Configure turn encoder
     CanandmagSettings settings = new CanandmagSettings();
     settings.setInvertDirection(constants.EncoderInverted);

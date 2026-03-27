@@ -28,7 +28,9 @@ public class RollersIOTalonFX implements RollersIO {
     motorConfigs.HardwareLimitSwitch.ReverseLimitEnable = false;
     motorConfigs.CurrentLimits.StatorCurrentLimit = Constants.Rollers.statorCurrentLimit;
     motorConfigs.CurrentLimits.SupplyCurrentLimit = Constants.Rollers.supplyCurrentLimit;
-
+    motorConfigs.CurrentLimits.SupplyCurrentLimitEnable = true;
+    motorConfigs.CurrentLimits.StatorCurrentLimitEnable = true;
+    
     motorConfigs.MotorOutput.Inverted = Constants.Rollers.leaderMotorInvert;
     motorConfigs.MotorOutput.NeutralMode = Constants.Rollers.neutralMode;
     StatusCode leaderConfigStatus = leaderMotor.getConfigurator().apply(motorConfigs);

@@ -40,6 +40,9 @@ public class FlywheelIOTalonFx implements FlywheelIO {
 
     config.MotorOutput.Inverted = Constants.Flywheel.motorInvert;
     config.MotorOutput.NeutralMode = Constants.Flywheel.neutralMode;
+    
+    config.HardwareLimitSwitch.ReverseLimitEnable = false;
+    config.HardwareLimitSwitch.ForwardLimitEnable = false;
 
     config.Slot0.kS = Constants.Flywheel.kS;
     config.Slot0.kV = Constants.Flywheel.kV;
