@@ -23,7 +23,7 @@ import java.util.Map;
 import org.littletonrobotics.junction.Logger;
 
 public class Simulator extends SubsystemBase {
-  private static final RegressTests regressTest = RegressTests.SUBSYSTEM_TEST_BOTH;
+  private static final RegressTests regressTest = RegressTests.DRIVE_WHILE_SHOOTING;
   public static AutoName autoScenario;
   private TeleopScenario teleopScenario;
   private List<TeleAnomaly> teleAnomalies;
@@ -45,7 +45,8 @@ public class Simulator extends SubsystemBase {
     TURRET,
     ALL_AUTOS,
     ZONES,
-    INTAKE_TEST
+    INTAKE_TEST,
+    DRIVE_WHILE_SHOOTING
   }
 
   private enum TeleAnomaly {
@@ -63,6 +64,7 @@ public class Simulator extends SubsystemBase {
     CONTROLLER_TEST2,
     SUBSYSTEM_TEST,
     AUTO_ROTATE,
+    DRIVE_WHILE_SHOOTING,
     TURRET,
     Slowly_Up_down,
     ZONES,
@@ -274,6 +276,9 @@ public class Simulator extends SubsystemBase {
           new RegressionTest("Zones Red", TeleopScenario.ZONES, Alliance.Red));
       case INTAKE_TEST -> List.of(
           new RegressionTest("Intake Test", TeleopScenario.INTAKE_TEST, Alliance.Blue));
+      case DRIVE_WHILE_SHOOTING -> List.of(
+          new RegressionTest(
+              "Drive While Shooting", TeleopScenario.DRIVE_WHILE_SHOOTING, Alliance.Blue));
 
       default -> List.of();
     };
@@ -623,6 +628,31 @@ public class Simulator extends SubsystemBase {
           new SimEvent(t += 0.5, "Start smooshing while intaking", EventType.HOLD_Y),
           new SimEvent(t += 2.0, "Stop smooshing", EventType.RELEASE_Y),
           new SimEvent(t += 0.5, "Stop intaking", EventType.RELEASE_LEFT_BUMPER),
+          new SimEvent(t += 0.1, "End", EventType.END_OF_SCENARIO));
+      case DRIVE_WHILE_SHOOTING -> List.of(
+          new SimEvent(
+              t += 0.1,
+              "Start pose",
+              EventType.SET_POSE,
+              new FieldPose2d(3, 0.5, Rotation2d.kZero)),
+          new SimEvent(t += 0.1, "Start intake button", EventType.HOLD_LEFT_BUMPER),
+          new SimEvent(t += 0.1, "Release intake button", EventType.RELEASE_LEFT_BUMPER),
+          new SimEvent(
+              t += 0.1,
+              "Move Left No Shoot",
+              EventType.MOVE_JOYSTICK_DRIVE,
+              new Pose2d(0, 1, Rotation2d.kZero)),
+          new SimEvent(
+              t += 1.5, "Stop", EventType.MOVE_JOYSTICK_DRIVE, new Pose2d(0, 0, Rotation2d.kZero)),
+          new SimEvent(t += 0.1, "Start shooting", EventType.HOLD_RIGHT_TRIGGER),
+          new SimEvent(
+              t += 2,
+              "Move Right Shoot",
+              EventType.MOVE_JOYSTICK_DRIVE,
+              new Pose2d(0, -1, Rotation2d.kZero)),
+          new SimEvent(
+              t += 1.5, "Stop", EventType.MOVE_JOYSTICK_DRIVE, new Pose2d(0, 0, Rotation2d.kZero)),
+          new SimEvent(t += 0.1, "Stop shooting", EventType.RELEASE_RIGHT_TRIGGER),
           new SimEvent(t += 0.1, "End", EventType.END_OF_SCENARIO));
 
       default -> List.of();
