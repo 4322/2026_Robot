@@ -50,6 +50,13 @@ public class FlywheelIOTalonFx implements FlywheelIO {
     config.Slot0.kI = Constants.Flywheel.kI;
     config.Slot0.kD = Constants.Flywheel.kD;
 
+    // Used for idle RPS to avoid wild PID oscillations when requesting slow RPS
+    config.Slot1.kS = Constants.Flywheel.kS;
+    config.Slot1.kV = Constants.Flywheel.kV;
+    config.Slot1.kP = 0;
+    config.Slot1.kI = 0;
+    config.Slot1.kD = 0;
+
     StatusCode leaderConfigStatus = motor.getConfigurator().apply(config);
     StatusCode followerConfigStatus = motor.getConfigurator().apply(config);
     StatusCode followerMotorSetStatus =
@@ -130,7 +137,12 @@ public class FlywheelIOTalonFx implements FlywheelIO {
       if (mechanismRPS == 0) {
         motor.stopMotor();
       } else {
-        motor.setControl(velocityRequest.withVelocity(mechanismRPS).withEnableFOC(true));
+        if (mechanismRPS == Constants.Flywheel.idleRPS) {
+          motor.setControl(velocityRequest.withVelocity(mechanismRPS).withEnableFOC(true).withSlot(1));
+        }
+        else {
+          motor.setControl(velocityRequest.withVelocity(mechanismRPS).withEnableFOC(true).withSlot(0));
+        }
       }
     }
 
