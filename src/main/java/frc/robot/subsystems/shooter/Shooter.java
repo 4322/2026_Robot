@@ -177,7 +177,7 @@ public class Shooter extends SubsystemBase {
 
         // TODO: Change check to when turret is within 90 degrees from physical midpoint
         // Don't need to check if turret is exactly at goal, just within range
-        if ((turret.isAtGoal() && turret.requestAtUnwindLimit()) || Constants.turretLocked) {
+        if (turret.atUnwindLimit() || Constants.turretLocked) {
           doUnwind = false;
           // Exit unwind state when completed
           // In next loop cycle if no command sends shooter request,

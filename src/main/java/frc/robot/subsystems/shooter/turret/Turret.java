@@ -179,8 +179,8 @@ public class Turret {
     state = turretState.SET_TURRET_ANGLE;
   }
 
-  public boolean requestAtUnwindLimit() {
-    return MathUtil.isNear(Constants.Turret.midPointPhysicalDeg, desiredDeg, 180.1);
+  public boolean atUnwindLimit() {
+    return MathUtil.isNear(Constants.Turret.midPointPhysicalDeg, inputs.turretDegs, 180.1);
   }
 
   public boolean isUnwinding() {
