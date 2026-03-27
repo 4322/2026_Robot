@@ -20,7 +20,6 @@ public class Intake extends SubsystemBase {
   private double initialDeployerAngle = 0;
   private boolean alreadyDeployedCheckFailed = false;
 
-
   public Intake(Deployer deployer, Rollers rollers) {
     this.deployer = deployer;
     this.rollers = rollers;
