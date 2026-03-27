@@ -138,10 +138,11 @@ public class FlywheelIOTalonFx implements FlywheelIO {
         motor.stopMotor();
       } else {
         if (mechanismRPS == Constants.Flywheel.idleRPS) {
-          motor.setControl(velocityRequest.withVelocity(mechanismRPS).withEnableFOC(true).withSlot(1));
-        }
-        else {
-          motor.setControl(velocityRequest.withVelocity(mechanismRPS).withEnableFOC(true).withSlot(0));
+          motor.setControl(
+              velocityRequest.withVelocity(mechanismRPS).withEnableFOC(true).withSlot(1));
+        } else {
+          motor.setControl(
+              velocityRequest.withVelocity(mechanismRPS).withEnableFOC(true).withSlot(0));
         }
       }
     }

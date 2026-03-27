@@ -134,26 +134,24 @@ public class Shooter extends SubsystemBase {
         if (resetIdleTimeout) {
           idleTimer.restart();
           resetIdleTimeout = false;
-        }  
+        }
 
         spindexer.requestIdle();
         turret.requestAngle(targetTurretAngleDeg, isScoring);
-        
+
         if (spindexer.isStopped()) {
           tunnel.requestIdle();
         }
 
         if (idleTimer.hasElapsed(Constants.Flywheel.idleTimeout)) {
           flywheel.requestGoal(Constants.Flywheel.idleRPS, isScoring);
-        }
-        else {
+        } else {
           flywheel.requestGoal(targetFlywheelSpeedRPS, isScoring);
         }
 
         if (idleTimer.hasElapsed(Constants.Hood.idleTimeout)) {
           hood.requestGoal(Constants.Hood.safeAngleDeg);
-        }
-        else {
+        } else {
           hood.requestGoal(targetHoodAngleDeg);
         }
       }
@@ -240,10 +238,7 @@ public class Shooter extends SubsystemBase {
       }
     } else {
       FiringSolution firingSolution =
-          FiringManager.getFiringSolution(
-              drive.getTurretPose(),
-              drive.getVelocity(),
-              isScoring);
+          FiringManager.getFiringSolution(drive.getTurretPose(), drive.getVelocity(), isScoring);
 
       Logger.recordOutput("Shooter/OriginalSolution/HoodAngleDeg", firingSolution.hoodAngle);
       Logger.recordOutput(

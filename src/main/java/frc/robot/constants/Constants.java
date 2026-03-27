@@ -222,7 +222,7 @@ public final class Constants {
         0.5; // don't exceed 1.0 to avoid hitting the trench
     public static final double mediumToleranceDeg = 3.5;
     public static final double largeToleranceDeg = 9.0;
-    public static final double atGoalTimeoutSec = 1.5; // full travel time 1.1s
+    public static final double atGoalTimeoutSec = 0.5; // full travel time 1.1s
     public static final int idleTimeout = 0;
     public static final int kSPulseWidth = 50; // power to hold hood position
   }
