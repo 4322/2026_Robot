@@ -4,6 +4,8 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.Intake.IntakeState;
@@ -82,6 +84,18 @@ public class IntakeCommands {
             () -> {
               intake.setState(IntakeState.SMOOSH);
             })
+        .onlyIf(() -> intake.hasExtended());
+  }
+
+  public static Command autoSmoosh(Intake intake, double delay, double timeout) {
+    return new SequentialCommandGroup(
+            new WaitCommand(delay),
+            Commands.run(
+                () -> {
+                  intake.setState(IntakeState.SMOOSH);
+                }),
+            new WaitCommand(timeout),
+            toggleOff(intake))
         .onlyIf(() -> intake.hasExtended());
   }
 }
