@@ -1,6 +1,7 @@
 package frc.robot.subsystems.shooter;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 import frc.robot.constants.Constants;
@@ -47,6 +48,8 @@ public class Shooter extends SubsystemBase {
   private boolean doUnwind = false;
   private boolean fixedPositionShooting = false;
   private boolean isScoring = true;
+  private Timer idleTimer = new Timer();
+  private boolean resetIdleTimeout = false;
 
   public Shooter(
       Flywheel flywheel,
@@ -123,43 +126,56 @@ public class Shooter extends SubsystemBase {
         // Commands will take state out of starting config only if intake was first deployed
       }
       case DISABLED -> {
+        resetIdleTimeout = true;
         if (DriverStation.isEnabled()) {
           state = ShooterState.IDLE;
         }
       }
       case IDLE -> {
+        if (resetIdleTimeout) {
+          idleTimer.restart();
+          resetIdleTimeout = false;
+        }  
+
         spindexer.requestIdle();
-        turret.requestAngle(targetTurretAngleDeg, false);
-        hood.requestGoal(Constants.Hood.safeAngleDeg);
+        turret.requestAngle(targetTurretAngleDeg, isScoring);
+        
         if (spindexer.isStopped()) {
           tunnel.requestIdle();
-        } else {
-          tunnel.requestGoal(targetTunnelSpeedRPS);
         }
-        if (tunnel.isStopped()) {
-          flywheel.requestGoal(Constants.Flywheel.idleRPS, false);
+
+        if (idleTimer.hasElapsed(Constants.Flywheel.idleTimeout)) {
+          flywheel.requestGoal(Constants.Flywheel.idleRPS, isScoring);
+        }
+        else {
+          flywheel.requestGoal(targetFlywheelSpeedRPS, isScoring);
+        }
+
+        if (idleTimer.hasElapsed(Constants.Hood.idleTimeout)) {
+          hood.requestGoal(Constants.Hood.safeAngleDeg);
+        }
+        else {
+          hood.requestGoal(targetHoodAngleDeg);
         }
       }
       case STOP -> {
-        flywheel.requestGoal(0, false);
+        resetIdleTimeout = true;
+        flywheel.requestGoal(0, isScoring);
         hood.requestGoal(targetHoodAngleDeg);
-        turret.requestAngle(targetTurretAngleDeg, false);
+        turret.requestAngle(targetTurretAngleDeg, isScoring);
         spindexer.requestIdle();
         tunnel.requestIdle();
       }
       case UNWIND -> {
-        // Keep requesting target states while waiting for unwind
-        if (requestedState == ShooterState.IDLE && requestedState == ShooterState.STOP) {
-          hood.requestGoal(Constants.Hood.safeAngleDeg);
-          flywheel.requestGoal(Constants.Flywheel.idleRPS, false);
-        } else {
+        // Optimization: Keep requesting target states while waiting for unwind if shooting
+        if (requestedState == ShooterState.PRESHOOT) {
           hood.requestGoal(targetHoodAngleDeg);
-          flywheel.requestGoal(targetFlywheelSpeedRPS, false);
+          flywheel.requestGoal(targetFlywheelSpeedRPS, isScoring);
         }
 
         // Keep sending turret angle requests and unwind logic will continuously adjust target
         // setpoint within range of physical midpoint
-        turret.requestAngle(targetTurretAngleDeg, false);
+        turret.requestAngle(targetTurretAngleDeg, isScoring);
         spindexer.requestIdle();
 
         if (spindexer.isStopped()) {
@@ -179,12 +195,14 @@ public class Shooter extends SubsystemBase {
         turret.unwind(doUnwind);
       }
       case PRESHOOT -> {
+        resetIdleTimeout = true;
         spindexer.requestIdle();
         flywheel.requestGoal(targetFlywheelSpeedRPS, isScoring);
         hood.requestGoal(targetHoodAngleDeg);
         turret.requestAngle(targetTurretAngleDeg, isScoring);
       }
       case SHOOT -> {
+        resetIdleTimeout = true;
         flywheel.requestGoal(targetFlywheelSpeedRPS, isScoring);
         hood.requestGoal(targetHoodAngleDeg);
         turret.requestAngle(targetTurretAngleDeg, isScoring);

@@ -163,6 +163,7 @@ public final class Constants {
     public static final double largeToleranceRPS = 4.0;
     public static final double smallToleranceRPS = 2.0;
     public static final int idleRPS = 15;
+    public static final int idleTimeout = 5;
 
     public static final int canandcolorId = 0;
     public static final boolean canAndColorEnabled = false;
@@ -219,6 +220,7 @@ public final class Constants {
     public static final double kIZone = 1.0;
     public static final double kD = 0.0;
     public static final int idleVelocity = 0;
+    public static final int idleTimeout = 0;
     public static final double toleranceDeg = 3;
     public static final double homingVelocityThresholdRPS = 0.01;
     public static final double homingVelocity = -0.4;
