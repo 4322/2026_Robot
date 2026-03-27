@@ -13,7 +13,6 @@ import frc.robot.subsystems.led.LED;
 import frc.robot.subsystems.shooter.areaManager.AreaManager;
 import frc.robot.subsystems.shooter.areaManager.AreaManager.Zone;
 import frc.robot.subsystems.shooter.firingManager.FiringManager;
-import frc.robot.subsystems.shooter.firingManager.FiringManager.FiringSolution;
 import frc.robot.subsystems.shooter.flywheel.Flywheel;
 import frc.robot.subsystems.shooter.hood.Hood;
 import frc.robot.subsystems.shooter.spindexer.Spindexer;
@@ -252,14 +251,14 @@ public class Shooter extends SubsystemBase {
 
   private void calculateFiringSolution() {
     if (fixedPositionShooting) {
-      targetHoodAngleDeg = Constants.fixedSolutionBlue.hoodAngle();
-      targetFlywheelSpeedRPS = Constants.fixedSolutionBlue.flywheelSpeedRPS();
-      targetTunnelSpeedRPS = Constants.fixedSolutionBlue.tunnelSpeedRPS();
-      targetIndexerSpeedRPS = Constants.fixedSolutionBlue.indexerSpeedRPS();
+      targetHoodAngleDeg = Constants.fixedSolutionBlue.hoodAngle;
+      targetFlywheelSpeedRPS = Constants.fixedSolutionBlue.flywheelSpeedRPS;
+      targetTunnelSpeedRPS = Constants.fixedSolutionBlue.tunnelSpeedRPS;
+      targetIndexerSpeedRPS = Constants.fixedSolutionBlue.indexerSpeedRPS;
       if (Robot.alliance == DriverStation.Alliance.Blue) {
-        targetTurretAngleDeg = Constants.fixedSolutionBlue.turretAngleDeg();
+        targetTurretAngleDeg = Constants.fixedSolutionBlue.turretAngleDeg;
       } else {
-        targetTurretAngleDeg = Constants.fixedSolutionRed.turretAngleDeg();
+        targetTurretAngleDeg = Constants.fixedSolutionRed.turretAngleDeg;
       }
     } else {
       FiringSolution firingSolution =
@@ -269,30 +268,29 @@ public class Shooter extends SubsystemBase {
               AreaManager.getZoneOfPosition(drive.getTurretPosition()) == Zone.ALLIANCE_ZONE
                   || AreaManager.isTrench(drive.getTurretPosition()));
 
-      Logger.recordOutput("Shooter/OriginalSolution/HoodAngleDeg", firingSolution.hoodAngle());
+      Logger.recordOutput("Shooter/OriginalSolution/HoodAngleDeg", firingSolution.hoodAngle);
       Logger.recordOutput(
-          "Shooter/OriginalSolution/FlywheelSpeedRPS", firingSolution.flywheelSpeedRPS());
-      Logger.recordOutput(
-          "Shooter/OriginalSolution/TurretAngleDeg", firingSolution.turretAngleDeg());
+          "Shooter/OriginalSolution/FlywheelSpeedRPS", firingSolution.flywheelSpeedRPS);
+      Logger.recordOutput("Shooter/OriginalSolution/TurretAngleDeg", firingSolution.turretAngleDeg);
 
-      // If hood isn't at goal anymore after entering shoot state, do flywheel compensation
-      if (state == ShooterState.SHOOT && !hood.isAtGoal()) {
+      // Do flywheel compensation for hood error once we start shooting
+      if (state == ShooterState.SHOOT) {
         firingSolution = FiringManager.adjustForHoodOffset(firingSolution, targetHoodAngleDeg);
-        Logger.recordOutput("Shooter/CompensatedSolution/HoodAngleDeg", firingSolution.hoodAngle());
+        Logger.recordOutput("Shooter/CompensatedSolution/HoodAngleDeg", firingSolution.hoodAngle);
         Logger.recordOutput(
-            "Shooter/CompensatedSolution/FlywheelSpeedRPS", firingSolution.flywheelSpeedRPS());
+            "Shooter/CompensatedSolution/FlywheelSpeedRPS", firingSolution.flywheelSpeedRPS);
         Logger.recordOutput(
-            "Shooter/CompensatedSolution/TurretAngleDeg", firingSolution.turretAngleDeg());
+            "Shooter/CompensatedSolution/TurretAngleDeg", firingSolution.turretAngleDeg);
         Logger.recordOutput("Shooter/adjustingForHoodOffset", true);
       } else {
         Logger.recordOutput("Shooter/adjustingForHoodOffset", false);
       }
 
-      targetHoodAngleDeg = firingSolution.hoodAngle();
-      targetFlywheelSpeedRPS = firingSolution.flywheelSpeedRPS();
-      targetTurretAngleDeg = firingSolution.turretAngleDeg();
-      targetTunnelSpeedRPS = firingSolution.tunnelSpeedRPS();
-      targetIndexerSpeedRPS = firingSolution.indexerSpeedRPS();
+      targetHoodAngleDeg = firingSolution.hoodAngle;
+      targetFlywheelSpeedRPS = firingSolution.flywheelSpeedRPS;
+      targetTurretAngleDeg = firingSolution.turretAngleDeg;
+      targetTunnelSpeedRPS = firingSolution.tunnelSpeedRPS;
+      targetIndexerSpeedRPS = firingSolution.indexerSpeedRPS;
     }
   }
 
@@ -383,5 +381,9 @@ public class Shooter extends SubsystemBase {
 
   public boolean autoShootEnabled() {
     return autoShootEnabled;
+  }
+
+  public double getHoodPositionDegrees() {
+    return hood.getPositionDegrees();
   }
 }

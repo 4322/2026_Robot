@@ -14,7 +14,7 @@ import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
 import edu.wpi.first.math.interpolation.InverseInterpolator;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotBase;
-import frc.robot.subsystems.shooter.firingManager.FiringManager.FiringSolution;
+import frc.robot.subsystems.shooter.FiringSolution;
 import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetection.ObjectDetectionType;
 
 /**
@@ -283,7 +283,7 @@ public final class Constants {
       this.indexerRPS = indexerRPS;
     }
 
-    public double getFlywheelRPM() {
+    public double getFlywheelRPS() {
       return flywheelRPM;
     }
 

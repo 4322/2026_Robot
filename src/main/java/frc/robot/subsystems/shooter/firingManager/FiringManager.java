@@ -10,6 +10,7 @@ import frc.robot.Robot;
 import frc.robot.RobotContainer;
 import frc.robot.constants.Constants;
 import frc.robot.constants.Constants.FiringParameters;
+import frc.robot.subsystems.shooter.FiringSolution;
 import frc.robot.subsystems.shooter.areaManager.AreaManager;
 import frc.robot.subsystems.shooter.areaManager.AreaManager.Zone;
 import frc.robot.util.GeomUtil;
@@ -17,13 +18,6 @@ import frc.robot.util.LoggedTunableNumber;
 import org.littletonrobotics.junction.Logger;
 
 public class FiringManager {
-
-  public record FiringSolution(
-      double flywheelSpeedRPS,
-      double hoodAngle,
-      double turretAngleDeg,
-      double tunnelSpeedRPS,
-      double indexerSpeedRPS) {}
 
   public enum FiringTargets {
     HUB,
@@ -33,13 +27,13 @@ public class FiringManager {
     NEUTRAL_RIGHT
   }
 
-  private static final LoggedTunableNumber flywheelSpeedRPM =
+  private static final LoggedTunableNumber tunableFlywheelSpeedRPS =
       new LoggedTunableNumber("FiringManager/flywheelSpeedRPM", 0);
-  private static final LoggedTunableNumber hoodAngle =
+  private static final LoggedTunableNumber tunableHoodAngle =
       new LoggedTunableNumber("FiringManager/hoodAngle", 0);
-  private static final LoggedTunableNumber tunnelSpeedRPS =
+  private static final LoggedTunableNumber tunableTunnelSpeedRPS =
       new LoggedTunableNumber("FiringManager/tunnelSpeedRPS", 0);
-  private static final LoggedTunableNumber indexerSpeedRPS =
+  private static final LoggedTunableNumber tunableIndexerSpeedRPS =
       new LoggedTunableNumber("FiringManager/indexerSpeedRPS", 0);
 
   public static FiringSolution getFiringSolution(
@@ -137,34 +131,37 @@ public class FiringManager {
             ? Constants.FiringManager.firingMapScoring.get(effectiveDistance)
             : Constants.FiringManager.firingMapPassing.get(effectiveDistance);
 
-    Logger.recordOutput("FiringManager/solution/flywheelRPM", solutionParameters.getFlywheelRPM());
+    Logger.recordOutput("FiringManager/solution/flywheelRPM", solutionParameters.getFlywheelRPS());
     Logger.recordOutput("FiringManager/solution/hoodAngle", solutionParameters.getHoodAngleDeg());
     Logger.recordOutput("FiringManager/solution/tunnelRPS", solutionParameters.getTunnelRPS());
     Logger.recordOutput("FiringManager/solution/indexerRPS", solutionParameters.getIndexerRPS());
     Logger.recordOutput("FiringManager/solution/turretAngle", turretAngle.getDegrees());
 
     if (Constants.firingManagerMode == Constants.SubsystemMode.TUNING) {
-      Logger.recordOutput("FiringManager/requestedTuning/flywheelSpeedRPM", flywheelSpeedRPM.get());
-      Logger.recordOutput("FiringManager/requestedTuning/hoodAngle", hoodAngle.get());
-      Logger.recordOutput("FiringManager/requestedTuning/tunnelSpeedRPS", tunnelSpeedRPS.get());
-      Logger.recordOutput("FiringManager/requestedTuning/indexerSpeedRPS", indexerSpeedRPS.get());
+      Logger.recordOutput(
+          "FiringManager/requestedTuning/flywheelSpeedRPM", tunableFlywheelSpeedRPS.get());
+      Logger.recordOutput("FiringManager/requestedTuning/hoodAngle", tunableHoodAngle.get());
+      Logger.recordOutput(
+          "FiringManager/requestedTuning/tunnelSpeedRPS", tunableTunnelSpeedRPS.get());
+      Logger.recordOutput(
+          "FiringManager/requestedTuning/indexerSpeedRPS", tunableIndexerSpeedRPS.get());
       return new FiringSolution(
-          flywheelSpeedRPM.get(),
-          hoodAngle.get(),
+          tunableFlywheelSpeedRPS.get(),
+          tunableHoodAngle.get(),
           adjustForTurretLock(vectorToGoal.getAngle().getDegrees()),
-          tunnelSpeedRPS.get(),
-          indexerSpeedRPS.get());
+          tunableTunnelSpeedRPS.get(),
+          tunableIndexerSpeedRPS.get());
 
     } else if (Constants.shootOnTheMoveEnabled) {
       return new FiringSolution(
-          solutionParameters.getFlywheelRPM(),
+          solutionParameters.getFlywheelRPS(),
           solutionParameters.getHoodAngleDeg(),
           adjustForTurretLock(turretAngle.getDegrees()),
           solutionParameters.getTunnelRPS(),
           solutionParameters.getIndexerRPS());
     } else {
       return new FiringSolution(
-          baseline.getFlywheelRPM(),
+          baseline.getFlywheelRPS(),
           baseline.getHoodAngleDeg(),
           adjustForTurretLock(targetDirection.getAngle().getDegrees()),
           baseline.getTunnelRPS(),
@@ -182,10 +179,15 @@ public class FiringManager {
     }
   }
 
+  // Adjust flywheel speed to compensate for quantization of hood position because
+  // it's hard to move the hood servo a small amount.
   public static FiringSolution adjustForHoodOffset(
-      FiringSolution calculatedSolution, double hoodAngle) {
-    // TODO: Add algorithm that modifies solution based on calculated hood solution and current hood
-    // angle
+      FiringSolution calculatedSolution, double idealHoodAngle) {
+    double deltaDegrees = RobotContainer.shooter.getHoodPositionDegrees() - idealHoodAngle;
+    calculatedSolution.flywheelSpeedRPS += deltaDegrees * -2.0;
+    if (calculatedSolution.flywheelSpeedRPS < 0) {
+      calculatedSolution.flywheelSpeedRPS = 0;
+    }
     return calculatedSolution;
   }
 

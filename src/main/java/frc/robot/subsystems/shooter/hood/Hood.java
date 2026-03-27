@@ -172,7 +172,7 @@ public class Hood {
     return homed;
   }
 
-  public double getEncoderDetectedPosition() {
+  public double getPositionDegrees() {
     return inputs.degrees;
   }
 
