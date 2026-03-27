@@ -204,11 +204,12 @@ public final class Constants {
     public static final double homingVelocity = -0.4;
     public static final double fastVelocity = 1.0;
     public static final double mediumVelocity = 0.4;
-    public static final double slowVelocity = 0.25; // no kS compensation, kS can be 0.1 to 0.2
+    public static final double slowVelocity = 0.3; // no kS compensation, kS can be 0.1 to 0.2
     public static final double smallToleranceDeg =
         0.5; // don't exceed 1.0 to avoid hitting the trench
     public static final double largeToleranceDeg = 12.0;
     public static final double mediumToleranceDeg = 4.0;
+    public static final double atGoalTimeoutSec = 1.5;
     public static final int kSPulseWidth = 70; // power to hold hood position
   }
 

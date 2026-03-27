@@ -3,6 +3,7 @@ package frc.robot.subsystems.shooter.hood;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.constants.Constants;
+import frc.robot.constants.Constants.SubsystemMode;
 import frc.robot.util.LoggedTunableNumber;
 import org.littletonrobotics.junction.Logger;
 
@@ -27,6 +28,7 @@ public class Hood {
   private HoodIO io;
   private HoodIOInputsAutoLogged inputs = new HoodIOInputsAutoLogged();
   private double requestedAngleDeg;
+  private Timer atGoalTimer = new Timer();
   private Timer homingTimer = new Timer();
   private boolean homed = false;
   private boolean trenchOverride = false;
@@ -54,7 +56,8 @@ public class Hood {
         if (tuningPulseWidth.get() != 0) {
           io.setPulseWidth((int) tuningPulseWidth.get());
         } else {
-          requestGoal(tuningGoalDeg.get());
+          setGoal(tuningGoalDeg.get());
+          setVelocity();
         }
       }
       case NORMAL -> {
@@ -86,10 +89,12 @@ public class Hood {
     Logger.recordOutput("Hood/Timer", homingTimer.get());
     Logger.recordOutput("Hood/homed", homed);
     Logger.recordOutput("Hood/isAtGoal", isAtGoal());
+    Logger.recordOutput("Hood/goalDegrees", requestedAngleDeg);
   }
 
   private void setVelocity() {
     double velocity = 0;
+    updateAtGoalTimer();
     if (Math.abs(inputs.degrees - requestedAngleDeg) < smallToleranceDeg.get()) {
       velocity = 0;
     } else if (inputs.degrees > requestedAngleDeg + largeToleranceDeg.get()
@@ -102,17 +107,19 @@ public class Hood {
       velocity = -mediumVelocity.get();
     } else if (inputs.degrees < requestedAngleDeg - mediumToleranceDeg.get()) {
       velocity = mediumVelocity.get();
-    } else if (lastVelocity > 0) {
-      if (inputs.degrees > requestedAngleDeg) {
-        velocity = 0;
-      } else {
-        velocity = slowVelocity.get();
-      }
-    } else if (lastVelocity < 0) {
-      if (inputs.degrees < requestedAngleDeg) {
-        velocity = 0;
-      } else {
-        velocity = -slowVelocity.get();
+    } else {
+      if (lastVelocity > 0) {
+        if (inputs.degrees > requestedAngleDeg) {
+          velocity = 0;
+        } else {
+          velocity = slowVelocity.get();
+        }
+      } else if (lastVelocity < 0) {
+        if (inputs.degrees < requestedAngleDeg) {
+          velocity = 0;
+        } else {
+          velocity = -slowVelocity.get();
+        }
       }
     }
     io.setServoVelocity(velocity, requestedAngleDeg);
@@ -120,16 +127,24 @@ public class Hood {
     Logger.recordOutput("Hood/requestedServoVelocity", velocity);
   }
 
-  public void requestGoal(double angle) {
-    if (!trenchOverride) {
-      setGoal(angle);
+  private void updateAtGoalTimer() {
+    if (Math.abs(inputs.degrees - requestedAngleDeg) < mediumToleranceDeg.get()) {
+      atGoalTimer.start();
+    } else {
+      atGoalTimer.stop();
+      atGoalTimer.reset();
     }
   }
 
-  private void setGoal(double angle) {
-    requestedAngleDeg = angle;
-    setVelocity();
-    Logger.recordOutput("Hood/goalDegrees", requestedAngleDeg);
+  public void requestGoal(double degrees) {
+    if (Constants.hoodMode == SubsystemMode.NORMAL && !trenchOverride) {
+      setGoal(degrees);
+    }
+  }
+
+  private void setGoal(double degrees) {
+    requestedAngleDeg = degrees;
+    updateAtGoalTimer();
   }
 
   public void trenchOverride(boolean override) {
@@ -146,8 +161,10 @@ public class Hood {
       return false;
     } else if (Constants.currentMode == Constants.Mode.SIM) {
       return true; // TODO temporary until we get hood sim working
+    } else if (lastVelocity == 0 || atGoalTimer.hasElapsed(Constants.Hood.atGoalTimeoutSec)) {
+      return true;
     } else {
-      return lastVelocity == 0;
+      return false;
     }
   }
 
