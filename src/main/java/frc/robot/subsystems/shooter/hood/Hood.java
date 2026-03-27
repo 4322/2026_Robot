@@ -1,23 +1,25 @@
 package frc.robot.subsystems.shooter.hood;
 
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.constants.Constants;
+import frc.robot.constants.Constants.SubsystemMode;
 import frc.robot.util.LoggedTunableNumber;
 import org.littletonrobotics.junction.Logger;
 
 public class Hood {
-  private static final LoggedTunableNumber kP =
-      new LoggedTunableNumber("Hood/kP", Constants.Hood.kP);
-  private static final LoggedTunableNumber kI =
-      new LoggedTunableNumber("Hood/kI", Constants.Hood.kI);
-  private static final LoggedTunableNumber kIZone =
-      new LoggedTunableNumber("Hood/kIZone", Constants.Hood.kIZone);
-  private static final LoggedTunableNumber kD =
-      new LoggedTunableNumber("Hood/kD", Constants.Hood.kD);
-  private static final LoggedTunableNumber toleranceDeg =
-      new LoggedTunableNumber("Hood/toleranceDeg", Constants.Hood.toleranceDeg);
+  private static final LoggedTunableNumber fastVelocity =
+      new LoggedTunableNumber("Hood/fastVelocity", Constants.Hood.fastVelocity);
+  private static final LoggedTunableNumber mediumVelocity =
+      new LoggedTunableNumber("Hood/mediumVelocity", Constants.Hood.mediumVelocity);
+  private static final LoggedTunableNumber slowVelocity =
+      new LoggedTunableNumber("Hood/slowVelocity", Constants.Hood.slowVelocity);
+  private static final LoggedTunableNumber largeToleranceDeg =
+      new LoggedTunableNumber("Hood/largeToleranceDeg", Constants.Hood.largeToleranceDeg);
+  private static final LoggedTunableNumber mediumToleranceDeg =
+      new LoggedTunableNumber("Hood/mediumToleranceDeg", Constants.Hood.mediumToleranceDeg);
+  private static final LoggedTunableNumber smallToleranceDeg =
+      new LoggedTunableNumber("Hood/smallToleranceDeg", Constants.Hood.smallToleranceDeg);
   private static final LoggedTunableNumber tuningGoalDeg =
       new LoggedTunableNumber("Hood/tuningGoalDeg", 0);
   private static final LoggedTunableNumber tuningPulseWidth =
@@ -26,17 +28,14 @@ public class Hood {
   private HoodIO io;
   private HoodIOInputsAutoLogged inputs = new HoodIOInputsAutoLogged();
   private double requestedAngleDeg;
+  private Timer atGoalTimer = new Timer();
   private Timer homingTimer = new Timer();
-  private double pidVelocity;
   private boolean homed = false;
   private boolean trenchOverride = false;
-  private PIDController pidController = new PIDController(kP.get(), kI.get(), kD.get());
+  private double lastVelocity = 0;
 
   public Hood(HoodIO io) {
     this.io = io;
-    pidController.disableContinuousInput();
-    pidController.setIZone(kIZone.get());
-    pidController.setTolerance(toleranceDeg.get());
   }
 
   public void inputsPeriodic() {
@@ -57,18 +56,8 @@ public class Hood {
         if (tuningPulseWidth.get() != 0) {
           io.setPulseWidth((int) tuningPulseWidth.get());
         } else {
-          LoggedTunableNumber.ifChanged(
-              hashCode(), () -> pidController.setPID(kP.get(), kI.get(), kD.get()), kP, kI, kD);
-          LoggedTunableNumber.ifChanged(
-              hashCode(), () -> pidController.setIZone(kIZone.get()), kIZone);
-          LoggedTunableNumber.ifChanged(
-              hashCode(), () -> pidController.setTolerance(toleranceDeg.get()), toleranceDeg);
-          requestGoal(tuningGoalDeg.get());
-
-          pidVelocity = pidController.calculate(inputs.degrees, requestedAngleDeg);
-
-          io.setServoVelocity(pidVelocity);
-          Logger.recordOutput("Shooter/Hood/requestedServoVelocity", pidVelocity);
+          setGoal(tuningGoalDeg.get());
+          setVelocity();
         }
       }
       case NORMAL -> {
@@ -77,28 +66,21 @@ public class Hood {
           homed = true;
         }
         if (!homed && DriverStation.isEnabled()) {
-          io.setServoVelocity(Constants.Hood.homingVelocity);
+          io.setServoVelocity(Constants.Hood.homingVelocity, 0);
           homingTimer.start();
           if (Math.abs(inputs.encoderRPS) > Constants.Hood.homingVelocityThresholdRPS) {
             homingTimer.reset();
           } else if (homingTimer.hasElapsed(0.1)) {
             io.setEncoderHomed();
-            io.setServoVelocity(Constants.Hood.idleVelocity);
+            io.setServoVelocity(0, 0);
             homed = true;
             homingTimer.stop();
             homingTimer.reset();
           }
         } else if (DriverStation.isEnabled()) {
-          pidVelocity = pidController.calculate(inputs.degrees, requestedAngleDeg);
-          // let hood continually adjust, unless it is near the bottom, in which case
-          // we don't want kI building up to max negative velocity
-          if (pidController.atSetpoint() && requestedAngleDeg == Constants.Hood.safeAngleDeg) {
-            pidVelocity = Constants.Hood.holdDownVelocity;
-          }
-          io.setServoVelocity(pidVelocity);
-          Logger.recordOutput("Shooter/Hood/requestedServoVelocity", pidVelocity);
+          setVelocity();
         } else {
-          io.setServoVelocity(Constants.Hood.idleVelocity);
+          io.setServoVelocity(0, 0);
           homingTimer.stop();
           homingTimer.reset();
         }
@@ -107,18 +89,62 @@ public class Hood {
     Logger.recordOutput("Shooter/Hood/Timer", homingTimer.get());
     Logger.recordOutput("Shooter/Hood/homed", homed);
     Logger.recordOutput("Shooter/Hood/isAtGoal", isAtGoal());
+    Logger.recordOutput("Shooter/Hood/goalDegrees", requestedAngleDeg);
   }
 
-  public void requestGoal(double angle) {
-    if (!trenchOverride) {
-      setGoal(angle);
+  private void setVelocity() {
+    double velocity = 0;
+    updateAtGoalTimer();
+    if (Math.abs(inputs.degrees - requestedAngleDeg) < smallToleranceDeg.get()) {
+      velocity = 0;
+    } else if (inputs.degrees > requestedAngleDeg + largeToleranceDeg.get()
+        || (requestedAngleDeg == Constants.Hood.safeAngleDeg
+            && inputs.degrees > Constants.Hood.safeAngleDeg)) {
+      velocity = -fastVelocity.get();
+    } else if (inputs.degrees < requestedAngleDeg - largeToleranceDeg.get()) {
+      velocity = fastVelocity.get();
+    } else if (inputs.degrees > requestedAngleDeg + mediumToleranceDeg.get()) {
+      velocity = -mediumVelocity.get();
+    } else if (inputs.degrees < requestedAngleDeg - mediumToleranceDeg.get()) {
+      velocity = mediumVelocity.get();
+    } else {
+      if (lastVelocity > 0) {
+        if (inputs.degrees > requestedAngleDeg) {
+          velocity = 0;
+        } else {
+          velocity = slowVelocity.get();
+        }
+      } else if (lastVelocity < 0) {
+        if (inputs.degrees < requestedAngleDeg) {
+          velocity = 0;
+        } else {
+          velocity = -slowVelocity.get();
+        }
+      }
+    }
+    io.setServoVelocity(velocity, requestedAngleDeg);
+    lastVelocity = velocity;
+    Logger.recordOutput("Shooter/Hood/requestedServoVelocity", velocity);
+  }
+
+  private void updateAtGoalTimer() {
+    if (Math.abs(inputs.degrees - requestedAngleDeg) < mediumToleranceDeg.get()) {
+      atGoalTimer.start();
+    } else {
+      atGoalTimer.stop();
+      atGoalTimer.reset();
     }
   }
 
-  private void setGoal(double angle) {
-    pidController.setSetpoint(angle);
-    this.requestedAngleDeg = angle;
-    Logger.recordOutput("Shooter/Hood/goalDegree", requestedAngleDeg);
+  public void requestGoal(double degrees) {
+    if (Constants.hoodMode == SubsystemMode.NORMAL && !trenchOverride) {
+      setGoal(degrees);
+    }
+  }
+
+  private void setGoal(double degrees) {
+    requestedAngleDeg = degrees;
+    updateAtGoalTimer();
   }
 
   public void trenchOverride(boolean override) {
@@ -135,8 +161,10 @@ public class Hood {
       return false;
     } else if (Constants.currentMode == Constants.Mode.SIM) {
       return true; // TODO temporary until we get hood sim working
+    } else if (lastVelocity == 0 || atGoalTimer.hasElapsed(Constants.Hood.atGoalTimeoutSec)) {
+      return true;
     } else {
-      return pidController.atSetpoint();
+      return false;
     }
   }
 
@@ -144,7 +172,7 @@ public class Hood {
     return homed;
   }
 
-  public double getEncoderDetectedPosition() {
+  public double getPositionDegrees() {
     return inputs.degrees;
   }
 

@@ -14,7 +14,7 @@ import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
 import edu.wpi.first.math.interpolation.InverseInterpolator;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotBase;
-import frc.robot.subsystems.shooter.firingManager.FiringManager.FiringSolution;
+import frc.robot.subsystems.shooter.FiringSolution;
 import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetection.ObjectDetectionType;
 
 /**
@@ -158,6 +158,7 @@ public final class Constants {
     public static final double kP = 0.5;
     public static final double kI = 0;
     public static final double kD = 0;
+    public static final double flywheelHoodAdjustmentFactor = -2.0;
 
     public static final double motorToMechanismRatio = 1;
     public static final double largeToleranceRPS = 4.0;
@@ -212,19 +213,18 @@ public final class Constants {
     public static final int encoderId = 3;
     public static final double gearRatio = 164 / 11.0;
     public static final double safeAngleDeg = 0;
-    public static final double kSPulsewidthUp = 80;
-    public static final double kSPulsewidthDown = 45;
-    public static final double kV = 0;
-    public static final double kP = 0.04;
-    public static final double kI = 0.03;
-    public static final double kIZone = 1.0;
-    public static final double kD = 0.0;
-    public static final int idleVelocity = 0;
-    public static final int idleTimeout = 0;
-    public static final double toleranceDeg = 3;
     public static final double homingVelocityThresholdRPS = 0.01;
     public static final double homingVelocity = -0.4;
-    public static final double holdDownVelocity = -0.2;
+    public static final double mediumVelocity = 0.35;
+    public static final double fastVelocity = 1.0;
+    public static final double slowVelocity = 0.3; // no kS compensation, kS can be 0.1 to 0.2
+    public static final double smallToleranceDeg =
+        0.5; // don't exceed 1.0 to avoid hitting the trench
+    public static final double mediumToleranceDeg = 3.5;
+    public static final double largeToleranceDeg = 9.0;
+    public static final double atGoalTimeoutSec = 0.5; // full travel time 1.1s
+    public static final int idleTimeout = 0;
+    public static final int kSPulseWidth = 50; // power to hold hood position
   }
 
   public static class Control {
@@ -278,27 +278,27 @@ public final class Constants {
   }
 
   public static class FiringParameters {
-    private final double flywheelRPM;
+    private final double flywheelRPS;
     private final double hoodAngleDeg;
     private final double timeOfFlightSec;
     private final double tunnelRPS;
     private final double indexerRPS;
 
     public FiringParameters(
-        double flywheelRPM,
+        double flywheelRPS,
         double hoodAngleDeg,
         double timeOfFlightSec,
         double tunnelRPS,
         double indexerRPS) {
-      this.flywheelRPM = flywheelRPM;
+      this.flywheelRPS = flywheelRPS;
       this.hoodAngleDeg = hoodAngleDeg;
       this.timeOfFlightSec = timeOfFlightSec;
       this.tunnelRPS = tunnelRPS;
       this.indexerRPS = indexerRPS;
     }
 
-    public double getFlywheelRPM() {
-      return flywheelRPM;
+    public double getFlywheelRPS() {
+      return flywheelRPS;
     }
 
     public double getTunnelRPS() {
@@ -320,7 +320,7 @@ public final class Constants {
     public static FiringParameters interpolate(
         FiringParameters start, FiringParameters end, double howFar) {
       return new FiringParameters(
-          start.flywheelRPM + (end.flywheelRPM - start.flywheelRPM) * howFar,
+          start.flywheelRPS + (end.flywheelRPS - start.flywheelRPS) * howFar,
           start.hoodAngleDeg + (end.hoodAngleDeg - start.hoodAngleDeg) * howFar,
           start.timeOfFlightSec + (end.timeOfFlightSec - start.timeOfFlightSec) * howFar,
           start.tunnelRPS + (end.tunnelRPS - start.tunnelRPS) * howFar,
