@@ -513,9 +513,6 @@ public final class Constants {
     public static final double pathPlannerDrivekP = 5; // TODO probably increase
     public static final double pathPlannerRotationkP = 4;
     public static final double unjamTimeSec = 0.5;
-    public static final double smooshDelayDoubleFirstPass = 2.0;
-    public static final double smooshDelayDoubleSecondPass = 1.0;
-    public static final double smooshDelaySinglePass = 5.0;
   }
 
   public static class LED {

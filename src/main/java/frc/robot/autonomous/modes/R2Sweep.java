@@ -7,11 +7,9 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Robot;
 import frc.robot.commands.IntakeCommands;
 import frc.robot.commands.ShooterCommands;
-import frc.robot.constants.Constants;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.led.LED;
@@ -34,29 +32,20 @@ public class R2Sweep extends SequentialCommandGroup {
                 drive.setPose(startPoseRed);
               }
             }),
-        new SequentialCommandGroup(
+        new ParallelCommandGroup(
             IntakeCommands.intake(intake),
-            AutoBuilder.followPath(Robot.R_2SWEEP_A),
-            AutoBuilder.followPath(Robot.R_2SWEEP_B),
-            ShooterCommands.setAutoShoot(shooter, true),
-            new ParallelCommandGroup(
+            new SequentialCommandGroup(
+                AutoBuilder.followPath(Robot.R_2SWEEP_A),
+                AutoBuilder.followPath(Robot.R_2SWEEP_B),
+                ShooterCommands.setAutoShoot(shooter, true),
                 AutoBuilder.followPath(Robot.R_2SWEEP_CG),
-                new SequentialCommandGroup(
-                    new WaitCommand(Constants.Autonomous.smooshDelayDoubleFirstPass),
-                    IntakeCommands.setAutoSmoosh(intake, true))),
-            IntakeCommands.setAutoSmoosh(intake, false),
-            ShooterCommands.setAutoShoot(shooter, false),
-            AutoBuilder.followPath(Robot.R_2SWEEP_D),
-            AutoBuilder.followPath(Robot.R_2SWEEP_E),
-            AutoBuilder.followPath(Robot.R_2SWEEP_F),
-            ShooterCommands.setAutoShoot(shooter, true),
-            new ParallelCommandGroup(
+                ShooterCommands.setAutoShoot(shooter, false),
+                AutoBuilder.followPath(Robot.R_2SWEEP_D),
+                AutoBuilder.followPath(Robot.R_2SWEEP_E),
+                AutoBuilder.followPath(Robot.R_2SWEEP_F),
+                ShooterCommands.setAutoShoot(shooter, true),
                 AutoBuilder.followPath(Robot.R_2SWEEP_CG),
-                new SequentialCommandGroup(
-                    new WaitCommand(Constants.Autonomous.smooshDelayDoubleSecondPass),
-                    IntakeCommands.setAutoSmoosh(intake, true))),
-            IntakeCommands.setAutoSmoosh(intake, false),
-            ShooterCommands.setAutoShoot(shooter, false),
-            AutoBuilder.followPath(Robot.R_2SWEEP_H)));
+                ShooterCommands.setAutoShoot(shooter, false),
+                AutoBuilder.followPath(Robot.R_2SWEEP_H))));
   }
 }

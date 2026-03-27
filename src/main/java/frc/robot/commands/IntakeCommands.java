@@ -76,19 +76,4 @@ public class IntakeCommands {
             })
         .onlyIf(() -> intake.hasExtended());
   }
-
-  public static Command setAutoSmoosh(Intake intake, boolean enabled) {
-    return new ConditionalCommand(
-        Commands.runOnce(
-            () -> {
-              intake.setState(IntakeState.SMOOSH);
-              intake.setAutoSmoosh(true);
-            }),
-        Commands.runOnce(
-                () -> {
-                  intake.setAutoSmoosh(false);
-                })
-            .andThen(toggleOff(intake)),
-        () -> enabled);
-  }
 }
