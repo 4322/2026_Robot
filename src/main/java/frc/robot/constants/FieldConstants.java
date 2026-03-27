@@ -24,7 +24,7 @@ public class FieldConstants {
   public static double blueLineX = Units.inchesToMeters(158.6);
   public static double redLineX = fieldLength - Units.inchesToMeters(158.6);
   public static double hubOffset = Units.inchesToMeters(24.0);
-  public static final double fieldEdgeTolerance = Units.inchesToMeters(24);
+  public static final double fieldEdgeTolerance = Units.inchesToMeters(48);
 
   // All left/right designations are relative to blue alliance station
   public static class Blue {
