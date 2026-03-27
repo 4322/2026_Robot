@@ -245,8 +245,8 @@ public class Turret {
         }
       }
     }
-    Logger.recordOutput("Turret/rotationRange", ROTATIONAL_RANGE);
-    Logger.recordOutput("Turret/fullRotations", turretFullRotations);
+    Logger.recordOutput("Shooter/Turret/rotationRange", ROTATIONAL_RANGE);
+    Logger.recordOutput("Shooter/Turret/fullRotations", turretFullRotations);
     return turretFullRotations;
   }
 
