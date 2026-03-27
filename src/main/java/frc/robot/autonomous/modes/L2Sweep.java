@@ -52,7 +52,6 @@ public class L2Sweep extends SequentialCommandGroup {
                     IntakeCommands.autoSmoosh(
                         intake, Constants.Autonomous.smooshDelayDoubleSecondPass, 4)),
                 AutoBuilder.followPath(Robot.L_2SWEEP_CG),
-                ShooterCommands.autoShootWithAreaCheck(shooter, drive, intake),
                 AutoBuilder.followPath(Robot.L_2SWEEP_H))));
   }
 }
