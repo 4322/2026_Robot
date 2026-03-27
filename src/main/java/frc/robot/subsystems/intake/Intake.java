@@ -111,6 +111,7 @@ public class Intake extends SubsystemBase {
 
     Logger.recordOutput("Intake/CurrentState", state);
     Logger.recordOutput("Intake/hasExtended", hasExtended);
+    Logger.recordOutput("Intake/alreadyDeployCheckFailed", alreadyDeployedCheckFailed);
   }
 
   public IntakeState getState() {
