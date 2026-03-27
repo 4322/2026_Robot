@@ -32,7 +32,7 @@ public class Turret {
     // Temporary until we can,
     // Temporary until we can,
     io.updateInputs(inputs);
-    io.setPosition(getRotation());
+    io.setPosition(0.5);
     // Upper method sets the position of the turret in rotations
     // Upper method sets the position of the turret in rotations
     // manual homing to the rear

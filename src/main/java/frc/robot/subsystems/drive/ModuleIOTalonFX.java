@@ -120,6 +120,8 @@ public class ModuleIOTalonFX implements ModuleIO {
     tryUntilOk(5, () -> driveTalon.getConfigurator().apply(driveConfig, 0.25));
     tryUntilOk(5, () -> driveTalon.setPosition(0.0, 0.25));
 
+    driveConfig.HardwareLimitSwitch.ForwardLimitEnable = false;
+    driveConfig.HardwareLimitSwitch.ReverseLimitEnable = false;
     // Configure turn motor
     var turnConfig = constants.SteerMotorInitialConfigs;
     turnConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
@@ -137,15 +139,14 @@ public class ModuleIOTalonFX implements ModuleIO {
     turnConfig.MotionMagic.MotionMagicExpo_kV = 0.12 * constants.SteerMotorGearRatio;
     turnConfig.MotionMagic.MotionMagicExpo_kA = 0.1;
     turnConfig.ClosedLoopGeneral.ContinuousWrap = true;
+    turnConfig.HardwareLimitSwitch.ForwardLimitEnable = false;
+    turnConfig.HardwareLimitSwitch.ReverseLimitEnable = false;
     turnConfig.MotorOutput.Inverted =
         constants.SteerMotorInverted
             ? InvertedValue.Clockwise_Positive
             : InvertedValue.CounterClockwise_Positive;
     tryUntilOk(5, () -> turnTalon.getConfigurator().apply(turnConfig, 0.25));
-    turnConfig.HardwareLimitSwitch.ForwardLimitEnable = false;
-    turnConfig.HardwareLimitSwitch.ReverseLimitEnable = false;
-    driveConfig.HardwareLimitSwitch.ForwardLimitEnable = false;
-    driveConfig.HardwareLimitSwitch.ReverseLimitEnable = false;
+
     // Configure turn encoder
     CanandmagSettings settings = new CanandmagSettings();
     settings.setInvertDirection(constants.EncoderInverted);
