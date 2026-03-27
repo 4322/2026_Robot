@@ -41,7 +41,7 @@ public class RDisruptSweepShoot extends SequentialCommandGroup {
                 AutoBuilder.followPath(Robot.R_NeutralR_Intake_Full_Disrupt),
                 AutoBuilder.followPath(Robot.R_NeutralR_Intake_Full_Disrupt_Flip),
                 AutoBuilder.followPath(Robot.R_NeutralRMid_To_ShootR),
-                ShooterCommands.autoShootNoAreaCheck(shooter, true),
+                ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake),
                 new WaitCommand(Constants.Autonomous.smooshDelaySinglePass),
                 IntakeCommands.autoSmoosh(intake))));
   }

@@ -123,8 +123,13 @@ public class Intake extends SubsystemBase {
 
   public void setState(IntakeState state) {
     Logger.recordOutput("Intake/RequestedState", state);
-    prevState = this.state;
-    this.state = state;
+    if (hasExtended) {
+      prevState = this.state;
+      this.state = state;
+    } else {
+      prevState = state;
+      this.state = IntakeState.DEPLOY;
+    }
   }
 
   public boolean isExtended() {

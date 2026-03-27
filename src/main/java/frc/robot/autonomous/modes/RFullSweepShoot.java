@@ -41,7 +41,7 @@ public class RFullSweepShoot extends SequentialCommandGroup {
                 AutoBuilder.followPath(Robot.R_NeutralR_Intake_Full),
                 AutoBuilder.followPath(Robot.R_NeutralR_Intake_Full_Flip),
                 AutoBuilder.followPath(Robot.R_Neutral_Mid_To_ShootR),
-                ShooterCommands.autoShootNoAreaCheck(shooter, true),
+                ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake),
                 new WaitCommand(Constants.Autonomous.smooshDelaySinglePass),
                 IntakeCommands.autoSmoosh(intake))));
   }
