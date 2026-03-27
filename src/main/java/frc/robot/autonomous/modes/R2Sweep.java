@@ -43,7 +43,7 @@ public class R2Sweep extends SequentialCommandGroup {
                     ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake),
                     AutoBuilder.followPath(Robot.L_2SWEEP_CG),
                     new SequentialCommandGroup(
-                        new WaitCommand(Constants.Autonomous.smooshDelayDoubleFirstPass),
+                        new WaitCommand(Constants.Autonomous.smooshDelayFirstPass),
                         IntakeCommands.autoSmoosh(intake))),
                 AutoBuilder.followPath(Robot.R_2SWEEP_D),
                 AutoBuilder.followPath(Robot.R_2SWEEP_E),
@@ -52,7 +52,7 @@ public class R2Sweep extends SequentialCommandGroup {
                     ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake),
                     AutoBuilder.followPath(Robot.L_2SWEEP_CG),
                     new SequentialCommandGroup(
-                        new WaitCommand(Constants.Autonomous.smooshDelayDoubleFirstPass),
+                        new WaitCommand(Constants.Autonomous.smooshDelaySecondPass),
                         IntakeCommands.autoSmoosh(intake))),
                 AutoBuilder.followPath(Robot.R_2SWEEP_H))));
   }

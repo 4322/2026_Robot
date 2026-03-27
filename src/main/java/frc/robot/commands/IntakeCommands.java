@@ -90,7 +90,7 @@ public class IntakeCommands {
   public static Command autoSmoosh(Intake intake, double delay, double timeout) {
     return new SequentialCommandGroup(
             new WaitCommand(delay),
-            Commands.run(
+            Commands.runOnce(
                 () -> {
                   intake.setState(IntakeState.SMOOSH);
                 }),
