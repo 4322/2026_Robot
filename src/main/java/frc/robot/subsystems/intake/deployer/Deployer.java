@@ -7,6 +7,7 @@ import org.littletonrobotics.junction.Logger;
 public class Deployer {
   private DeployerIO deployerIO;
   private DeployerIOInputsAutoLogged inputs = new DeployerIOInputsAutoLogged();
+  private double requestedPos;
 
   public enum DeployerState {
     DISABLED,
@@ -41,18 +42,21 @@ public class Deployer {
   }
 
   public void setState(DeployerState state) {
-    Logger.recordOutput("Intake/Deployer/state", state);
     switch (state) {
       case DISABLED -> {
         break;
       }
       case EXTEND -> {
-        deployerIO.setPosition(Constants.Deployer.extendDeg);
+        requestedPos = Constants.Deployer.extendDeg;
+        deployerIO.setPosition(requestedPos);
       }
       case SMOOSH -> {
-        deployerIO.setPosition(Constants.Deployer.smooshDeg);
+        requestedPos = Constants.Deployer.smooshDeg;
+        deployerIO.setPosition(requestedPos);
       }
     }
+    Logger.recordOutput("Intake/Deployer/state", state);
+    Logger.recordOutput("Intake/Deployer/requestedPos", requestedPos);
   }
 
   public boolean isStowed() {
@@ -61,5 +65,13 @@ public class Deployer {
     } else {
       return inputs.angleDeg <= Constants.Deployer.retractDeg + Constants.Deployer.tolerance;
     }
+  }
+
+  public double getAngle() {
+    return inputs.angleDeg;
+  }
+
+  public void seedPosition(double newAngleDeg) {
+    deployerIO.seedPosition(newAngleDeg);
   }
 }

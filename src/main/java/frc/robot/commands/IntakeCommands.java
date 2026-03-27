@@ -44,7 +44,7 @@ public class IntakeCommands {
             .onlyIf(
                 () ->
                     intake.getState() == IntakeState.IDLE
-                        || intake.getState() == IntakeState.DISABLED),
+                        || intake.getState() == IntakeState.STARING_CONFIG),
         idle(intake),
         () -> intake.getState() != IntakeState.INTAKING);
   }

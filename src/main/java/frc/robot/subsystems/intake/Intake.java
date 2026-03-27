@@ -1,6 +1,9 @@
 package frc.robot.subsystems.intake;
 
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.constants.Constants;
 import frc.robot.subsystems.intake.deployer.Deployer;
 import frc.robot.subsystems.intake.deployer.Deployer.DeployerState;
 import frc.robot.subsystems.intake.rollers.Rollers;
@@ -10,9 +13,13 @@ import org.littletonrobotics.junction.Logger;
 public class Intake extends SubsystemBase {
   private final Deployer deployer;
   private final Rollers rollers;
-  private IntakeState state = IntakeState.DISABLED;
-  private IntakeState prevState = IntakeState.DISABLED;
+  private IntakeState state = IntakeState.STARING_CONFIG;
+  private IntakeState prevState = IntakeState.STARING_CONFIG;
   private boolean hasExtended = false;
+  private Timer deployCheckTimer = new Timer();
+  private double initialDeployerAngle = 0;
+  private boolean alreadyDeployedCheckFailed = false;
+
 
   public Intake(Deployer deployer, Rollers rollers) {
     this.deployer = deployer;
@@ -20,7 +27,8 @@ public class Intake extends SubsystemBase {
   }
 
   public enum IntakeState {
-    DISABLED,
+    STARING_CONFIG,
+    DEPLOY,
     IDLE,
     EJECT,
     SMOOSH,
@@ -35,35 +43,59 @@ public class Intake extends SubsystemBase {
 
   public void periodicOutputs() {
 
+    if (DriverStation.isDisabled() && state != IntakeState.STARING_CONFIG) {
+      setState(IntakeState.IDLE);
+    }
+
     switch (state) {
-      case DISABLED -> {
+      case STARING_CONFIG -> {
         deployer.setState(DeployerState.DISABLED);
         rollers.setState(RollersState.DISABLED);
-        hasExtended = false;
+      }
+      case DEPLOY -> {
+        deployer.setState(DeployerState.EXTEND);
+        rollers.setState(RollersState.DEPLOY);
+
+        if (!alreadyDeployedCheckFailed) {
+          if (!deployCheckTimer.isRunning()) {
+            initialDeployerAngle = deployer.getAngle();
+            deployCheckTimer.start();
+          }
+
+          if (deployCheckTimer.hasElapsed(1)) {
+            double currentDeployerAngle = deployer.getAngle();
+            // Deployer is up against bumper and isn't moving
+            if (currentDeployerAngle < Constants.Deployer.alreadyDeployedMaxDeg
+                && Math.abs(initialDeployerAngle - currentDeployerAngle)
+                    < Constants.Deployer.alreadyDeployedMoveThreshold) {
+              // Add one sensor rotation to current reported position
+              deployer.seedPosition(
+                  currentDeployerAngle + (360 / Constants.Deployer.sensorToMechanismRatio));
+              hasExtended = true;
+              state = prevState;
+            } else {
+              alreadyDeployedCheckFailed = true;
+            }
+            deployCheckTimer.stop();
+            deployCheckTimer.reset();
+          }
+        }
+
+        if (deployer.isExtended()) {
+          hasExtended = true;
+          state = prevState;
+          alreadyDeployedCheckFailed = true;
+          deployCheckTimer.stop();
+          deployCheckTimer.reset();
+        }
       }
       case IDLE -> {
-        if (!hasExtended) {
-          deployer.setState(DeployerState.EXTEND);
-          rollers.setState(RollersState.DEPLOY);
-          if (deployer.isExtended()) {
-            hasExtended = true;
-          }
-        } else {
-          deployer.setState(DeployerState.EXTEND);
-          rollers.setState(RollersState.IDLE);
-        }
+        deployer.setState(DeployerState.EXTEND);
+        rollers.setState(RollersState.IDLE);
       }
       case INTAKING -> {
-        if (!hasExtended) {
-          deployer.setState(DeployerState.EXTEND);
-          rollers.setState(RollersState.DEPLOY);
-          if (deployer.isExtended()) {
-            hasExtended = true;
-          }
-        } else {
-          deployer.setState(DeployerState.EXTEND);
-          rollers.setState(RollersState.INTAKE);
-        }
+        deployer.setState(DeployerState.EXTEND);
+        rollers.setState(RollersState.INTAKE);
       }
       case EJECT -> {
         deployer.setState(DeployerState.EXTEND);
@@ -80,6 +112,7 @@ public class Intake extends SubsystemBase {
 
     Logger.recordOutput("Intake/CurrentState", state);
     Logger.recordOutput("Intake/hasExtended", hasExtended);
+    Logger.recordOutput("Intake/alreadyDeployedCheckFailed", alreadyDeployedCheckFailed);
   }
 
   public IntakeState getState() {
@@ -90,14 +123,15 @@ public class Intake extends SubsystemBase {
     return prevState;
   }
 
-  public boolean isDisabled() {
-    return state == IntakeState.DISABLED;
-  }
-
   public void setState(IntakeState state) {
     Logger.recordOutput("Intake/RequestedState", state);
-    prevState = this.state;
-    this.state = state;
+    if (hasExtended) {
+      prevState = this.state;
+      this.state = state;
+    } else {
+      prevState = state;
+      this.state = IntakeState.DEPLOY;
+    }
   }
 
   public boolean isExtended() {
