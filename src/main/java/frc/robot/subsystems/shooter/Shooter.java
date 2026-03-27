@@ -91,10 +91,10 @@ public class Shooter extends SubsystemBase {
 
     if (Constants.firingManagerMode == Constants.SubsystemMode.TUNING) {
 
-      flywheel.requestGoal(targetFlywheelSpeedRPS, null);
+      flywheel.requestGoal(targetFlywheelSpeedRPS, false);
       hood.requestGoal(targetHoodAngleDeg);
 
-      turret.requestAngle(targetTurretAngleDeg, null);
+      turret.requestAngle(targetTurretAngleDeg, false);
 
       tunnel.requestGoal(targetTunnelSpeedRPS);
       spindexer.requestGoal(targetSpindexerSpeedRPS);
@@ -134,7 +134,7 @@ public class Shooter extends SubsystemBase {
       }
       case IDLE -> {
         spindexer.requestIdle();
-        turret.requestAngle(targetTurretAngleDeg, null);
+        turret.requestAngle(targetTurretAngleDeg, false);
         hood.requestGoal(Constants.Hood.safeAngleDeg);
         if (spindexer.isStopped()) {
           tunnel.requestIdle();
@@ -142,13 +142,13 @@ public class Shooter extends SubsystemBase {
           tunnel.requestGoal(targetTunnelSpeedRPS);
         }
         if (tunnel.isStopped()) {
-          flywheel.requestGoal(Constants.Flywheel.idleRPS, null);
+          flywheel.requestGoal(Constants.Flywheel.idleRPS, false);
         }
       }
       case STOP -> {
-        flywheel.requestGoal(0, null);
+        flywheel.requestGoal(0, false);
         hood.requestGoal(targetHoodAngleDeg);
-        turret.requestAngle(targetTurretAngleDeg, null);
+        turret.requestAngle(targetTurretAngleDeg, false);
         spindexer.requestIdle();
         tunnel.requestIdle();
       }
@@ -156,15 +156,15 @@ public class Shooter extends SubsystemBase {
         // Keep requesting target states while waiting for unwind
         if (requestedState == ShooterState.IDLE && requestedState == ShooterState.STOP) {
           hood.requestGoal(Constants.Hood.safeAngleDeg);
-          flywheel.requestGoal(Constants.Flywheel.idleRPS, null);
+          flywheel.requestGoal(Constants.Flywheel.idleRPS, false);
         } else {
           hood.requestGoal(targetHoodAngleDeg);
-          flywheel.requestGoal(targetFlywheelSpeedRPS, null);
+          flywheel.requestGoal(targetFlywheelSpeedRPS, false);
         }
 
         // Keep sending turret angle requests and unwind logic will continuously adjust target
         // setpoint within range of physical midpoint
-        turret.requestAngle(targetTurretAngleDeg, null);
+        turret.requestAngle(targetTurretAngleDeg, false);
         spindexer.requestIdle();
 
         if (spindexer.isStopped()) {
@@ -174,8 +174,6 @@ public class Shooter extends SubsystemBase {
           doUnwind = true;
         }
 
-        // TODO: Change check to when turret is within 90 degrees from physical midpoint
-        // Don't need to check if turret is exactly at goal, just within range
         if (turret.atUnwindLimit() || Constants.turretLocked) {
           doUnwind = false;
           // Exit unwind state when completed

@@ -15,10 +15,8 @@ public class Turret {
   private Double desiredDeg = 0.0;
   private Double azimuth = 0.0;
   private double prevDeg = 0.0;
-  private double timerSetpoint = 0;
-  private Timer setpointFallbackTimer = new Timer();
-  private boolean fallbackToleranceEnabled = false;
-  private Boolean isScoring = null;
+  private Timer atGoalTimer = new Timer();
+  private boolean isScoring = false;
 
   public enum turretState {
     DISABLED,
@@ -48,6 +46,8 @@ public class Turret {
       case DISABLED -> {}
       case TUNING -> {}
       case NORMAL -> {
+        updateAtGoalTimer();
+
         if (DriverStation.isDisabled()) {
           state = turretState.DISABLED;
         }
@@ -73,48 +73,11 @@ public class Turret {
           }
         }
 
-        if (Constants.doubleToleranceEnabled) {
-          // Check for change in setpoint to reset running timer
-          if (timerSetpoint != desiredDeg) {
-            timerSetpoint = desiredDeg;
-            setpointFallbackTimer.stop();
-            setpointFallbackTimer.reset();
-          }
-          // If in regular tolerance, reset timer
-          else if (setpointFallbackTimer.isRunning()
-              && MathUtil.isNear(
-                  inputs.turretDegs, desiredDeg, Constants.Turret.goalToleranceDeg)) {
-            setpointFallbackTimer.stop();
-            setpointFallbackTimer.reset();
-          }
-          // Start timer upon entering larger tolerance
-          else if (MathUtil.isNear(
-              inputs.turretDegs, desiredDeg, Constants.Turret.fallbackToleranceDeg)) {
-            setpointFallbackTimer.start();
-          }
-
-          // Different time thresholds based on scoring vs passing
-          if (isScoring != null) {
-            if (isScoring.booleanValue()
-                && setpointFallbackTimer.hasElapsed(Constants.scoringDoubleToleranceTime)) {
-              fallbackToleranceEnabled = true;
-            } else if (!isScoring.booleanValue()
-                && setpointFallbackTimer.hasElapsed(Constants.passingDoubleToleranceTime)) {
-              fallbackToleranceEnabled = true;
-            } else {
-              fallbackToleranceEnabled = false;
-            }
-          } else {
-            fallbackToleranceEnabled = false;
-          }
-        }
-
         Logger.recordOutput("Turret/State", state);
         Logger.recordOutput("Turret/needToUnwind", needsToUnwind());
         Logger.recordOutput("Turret/isUnwinding", isUnwinding());
         Logger.recordOutput("Turret/atGoal", isAtGoal());
         Logger.recordOutput("Turret/desiredDeg", desiredDeg);
-        Logger.recordOutput("Turret/usingFallbackTolerance", fallbackToleranceEnabled);
       }
     }
   }
@@ -166,14 +129,12 @@ public class Turret {
     } else if (Constants.turretMode == Constants.SubsystemMode.DISABLED) {
       return true;
     } else {
-      if (fallbackToleranceEnabled) {
-        return MathUtil.isNear(
-            desiredDeg, inputs.turretDegs, Constants.Turret.fallbackToleranceDeg);
-      } else {
-        return MathUtil.isNear(desiredDeg, inputs.turretDegs, Constants.Turret.goalToleranceDeg);
-      }
+      return Math.abs(inputs.turretDegs - desiredDeg) < Constants.Turret.smallToleranceDeg
+        || (isScoring
+            ? atGoalTimer.hasElapsed(Constants.scoringDoubleToleranceTime)
+            : atGoalTimer.hasElapsed(Constants.passingDoubleToleranceTime));
     }
-  }
+    }
 
   public void setTurretAngleState() {
     state = turretState.SET_TURRET_ANGLE;
@@ -199,7 +160,6 @@ public class Turret {
     }
     this.needsToUnwind = needsUnwindFinish;
     prevDeg = desiredDeg;
-    this.isScoring = null;
     Logger.recordOutput("Turret/unwindDesiredDeg", prevDeg);
   }
 
@@ -235,6 +195,16 @@ public class Turret {
         ClockUtil.inputModulus(targetAngle - currentAngle, -180, 180, minInclusive) + currentAngle;
 
     return targetAngle;
+  }
+
+  private void updateAtGoalTimer() {
+    if (Math.abs(inputs.turretDegs - desiredDeg)
+        < Constants.Turret.largeToleranceDeg) {
+      atGoalTimer.start();
+    } else {
+      atGoalTimer.stop();
+      atGoalTimer.reset();
+    }
   }
 
   private double getRotation() {

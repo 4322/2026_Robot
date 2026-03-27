@@ -63,7 +63,6 @@ public final class Constants {
   public static final boolean backRightCameraEnable = true;
   public static final boolean backLeftCameraEnable = true;
 
-  public static final boolean doubleToleranceEnabled = true;
   public static final double scoringDoubleToleranceTime = 0.5;
   public static final double passingDoubleToleranceTime = 0.25;
 
@@ -161,8 +160,8 @@ public final class Constants {
     public static final double kD = 0;
 
     public static final double motorToMechanismRatio = 1;
-    public static final double mechanismFallbackToleranceRPS = 4.0;
-    public static final double mechanismToleranceRPS = 2.0;
+    public static final double largeToleranceRPS = 4.0;
+    public static final double smallToleranceRPS = 2.0;
     public static final int idleRPS = 0; // normally 15
 
     public static final int canandcolorId = 0;
@@ -185,8 +184,8 @@ public final class Constants {
     public static final double supplyCurrentLimit = 40; // set limits
     public static final InvertedValue motorInvert = InvertedValue.CounterClockwise_Positive;
     public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
-    public static final double goalToleranceDeg = 4.0;
-    public static final double fallbackToleranceDeg = 2.0;
+    public static final double smallToleranceDeg = 4.0;
+    public static final double largeToleranceDeg = 2.0;
     public static final double goalToleranceLockedDeg = 2.0;
     public static final int CANCoderOneRatio = 5;
     public static final int CANCoderTwoRatio = 9;

@@ -1,6 +1,5 @@
 package frc.robot.subsystems.shooter.flywheel;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.constants.Constants;
 import org.littletonrobotics.junction.Logger;
@@ -9,10 +8,8 @@ public class Flywheel {
   private FlywheelIO io;
   private FlywheelIOInputsAutoLogged inputs = new FlywheelIOInputsAutoLogged();
   private double requestedSetpoint = 0;
-  private double timerSetpoint = 0;
-  private Timer setpointFallbackTimer = new Timer();
-  private boolean fallbackToleranceEnabled = false;
-  private Boolean isScoring = null;
+  private Timer atGoalTimer = new Timer();
+  private boolean isScoring = false;
 
   public Flywheel(FlywheelIO io) {
     this.io = io;
@@ -27,52 +24,13 @@ public class Flywheel {
     switch (Constants.flywheelMode) {
       case TUNING -> {}
       case NORMAL -> {
-        if (Constants.doubleToleranceEnabled) {
-          // Check for change in setpoint to reset running timer
-          if (timerSetpoint != requestedSetpoint) {
-            timerSetpoint = requestedSetpoint;
-            setpointFallbackTimer.stop();
-            setpointFallbackTimer.reset();
-          }
-          // If in regular tolerance, reset timer
-          else if (setpointFallbackTimer.isRunning()
-              && MathUtil.isNear(
-                  inputs.leaderMechanismRPS,
-                  requestedSetpoint,
-                  Constants.Flywheel.mechanismToleranceRPS)) {
-            setpointFallbackTimer.stop();
-            setpointFallbackTimer.reset();
-          }
-          // Start timer upon entering larger tolerance
-          else if (MathUtil.isNear(
-              inputs.leaderMechanismRPS,
-              requestedSetpoint,
-              Constants.Flywheel.mechanismFallbackToleranceRPS)) {
-            setpointFallbackTimer.start();
-          }
-
-          // Different time thresholds based on scoring vs passing
-          if (isScoring != null) {
-            if (isScoring.booleanValue()
-                && setpointFallbackTimer.hasElapsed(Constants.scoringDoubleToleranceTime)) {
-              fallbackToleranceEnabled = true;
-            } else if (!isScoring.booleanValue()
-                && setpointFallbackTimer.hasElapsed(Constants.passingDoubleToleranceTime)) {
-              fallbackToleranceEnabled = true;
-            } else {
-              fallbackToleranceEnabled = false;
-            }
-          } else {
-            fallbackToleranceEnabled = false;
-          }
-        }
+        updateAtGoalTimer();
       }
       case DISABLED -> {}
     }
-    Logger.recordOutput("Flywheel/usingFallbackTolerance", fallbackToleranceEnabled);
   }
 
-  public void requestGoal(double velocity, Boolean isScoring) {
+  public void requestGoal(double velocity, boolean isScoring) {
     switch (Constants.flywheelMode) {
       case TUNING -> {}
       case NORMAL -> {
@@ -90,12 +48,20 @@ public class Flywheel {
   }
 
   public boolean isAtGoal() {
-    if (fallbackToleranceEnabled) {
-      return Math.abs(inputs.leaderMechanismRPS - requestedSetpoint)
-          < Constants.Flywheel.mechanismFallbackToleranceRPS;
+    return Math.abs(inputs.leaderMechanismRPS - requestedSetpoint)
+            < Constants.Flywheel.smallToleranceRPS
+        || (isScoring
+            ? atGoalTimer.hasElapsed(Constants.scoringDoubleToleranceTime)
+            : atGoalTimer.hasElapsed(Constants.passingDoubleToleranceTime));
+  }
+
+  private void updateAtGoalTimer() {
+    if (Math.abs(inputs.leaderMechanismRPS - requestedSetpoint)
+        < Constants.Flywheel.largeToleranceRPS) {
+      atGoalTimer.start();
     } else {
-      return Math.abs(inputs.leaderMechanismRPS - requestedSetpoint)
-          < Constants.Flywheel.mechanismToleranceRPS;
+      atGoalTimer.stop();
+      atGoalTimer.reset();
     }
   }
 }
