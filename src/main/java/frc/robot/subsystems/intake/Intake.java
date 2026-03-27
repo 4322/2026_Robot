@@ -20,7 +20,6 @@ public class Intake extends SubsystemBase {
   private double initialDeployerAngle = 0;
   private boolean alreadyDeployedCheckFailed = false;
 
-
   public Intake(Deployer deployer, Rollers rollers) {
     this.deployer = deployer;
     this.rollers = rollers;
@@ -112,7 +111,7 @@ public class Intake extends SubsystemBase {
 
     Logger.recordOutput("Intake/CurrentState", state);
     Logger.recordOutput("Intake/hasExtended", hasExtended);
-    Logger.recordOutput("Intake/alreadyDeployedCheckFailed", alreadyDeployedCheckFailed);
+    Logger.recordOutput("Intake/alreadyDeployCheckFailed", alreadyDeployedCheckFailed);
   }
 
   public IntakeState getState() {
@@ -136,6 +135,10 @@ public class Intake extends SubsystemBase {
 
   public boolean isExtended() {
     return deployer.isExtended();
+  }
+
+  public boolean isSmooshed() {
+    return deployer.isSmooshed();
   }
 
   // Has extended from deployment; hasn't gotten stuck in net

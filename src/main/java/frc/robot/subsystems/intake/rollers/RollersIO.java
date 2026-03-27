@@ -7,16 +7,16 @@ public interface RollersIO {
   @AutoLog
   public static class RollersIOInputs {
     public boolean leaderConnected = false;
-    public double leaderStatorAmps = 0.0;
-    public double leaderBusAmps = 0.0;
+    public double leaderStatorCurrentAmps = 0.0;
+    public double leaderSupplyCurrentAmps = 0.0;
     public double leaderMotorTempCelcius = 0.0;
     public double leaderRotationsPerSec = 0.0;
     public double leaderVolts = 0.0;
     public double leaderControllerTempCelcius = 0.0;
 
     public boolean followerConnected = false;
-    public double followerStatorAmps = 0.0;
-    public double followerBusAmps = 0.0;
+    public double followerStatorCurrentAmps = 0.0;
+    public double followerSupplyCurrentAmps = 0.0;
     public double followerMotorTempCelcius = 0.0;
     public double followerRotationsPerSec = 0.0;
     public double followerVolts = 0.0;

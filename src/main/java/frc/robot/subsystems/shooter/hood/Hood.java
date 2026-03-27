@@ -41,7 +41,7 @@ public class Hood {
 
   public void inputsPeriodic() {
     io.updateInputs(inputs);
-    Logger.processInputs("Hood", inputs);
+    Logger.processInputs("Shooter/Hood", inputs);
   }
 
   public void outputsPeriodic() {
@@ -68,7 +68,7 @@ public class Hood {
           pidVelocity = pidController.calculate(inputs.degrees, requestedAngleDeg);
 
           io.setServoVelocity(pidVelocity);
-          Logger.recordOutput("Hood/requestedServoVelocity", pidVelocity);
+          Logger.recordOutput("Shooter/Hood/requestedServoVelocity", pidVelocity);
         }
       }
       case NORMAL -> {
@@ -96,7 +96,7 @@ public class Hood {
             pidVelocity = Constants.Hood.holdDownVelocity;
           }
           io.setServoVelocity(pidVelocity);
-          Logger.recordOutput("Hood/requestedServoVelocity", pidVelocity);
+          Logger.recordOutput("Shooter/Hood/requestedServoVelocity", pidVelocity);
         } else {
           io.setServoVelocity(Constants.Hood.idleVelocity);
           homingTimer.stop();
@@ -104,9 +104,9 @@ public class Hood {
         }
       }
     }
-    Logger.recordOutput("Hood/Timer", homingTimer.get());
-    Logger.recordOutput("Hood/homed", homed);
-    Logger.recordOutput("Hood/isAtGoal", isAtGoal());
+    Logger.recordOutput("Shooter/Hood/Timer", homingTimer.get());
+    Logger.recordOutput("Shooter/Hood/homed", homed);
+    Logger.recordOutput("Shooter/Hood/isAtGoal", isAtGoal());
   }
 
   public void requestGoal(double angle) {
@@ -118,7 +118,7 @@ public class Hood {
   private void setGoal(double angle) {
     pidController.setSetpoint(angle);
     this.requestedAngleDeg = angle;
-    Logger.recordOutput("Hood/goalDegree", requestedAngleDeg);
+    Logger.recordOutput("Shooter/Hood/goalDegree", requestedAngleDeg);
   }
 
   public void trenchOverride(boolean override) {

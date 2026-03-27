@@ -26,6 +26,7 @@ public class TurretIOTalonFx implements TurretIO {
     CANcoderTwo = new CANcoder(Constants.Turret.CANCoderTwoId, Constants.CANivore.CANBus);
     config.CurrentLimits.StatorCurrentLimit = Constants.Turret.statorCurrentLimit;
     config.CurrentLimits.SupplyCurrentLimit = Constants.Turret.supplyCurrentLimit;
+
     config.MotorOutput.Inverted = Constants.Turret.motorInvert;
     config.MotorOutput.NeutralMode = Constants.Turret.neutralMode;
     config.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
@@ -36,6 +37,9 @@ public class TurretIOTalonFx implements TurretIO {
     config.Slot0.kP = Constants.Turret.kP;
     config.Slot0.kI = Constants.Turret.kI;
     config.Slot0.kD = Constants.Turret.kD;
+
+    config.CurrentLimits.SupplyCurrentLimitEnable = true;
+    config.CurrentLimits.StatorCurrentLimitEnable = true;
 
     config.HardwareLimitSwitch.ReverseLimitEnable = false;
     config.HardwareLimitSwitch.ForwardLimitEnable = false;
@@ -115,9 +119,10 @@ public class TurretIOTalonFx implements TurretIO {
                 * Constants.Turret.CANCoderResolution);
     inputs.motorConnected = turretMotor.isConnected();
     inputs.motorRPS = turretMotor.getVelocity().getValueAsDouble();
-    inputs.appliedVolts = turretMotor.getSupplyVoltage().getValueAsDouble();
-    inputs.TempCelsius = turretMotor.getDeviceTemp().getValueAsDouble();
-    inputs.statorVolts = turretMotor.getMotorVoltage().getValueAsDouble();
+    inputs.supplyCurrentAmps = turretMotor.getSupplyCurrent().getValueAsDouble();
+    inputs.statorCurrentAmps = turretMotor.getStatorCurrent().getValueAsDouble();
+    inputs.tempCelsius = turretMotor.getDeviceTemp().getValueAsDouble();
+    inputs.appliedVoltage = turretMotor.getMotorVoltage().getValueAsDouble();
   }
 
   @Override

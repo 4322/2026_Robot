@@ -63,6 +63,9 @@ public final class Constants {
   public static final boolean backRightCameraEnable = true;
   public static final boolean backLeftCameraEnable = true;
 
+  public static final double scoringDoubleToleranceTime = 0.5;
+  public static final double passingDoubleToleranceTime = 0.25;
+
   { // set dependent operational modes
     if (firingManagerMode == SubsystemMode.TUNING) {
       shootOnTheMoveEnabled = false;
@@ -94,6 +97,12 @@ public final class Constants {
     public static double driveSupplyCurrentLowerLimit = 40;
     public static double driveSupplyCurrentLowerTime = 1.0;
     public static double turnSupplyCurrentLimit = 30;
+
+    // Scales max speeds for X, Y, and omega respectively
+    public static double maxLinearSpeedPercentShooting = 0.1;
+    public static double maxAngularSpeedPercentShooting = 0.1;
+    public static double maxLinearSpeedPercentPassing = 0.4;
+    public static double maxAngularSpeedPercentPassing = 0.4;
   }
 
   public static class Spindexer {
@@ -121,7 +130,7 @@ public final class Constants {
     public static final double statorCurrentLimit = 60;
     public static final double supplyCurrentLimit = 40;
     public static final InvertedValue motorInvert = InvertedValue.CounterClockwise_Positive;
-    public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
+    public static final NeutralModeValue neutralMode = NeutralModeValue.Coast;
     public static final double kS = 0.31;
     public static final double kV = 0.19;
     public static final double kP = 0;
@@ -151,8 +160,10 @@ public final class Constants {
     public static final double kD = 0;
 
     public static final double motorToMechanismRatio = 1;
-    public static final double mechanismToleranceRPS = 4.0;
-    public static final int idleRPS = 0; // normally 15
+    public static final double largeToleranceRPS = 4.0;
+    public static final double smallToleranceRPS = 2.0;
+    public static final int idleRPS = 15;
+    public static final int idleTimeout = 5;
 
     public static final int canandcolorId = 0;
     public static final boolean canAndColorEnabled = false;
@@ -174,7 +185,8 @@ public final class Constants {
     public static final double supplyCurrentLimit = 40; // set limits
     public static final InvertedValue motorInvert = InvertedValue.CounterClockwise_Positive;
     public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
-    public static final double goalToleranceDeg = 1.0;
+    public static final double smallToleranceDeg = 4.0;
+    public static final double largeToleranceDeg = 2.0;
     public static final double goalToleranceLockedDeg = 2.0;
     public static final int CANCoderOneRatio = 5;
     public static final int CANCoderTwoRatio = 9;
@@ -208,6 +220,7 @@ public final class Constants {
     public static final double kIZone = 1.0;
     public static final double kD = 0.0;
     public static final int idleVelocity = 0;
+    public static final int idleTimeout = 0;
     public static final double toleranceDeg = 3;
     public static final double homingVelocityThresholdRPS = 0.01;
     public static final double homingVelocity = -0.4;
@@ -427,7 +440,7 @@ public final class Constants {
 
   public static class Sim {
 
-    public static final double tunnelRate = 1;
+    public static final double tunnelRate = 2;
     public static final double spindexerRate = 0.2;
     public static final double flywheelRate = 2;
     public static final double servoRate = 0.2;
@@ -513,6 +526,13 @@ public final class Constants {
     public static final double pathPlannerDrivekP = 5; // TODO probably increase
     public static final double pathPlannerRotationkP = 4;
     public static final double unjamTimeSec = 0.5;
+    public static final double smooshDelayFirstPass = 1.5;
+    public static final double smooshDelaySecondPass = 1.5;
+    public static final double smooshDelaySinglePass = 1.5;
+
+    public static final double shootTimeFirstPass = 3.0;
+    public static final double shootTimeSecondPass = 2.0;
+    public static final double shootTimeSinglePass = 3.0;
   }
 
   public static class LED {

@@ -20,6 +20,9 @@ public class TunnelIOTalonFx implements TunnelIO {
 
     config.CurrentLimits.StatorCurrentLimit = Constants.Tunnel.statorCurrentLimit;
     config.CurrentLimits.SupplyCurrentLimit = Constants.Tunnel.supplyCurrentLimit;
+    config.CurrentLimits.SupplyCurrentLimitEnable = true;
+    config.CurrentLimits.StatorCurrentLimitEnable = true;
+
     config.MotorOutput.Inverted = Constants.Tunnel.motorInvert;
     config.MotorOutput.NeutralMode = Constants.Tunnel.neutralMode;
 
