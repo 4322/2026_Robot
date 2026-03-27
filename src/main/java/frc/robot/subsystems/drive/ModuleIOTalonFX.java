@@ -113,6 +113,8 @@ public class ModuleIOTalonFX implements ModuleIO {
     driveConfig.CurrentLimits.SupplyCurrentLowerLimit =
         Constants.Drive.driveSupplyCurrentLowerLimit;
     driveConfig.CurrentLimits.SupplyCurrentLowerTime = Constants.Drive.driveSupplyCurrentLowerTime;
+    driveConfig.HardwareLimitSwitch.ForwardLimitEnable = false;
+    driveConfig.HardwareLimitSwitch.ReverseLimitEnable = false;
     driveConfig.MotorOutput.Inverted =
         constants.DriveMotorInverted
             ? InvertedValue.Clockwise_Positive
@@ -120,8 +122,7 @@ public class ModuleIOTalonFX implements ModuleIO {
     tryUntilOk(5, () -> driveTalon.getConfigurator().apply(driveConfig, 0.25));
     tryUntilOk(5, () -> driveTalon.setPosition(0.0, 0.25));
 
-    driveConfig.HardwareLimitSwitch.ForwardLimitEnable = false;
-    driveConfig.HardwareLimitSwitch.ReverseLimitEnable = false;
+
     // Configure turn motor
     var turnConfig = constants.SteerMotorInitialConfigs;
     turnConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
