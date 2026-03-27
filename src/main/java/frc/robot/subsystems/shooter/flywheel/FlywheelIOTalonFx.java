@@ -139,7 +139,6 @@ public class FlywheelIOTalonFx implements FlywheelIO {
   public void stop() {
     motor.stopMotor();
     lastRequestedVelocity = 0;
-    motor.stopMotor();
   }
 
   @Override
