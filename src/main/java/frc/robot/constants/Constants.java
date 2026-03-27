@@ -44,7 +44,7 @@ public final class Constants {
 
   public static SubsystemMode driveMode = SubsystemMode.NORMAL;
   public static final SubsystemMode flywheelMode = SubsystemMode.NORMAL;
-  public static final SubsystemMode hoodMode = SubsystemMode.TUNING;
+  public static final SubsystemMode hoodMode = SubsystemMode.NORMAL;
   public static final SubsystemMode spindexerMode = SubsystemMode.NORMAL;
   public static final SubsystemMode tunnelMode = SubsystemMode.NORMAL;
   public static SubsystemMode turretMode = SubsystemMode.NORMAL;
@@ -202,15 +202,15 @@ public final class Constants {
     public static final double safeAngleDeg = 0;
     public static final double homingVelocityThresholdRPS = 0.01;
     public static final double homingVelocity = -0.4;
+    public static final double mediumVelocity = 0.35;
     public static final double fastVelocity = 1.0;
-    public static final double mediumVelocity = 0.4;
     public static final double slowVelocity = 0.3; // no kS compensation, kS can be 0.1 to 0.2
     public static final double smallToleranceDeg =
         0.5; // don't exceed 1.0 to avoid hitting the trench
-    public static final double largeToleranceDeg = 12.0;
-    public static final double mediumToleranceDeg = 4.0;
-    public static final double atGoalTimeoutSec = 1.5;
-    public static final int kSPulseWidth = 70; // power to hold hood position
+    public static final double mediumToleranceDeg = 3.5;
+    public static final double largeToleranceDeg = 9.0;
+    public static final double atGoalTimeoutSec = 1.5; // full travel time 1.1s
+    public static final int kSPulseWidth = 50; // power to hold hood position
   }
 
   public static class Control {
