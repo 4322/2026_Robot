@@ -1,6 +1,5 @@
 package frc.robot.subsystems.intake.rollers;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.constants.Constants;
 import org.littletonrobotics.junction.Logger;
 
@@ -10,55 +9,54 @@ public class Rollers {
 
   public enum RollersState {
     IDLE,
-    DEPLOYING,
+    DEPLOY,
     INTAKE,
     EJECT,
+    SMOOSH,
     DISABLED
   }
 
-  public RollersState state = RollersState.IDLE;
+  public RollersState state = RollersState.DISABLED;
 
   public Rollers(RollersIO rollersIO) {
     this.rollersIO = rollersIO;
   }
 
-  public void periodic() {
+  public void inputsPeriodic() {
     rollersIO.updateInputs(inputs);
-    Logger.processInputs("Rollers", inputs);
+    Logger.processInputs("Intake/Rollers", inputs);
+  }
 
-    switch (Constants.rollerMode) {
-      case TUNING -> {}
-      case DISABLED -> {}
-      case NORMAL -> {
-        switch (state) {
-          case DISABLED -> {
-            if (DriverStation.isEnabled()) {
-              state = RollersState.DEPLOYING;
-            }
-          }
-          case DEPLOYING -> {
-            rollersIO.setVoltage(Constants.Rollers.voltageDeploy);
-          }
-          case IDLE -> {
-            rollersIO.setVoltage(Constants.Rollers.voltageIdle);
-          }
-          case INTAKE -> {
-            rollersIO.setVoltage(Constants.Rollers.voltageIntake);
-          }
-          case EJECT -> {
-            rollersIO.setVoltage(Constants.Rollers.voltageEject);
-          }
-        }
-        Logger.recordOutput("Rollers/state", state);
-      }
-    }
+  // Called at end of command processing in intake
+  public void outputsPeriodic() {
+    // Nothing here currently
   }
 
   public void setBrakeMode(boolean enable) {
     rollersIO.enableBrakeMode(enable);
   }
 
-  public void setState(RollersState newState) {
-    state = newState;
+  public void setState(RollersState state) {
+    Logger.recordOutput("Intake/Rollers/State", state);
+    switch (state) {
+      case DISABLED -> {
+        rollersIO.stopMotor();
+      }
+      case DEPLOY -> {
+        rollersIO.setVoltage(Constants.Rollers.voltageDeploy);
+      }
+      case IDLE -> {
+        rollersIO.stopMotor();
+      }
+      case INTAKE -> {
+        rollersIO.setVoltage(Constants.Rollers.voltageIntake);
+      }
+      case EJECT -> {
+        rollersIO.setVoltage(Constants.Rollers.voltageEject);
+      }
+      case SMOOSH -> {
+        rollersIO.setVoltage(Constants.Rollers.voltageSmoosh);
+      }
+    }
   }
 }

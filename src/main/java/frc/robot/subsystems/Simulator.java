@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
 import frc.robot.autonomous.AutonomousSelector.AutoName;
 import frc.robot.subsystems.drive.Drive;
+import frc.robot.subsystems.shooter.Shooter;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -22,7 +23,7 @@ import java.util.Map;
 import org.littletonrobotics.junction.Logger;
 
 public class Simulator extends SubsystemBase {
-  private static final RegressTests regressTest = RegressTests.SUBSYSTEM_TEST_BOTH;
+  private static final RegressTests regressTest = RegressTests.INTAKE_TEST;
   public static AutoName autoScenario;
   private TeleopScenario teleopScenario;
   private List<TeleAnomaly> teleAnomalies;
@@ -43,7 +44,8 @@ public class Simulator extends SubsystemBase {
     AUTO,
     TURRET,
     ALL_AUTOS,
-    ZONES
+    ZONES,
+    INTAKE_TEST
   }
 
   private enum TeleAnomaly {
@@ -63,7 +65,8 @@ public class Simulator extends SubsystemBase {
     AUTO_ROTATE,
     TURRET,
     Slowly_Up_down,
-    ZONES
+    ZONES,
+    INTAKE_TEST
   }
 
   private enum EventType {
@@ -229,7 +232,7 @@ public class Simulator extends SubsystemBase {
 
   private List<RegressionTest> regressionTestCases() {
     return switch (regressTest) {
-      case AUTO -> List.of(new RegressionTest("AUTO", AutoName.R_FULL_SWEEP_SHOOT, Alliance.Red));
+      case AUTO -> List.of(new RegressionTest("AUTO", AutoName.L_SWEEP_BUMP, Alliance.Red));
       case SHOOT -> List.of(new RegressionTest("Shoot", TeleopScenario.SHOOT, Alliance.Blue));
       case DO_NOTHING -> List.of(
           new RegressionTest("Do nothing", AutoName.DO_NOTHING, Alliance.Blue));
@@ -237,8 +240,8 @@ public class Simulator extends SubsystemBase {
           new RegressionTest("Controller Test 1", TeleopScenario.CONTROLLER_TEST1, Alliance.Blue),
           new RegressionTest("Controller Test 2", TeleopScenario.CONTROLLER_TEST2, Alliance.Blue));
       case SUBSYSTEM_TEST_BOTH -> List.of(
-          new RegressionTest("Auto test", AutoName.R_FULL_SWEEP_SHOOT, Alliance.Blue),
-          new RegressionTest("Subsystem Test", TeleopScenario.SUBSYSTEM_TEST, Alliance.Blue));
+          new RegressionTest(
+              "Auto test", AutoName.L_SWEEP_BUMP, TeleopScenario.AUTO_ROTATE, Alliance.Blue));
       case SUBSYSTEM_TEST_TELE -> List.of(
           new RegressionTest("Subsystem Test", TeleopScenario.SUBSYSTEM_TEST, Alliance.Blue));
       case TEST_AUTOROTATE -> List.of(
@@ -269,6 +272,8 @@ public class Simulator extends SubsystemBase {
       case ZONES -> List.of(
           new RegressionTest("Zones Blue", TeleopScenario.ZONES, Alliance.Blue),
           new RegressionTest("Zones Red", TeleopScenario.ZONES, Alliance.Red));
+      case INTAKE_TEST -> List.of(
+          new RegressionTest("Intake Test", TeleopScenario.INTAKE_TEST, Alliance.Blue));
 
       default -> List.of();
     };
@@ -497,8 +502,8 @@ public class Simulator extends SubsystemBase {
               "Stop Drive",
               EventType.MOVE_JOYSTICK_DRIVE,
               new Pose2d(0.0, 0.0, Rotation2d.k180deg)),
-          new SimEvent(t += 0.1, "Shoot", EventType.HOLD_RIGHT_BUMPER),
-          new SimEvent(t += 6, "Stop Shooting", EventType.RELEASE_RIGHT_BUMPER),
+          new SimEvent(t += 0.1, "Shoot", EventType.HOLD_RIGHT_TRIGGER),
+          new SimEvent(t += 6, "Stop Shooting", EventType.RELEASE_RIGHT_TRIGGER),
           new SimEvent(
               t += 0.1,
               "Drive Back",
@@ -593,6 +598,24 @@ public class Simulator extends SubsystemBase {
               new FieldPose2d(3.7, 6.5, Rotation2d.kZero)),
           new SimEvent(t += 0.1, "Fixed Shoot", EventType.HOLD_RIGHT_BUMPER),
           new SimEvent(t += 5, "End", EventType.END_OF_SCENARIO));
+      case INTAKE_TEST -> List.of(
+          new SimEvent(
+              t += 0.1, "Start pose", EventType.SET_POSE, new FieldPose2d(2, 2, Rotation2d.kZero)),
+          new SimEvent(t += 0.5, "Deploy/Intake", EventType.HOLD_LEFT_BUMPER),
+          new SimEvent(t += 0.5, "Deploy/Intake Release", EventType.RELEASE_LEFT_BUMPER),
+          new SimEvent(t += 0.5, "IntakeOff", EventType.HOLD_LEFT_BUMPER),
+          new SimEvent(t += 0.5, "IntakeOff Release", EventType.RELEASE_LEFT_BUMPER),
+          new SimEvent(t += 0.5, "Start ejecting", EventType.HOLD_X),
+          new SimEvent(t += 2.0, "Stop ejecting", EventType.RELEASE_X),
+          new SimEvent(t += 0.5, "Start smooshing", EventType.HOLD_Y),
+          new SimEvent(t += 2.0, "Stop smooshing", EventType.RELEASE_Y),
+          new SimEvent(t += 0.5, "Start intaking", EventType.HOLD_LEFT_BUMPER),
+          new SimEvent(t += 0.5, "Start ejecting while intaking", EventType.HOLD_X),
+          new SimEvent(t += 2.0, "Stop ejecting", EventType.RELEASE_X),
+          new SimEvent(t += 0.5, "Start smooshing while intaking", EventType.HOLD_Y),
+          new SimEvent(t += 2.0, "Stop smooshing", EventType.RELEASE_Y),
+          new SimEvent(t += 0.5, "Stop intaking", EventType.RELEASE_LEFT_BUMPER),
+          new SimEvent(t += 0.1, "End", EventType.END_OF_SCENARIO));
 
       default -> List.of();
     };
@@ -632,9 +655,11 @@ public class Simulator extends SubsystemBase {
   boolean momentaryPOV;
 
   private final Drive drive;
+  private final Shooter shooter;
 
-  public Simulator(Drive drive) {
+  public Simulator(Drive drive, Shooter shooter) {
     this.drive = drive;
+    this.shooter = shooter;
 
     warmupTimer.start();
   }
@@ -857,6 +882,7 @@ public class Simulator extends SubsystemBase {
       events = teleopEvents;
     }
     drive.setPose(new Pose2d(0, 0, Rotation2d.kZero));
+    shooter.setAutoShoot(false);
     resetScenario();
   }
 

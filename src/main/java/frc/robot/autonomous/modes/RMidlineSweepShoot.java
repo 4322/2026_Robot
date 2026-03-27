@@ -9,11 +9,11 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Robot;
 import frc.robot.commands.IntakeCommands;
+import frc.robot.commands.ShooterCommands;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.led.LED;
 import frc.robot.subsystems.shooter.Shooter;
-import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetection;
 
 public class RMidlineSweepShoot extends SequentialCommandGroup {
 
@@ -33,36 +33,12 @@ public class RMidlineSweepShoot extends SequentialCommandGroup {
               }
             }),
         new ParallelCommandGroup(
-            IntakeCommands.setIntaking(intake),
+            IntakeCommands.intake(intake),
             new SequentialCommandGroup(
                 AutoBuilder.followPath(Robot.R_StartR_To_NeutralR_Intake_Midline),
                 AutoBuilder.followPath(Robot.R_NeutralR_Intake_Full_Midline),
                 AutoBuilder.followPath(Robot.R_NeutralR_Intake_Full_Midline_Flip),
-                AutoBuilder.followPath(Robot.R_NeutralRMid_To_ShootR))));
-  }
-
-  public RMidlineSweepShoot(
-      Drive drive, LED led, Intake intake, VisionObjectDetection visionObjectDetection) {
-    PathPlannerPath path = Robot.R_StartR_To_NeutralR_Intake_Midline;
-    Pose2d startPoseBlue = path.getStartingHolonomicPose().get();
-    Pose2d startPoseRed = path.flipPath().getStartingHolonomicPose().get();
-
-    setName("R_MIDLINE_SWEEP_SHOOT_OD");
-    addCommands(
-        new InstantCommand(
-            () -> {
-              if (Robot.alliance == Alliance.Blue) {
-                drive.setPose(startPoseBlue);
-              } else {
-                drive.setPose(startPoseRed);
-              }
-            }),
-        new ParallelCommandGroup(IntakeCommands.setIntaking(intake)),
-        new SequentialCommandGroup(
-            AutoBuilder.followPath(Robot.R_StartR_To_NeutralR_Intake_Midline),
-            AutoBuilder.followPath(Robot.R_NeutralR_Intake_Full_Midline),
-            AutoBuilder.followPath(Robot.R_NeutralR_Intake_Full_Midline_Flip),
-            AutoBuilder.followPath(Robot.R_NeutralRMid_To_ShootR),
-            AutoBuilder.followPath(Robot.R_NeutralRMid_To_ShootR)));
+                AutoBuilder.followPath(Robot.R_NeutralRMid_To_ShootR),
+                ShooterCommands.setAutoShoot(shooter, true))));
   }
 }

@@ -16,18 +16,19 @@ public interface DeployerIO {
     public double angleDeg = 0.0;
     public double encoderRotations = 0.0;
     public double motorRotations;
-    public double requestedPosDeg = 0.0;
   }
 
   public default void updateInputs(DeployerIOInputs inputs) {}
 
   public default void setPosition(double requestedPosDeg) {}
 
-  public default void enableBrakeMode(boolean mode) {}
+  public default void setBrakeMode(boolean mode) {}
 
   public default void stop() {}
 
   public default TalonFX getTalonFX() {
     return null;
   }
+
+  public default void seedPosition(double newAngle) {}
 }

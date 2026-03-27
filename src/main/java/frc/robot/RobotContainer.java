@@ -14,7 +14,6 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -109,6 +108,7 @@ public class RobotContainer {
   public static final CommandXboxController controller = new CommandXboxController(0);
 
   private final Trigger inNonShootingArea;
+  private final Trigger autoAbleToShoot;
 
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> testCommandChooser;
@@ -310,7 +310,7 @@ public class RobotContainer {
                 : new Rollers(new RollersIOSim());
         intake = new Intake(deployer, rollers);
 
-        new Simulator(drive);
+        new Simulator(drive, shooter);
       }
 
       default -> {
@@ -369,6 +369,9 @@ public class RobotContainer {
     inNonShootingArea =
         new Trigger(() -> !AreaManager.isShootingArea(drive.getTurretPose().getTranslation()));
 
+    autoAbleToShoot =
+        new Trigger(() -> shooter.autoShootEnabled() && DriverStation.isAutonomousEnabled());
+
     // Configure the button bindings
     configureButtonBindings();
 
@@ -401,6 +404,7 @@ public class RobotContainer {
     Trench Override Hood - Left Trigger while held (Driver)
     Unjam Shooter - B while held (Driver)
     Shoot - Left Trigger while held (Operator)
+    Smoosh - A while held (Driver)
     */
 
     shooter.setDefaultCommand(ShooterCommands.idle(shooter));
@@ -419,30 +423,21 @@ public class RobotContainer {
       controller.a().whileTrue(ShooterCommands.shootFixed(shooter));
     }
 
-    inNonShootingArea.and(() -> !shooter.isInIdle()).whileTrue(ShooterCommands.idle(shooter));
-
     inNonShootingArea
-        .negate()
-        .whileTrue(
-            ShooterCommands.shoot(shooter).onlyIf(() -> DriverStation.isAutonomousEnabled()));
+        .and(() -> !shooter.isInIdle())
+        .and(autoAbleToShoot.negate())
+        .whileTrue(ShooterCommands.idle(shooter));
 
-    intake.setDefaultCommand(IntakeCommands.setIdle(intake));
+    autoAbleToShoot.onTrue(
+        ShooterCommands.unjam(shooter)
+            .withTimeout(Constants.Autonomous.unjamTimeSec)
+            .andThen(ShooterCommands.shoot(shooter).until(autoAbleToShoot.negate())));
 
-    controller.x().whileTrue(IntakeCommands.setEject(intake));
+    controller.leftBumper().onTrue(IntakeCommands.toggleIntake(intake, controller));
 
-    controller
-        .leftBumper()
-        .toggleOnTrue(IntakeCommands.setIntaking(intake))
-        .onTrue(
-            Commands.run(
-                    () -> {
-                      controller.setRumble(GenericHID.RumbleType.kLeftRumble, 0.5);
-                    })
-                .withTimeout(0.5)
-                .finallyDo(
-                    () -> {
-                      controller.setRumble(GenericHID.RumbleType.kLeftRumble, 0.0);
-                    }));
+    controller.x().onTrue(IntakeCommands.eject(intake)).onFalse(IntakeCommands.toggleOff(intake));
+
+    controller.y().onTrue(IntakeCommands.smoosh(intake)).onFalse(IntakeCommands.toggleOff(intake));
   }
 
   /**

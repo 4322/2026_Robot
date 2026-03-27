@@ -21,9 +21,12 @@ public class Tunnel {
     this.io = io;
   }
 
-  public void periodic() {
+  public void inputsPeriodic() {
     io.updateInputs(inputs);
     Logger.processInputs("Tunnel", inputs);
+  }
+
+  public void outputsPeriodic() {
     switch (Constants.tunnelMode) {
       case TUNING -> {}
       case NORMAL -> {

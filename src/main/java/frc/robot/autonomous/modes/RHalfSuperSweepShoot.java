@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Robot;
 import frc.robot.commands.IntakeCommands;
+import frc.robot.commands.ShooterCommands;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.led.LED;
@@ -32,13 +33,16 @@ public class RHalfSuperSweepShoot extends SequentialCommandGroup {
               }
             }),
         new ParallelCommandGroup(
-            IntakeCommands.setIntaking(intake),
+            IntakeCommands.intake(intake),
             new SequentialCommandGroup(
                 AutoBuilder.followPath(Robot.R_StartR_To_NeutralR_Intake_Disrupt),
+                ShooterCommands.setAutoShoot(shooter, true),
                 AutoBuilder.followPath(Robot.R_Half_SuperSweep_B),
+                ShooterCommands.setAutoShoot(shooter, false),
                 AutoBuilder.followPath(Robot.R_Half_SuperSweep_C),
                 AutoBuilder.followPath(Robot.R_Half_SuperSweep_D),
                 AutoBuilder.followPath(Robot.R_Half_SuperSweep_E),
-                AutoBuilder.followPath(Robot.R_Half_SuperSweep_F))));
+                AutoBuilder.followPath(Robot.R_Half_SuperSweep_F),
+                ShooterCommands.setAutoShoot(shooter, true))));
   }
 }

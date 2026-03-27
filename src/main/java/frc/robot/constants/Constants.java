@@ -90,12 +90,18 @@ public final class Constants {
   public static class Drive {
     public static final int gyroID = 0;
     public static boolean zeroTurnEncoders = false; // for initial swerve homing only
+    public static double driveSupplyCurrentLimit = 45; // don't pop main breaker
+    public static double driveSupplyCurrentLowerLimit = 40;
+    public static double driveSupplyCurrentLowerTime = 1.0;
+    public static double turnSupplyCurrentLimit = 30;
   }
 
   public static class Spindexer {
     public static final int spindexerMotorId = 4;
-    public static final double supplyCurrentLimit = 40;
-    public static final double statorCurrentLimit = 60;
+    public static final double supplyCurrentLimit = 60;
+    public static final double supplyCurrentLowerLimit = 40;
+    public static final double supplyCurrentLowerTime = 0.5; // fast start
+    public static final double statorCurrentLimit = 120;
     public static final InvertedValue motorInvert = InvertedValue.CounterClockwise_Positive;
     public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
     public static final double kS = 0.34;
@@ -132,20 +138,20 @@ public final class Constants {
   public static class Flywheel {
     public static final int motorId = 2;
     public static final int followerMotorId = 3;
-    public static final double statorCurrentLimit = 60;
+    public static final double statorCurrentLimit = 120;
     public static final double supplyCurrentLimit = 40;
     public static final InvertedValue motorInvert = InvertedValue.Clockwise_Positive;
     public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
 
     // max RPS for a burst is 75 due to drop in battery voltage
-    public static final double kS = 0.28;
-    public static final double kV = 0.128;
-    public static final double kP = 2;
+    public static final double kS = 0.32;
+    public static final double kV = 0.123;
+    public static final double kP = 0.5;
     public static final double kI = 0;
     public static final double kD = 0;
 
     public static final double motorToMechanismRatio = 1;
-    public static final double mechanismToleranceRPS = 2.0;
+    public static final double mechanismToleranceRPS = 4.0;
     public static final int idleRPS = 0; // normally 15
 
     public static final int canandcolorId = 0;
@@ -193,7 +199,7 @@ public final class Constants {
     public static final int servoChannel = 3;
     public static final int encoderId = 3;
     public static final double gearRatio = 164 / 11.0;
-    public static final double safeAngleDeg = 1;
+    public static final double safeAngleDeg = 0;
     public static final double kSPulsewidthUp = 80;
     public static final double kSPulsewidthDown = 45;
     public static final double kV = 0;
@@ -202,10 +208,10 @@ public final class Constants {
     public static final double kIZone = 1.0;
     public static final double kD = 0.0;
     public static final int idleVelocity = 0;
-    public static final double toleranceDeg = 0.25;
+    public static final double toleranceDeg = 3;
     public static final double homingVelocityThresholdRPS = 0.01;
     public static final double homingVelocity = -0.4;
-    public static final double idleAngleDeg = 0;
+    public static final double holdDownVelocity = -0.2;
   }
 
   public static class Control {
@@ -219,13 +225,14 @@ public final class Constants {
     public static final double voltageIntake = 6;
     public static final double voltageEject = -6;
     public static final double voltageDeploy = -1;
+    public static final double voltageIdle = 0;
+    public static final double voltageSmoosh = 3; // TODO
     public static final int leaderMotorId = 1;
     public static final int followerMotorId = 5;
     public static final double statorCurrentLimit = 60;
     public static final double supplyCurrentLimit = 40;
     public static final NeutralModeValue neutralMode = NeutralModeValue.Coast;
     public static final InvertedValue leaderMotorInvert = InvertedValue.Clockwise_Positive;
-    public static final double voltageIdle = 0;
   }
 
   public class Deployer {
@@ -233,6 +240,7 @@ public final class Constants {
     // postive degrees when extending
     public static final double retractDeg = 7; // allow for net (starting config = 3.87)
     public static final double extendDeg = 125.6; // fully against the bumper = 127.8
+    public static final double smooshDeg = (extendDeg + retractDeg) / 2.0;
     public static final double maxGravityDegrees = 125 - 180; // range is +/- 90 degrees
     public static final int motorId = 25;
     public static final double statorCurrentLimit = 60;
@@ -252,6 +260,8 @@ public final class Constants {
     public static final double RotorToSensorRatio = 12.0;
     public static final double tolerance = 2.0;
     public static final double SesnorOffsetRotations = 0.39; // retract pos > 0.02 to avoid wrapping
+    public static final double alreadyDeployedMaxDeg = 13;
+    public static final double alreadyDeployedMoveThreshold = 3;
   }
 
   public static class FiringParameters {
@@ -417,9 +427,9 @@ public final class Constants {
 
   public static class Sim {
 
-    public static final double tunnelRate = 0.2;
+    public static final double tunnelRate = 1;
     public static final double spindexerRate = 0.2;
-    public static final double flywheelRate = 0.1;
+    public static final double flywheelRate = 2;
     public static final double servoRate = 0.2;
   }
 
@@ -502,6 +512,7 @@ public final class Constants {
 
     public static final double pathPlannerDrivekP = 5; // TODO probably increase
     public static final double pathPlannerRotationkP = 4;
+    public static final double unjamTimeSec = 0.5;
   }
 
   public static class LED {

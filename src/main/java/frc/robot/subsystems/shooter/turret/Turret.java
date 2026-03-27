@@ -27,45 +27,14 @@ public class Turret {
     io.setPosition(getRotation() - 0.25); // adjust for offset locked (calibrated) position
   }
 
-  public void periodic() {
+  public void inputsPeriodic() {
     io.updateInputs(inputs);
     Logger.processInputs("Turret", inputs);
+  }
+
+  public void outputsPeriodic() {
     Logger.recordOutput("Turret/State", state);
     Logger.recordOutput("Turret/needToUnwind", needsToUnwind());
-
-    switch (Constants.turretMode) {
-      case DISABLED -> {}
-      case TUNING -> {}
-      case NORMAL -> {
-        switch (state) {
-            /*
-            case DISABLED -> {
-              break;
-            }
-            case UNWIND -> {
-              if (desiredDeg >= Constants.Turret.maxUnwindLimitDeg) {
-                desiredDeg = (desiredDeg - 360);
-              } else if (desiredDeg <= Constants.Turret.minUnwindLimitDeg) {
-                desiredDeg = (desiredDeg + 360);
-              } else {
-                desiredDeg = 0.0;
-              }
-              if (!needsToUnwind()
-                  && (isAtGoal() || (inputs.turretDegs >= -180 && inputs.turretDegs <= 180))) {
-                state = turretState.SET_TURRET_ANGLE;
-              }
-            }
-            case SET_TURRET_ANGLE -> {
-              if (needsToUnwind()) {
-                state = turretState.UNWIND;
-              }
-              if (desiredDeg != null) {
-                io.setAngle(desiredDeg);
-              }
-            } */
-        }
-      }
-    }
   }
 
   public void requestAngle(Double angle, boolean safeToUnwind) {
@@ -79,7 +48,7 @@ public class Turret {
             MathUtil.angleModulus(
                 Units.degreesToRadians(desiredDeg - Constants.Turret.midPointPhysicalDeg)));
     desiredDeg = Constants.Turret.midPointPhysicalDeg + diffFromMid;
-    if (RobotContainer.intake.isExtended()) {
+    if (RobotContainer.intake.hasExtended()) {
       io.setAngle(desiredDeg);
     }
 

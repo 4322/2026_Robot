@@ -7,45 +7,30 @@ import org.littletonrobotics.junction.Logger;
 public class Deployer {
   private DeployerIO deployerIO;
   private DeployerIOInputsAutoLogged inputs = new DeployerIOInputsAutoLogged();
+  private double requestedPos;
 
   public enum DeployerState {
     DISABLED,
     EXTEND,
-    RETRACT,
-    // UNJAM TODO
+    SMOOSH
   }
-
-  private DeployerState state = DeployerState.DISABLED;
 
   public Deployer(DeployerIO deployerIO) {
     this.deployerIO = deployerIO;
   }
 
-  public void periodic() {
+  public void inputsPeriodic() {
     deployerIO.updateInputs(inputs);
-    Logger.processInputs("Deployer", inputs);
-    Logger.recordOutput("Deployer/state", state);
-    switch (Constants.deployerMode) {
-      case DISABLED -> {}
-      case TUNING -> {}
-      case NORMAL -> {
-        switch (state) {
-          case DISABLED -> {
-            break;
-          }
-          case EXTEND -> {
-            deployerIO.setPosition(Constants.Deployer.extendDeg);
-          }
-          case RETRACT -> {
-            // deployerIO.setPosition(Constants.Deployer.retractDeg);
-          }
-        }
-      }
-    }
+    Logger.processInputs("Intake/Deployer", inputs);
+  }
+
+  // Called at end of command processing in intake
+  public void outputsPeriodic() {
+    // Nothing here currently
   }
 
   public void setBrakeMode(boolean mode) {
-    deployerIO.enableBrakeMode(mode);
+    deployerIO.setBrakeMode(mode);
   }
 
   public boolean isExtended() {
@@ -56,8 +41,22 @@ public class Deployer {
     }
   }
 
-  public void setGoal(DeployerState state) {
-    this.state = state;
+  public void setState(DeployerState state) {
+    switch (state) {
+      case DISABLED -> {
+        break;
+      }
+      case EXTEND -> {
+        requestedPos = Constants.Deployer.extendDeg;
+        deployerIO.setPosition(requestedPos);
+      }
+      case SMOOSH -> {
+        requestedPos = Constants.Deployer.smooshDeg;
+        deployerIO.setPosition(requestedPos);
+      }
+    }
+    Logger.recordOutput("Intake/Deployer/state", state);
+    Logger.recordOutput("Intake/Deployer/requestedPos", requestedPos);
   }
 
   public boolean isStowed() {
@@ -66,5 +65,13 @@ public class Deployer {
     } else {
       return inputs.angleDeg <= Constants.Deployer.retractDeg + Constants.Deployer.tolerance;
     }
+  }
+
+  public double getAngle() {
+    return inputs.angleDeg;
+  }
+
+  public void seedPosition(double newAngleDeg) {
+    deployerIO.seedPosition(newAngleDeg);
   }
 }

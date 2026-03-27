@@ -28,7 +28,6 @@ public class DeployerIOSim implements DeployerIO {
     inputs.angleDeg = currentAngle;
     inputs.appliedVolts = voltage;
     inputs.motorDegreesPerSec = velocity;
-    inputs.requestedPosDeg = requestedAngle;
   }
 
   @Override
@@ -37,10 +36,15 @@ public class DeployerIOSim implements DeployerIO {
   }
 
   @Override
-  public void enableBrakeMode(boolean mode) {}
+  public void setBrakeMode(boolean mode) {}
 
   @Override
   public void stop() {}
+
+  @Override
+  public void seedPosition(double newAngleDeg) {
+    currentAngle = newAngleDeg;
+  }
 
   private void simVolts() {
     if (DriverStation.isEnabled()) {

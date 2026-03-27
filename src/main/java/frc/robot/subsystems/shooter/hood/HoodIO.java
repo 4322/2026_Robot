@@ -24,6 +24,9 @@ public interface HoodIO {
   // velocity range: -1 to 1
   public default void setServoVelocity(double velocity) {}
 
+  // for tuning only
+  public default void setPulseWidth(int pulseWidth) {}
+
   public default void simEstimatedPosition() {}
 
   public default void setBrakeMode(boolean brake) {}
