@@ -530,7 +530,7 @@ public final class Constants {
 
     public static final double shootTimeFirstPass = 3.0;
     public static final double shootTimeSecondPass = 2.0;
-      public static final double shootTimeSinglePass = 3.0;
+    public static final double shootTimeSinglePass = 3.0;
   }
 
   public static class LED {
