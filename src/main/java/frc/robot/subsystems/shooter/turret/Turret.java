@@ -130,11 +130,11 @@ public class Turret {
       return true;
     } else {
       return Math.abs(inputs.turretDegs - desiredDeg) < Constants.Turret.smallToleranceDeg
-        || (isScoring
-            ? atGoalTimer.hasElapsed(Constants.scoringDoubleToleranceTime)
-            : atGoalTimer.hasElapsed(Constants.passingDoubleToleranceTime));
+          || (isScoring
+              ? atGoalTimer.hasElapsed(Constants.scoringDoubleToleranceTime)
+              : atGoalTimer.hasElapsed(Constants.passingDoubleToleranceTime));
     }
-    }
+  }
 
   public void setTurretAngleState() {
     state = turretState.SET_TURRET_ANGLE;
@@ -198,8 +198,7 @@ public class Turret {
   }
 
   private void updateAtGoalTimer() {
-    if (Math.abs(inputs.turretDegs - desiredDeg)
-        < Constants.Turret.largeToleranceDeg) {
+    if (Math.abs(inputs.turretDegs - desiredDeg) < Constants.Turret.largeToleranceDeg) {
       atGoalTimer.start();
     } else {
       atGoalTimer.stop();
