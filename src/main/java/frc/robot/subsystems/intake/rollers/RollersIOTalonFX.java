@@ -28,6 +28,8 @@ public class RollersIOTalonFX implements RollersIO {
     motorConfigs.HardwareLimitSwitch.ReverseLimitEnable = false;
     motorConfigs.CurrentLimits.StatorCurrentLimit = Constants.Rollers.statorCurrentLimit;
     motorConfigs.CurrentLimits.SupplyCurrentLimit = Constants.Rollers.supplyCurrentLimit;
+    motorConfigs.CurrentLimits.SupplyCurrentLimitEnable = true;
+    motorConfigs.CurrentLimits.StatorCurrentLimitEnable = true;
 
     motorConfigs.MotorOutput.Inverted = Constants.Rollers.leaderMotorInvert;
     motorConfigs.MotorOutput.NeutralMode = Constants.Rollers.neutralMode;
@@ -67,16 +69,16 @@ public class RollersIOTalonFX implements RollersIO {
   public void updateInputs(RollersIOInputs inputs) {
     inputs.leaderConnected = leaderMotor.isConnected();
     inputs.leaderVolts = leaderMotor.getMotorVoltage().getValueAsDouble();
-    inputs.leaderBusAmps = leaderMotor.getSupplyCurrent().getValueAsDouble();
-    inputs.leaderStatorAmps = leaderMotor.getStatorCurrent().getValueAsDouble();
+    inputs.leaderSupplyCurrentAmps = leaderMotor.getSupplyCurrent().getValueAsDouble();
+    inputs.leaderStatorCurrentAmps = leaderMotor.getStatorCurrent().getValueAsDouble();
     inputs.leaderMotorTempCelcius = leaderMotor.getDeviceTemp().getValueAsDouble();
     inputs.leaderControllerTempCelcius = leaderMotor.getProcessorTemp().getValueAsDouble();
     inputs.leaderRotationsPerSec = leaderMotor.getVelocity().getValueAsDouble();
 
     inputs.followerConnected = followerMotor.isConnected();
     inputs.followerVolts = followerMotor.getMotorVoltage().getValueAsDouble();
-    inputs.followerBusAmps = followerMotor.getSupplyCurrent().getValueAsDouble();
-    inputs.followerStatorAmps = followerMotor.getStatorCurrent().getValueAsDouble();
+    inputs.followerSupplyCurrentAmps = followerMotor.getSupplyCurrent().getValueAsDouble();
+    inputs.followerStatorCurrentAmps = followerMotor.getStatorCurrent().getValueAsDouble();
     inputs.followerMotorTempCelcius = followerMotor.getDeviceTemp().getValueAsDouble();
     inputs.followerControllerTempCelcius = followerMotor.getProcessorTemp().getValueAsDouble();
     inputs.followerRotationsPerSec = followerMotor.getVelocity().getValueAsDouble();

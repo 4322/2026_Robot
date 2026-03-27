@@ -40,7 +40,7 @@ public class Hood {
 
   public void inputsPeriodic() {
     io.updateInputs(inputs);
-    Logger.processInputs("Hood", inputs);
+    Logger.processInputs("Shooter/Hood", inputs);
   }
 
   public void outputsPeriodic() {
@@ -86,10 +86,10 @@ public class Hood {
         }
       }
     }
-    Logger.recordOutput("Hood/Timer", homingTimer.get());
-    Logger.recordOutput("Hood/homed", homed);
-    Logger.recordOutput("Hood/isAtGoal", isAtGoal());
-    Logger.recordOutput("Hood/goalDegrees", requestedAngleDeg);
+    Logger.recordOutput("Shooter/Hood/Timer", homingTimer.get());
+    Logger.recordOutput("Shooter/Hood/homed", homed);
+    Logger.recordOutput("Shooter/Hood/isAtGoal", isAtGoal());
+    Logger.recordOutput("Shooter/Hood/goalDegrees", requestedAngleDeg);
   }
 
   private void setVelocity() {
@@ -124,7 +124,7 @@ public class Hood {
     }
     io.setServoVelocity(velocity, requestedAngleDeg);
     lastVelocity = velocity;
-    Logger.recordOutput("Hood/requestedServoVelocity", velocity);
+    Logger.recordOutput("Shooter/Hood/requestedServoVelocity", velocity);
   }
 
   private void updateAtGoalTimer() {
