@@ -38,7 +38,7 @@ public class Turret {
 
   public void inputsPeriodic() {
     io.updateInputs(inputs);
-    Logger.processInputs("Turret", inputs);
+    Logger.processInputs("Shooter/Turret", inputs);
   }
 
   public void outputsPeriodic() {
@@ -73,11 +73,11 @@ public class Turret {
           }
         }
 
-        Logger.recordOutput("Turret/State", state);
-        Logger.recordOutput("Turret/needToUnwind", needsToUnwind());
-        Logger.recordOutput("Turret/isUnwinding", isUnwinding());
-        Logger.recordOutput("Turret/atGoal", isAtGoal());
-        Logger.recordOutput("Turret/desiredDeg", desiredDeg);
+        Logger.recordOutput("Shooter/Turret/State", state);
+        Logger.recordOutput("Shooter/Turret/needToUnwind", needsToUnwind());
+        Logger.recordOutput("Shooter/Turret/isUnwinding", isUnwinding());
+        Logger.recordOutput("Shooter/Turret/atGoal", isAtGoal());
+        Logger.recordOutput("Shooter/Turret/desiredDeg", desiredDeg);
       }
     }
   }
@@ -108,7 +108,7 @@ public class Turret {
   }
 
   private double getTargetAngleInMidpoint() {
-    Logger.recordOutput("Turret/currentMethod", "getTargetAngleInMidpoint()");
+    Logger.recordOutput("Shooter/Turret/currentMethod", "getTargetAngleInMidpoint()");
     return (desiredDeg - Constants.Turret.midPointPhysicalDeg) > 0
         ? desiredDeg - 360
         : (desiredDeg - Constants.Turret.midPointPhysicalDeg) < 0 ? desiredDeg + 360 : desiredDeg;
@@ -160,7 +160,7 @@ public class Turret {
     }
     this.needsToUnwind = needsUnwindFinish;
     prevDeg = desiredDeg;
-    Logger.recordOutput("Turret/unwindDesiredDeg", prevDeg);
+    Logger.recordOutput("Shooter/Turret/unwindDesiredDeg", prevDeg);
   }
 
   public double getAngle() {
@@ -241,7 +241,7 @@ public class Turret {
         }
       }
     }
-    Logger.recordOutput("Turret/fullRotations", turretFullRotations);
+    Logger.recordOutput("Shooter/Turret/fullRotations", turretFullRotations);
     return turretFullRotations;
 
     // int CANCoderOneMod = mod(inputs.encoderOneCount, Constants.Turret.CANCoderTwoRatio);

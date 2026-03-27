@@ -17,7 +17,7 @@ public class Flywheel {
 
   public void inputsPeriodic() {
     io.updateInputs(inputs);
-    Logger.processInputs("Flywheel", inputs);
+    Logger.processInputs("Shooter/Flywheel", inputs);
   }
 
   public void outputsPeriodic() {
@@ -25,6 +25,7 @@ public class Flywheel {
       case TUNING -> {}
       case NORMAL -> {
         updateAtGoalTimer();
+        Logger.recordOutput("Shooter/Flywheel/atGoal", isAtGoal());
       }
       case DISABLED -> {}
     }
@@ -40,7 +41,7 @@ public class Flywheel {
       case DISABLED -> {}
     }
     this.isScoring = isScoring;
-    Logger.recordOutput("Flywheel/RequestedSetpoint", requestedSetpoint);
+    Logger.recordOutput("Shooter/Flywheel/RequestedSetpoint", requestedSetpoint);
   }
 
   public void enableBrakeMode(boolean enable) {

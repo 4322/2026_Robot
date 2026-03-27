@@ -1,9 +1,5 @@
 package frc.robot.subsystems.shooter;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
@@ -18,7 +14,6 @@ import frc.robot.subsystems.shooter.spindexer.Spindexer;
 import frc.robot.subsystems.shooter.tunnel.Tunnel;
 import frc.robot.subsystems.shooter.turret.Turret;
 import frc.robot.subsystems.vision.visionGlobalPose.VisionGlobalPose;
-import frc.robot.util.GeomUtil;
 import org.littletonrobotics.junction.Logger;
 
 public class Shooter extends SubsystemBase {
@@ -208,29 +203,11 @@ public class Shooter extends SubsystemBase {
     }
 
     Logger.recordOutput("Shooter/State", state.toString());
-    Logger.recordOutput("Shooter/spindexerStopped", spindexer.isStopped());
-    Logger.recordOutput("Shooter/tunnelStopped", tunnel.isStopped());
-    Logger.recordOutput("Shooter/flywheelAtSpeed", flywheel.isAtGoal());
-    Logger.recordOutput("Shooter/hoodAtPosition", hood.isAtGoal());
-    Logger.recordOutput("Shooter/turretAtPosition", turret.isAtGoal());
     Logger.recordOutput("Shooter/TargetHoodAngleDeg", targetHoodAngleDeg);
     Logger.recordOutput("Shooter/TargetFlywheelSpeedRPS", targetFlywheelSpeedRPS);
     Logger.recordOutput("Shooter/TargetTurretAngleDeg", targetTurretAngleDeg);
     Logger.recordOutput("Shooter/TargetTunnelSpeedRPS", targetTunnelSpeedRPS);
     Logger.recordOutput("Shooter/TargetIndexerSpeedRPS", targetSpindexerSpeedRPS);
-    Logger.recordOutput("Shooter/CurrentTurretPose", drive.getTurretPose(turret.getAngle()));
-    Logger.recordOutput(
-        "Shooter/TargetTurretPose",
-        GeomUtil.pose2dToPose3d(drive.getTurretPose(targetTurretAngleDeg), 0.4));
-    Logger.recordOutput(
-        "Shooter/ComponentPoses",
-        new Pose3d[] {
-          GeomUtil.pose2dToPose3d(
-              new Pose2d(
-                  Constants.Turret.originToTurret,
-                  new Rotation2d(Units.degreesToRadians(targetTurretAngleDeg) - 4 * Math.PI / 3)),
-              0.22)
-        });
   }
 
   private void calculateFiringSolution() {
