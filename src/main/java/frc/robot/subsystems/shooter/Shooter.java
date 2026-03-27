@@ -157,12 +157,11 @@ public class Shooter extends SubsystemBase {
         if (requestedState == ShooterState.IDLE && requestedState == ShooterState.STOP) {
           hood.requestGoal(Constants.Hood.safeAngleDeg);
           flywheel.requestGoal(Constants.Flywheel.idleRPS, null);
-        }
-        else {
+        } else {
           hood.requestGoal(targetHoodAngleDeg);
           flywheel.requestGoal(targetFlywheelSpeedRPS, null);
         }
-        
+
         // Keep sending turret angle requests and unwind logic will continuously adjust target
         // setpoint within range of physical midpoint
         turret.requestAngle(targetTurretAngleDeg, null);

@@ -40,7 +40,7 @@ public class FlywheelIOTalonFx implements FlywheelIO {
 
     config.MotorOutput.Inverted = Constants.Flywheel.motorInvert;
     config.MotorOutput.NeutralMode = Constants.Flywheel.neutralMode;
-    
+
     config.HardwareLimitSwitch.ReverseLimitEnable = false;
     config.HardwareLimitSwitch.ForwardLimitEnable = false;
 
@@ -106,13 +106,12 @@ public class FlywheelIOTalonFx implements FlywheelIO {
     inputs.leaderStatorCurrentAmps = motor.getStatorCurrent().getValueAsDouble();
     inputs.leaderSupplyCurrentAmps = motor.getSupplyCurrent().getValueAsDouble();
 
-    inputs.followerMotorConnected = followerMotor.isConnected();    
+    inputs.followerMotorConnected = followerMotor.isConnected();
     inputs.followerMechanismRPS = followerMotor.getVelocity().getValueAsDouble();
     inputs.followerMotorTempCelsius = followerMotor.getDeviceTemp().getValueAsDouble();
     inputs.followerSupplyCurrentAmps = followerMotor.getSupplyCurrent().getValueAsDouble();
     inputs.followerStatorCurrentAmps = followerMotor.getStatorCurrent().getValueAsDouble();
     inputs.followerAppliedVolts = followerMotor.getMotorVoltage().getValueAsDouble();
-    
 
     if (Constants.Flywheel.canAndColorEnabled) {
       inputs.color = new Color(canandcolor.getRed(), canandcolor.getGreen(), canandcolor.getBlue());

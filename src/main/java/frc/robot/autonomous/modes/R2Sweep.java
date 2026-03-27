@@ -5,7 +5,6 @@ import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -44,8 +43,8 @@ public class R2Sweep extends SequentialCommandGroup {
                     ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake),
                     AutoBuilder.followPath(Robot.L_2SWEEP_CG),
                     new SequentialCommandGroup(
-                    new WaitCommand(Constants.Autonomous.smooshDelayDoubleFirstPass),
-                    IntakeCommands.autoSmoosh(intake))),
+                        new WaitCommand(Constants.Autonomous.smooshDelayDoubleFirstPass),
+                        IntakeCommands.autoSmoosh(intake))),
                 AutoBuilder.followPath(Robot.R_2SWEEP_D),
                 AutoBuilder.followPath(Robot.R_2SWEEP_E),
                 AutoBuilder.followPath(Robot.R_2SWEEP_F),
@@ -53,8 +52,8 @@ public class R2Sweep extends SequentialCommandGroup {
                     ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake),
                     AutoBuilder.followPath(Robot.L_2SWEEP_CG),
                     new SequentialCommandGroup(
-                    new WaitCommand(Constants.Autonomous.smooshDelayDoubleFirstPass),
-                    IntakeCommands.autoSmoosh(intake))),
+                        new WaitCommand(Constants.Autonomous.smooshDelayDoubleFirstPass),
+                        IntakeCommands.autoSmoosh(intake))),
                 AutoBuilder.followPath(Robot.R_2SWEEP_H))));
   }
 }

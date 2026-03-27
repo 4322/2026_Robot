@@ -31,22 +31,29 @@ public class FieldConstants {
     public static Translation2d hubTranslation =
         new Translation2d(blueLineX + hubOffset, centerLineY);
     public static FieldRectangle2d allianceZone =
-        new FieldRectangle2d(new Translation2d(-fieldEdgeTolerance, -fieldEdgeTolerance), new Translation2d(blueLineX, fieldWidth + fieldEdgeTolerance));
+        new FieldRectangle2d(
+            new Translation2d(-fieldEdgeTolerance, -fieldEdgeTolerance),
+            new Translation2d(blueLineX, fieldWidth + fieldEdgeTolerance));
     public static FieldRectangle2d rightAllianceZone =
-        new FieldRectangle2d(new Translation2d(-fieldEdgeTolerance, -fieldEdgeTolerance), new Translation2d(blueLineX, centerLineY));
+        new FieldRectangle2d(
+            new Translation2d(-fieldEdgeTolerance, -fieldEdgeTolerance),
+            new Translation2d(blueLineX, centerLineY));
     public static FieldRectangle2d leftAllianceZone =
         new FieldRectangle2d(
-            new Translation2d(-fieldEdgeTolerance, centerLineY), new Translation2d(blueLineX, fieldWidth + fieldEdgeTolerance));
+            new Translation2d(-fieldEdgeTolerance, centerLineY),
+            new Translation2d(blueLineX, fieldWidth + fieldEdgeTolerance));
     public static FieldRectangle2d trenchLeft =
         new FieldRectangle2d(
             new Translation2d(
                 blueLineX - trenchScaleFactor * Units.inchesToMeters(22.20),
                 centerLineY + Units.inchesToMeters(133.47 - (24.97 + 12.00))),
             new Translation2d(
-                blueLineX + trenchScaleFactor * Units.inchesToMeters(22.20), fieldWidth + fieldEdgeTolerance));
+                blueLineX + trenchScaleFactor * Units.inchesToMeters(22.20),
+                fieldWidth + fieldEdgeTolerance));
     public static FieldRectangle2d trenchRight =
         new FieldRectangle2d(
-            new Translation2d(blueLineX - trenchScaleFactor * Units.inchesToMeters(22.20), -fieldEdgeTolerance),
+            new Translation2d(
+                blueLineX - trenchScaleFactor * Units.inchesToMeters(22.20), -fieldEdgeTolerance),
             new Translation2d(
                 blueLineX + trenchScaleFactor * Units.inchesToMeters(22.20),
                 Units.inchesToMeters(50.59)));
@@ -74,10 +81,13 @@ public class FieldConstants {
                 blueLineX - trenchScaleFactor * Units.inchesToMeters(22.20 + 6),
                 centerLineY + Units.inchesToMeters(133.47 - (24.97 + 12.00))),
             new Translation2d(
-                blueLineX + trenchScaleFactor * Units.inchesToMeters(22.20 + 6), fieldWidth + fieldEdgeTolerance));
+                blueLineX + trenchScaleFactor * Units.inchesToMeters(22.20 + 6),
+                fieldWidth + fieldEdgeTolerance));
     public static FieldRectangle2d stopShootRight =
         new FieldRectangle2d(
-            new Translation2d(blueLineX - trenchScaleFactor * Units.inchesToMeters(22.20 + 6), -fieldEdgeTolerance),
+            new Translation2d(
+                blueLineX - trenchScaleFactor * Units.inchesToMeters(22.20 + 6),
+                -fieldEdgeTolerance),
             new Translation2d(
                 blueLineX + trenchScaleFactor * Units.inchesToMeters(22.20 + 6),
                 Units.inchesToMeters(50.59)));
@@ -94,7 +104,8 @@ public class FieldConstants {
     public static FieldRectangle2d towerZone =
         new FieldRectangle2d(
             new Translation2d(
-                -fieldEdgeTolerance, centerLineY - Units.inchesToMeters(11.38) - Units.inchesToMeters(47.00 / 2)),
+                -fieldEdgeTolerance,
+                centerLineY - Units.inchesToMeters(11.38) - Units.inchesToMeters(47.00 / 2)),
             new Translation2d(
                 blueLineX - Units.inchesToMeters(115.05 + (47.00 / 2)),
                 centerLineY - Units.inchesToMeters(11.38) + Units.inchesToMeters(47.00 / 2)));
@@ -105,14 +116,17 @@ public class FieldConstants {
         new Translation2d(redLineX - hubOffset, centerLineY);
     public static FieldRectangle2d allianceZone =
         new FieldRectangle2d(
-            new Translation2d(redLineX, -fieldEdgeTolerance), new Translation2d(fieldLength + fieldEdgeTolerance, fieldWidth + fieldEdgeTolerance));
+            new Translation2d(redLineX, -fieldEdgeTolerance),
+            new Translation2d(fieldLength + fieldEdgeTolerance, fieldWidth + fieldEdgeTolerance));
 
     public static FieldRectangle2d rightAllianceZone =
         new FieldRectangle2d(
-            new Translation2d(redLineX, -fieldEdgeTolerance), new Translation2d(fieldLength + fieldEdgeTolerance, centerLineY));
+            new Translation2d(redLineX, -fieldEdgeTolerance),
+            new Translation2d(fieldLength + fieldEdgeTolerance, centerLineY));
     public static FieldRectangle2d leftAllianceZone =
         new FieldRectangle2d(
-            new Translation2d(redLineX, centerLineY), new Translation2d(fieldLength + fieldEdgeTolerance, fieldWidth + fieldEdgeTolerance));
+            new Translation2d(redLineX, centerLineY),
+            new Translation2d(fieldLength + fieldEdgeTolerance, fieldWidth + fieldEdgeTolerance));
 
     public static FieldRectangle2d trenchLeft =
         new FieldRectangle2d(
@@ -120,10 +134,12 @@ public class FieldConstants {
                 redLineX - trenchScaleFactor * Units.inchesToMeters(22.20),
                 centerLineY + Units.inchesToMeters(133.47 - (24.97 + 12.00))),
             new Translation2d(
-                redLineX + trenchScaleFactor * Units.inchesToMeters(22.20), fieldWidth + fieldEdgeTolerance));
+                redLineX + trenchScaleFactor * Units.inchesToMeters(22.20),
+                fieldWidth + fieldEdgeTolerance));
     public static FieldRectangle2d trenchRight =
         new FieldRectangle2d(
-            new Translation2d(redLineX - trenchScaleFactor * Units.inchesToMeters(22.20), -fieldEdgeTolerance),
+            new Translation2d(
+                redLineX - trenchScaleFactor * Units.inchesToMeters(22.20), -fieldEdgeTolerance),
             new Translation2d(
                 redLineX + trenchScaleFactor * Units.inchesToMeters(22.20),
                 Units.inchesToMeters(50.59)));
@@ -150,10 +166,13 @@ public class FieldConstants {
                 redLineX - trenchScaleFactor * Units.inchesToMeters(22.20 + 6),
                 centerLineY + Units.inchesToMeters(133.47 - (24.97 + 12.00))),
             new Translation2d(
-                redLineX + trenchScaleFactor * Units.inchesToMeters(22.20 + 6), fieldWidth + fieldEdgeTolerance));
+                redLineX + trenchScaleFactor * Units.inchesToMeters(22.20 + 6),
+                fieldWidth + fieldEdgeTolerance));
     public static FieldRectangle2d stopShootRight =
         new FieldRectangle2d(
-            new Translation2d(redLineX - trenchScaleFactor * Units.inchesToMeters(22.20 + 6), -fieldEdgeTolerance),
+            new Translation2d(
+                redLineX - trenchScaleFactor * Units.inchesToMeters(22.20 + 6),
+                -fieldEdgeTolerance),
             new Translation2d(
                 redLineX + trenchScaleFactor * Units.inchesToMeters(22.20 + 6),
                 Units.inchesToMeters(50.59)));
@@ -178,10 +197,12 @@ public class FieldConstants {
   public static class Neutral {
     public static FieldRectangle2d rightNeutral =
         new FieldRectangle2d(
-            new Translation2d(blueLineX, -fieldEdgeTolerance), new Translation2d(redLineX, centerLineY));
+            new Translation2d(blueLineX, -fieldEdgeTolerance),
+            new Translation2d(redLineX, centerLineY));
     public static FieldRectangle2d leftNeutral =
         new FieldRectangle2d(
-            new Translation2d(blueLineX, centerLineY), new Translation2d(redLineX, fieldWidth + fieldEdgeTolerance));
+            new Translation2d(blueLineX, centerLineY),
+            new Translation2d(redLineX, fieldWidth + fieldEdgeTolerance));
   }
 
   public static void plotZones() {
