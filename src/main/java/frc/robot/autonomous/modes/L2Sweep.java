@@ -42,7 +42,7 @@ public class L2Sweep extends SequentialCommandGroup {
                 new ParallelRaceGroup(
                     ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake),
                     IntakeCommands.autoSmoosh(
-                        intake, Constants.Autonomous.smooshDelayDoubleFirstPass, 4)),
+                        intake, Constants.Autonomous.smooshDelayDoubleFirstPass, 1.5)),
                 AutoBuilder.followPath(Robot.L_2SWEEP_CG),
                 AutoBuilder.followPath(Robot.L_2SWEEP_D),
                 AutoBuilder.followPath(Robot.L_2SWEEP_E),
@@ -50,7 +50,7 @@ public class L2Sweep extends SequentialCommandGroup {
                 new ParallelRaceGroup(
                     ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake),
                     IntakeCommands.autoSmoosh(
-                        intake, Constants.Autonomous.smooshDelayDoubleSecondPass, 4)),
+                        intake, Constants.Autonomous.smooshDelayDoubleSecondPass, 1.5)),
                 AutoBuilder.followPath(Robot.L_2SWEEP_CG),
                 AutoBuilder.followPath(Robot.L_2SWEEP_H))));
   }
