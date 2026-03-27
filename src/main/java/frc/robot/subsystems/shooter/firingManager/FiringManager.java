@@ -35,6 +35,10 @@ public class FiringManager {
       new LoggedTunableNumber("FiringManager/tunnelSpeedRPS", 0);
   private static final LoggedTunableNumber tunableIndexerSpeedRPS =
       new LoggedTunableNumber("FiringManager/indexerSpeedRPS", 0);
+  private static final LoggedTunableNumber tunableFlywheelAdjustFactor =
+      new LoggedTunableNumber(
+          "FiringManager/flywheelHoodAdjustmentFactor",
+          Constants.Flywheel.flywheelHoodAdjustmentFactor);
 
   public static FiringSolution getFiringSolution(
       Pose2d turretPosition, Translation2d robotVelocity, boolean isScoring) {
@@ -184,7 +188,7 @@ public class FiringManager {
   public static FiringSolution adjustForHoodOffset(
       FiringSolution calculatedSolution, double idealHoodAngle) {
     double deltaDegrees = RobotContainer.shooter.getHoodPositionDegrees() - idealHoodAngle;
-    calculatedSolution.flywheelSpeedRPS += deltaDegrees * -2.0;
+    calculatedSolution.flywheelSpeedRPS += deltaDegrees * tunableFlywheelAdjustFactor.get();
     if (calculatedSolution.flywheelSpeedRPS < 0) {
       calculatedSolution.flywheelSpeedRPS = 0;
     }
