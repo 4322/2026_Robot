@@ -25,12 +25,15 @@ public class Hood {
       new LoggedTunableNumber("Hood/tuningGoalDeg", 0);
   private static final LoggedTunableNumber tuningPulseWidth =
       new LoggedTunableNumber("Hood/tuningpulseWidth", 0);
+  private static final LoggedTunableNumber burstInterval =
+      new LoggedTunableNumber("Hood/pulseBurstDutyCycle", 0);
 
   private HoodIO io;
   private HoodIOInputsAutoLogged inputs = new HoodIOInputsAutoLogged();
   private double requestedAngleDeg;
   private Timer atGoalTimer = new Timer();
   private Timer homingTimer = new Timer();
+  private int burstIntervalCount = 0;
   private boolean homed = false;
   private boolean trenchOverride = false;
   private double lastVelocity = 0;
@@ -54,11 +57,14 @@ public class Hood {
           io.setEncoderHomed();
           homed = true;
         }
-        if (tuningPulseWidth.get() != 0) {
-          io.setPulseWidth((int) tuningPulseWidth.get());
-        } else {
+        if (tuningPulseWidth.get() == 0) {
           setGoal(tuningGoalDeg.get());
           setVelocity();
+        } else if (burstInterval.getAsDouble() >= burstIntervalCount++) {
+          burstIntervalCount = 0;
+          io.setPulseWidth((int) tuningPulseWidth.get());
+        } else {
+          io.setPulseWidth(1500); // pause output
         }
       }
       case NORMAL -> {
@@ -124,8 +130,13 @@ public class Hood {
         }
       }
     }
-    io.setServoVelocity(velocity, requestedAngleDeg);
-    lastVelocity = velocity;
+    if (burstInterval.getAsDouble() >= burstIntervalCount++) {
+      burstIntervalCount = 0;
+      io.setServoVelocity(velocity, requestedAngleDeg);
+      lastVelocity = velocity;
+    } else {
+      io.setServoVelocity(0, 0);
+    }
     Logger.recordOutput("Shooter/Hood/requestedServoVelocity", velocity);
   }
 
