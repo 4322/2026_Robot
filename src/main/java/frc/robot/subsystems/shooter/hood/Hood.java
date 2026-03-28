@@ -141,13 +141,14 @@ public class Hood {
   private void updateNetworkTableValues() {
     if (isAtGoal()) {
       if (lastVelocity == 0) {
-        SmartDashboard.putString("Hood/AtGoal", Constants.NetworkTables.green.toHexString());
+        SmartDashboard.putString("Hood/HoodAtGoal", Constants.NetworkTables.green.toHexString());
       } else {
-        SmartDashboard.putString("Hood/AtGoal", Constants.NetworkTables.yellow.toHexString());
+        SmartDashboard.putString("Hood/HoodAtGoal", Constants.NetworkTables.yellow.toHexString());
       }
     } else {
-      SmartDashboard.putString("Hood/AtGoal", Constants.NetworkTables.red.toHexString());
+      SmartDashboard.putString("Hood/HoodAtGoal", Constants.NetworkTables.red.toHexString());
     }
+    
   }
 
   public void requestGoal(double degrees) {

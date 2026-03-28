@@ -72,12 +72,12 @@ public class Flywheel {
     if (isAtGoal()) {
       if (Math.abs(inputs.leaderMechanismRPS - requestedSetpoint)
           < Constants.Turret.smallToleranceDeg) {
-        SmartDashboard.putString("Flywheel/AtGoal", Constants.NetworkTables.green.toHexString());
+        SmartDashboard.putString("Flywheel/FlywheelAtGoal", Constants.NetworkTables.green.toHexString());
       } else {
-        SmartDashboard.putString("Flywheel/AtGoal", Constants.NetworkTables.yellow.toHexString());
+        SmartDashboard.putString("Flywheel/FlywheelAtGoal", Constants.NetworkTables.yellow.toHexString());
       }
     } else {
-      SmartDashboard.putString("Flywheel/AtGoal", Constants.NetworkTables.red.toHexString());
+      SmartDashboard.putString("Flywheel/FlywheelAtGoal", Constants.NetworkTables.red.toHexString());
     }
   }
 }
