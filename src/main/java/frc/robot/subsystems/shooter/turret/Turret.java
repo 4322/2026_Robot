@@ -252,9 +252,11 @@ public class Turret {
   private void updateNetworkTableValues() {
     if (isAtGoal()) {
       if (Math.abs(inputs.turretDegs - desiredDeg) < Constants.Turret.smallToleranceDeg) {
-        SmartDashboard.putString("Turret/TurretAtGoal", Constants.NetworkTables.green.toHexString());
+        SmartDashboard.putString(
+            "Turret/TurretAtGoal", Constants.NetworkTables.green.toHexString());
       } else {
-        SmartDashboard.putString("Turret/TurretAtGoal", Constants.NetworkTables.yellow.toHexString());
+        SmartDashboard.putString(
+            "Turret/TurretAtGoal", Constants.NetworkTables.yellow.toHexString());
       }
     } else {
       SmartDashboard.putString("Turret/TurretAtGoal", Constants.NetworkTables.red.toHexString());

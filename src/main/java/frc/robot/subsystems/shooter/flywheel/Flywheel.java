@@ -74,10 +74,14 @@ public class Flywheel {
           < Constants.Flywheel.smallToleranceRPS) {
         SmartDashboard.putString("Flywheel/FlywheelAtGoal", Constants.NetworkTables.green.toHexString());
       } else {
-        SmartDashboard.putString("Flywheel/FlywheelAtGoal", Constants.NetworkTables.yellow.toHexString());
+        SmartDashboard.putString(
+            "Flywheel/FlywheelAtGoal", Constants.NetworkTables.yellow.toHexString());
       }
     } else {
-      SmartDashboard.putString("Flywheel/FlywheelAtGoal", Constants.NetworkTables.red.toHexString());
+      SmartDashboard.putString(
+          "Flywheel/FlywheelAtGoal", Constants.NetworkTables.red.toHexString());
     }
+    SmartDashboard.putNumber("Flywheel/FlywheelLRPS", inputs.leaderMechanismRPS);
+    SmartDashboard.putNumber("Flywheel/FlywheelFRPS", inputs.followerMechanismRPS);
   }
 }
