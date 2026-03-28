@@ -1,6 +1,7 @@
 package frc.robot.subsystems.shooter.flywheel;
 
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.constants.Constants;
 import org.littletonrobotics.junction.Logger;
 
@@ -25,6 +26,7 @@ public class Flywheel {
       case TUNING -> {}
       case NORMAL -> {
         updateAtGoalTimer();
+        updateNetworkTableValues();
         Logger.recordOutput("Shooter/Flywheel/atGoal", isAtGoal());
       }
       case DISABLED -> {}
@@ -63,6 +65,19 @@ public class Flywheel {
     } else {
       atGoalTimer.stop();
       atGoalTimer.reset();
+    }
+  }
+
+  private void updateNetworkTableValues() {
+    if (isAtGoal()) {
+      if (Math.abs(inputs.leaderMechanismRPS - requestedSetpoint)
+          < Constants.Turret.smallToleranceDeg) {
+        SmartDashboard.putString("Flywheel/AtGoal", Constants.NetworkTables.green.toHexString());
+      } else {
+        SmartDashboard.putString("Flywheel/AtGoal", Constants.NetworkTables.yellow.toHexString());
+      }
+    } else {
+      SmartDashboard.putString("Flywheel/AtGoal", Constants.NetworkTables.red.toHexString());
     }
   }
 }

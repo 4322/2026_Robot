@@ -2,6 +2,7 @@ package frc.robot.subsystems.shooter.hood;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.constants.Constants;
 import frc.robot.constants.Constants.SubsystemMode;
 import frc.robot.util.LoggedTunableNumber;
@@ -84,6 +85,7 @@ public class Hood {
           homingTimer.stop();
           homingTimer.reset();
         }
+        updateNetworkTableValues();
       }
     }
     Logger.recordOutput("Shooter/Hood/Timer", homingTimer.get());
@@ -133,6 +135,18 @@ public class Hood {
     } else {
       atGoalTimer.stop();
       atGoalTimer.reset();
+    }
+  }
+
+  private void updateNetworkTableValues() {
+    if (isAtGoal()) {
+      if (lastVelocity == 0) {
+        SmartDashboard.putString("Hood/AtGoal", Constants.NetworkTables.green.toHexString());
+      } else {
+        SmartDashboard.putString("Hood/AtGoal", Constants.NetworkTables.yellow.toHexString());
+      }
+    } else {
+      SmartDashboard.putString("Hood/AtGoal", Constants.NetworkTables.red.toHexString());
     }
   }
 

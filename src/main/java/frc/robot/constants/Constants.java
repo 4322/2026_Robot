@@ -14,6 +14,7 @@ import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
 import edu.wpi.first.math.interpolation.InverseInterpolator;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.util.Color;
 import frc.robot.subsystems.shooter.FiringSolution;
 import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetection.ObjectDetectionType;
 
@@ -540,5 +541,11 @@ public final class Constants {
     public static final double brightnessScalar = 0.5;
     public static final int ledStart = 0;
     public static final int ledEnd = 0;
+  }
+
+  public static class NetworkTables {
+    public static final Color red = new Color(255, 0, 0);
+    public static final Color green = new Color(0, 255, 0);
+    public static final Color yellow = new Color(255, 255, 0);
   }
 }

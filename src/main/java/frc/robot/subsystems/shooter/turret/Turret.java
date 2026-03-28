@@ -3,6 +3,7 @@ package frc.robot.subsystems.shooter.turret;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotContainer;
 import frc.robot.constants.Constants;
 import frc.robot.util.ClockUtil;
@@ -45,7 +46,7 @@ public class Turret {
       case TUNING -> {}
       case NORMAL -> {
         updateAtGoalTimer();
-
+        
         if (DriverStation.isDisabled()) {
           state = turretState.DISABLED;
         }
@@ -71,6 +72,7 @@ public class Turret {
           }
         }
 
+        updateNetworkTableValues();
         Logger.recordOutput("Shooter/Turret/State", state);
         Logger.recordOutput("Shooter/Turret/needToUnwind", needsToUnwind());
         Logger.recordOutput("Shooter/Turret/isUnwinding", isUnwinding());
@@ -245,6 +247,18 @@ public class Turret {
     Logger.recordOutput("Shooter/Turret/rotationRange", ROTATIONAL_RANGE);
     Logger.recordOutput("Shooter/Turret/fullRotations", turretFullRotations);
     return turretFullRotations;
+  }
+
+  private void updateNetworkTableValues() {
+    if (isAtGoal()) {
+      if (Math.abs(inputs.turretDegs - desiredDeg) < Constants.Turret.smallToleranceDeg) {
+        SmartDashboard.putString("Turret/AtGoal", Constants.NetworkTables.green.toHexString());
+      } else {
+        SmartDashboard.putString("Turret/AtGoal", Constants.NetworkTables.yellow.toHexString());
+      }
+    } else {
+      SmartDashboard.putString("Turret/AtGoal", Constants.NetworkTables.red.toHexString());
+    }
   }
 
   private static double mod(double a, double b) {
