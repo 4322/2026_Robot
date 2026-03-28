@@ -252,10 +252,10 @@ public class VisionGlobalPose extends SubsystemBase {
       if (Constants.VisionGlobalPose.enableVerbosePoseLogging) {
         Logger.recordOutput(
             "VisionGlobalPose/Camera" + Integer.toString(cameraIndex) + "/RobotPosesAccepted",
-            (Pose2d[]) robotPosesAccepted.toArray());
+            robotPosesAccepted.stream().toArray(Pose2d[]::new));
         Logger.recordOutput(
             "VisionGlobalPose/Camera" + Integer.toString(cameraIndex) + "/RobotPosesRejected",
-            (Pose2d[]) robotPosesRejected.toArray());
+            robotPosesRejected.stream().toArray(Pose2d[]::new));
         allRobotPoses.addAll(robotPoses);
         allRobotPosesAccepted.addAll(robotPosesAccepted);
         allRobotPosesRejected.addAll(robotPosesRejected);
@@ -265,13 +265,13 @@ public class VisionGlobalPose extends SubsystemBase {
     // Log summary data
     if (Constants.VisionGlobalPose.enableVerbosePoseLogging) {
       Logger.recordOutput(
-          "VisionGlobalPose/Summary/RobotPoses", (Pose2d[]) allRobotPoses.toArray());
+          "VisionGlobalPose/Summary/RobotPoses", allRobotPoses.stream().toArray(Pose2d[]::new));
       Logger.recordOutput(
           "VisionGlobalPose/Summary/RobotPosesAccepted",
-          (Pose2d[]) allRobotPosesAccepted.toArray());
+          allRobotPosesAccepted.stream().toArray(Pose2d[]::new));
       Logger.recordOutput(
           "VisionGlobalPose/Summary/RobotPosesRejected",
-          (Pose2d[]) allRobotPosesRejected.toArray());
+          allRobotPosesRejected.stream().toArray(Pose2d[]::new));
     }
   }
 
