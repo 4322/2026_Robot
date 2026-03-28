@@ -26,11 +26,11 @@ public class FieldConstants {
   public static double centerLineX = fieldLength / 2;
   public static double centerLineY = fieldWidth / 2;
   public static double blueLineX =
-      Units.inchesToMeters(158.6); // The edge towards the driver station of the bump
+      Units.inchesToMeters(158.6); // The edge towards the driver station of the hub
   public static double redLineX =
       fieldLength
           - Units.inchesToMeters(
-              158.6); // The edge towards the driver station of the bump but red side
+              158.6); // The edge towards the driver station of the hub but red side
   public static double hubOffset = Units.inchesToMeters(24.0);
   public static final double fieldEdgeTolerance = Units.inchesToMeters(48);
 
