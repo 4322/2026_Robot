@@ -86,7 +86,7 @@ public class Shooter extends SubsystemBase {
 
   public void outputsPeriodic() {
     calculateFiringSolution();
-    SmartDashboard.putNumber("Flywheel/FlywheelRequestedRPS", targetFlywheelSpeedRPS);
+    SmartDashboard.putNumber("Shooter/TargetFlywheelSpeedRPS", targetFlywheelSpeedRPS);
 
     if (Constants.firingManagerMode == Constants.SubsystemMode.TUNING) {
 
@@ -241,24 +241,8 @@ public class Shooter extends SubsystemBase {
     } else {
       FiringSolution firingSolution =
           FiringManager.getFiringSolution(drive.getTurretPose(), drive.getVelocity(), isScoring);
-
-      Logger.recordOutput("Shooter/OriginalSolution/HoodAngleDeg", firingSolution.hoodAngle);
-      Logger.recordOutput(
-          "Shooter/OriginalSolution/FlywheelSpeedRPS", firingSolution.flywheelSpeedRPS);
-      Logger.recordOutput("Shooter/OriginalSolution/TurretAngleDeg", firingSolution.turretAngleDeg);
-
-      // Do flywheel compensation for hood error once we start shooting
-      if (state == ShooterState.SHOOT) {
-        firingSolution = FiringManager.adjustForHoodOffset(firingSolution, targetHoodAngleDeg);
-        Logger.recordOutput("Shooter/CompensatedSolution/HoodAngleDeg", firingSolution.hoodAngle);
-        Logger.recordOutput(
-            "Shooter/CompensatedSolution/FlywheelSpeedRPS", firingSolution.flywheelSpeedRPS);
-        Logger.recordOutput(
-            "Shooter/CompensatedSolution/TurretAngleDeg", firingSolution.turretAngleDeg);
-        Logger.recordOutput("Shooter/adjustingForHoodOffset", true);
-      } else {
-        Logger.recordOutput("Shooter/adjustingForHoodOffset", false);
-      }
+      Logger.recordOutput("Shooter/rawTargetFlywheelSpeedRPS", targetFlywheelSpeedRPS);
+      firingSolution = FiringManager.adjustForHoodOffset(firingSolution, targetHoodAngleDeg);
 
       targetHoodAngleDeg = firingSolution.hoodAngle;
       targetFlywheelSpeedRPS = firingSolution.flywheelSpeedRPS;
@@ -270,6 +254,10 @@ public class Shooter extends SubsystemBase {
 
   public ShooterState getState() {
     return state;
+  }
+
+  public boolean hoodAtGoal() {
+    return hood.isAtGoal();
   }
 
   // Needs to be continuously called in order to start shooting balls

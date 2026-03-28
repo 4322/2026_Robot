@@ -192,10 +192,12 @@ public class FiringManager {
   // it's hard to move the hood servo a small amount.
   public static FiringSolution adjustForHoodOffset(
       FiringSolution calculatedSolution, double idealHoodAngle) {
-    double deltaDegrees = RobotContainer.shooter.getHoodPositionDegrees() - idealHoodAngle;
-    calculatedSolution.flywheelSpeedRPS += deltaDegrees * tunableFlywheelAdjustFactor.get();
-    if (calculatedSolution.flywheelSpeedRPS < 0) {
-      calculatedSolution.flywheelSpeedRPS = 0;
+    if (RobotContainer.shooter.hoodAtGoal()) {
+      double deltaDegrees = RobotContainer.shooter.getHoodPositionDegrees() - idealHoodAngle;
+      calculatedSolution.flywheelSpeedRPS += deltaDegrees * tunableFlywheelAdjustFactor.get();
+      if (calculatedSolution.flywheelSpeedRPS < 0) {
+        calculatedSolution.flywheelSpeedRPS = 0;
+      }
     }
     return calculatedSolution;
   }
