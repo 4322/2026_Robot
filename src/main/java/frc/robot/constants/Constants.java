@@ -192,8 +192,6 @@ public final class Constants {
     public static final double goalToleranceLockedDeg = 2.0;
     public static final double CANCoderOneRatio = 90.0 / 10.0;
     public static final double CANCoderTwoRatio = 90.0 / 19.0;
-    public static final double CANCoderOneOffsetRot = 0.286133; // in locked position
-    public static final double CANCoderTwoOffsetRot = 0.308594; // in locked position
     public static final double turretGearRatio = 27;
     public static final double minPhysicalLimitDeg = -180;
     public static final double maxPhysicalLimitDeg = 540;
@@ -206,6 +204,15 @@ public final class Constants {
     public static final int CANCoderTwoId = 4;
     public static final Translation2d originToTurret =
         new Translation2d(Units.inchesToMeters(-4.6111), Units.inchesToMeters(5.8889));
+
+    // Encoder calibration procedure:
+    // 1. Put turret in locked position and insert lock bolt (90 degrees)
+    // 2. Set magnetic offsets to 0 on both encoders in Phoenix Tuner
+    // 3. Record the negative of the magnetic offsets below
+    //    CANCoderOne = Encoder 9
+    //    CANCoderTwo = Encoder 4.73
+    public static final double CANCoderOneOffsetRot = -0.5414;
+    public static final double CANCoderTwoOffsetRot = -0.5235;
   }
 
   public static class Hood {
