@@ -1,6 +1,7 @@
 package frc.robot.subsystems.shooter.turret;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -45,7 +46,8 @@ public class Turret {
   public void outputsPeriodic() {
     if (crtTimer.hasElapsed(2.0)) {
       crtTimer.restart();
-      getRotation();
+      Logger.recordOutput(
+          "Shooter/Turret/crtDegrees", Units.rotationsToDegrees(getRotation() + 0.25));
     }
     switch (Constants.turretMode) {
       case DISABLED -> {}
