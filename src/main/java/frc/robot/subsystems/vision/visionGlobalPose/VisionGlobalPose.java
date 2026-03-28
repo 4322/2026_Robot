@@ -210,12 +210,12 @@ public class VisionGlobalPose extends SubsystemBase {
                       * thetaStdDev));
           if (Constants.VisionGlobalPose.enableVerbosePoseLogging) {
             Logger.recordOutput(
-                "VisionGlobalPose/StdDev/XY",
+                "VisionGlobalPose/Camera" + Integer.toString(cameraIndex) + "/StdDev/XY",
                 Constants.VisionGlobalPose.stdDevBaseline
                     * xyStdDev
                     * Constants.VisionGlobalPose.thetaStdDevBaseline);
             Logger.recordOutput(
-                "VisionGlobalPose/StdDev/Theta",
+                "VisionGlobalPose/Camera" + Integer.toString(cameraIndex) + "/StdDev/Theta",
                 Constants.VisionGlobalPose.stdDevBaseline
                     * thetaStdDev
                     * Constants.VisionGlobalPose.thetaStdDevBaseline);
@@ -240,9 +240,9 @@ public class VisionGlobalPose extends SubsystemBase {
 
           if (Constants.VisionGlobalPose.enableVerbosePoseLogging) {
             Logger.recordOutput(
-                "VisionGlobalPose/StdDev/XY", Constants.VisionGlobalPose.stdDevBaseline * xyStdDev);
+                "VisionGlobalPose/Camera" + Integer.toString(cameraIndex) + "/StdDev/XY", Constants.VisionGlobalPose.stdDevBaseline * xyStdDev);
             Logger.recordOutput(
-                "VisionGlobalPose/StdDev/Theta",
+                "VisionGlobalPose/Camera" + Integer.toString(cameraIndex) + "/StdDev/Theta",
                 Constants.VisionGlobalPose.stdDevBaseline * thetaStdDev);
           }
         }
