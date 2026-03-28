@@ -71,7 +71,7 @@ public class Flywheel {
   private void updateNetworkTableValues() {
     if (isAtGoal()) {
       if (Math.abs(inputs.leaderMechanismRPS - requestedSetpoint)
-          < Constants.Turret.smallToleranceDeg) {
+          < Constants.Flywheel.smallToleranceRPS) {
         SmartDashboard.putString("Flywheel/FlywheelAtGoal", Constants.NetworkTables.green.toHexString());
       } else {
         SmartDashboard.putString("Flywheel/FlywheelAtGoal", Constants.NetworkTables.yellow.toHexString());
