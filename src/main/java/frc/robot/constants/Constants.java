@@ -24,7 +24,7 @@ import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetection.O
  * (log replay from a file).
  */
 public final class Constants {
-  public static final Mode currentMode = RobotBase.isReal() ? Mode.REAL : Mode.SIM;
+  public static final Mode currentMode = RobotBase.isReal() ? Mode.REAL : Mode.REPLAY;
 
   public static enum Mode {
     /** Running on a real robot. */
@@ -458,7 +458,7 @@ public final class Constants {
     // TODO
     public static final boolean enableGlobalPoseTrigEstimation = false;
     // See if this helps with NT/CPU stability
-    public static final boolean enableVerbosePoseLogging = false;
+    public static final boolean enableVerbosePoseLogging = true;
     // Camera names, must match names configured on coprocessor
     public static String frontRightName = "FrontRight";
     public static String frontLeftName = "FrontLeft";
@@ -498,13 +498,12 @@ public final class Constants {
             new Rotation3d(0, Units.degreesToRadians(-19.8534025106), Units.degreesToRadians(135)));
 
     // Basic filtering thresholds
-    // TODO
     public static double maxAmbiguity = 0.15;
     public static double maxZError = 0.75;
-    public static double maxAvgTagDistance = 3;
+    public static double maxAvgTagDistance = 30;
 
     public static double stdDevBaseline = 0.2;
-    public static double thetaStdDevBaseline = 0.075;
+    public static double thetaStdDevBaseline = 1;
   }
 
   public static final class VisionObjectDetection {

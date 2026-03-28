@@ -170,7 +170,8 @@ public class VisionGlobalPose extends SubsystemBase {
                 || disambiguatedRobotPose.getX() > FieldConstants.fieldLength + 0.5
                 || disambiguatedRobotPose.getY() < -0.5
                 || disambiguatedRobotPose.getY() > FieldConstants.fieldWidth + 0.5
-                || avgTagDistance > Constants.VisionGlobalPose.maxAvgTagDistance;
+                || avgTagDistance > Constants.VisionGlobalPose.maxAvgTagDistance
+                || !observation.useMultiTag();
 
         // Add pose to log
         if (Constants.VisionGlobalPose.enableVerbosePoseLogging) {
@@ -226,8 +227,7 @@ public class VisionGlobalPose extends SubsystemBase {
           if (Constants.VisionGlobalPose.enableGlobalPoseTrigEstimation) {
             thetaStdDev = 4322.0;
           } else {
-            thetaStdDev =
-                Math.max(thetaStdDevModel.predict(avgTagDistance), 0.000001);
+            thetaStdDev = Math.max(thetaStdDevModel.predict(avgTagDistance), 0.000001);
           }
 
           consumer.accept(
@@ -240,7 +240,8 @@ public class VisionGlobalPose extends SubsystemBase {
 
           if (Constants.VisionGlobalPose.enableVerbosePoseLogging) {
             Logger.recordOutput(
-                "VisionGlobalPose/Camera" + Integer.toString(cameraIndex) + "/StdDev/XY", Constants.VisionGlobalPose.stdDevBaseline * xyStdDev);
+                "VisionGlobalPose/Camera" + Integer.toString(cameraIndex) + "/StdDev/XY",
+                Constants.VisionGlobalPose.stdDevBaseline * xyStdDev);
             Logger.recordOutput(
                 "VisionGlobalPose/Camera" + Integer.toString(cameraIndex) + "/StdDev/Theta",
                 Constants.VisionGlobalPose.stdDevBaseline * thetaStdDev);
