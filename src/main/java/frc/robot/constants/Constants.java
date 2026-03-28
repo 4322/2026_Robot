@@ -378,7 +378,7 @@ public final class Constants {
       putFiringMapEntryScoring(3.57, new FiringParameters(56, 11, 1, 35, 7));
       putFiringMapEntryScoring(4.542, new FiringParameters(58, 18, 1, 35, 7));
       putFiringMapEntryScoring(4.741, new FiringParameters(59, 18, 1, 35, 7));
-      putFiringMapEntryScoring(5.137, new FiringParameters(54.9, 26.5, 1, 35, 7));
+      putFiringMapEntryScoring(5.137, new FiringParameters(54.9, 26.5, 1.1, 35, 7));
       putFiringMapEntryScoring(5.817, new FiringParameters(59.67, 25.6, 1.3, 35, 7));
 
       /* Tuned shots with fresh kicker wheels
