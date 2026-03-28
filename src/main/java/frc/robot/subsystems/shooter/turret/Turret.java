@@ -34,7 +34,6 @@ public class Turret {
     // Temporary until we can,
     io.updateInputs(inputs);
     io.setPosition(getRotation() + 0.25); // adjust for offset locked (calibrated) position
-    io.setPosition(0.5); // TODO
     crtTimer.start();
   }
 
