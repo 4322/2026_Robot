@@ -372,11 +372,12 @@ public final class Constants {
       // Meters is center of turret to 3 inches behind center from hub
 
       // Shooting
-      putFiringMapEntryScoring(1.089, new FiringParameters(43, 5, 1, 35, 7));
-      putFiringMapEntryScoring(2.09, new FiringParameters(45, 9, 1, 35, 7));
-      putFiringMapEntryScoring(2.78, new FiringParameters(51.2, 9, 1, 35, 7));
-      putFiringMapEntryScoring(3.57, new FiringParameters(56, 11, 1, 35, 7));
-      putFiringMapEntryScoring(4.542, new FiringParameters(58, 18, 1, 35, 7));
+       putFiringMapEntryScoring(1.09, new FiringParameters(46.2, 0.12, 1.2, 35, 7));
+      putFiringMapEntryScoring(1.59, new FiringParameters(40.9, 6.5, 1.0, 35, 7));
+      putFiringMapEntryScoring(2.10, new FiringParameters(40.0, 10.9, 1, 35, 7));
+      putFiringMapEntryScoring(2.7, new FiringParameters(43.1, 16.4, 0.9, 35, 7));
+      putFiringMapEntryScoring(3.2, new FiringParameters(46.8, 18.0, 1.9, 35, 7));
+      putFiringMapEntryScoring(4.07, new FiringParameters(50.6, 23.1, 1.15, 35, 7));
       putFiringMapEntryScoring(4.699, new FiringParameters(53.2, 25.8, 1.05, 35, 7));
       putFiringMapEntryScoring(5.137, new FiringParameters(54.9, 26.5, 1.1, 35, 7));
       putFiringMapEntryScoring(5.817, new FiringParameters(59.67, 25.6, 1.3, 35, 7));
