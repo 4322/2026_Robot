@@ -86,6 +86,7 @@ public class Shooter extends SubsystemBase {
 
   public void outputsPeriodic() {
     calculateFiringSolution();
+    SmartDashboard.putNumber("Flywheel/FlywheelRequestedRPS", targetFlywheelSpeedRPS);
 
     if (Constants.firingManagerMode == Constants.SubsystemMode.TUNING) {
 
@@ -252,7 +253,6 @@ public class Shooter extends SubsystemBase {
         Logger.recordOutput("Shooter/CompensatedSolution/HoodAngleDeg", firingSolution.hoodAngle);
         Logger.recordOutput(
             "Shooter/CompensatedSolution/FlywheelSpeedRPS", firingSolution.flywheelSpeedRPS);
-    SmartDashboard.putNumber("Flywheel/FlywheelRequestedRPS", firingSolution.flywheelSpeedRPS);
         Logger.recordOutput(
             "Shooter/CompensatedSolution/TurretAngleDeg", firingSolution.turretAngleDeg);
         Logger.recordOutput("Shooter/adjustingForHoodOffset", true);
