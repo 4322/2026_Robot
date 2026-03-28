@@ -143,6 +143,14 @@ public class FiringManager {
 
     SmartDashboard.putNumber("FiringManager/distanceToGivenTarget", distanceToGivenTarget);
 
+    if (AreaManager.getZoneOfPosition(turretPosition.getTranslation()) == Zone.ALLIANCE_ZONE) {
+      SmartDashboard.putString(
+          "AreaManager/InAllianceZone", Constants.NetworkTables.green.toHexString());
+    } else {
+      SmartDashboard.putString(
+          "AreaManager/InAllianceZone", Constants.NetworkTables.red.toHexString());
+    }
+
     if (Constants.firingManagerMode == Constants.SubsystemMode.TUNING) {
       Logger.recordOutput(
           "FiringManager/requestedTuning/flywheelSpeedRPS", tunableFlywheelSpeedRPS.get());
