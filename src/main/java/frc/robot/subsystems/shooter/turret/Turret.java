@@ -18,6 +18,7 @@ public class Turret {
   private double prevDeg = 0.0;
   private Timer atGoalTimer = new Timer();
   private boolean isScoring = false;
+  private Timer crtTimer = new Timer();
 
   public enum turretState {
     DISABLED,
@@ -33,6 +34,7 @@ public class Turret {
     io.updateInputs(inputs);
     io.setPosition(getRotation() + 0.25); // adjust for offset locked (calibrated) position
     io.setPosition(0.5); // TODO
+    crtTimer.start();
   }
 
   public void inputsPeriodic() {
@@ -41,6 +43,10 @@ public class Turret {
   }
 
   public void outputsPeriodic() {
+    if (crtTimer.hasElapsed(2.0)) {
+      crtTimer.restart();
+      getRotation();
+    }
     switch (Constants.turretMode) {
       case DISABLED -> {}
       case TUNING -> {}
@@ -206,11 +212,11 @@ public class Turret {
     }
   }
 
+  // Returns rotations relative to locked position
   private double getRotation() {
     if (state == turretState.DISABLED) {
       return 0.5;
     }
-    // returns rotations relative to locked position
 
     // Based off of 4522's "brute force" solver:
     // https://www.chiefdelphi.com/uploads/short-url/vvrM1V1pqvDnnZfHtAhS02mBVIi.pdf
