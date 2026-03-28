@@ -2,6 +2,7 @@ package frc.robot.subsystems.shooter;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 import frc.robot.constants.Constants;
@@ -251,6 +252,7 @@ public class Shooter extends SubsystemBase {
         Logger.recordOutput("Shooter/CompensatedSolution/HoodAngleDeg", firingSolution.hoodAngle);
         Logger.recordOutput(
             "Shooter/CompensatedSolution/FlywheelSpeedRPS", firingSolution.flywheelSpeedRPS);
+    SmartDashboard.putNumber("Flywheel/FlywheelRequestedRPS", firingSolution.flywheelSpeedRPS);
         Logger.recordOutput(
             "Shooter/CompensatedSolution/TurretAngleDeg", firingSolution.turretAngleDeg);
         Logger.recordOutput("Shooter/adjustingForHoodOffset", true);
