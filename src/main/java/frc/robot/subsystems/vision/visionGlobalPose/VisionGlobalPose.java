@@ -226,8 +226,7 @@ public class VisionGlobalPose extends SubsystemBase {
           if (Constants.VisionGlobalPose.enableGlobalPoseTrigEstimation) {
             thetaStdDev = 4322.0;
           } else {
-            thetaStdDev =
-                Math.max(thetaStdDevModel.predict(avgTagDistance), 0.000001);
+            thetaStdDev = Math.max(thetaStdDevModel.predict(avgTagDistance), 0.000001);
           }
 
           consumer.accept(
@@ -240,7 +239,8 @@ public class VisionGlobalPose extends SubsystemBase {
 
           if (Constants.VisionGlobalPose.enableVerbosePoseLogging) {
             Logger.recordOutput(
-                "VisionGlobalPose/Camera" + Integer.toString(cameraIndex) + "/StdDev/XY", Constants.VisionGlobalPose.stdDevBaseline * xyStdDev);
+                "VisionGlobalPose/Camera" + Integer.toString(cameraIndex) + "/StdDev/XY",
+                Constants.VisionGlobalPose.stdDevBaseline * xyStdDev);
             Logger.recordOutput(
                 "VisionGlobalPose/Camera" + Integer.toString(cameraIndex) + "/StdDev/Theta",
                 Constants.VisionGlobalPose.stdDevBaseline * thetaStdDev);
