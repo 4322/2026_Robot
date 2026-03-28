@@ -218,10 +218,12 @@ public final class Constants {
   public static class Hood {
     public static final int servoChannel = 3;
     public static final int encoderId = 3;
-    public static final double gearRatio = 164 / 11.0;
+    public static final double encoderToHoodGearRatio = 164 / 11.0;
+    public static final double servoToEncoderGearRatio = 45 / 32.0;
     public static final double safeAngleDeg = 0;
     public static final double homingVelocityThresholdRPS = 0.01;
     public static final double homingVelocity = -0.4;
+    public static final int homeMicroSecOffset = 50; // calibrate after replacing servo
     public static final double mediumVelocity = 0.35;
     public static final double fastVelocity = 1.0;
     public static final double slowVelocity = 0.3; // no kS compensation, kS can be 0.1 to 0.2
