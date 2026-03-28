@@ -14,6 +14,8 @@ import frc.robot.util.FieldRectangle2d;
 import java.util.List;
 
 public class FieldConstants {
+    // Point A should be bottom right 
+    // Point B should be top left
   public static double trenchScaleFactor = 1.3;
 
   public static double fieldLength = Units.inchesToMeters(651.22);
@@ -48,14 +50,14 @@ public class FieldConstants {
                 blueLineX - trenchScaleFactor * Units.inchesToMeters(22.20),
                 centerLineY + Units.inchesToMeters(133.47 - (24.97 + 12.00))),
             new Translation2d(
-                blueLineX + trenchScaleFactor * Units.inchesToMeters(22.20),
+                blueLineX + trenchScaleFactor * Units.inchesToMeters(22.20 + 47.00),
                 fieldWidth + fieldEdgeTolerance));
     public static FieldRectangle2d trenchRight =
         new FieldRectangle2d(
             new Translation2d(
                 blueLineX - trenchScaleFactor * Units.inchesToMeters(22.20), -fieldEdgeTolerance),
             new Translation2d(
-                blueLineX + trenchScaleFactor * Units.inchesToMeters(22.20),
+                blueLineX + trenchScaleFactor * Units.inchesToMeters(22.20 + 47.00),
                 Units.inchesToMeters(50.59)));
 
     public static FieldRectangle2d bumpRight =
@@ -134,14 +136,14 @@ public class FieldConstants {
                 redLineX - trenchScaleFactor * Units.inchesToMeters(22.20),
                 centerLineY + Units.inchesToMeters(133.47 - (24.97 + 12.00))),
             new Translation2d(
-                redLineX + trenchScaleFactor * Units.inchesToMeters(22.20),
+                redLineX + trenchScaleFactor * Units.inchesToMeters(22.20 + 47.00),
                 fieldWidth + fieldEdgeTolerance));
     public static FieldRectangle2d trenchRight =
         new FieldRectangle2d(
             new Translation2d(
                 redLineX - trenchScaleFactor * Units.inchesToMeters(22.20), -fieldEdgeTolerance),
             new Translation2d(
-                redLineX + trenchScaleFactor * Units.inchesToMeters(22.20),
+                redLineX + trenchScaleFactor * Units.inchesToMeters(22.20 + 47.00),
                 Units.inchesToMeters(50.59)));
     public static FieldRectangle2d bumpRight =
         new FieldRectangle2d(
