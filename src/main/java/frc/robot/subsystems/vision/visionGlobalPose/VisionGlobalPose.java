@@ -173,11 +173,13 @@ public class VisionGlobalPose extends SubsystemBase {
                 || avgTagDistance > Constants.VisionGlobalPose.maxAvgTagDistance;
 
         // Add pose to log
-        robotPoses.add(disambiguatedRobotPose.toPose2d());
-        if (rejectPose) {
-          robotPosesRejected.add(disambiguatedRobotPose.toPose2d());
-        } else {
-          robotPosesAccepted.add(disambiguatedRobotPose.toPose2d());
+        if (Constants.VisionGlobalPose.enableVerbosePoseLogging) {
+          robotPoses.add(disambiguatedRobotPose.toPose2d());
+          if (rejectPose) {
+            robotPosesRejected.add(disambiguatedRobotPose.toPose2d());
+          } else {
+            robotPosesAccepted.add(disambiguatedRobotPose.toPose2d());
+          }
         }
 
         // Skip if rejected
@@ -225,8 +227,7 @@ public class VisionGlobalPose extends SubsystemBase {
             thetaStdDev = 4322.0;
           } else {
             thetaStdDev =
-                Math.max(thetaStdDevModel.predict(avgTagDistance), 0.000001)
-                    * Constants.VisionGlobalPose.stdDevBaseline;
+                Math.max(thetaStdDevModel.predict(avgTagDistance), 0.000001);
           }
 
           consumer.accept(
@@ -235,7 +236,7 @@ public class VisionGlobalPose extends SubsystemBase {
               VecBuilder.fill(
                   Constants.VisionGlobalPose.stdDevBaseline * xyStdDev,
                   Constants.VisionGlobalPose.stdDevBaseline * xyStdDev,
-                  thetaStdDev));
+                  Constants.VisionGlobalPose.stdDevBaseline * thetaStdDev));
 
           if (Constants.VisionGlobalPose.enableVerbosePoseLogging) {
             Logger.recordOutput(
