@@ -214,9 +214,6 @@ public class Turret {
 
   // Returns rotations relative to locked position
   private double getRotation() {
-    if (state == turretState.DISABLED) {
-      return 0.5;
-    }
 
     // Based off of 4522's "brute force" solver:
     // https://www.chiefdelphi.com/uploads/short-url/vvrM1V1pqvDnnZfHtAhS02mBVIi.pdf
