@@ -116,7 +116,7 @@ public final class Constants {
     public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
     public static final double kS = 0.34;
     public static final double kV = 1.47;
-    public static final double kP = 0;
+    public static final double kP = 5.0;
     public static final double kI = 0;
     public static final double kD = 0;
     public static final double stoppedMechanismRotationsPerSec = 0.1; // TODO
@@ -134,7 +134,7 @@ public final class Constants {
     public static final NeutralModeValue neutralMode = NeutralModeValue.Coast;
     public static final double kS = 0.31;
     public static final double kV = 0.19;
-    public static final double kP = 0;
+    public static final double kP = 0.5;
     public static final double kI = 0;
     public static final double kD = 0;
 

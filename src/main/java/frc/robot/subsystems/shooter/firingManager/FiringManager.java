@@ -142,9 +142,9 @@ public class FiringManager {
     Logger.recordOutput("FiringManager/solution/turretAngle", turretAngle.getDegrees());
 
     SmartDashboard.putNumber("FiringManager/distanceToGivenTarget", distanceToGivenTarget);
-      SmartDashboard.putBoolean(
-          "AreaManager/InAllianceZone", AreaManager.getZoneOfPosition(turretPosition.getTranslation()) == Zone.ALLIANCE_ZONE);
-   
+    SmartDashboard.putBoolean(
+        "AreaManager/InAllianceZone",
+        AreaManager.getZoneOfPosition(turretPosition.getTranslation()) == Zone.ALLIANCE_ZONE);
 
     if (Constants.firingManagerMode == Constants.SubsystemMode.TUNING) {
       Logger.recordOutput(
