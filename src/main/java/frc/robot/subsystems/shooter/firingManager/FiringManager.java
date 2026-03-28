@@ -6,6 +6,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Robot;
 import frc.robot.RobotContainer;
 import frc.robot.constants.Constants;
@@ -79,7 +80,6 @@ public class FiringManager {
 
     double distanceToGivenTarget = vectorToGoal.getNorm();
     Translation2d targetDirection = vectorToGoal.div(distanceToGivenTarget);
-
     Logger.recordOutput("FiringManager/distanceToGivenTarget", distanceToGivenTarget);
     Logger.recordOutput(
         "FiringManager/targetDirection",
@@ -140,6 +140,8 @@ public class FiringManager {
     Logger.recordOutput("FiringManager/solution/tunnelRPS", solutionParameters.getTunnelRPS());
     Logger.recordOutput("FiringManager/solution/indexerRPS", solutionParameters.getIndexerRPS());
     Logger.recordOutput("FiringManager/solution/turretAngle", turretAngle.getDegrees());
+
+    SmartDashboard.putNumber("FiringManager/distanceToGivenTarget", distanceToGivenTarget);
 
     if (Constants.firingManagerMode == Constants.SubsystemMode.TUNING) {
       Logger.recordOutput(

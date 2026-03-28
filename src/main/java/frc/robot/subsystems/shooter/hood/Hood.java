@@ -148,6 +148,8 @@ public class Hood {
     } else {
       SmartDashboard.putString("Hood/HoodAtGoal", Constants.NetworkTables.red.toHexString());
     }
+
+    SmartDashboard.putNumber("Hood/HoodAngle", inputs.degrees);
   }
 
   public void requestGoal(double degrees) {

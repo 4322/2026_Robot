@@ -82,5 +82,7 @@ public class Flywheel {
       SmartDashboard.putString(
           "Flywheel/FlywheelAtGoal", Constants.NetworkTables.red.toHexString());
     }
+    SmartDashboard.putNumber("Flywheel/FlywheelLRPS", inputs.leaderMechanismRPS);
+    SmartDashboard.putNumber("Flywheel/FlywheelFRPS", inputs.followerMechanismRPS);
   }
 }
