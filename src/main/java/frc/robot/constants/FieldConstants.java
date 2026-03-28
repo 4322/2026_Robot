@@ -14,6 +14,8 @@ import frc.robot.util.FieldRectangle2d;
 import java.util.List;
 
 public class FieldConstants {
+    // Point A should be bottom right 
+    // Point B should be top left
   public static double trenchScaleFactor = 1.3;
 
   public static double fieldLength = Units.inchesToMeters(651.22);
