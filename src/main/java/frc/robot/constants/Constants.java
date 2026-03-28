@@ -527,7 +527,7 @@ public final class Constants {
     public static final double pathPlannerRotationkP = 4;
     public static final double unjamTimeSec = 0.5;
     public static final double smooshDelayFirstPass = 1.5;
-    public static final double smooshDelaySecondPass = 1.5;
+    public static final double smooshDelaySecondPass = 2.5;
     public static final double smooshDelaySinglePass = 1.5;
 
     public static final double shootTimeFirstPass = 3.0;

@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 5.889,
-        "y": 2.618
+        "x": 6.0213285883748515,
+        "y": 3.7176037959667845
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.870145439409886,
-        "y": 2.6558454823680497
+        "x": 6.0213285883748515,
+        "y": 2.1037247924080655
       },
       "isLocked": false,
       "linkedName": "R.2Sweep_F"
@@ -38,7 +38,7 @@
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
-    "unlimited": false
+    "unlimited": true
   },
   "goalEndState": {
     "velocity": 0.1,
@@ -48,7 +48,7 @@
   "folder": "R_2Sweep",
   "idealStartingState": {
     "velocity": 0.1,
-    "rotation": -123.254
+    "rotation": -90.0
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

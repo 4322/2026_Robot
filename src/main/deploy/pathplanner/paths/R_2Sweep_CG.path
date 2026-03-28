@@ -8,20 +8,20 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.0259058487874455,
-        "y": 2.3612125534950077
+        "x": 1.2765243179122194,
+        "y": 0.8879359430604987
       },
       "isLocked": false,
       "linkedName": "R.2Sweep_C"
     },
     {
       "anchor": {
-        "x": 3.2498002853067045,
-        "y": 0.5350927246790309
+        "x": 4.654911032028471,
+        "y": 0.7588256227758006
       },
       "prevControl": {
-        "x": 2.2498002853067045,
-        "y": 0.535092724679031
+        "x": 3.4132602129139373,
+        "y": 0.7996522338025817
       },
       "nextControl": null,
       "isLocked": false,
@@ -33,21 +33,21 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 1.0,
-    "maxAcceleration": 3.0,
+    "maxVelocity": 2.0,
+    "maxAcceleration": 2.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0.1,
-    "rotation": 90.0
+    "velocity": 1.0,
+    "rotation": -0.0
   },
   "reversed": false,
   "folder": "R_2Sweep",
   "idealStartingState": {
-    "velocity": 0.01,
+    "velocity": 0.0,
     "rotation": -123.254
   },
   "useDefaultConstraints": false
