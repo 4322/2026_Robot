@@ -200,8 +200,8 @@ public final class Constants {
     public static final double unwindToleranceDeg = 30.0;
     public static final double minUnwindLimitDeg = minPhysicalLimitDeg + unwindToleranceDeg;
     public static final double maxUnwindLimitDeg = maxPhysicalLimitDeg - unwindToleranceDeg;
-    public static final int CANCoderOneId = 1;
-    public static final int CANCoderTwoId = 4;
+    public static final int CANCoderOneId = 4;
+    public static final int CANCoderTwoId = 1;
     public static final Translation2d originToTurret =
         new Translation2d(Units.inchesToMeters(-4.6111), Units.inchesToMeters(5.8889));
 
