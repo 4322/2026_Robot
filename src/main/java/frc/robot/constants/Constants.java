@@ -372,7 +372,7 @@ public final class Constants {
       // Meters is center of turret to 3 inches behind center from hub
 
       // Shooting
-       putFiringMapEntryScoring(1.09, new FiringParameters(46.2, 0.12, 1.2, 35, 7));
+      putFiringMapEntryScoring(1.09, new FiringParameters(46.2, 0.12, 1.2, 35, 7));
       putFiringMapEntryScoring(1.59, new FiringParameters(40.9, 6.5, 1.0, 35, 7));
       putFiringMapEntryScoring(2.10, new FiringParameters(40.0, 10.9, 1, 35, 7));
       putFiringMapEntryScoring(2.7, new FiringParameters(43.1, 16.4, 0.9, 35, 7));
