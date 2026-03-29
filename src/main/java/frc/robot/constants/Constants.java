@@ -403,7 +403,7 @@ public final class Constants {
       putFiringMapEntryScoring(1.59, new FiringParameters(40.9, 6.5, 1.0, 35, 7));
       putFiringMapEntryScoring(2.10, new FiringParameters(40.0, 10.9, 1, 35, 7));
       putFiringMapEntryScoring(2.7, new FiringParameters(43.1, 16.4, 0.9, 35, 7));
-      putFiringMapEntryScoring(3.2, new FiringParameters(46.8, 18.0, 1.9, 35, 7));
+      putFiringMapEntryScoring(3.2, new FiringParameters(46.8, 18.0, 1.09, 35, 7));
       putFiringMapEntryScoring(4.07, new FiringParameters(50.6, 23.1, 1.15, 35, 7));
       putFiringMapEntryScoring(4.699, new FiringParameters(53.2, 25.8, 1.05, 35, 7));
       putFiringMapEntryScoring(5.137, new FiringParameters(54.9, 26.5, 1.1, 35, 7));
