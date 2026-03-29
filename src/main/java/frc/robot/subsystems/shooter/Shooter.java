@@ -241,8 +241,6 @@ public class Shooter extends SubsystemBase {
     } else {
       FiringSolution firingSolution =
           FiringManager.getFiringSolution(drive.getTurretPose(), drive.getVelocity(), isScoring);
-      Logger.recordOutput("Shooter/rawTargetFlywheelSpeedRPS", targetFlywheelSpeedRPS);
-      firingSolution = FiringManager.adjustForHoodOffset(firingSolution, targetHoodAngleDeg);
 
       targetHoodAngleDeg = firingSolution.hoodAngle;
       targetFlywheelSpeedRPS = firingSolution.flywheelSpeedRPS;

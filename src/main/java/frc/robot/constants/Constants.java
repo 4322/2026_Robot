@@ -157,7 +157,6 @@ public final class Constants {
     public static final double kP = 0.5;
     public static final double kI = 0;
     public static final double kD = 0;
-    public static final double flywheelHoodAdjustmentFactor = -2.0;
 
     public static final double motorToMechanismRatio = 1;
     public static final double largeToleranceRPS = 4.0;
@@ -214,9 +213,9 @@ public final class Constants {
     public static final double CANCoderTwoOffsetRot = 0.8157 - 0.0092;
 
     // Derivation of above values:
-    // 290 degrees * 90/10 = encoder 1 should have rotated 7.25 rotations -> 
+    // 290 degrees * 90/10 = encoder 1 should have rotated 7.25 rotations ->
     //   encoder 1 reads 0.25 in locked position
-    // 290 degrees * 90/19 = encoder 2 should have rotated 3.815789 rotations -> 
+    // 290 degrees * 90/19 = encoder 2 should have rotated 3.815789 rotations ->
     //   encoder 2 reads 3341.0/4096.0 = 0.8157 in locked position
   }
 
@@ -228,7 +227,7 @@ public final class Constants {
     public static final double safeAngleDeg = 0;
     public static final double homingVelocityThresholdRPS = 0.01;
     public static final double homingVelocity = -0.4;
-    public static final int homeMicroSecOffset = 50; // calibrate after replacing servo
+    public static final int homePulseWidth = 515; // calibrate after replacing servo, min 500
     public static final double mediumVelocity = 0.35;
     public static final double fastVelocity = 1.0;
     public static final double slowVelocity = 0.3; // no kS compensation, kS can be 0.1 to 0.2
@@ -238,7 +237,6 @@ public final class Constants {
     public static final double largeToleranceDeg = 9.0;
     public static final double atGoalTimeoutSec = 0.5; // full travel time 1.1s
     public static final int idleTimeout = 0;
-    public static final int kSPulseWidth = 50; // power to hold hood position
   }
 
   public static class Control {
