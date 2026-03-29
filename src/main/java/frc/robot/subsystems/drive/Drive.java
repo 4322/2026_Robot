@@ -393,11 +393,11 @@ public class Drive extends SubsystemBase {
   }
 
   public ChassisSpeeds getFieldRelativeVelocity() {
-    return new ChassisSpeeds(); // TODO
+    return ChassisSpeeds.fromRobotRelativeSpeeds(getRobotRelativeVelocity(), getRotation());
   }
 
   public ChassisSpeeds getRobotRelativeVelocity() {
-    return new ChassisSpeeds(); // TODO
+    return getChassisSpeeds();
   }
 
   public Pose2d getPoseAtTimestamp(double timestampSeconds) {
