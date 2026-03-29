@@ -36,12 +36,12 @@ public class CDepotOutpost extends SequentialCommandGroup {
               }
             }),
         new ParallelCommandGroup(
-            IntakeCommands.intake(intake),
+            ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake),
             new SequentialCommandGroup(
+              IntakeCommands.intake(intake),
                 AutoBuilder.followPath(Robot.C_Start_To_Depot),
                 AutoBuilder.followPath(Robot.C_Depot_To_Outpost),
-                ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake),
-                new WaitCommand(Constants.Autonomous.smooshDelaySinglePass),
+                new WaitCommand(Constants.Autonomous.smooshDelaySinglePass + 3),
                 IntakeCommands.autoSmoosh(intake))));
   }
 }
