@@ -232,8 +232,7 @@ public class Turret {
 
     */
 
-    return crtRotations - 200.0;
-
+    return crtRotations - 200.0 / 360.0;
   }
 
   // Returns rotations relative to locked position
