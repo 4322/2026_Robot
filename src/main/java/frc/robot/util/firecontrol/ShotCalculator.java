@@ -75,8 +75,8 @@ public class ShotCalculator {
   public record LaunchParameters(
       double rpm,
       double timeOfFlightSec,
-      Rotation2d driveAngle,
-      double driveAngularVelocityRadPerSec,
+      Rotation2d turretAngle,
+      double turretAngularVelocityRadPerSec,
       boolean isValid,
       double confidence,
       double solvedDistanceM,
@@ -451,22 +451,30 @@ public class ShotCalculator {
       compTargetX = hubX - vx * headingDriftTOF;
       compTargetY = hubY - vy * headingDriftTOF;
     }
-    double aimX = compTargetX - robotX;
-    double aimY = compTargetY - robotY;
-    Rotation2d driveAngle = new Rotation2d(aimX, aimY);
+    double aimX = compTargetX - launcherX;
+    double aimY = compTargetY - launcherY;
+    // Turret angle with robot rotation compensation
+    Rotation2d turretAngle =
+        new Rotation2d(aimX, aimY).rotateBy(compensatedPose.getRotation().unaryMinus());
+
+    // TODO: Remove since not needed for turret
     if (config.shooterAngleOffsetRad != 0.0) {
-      driveAngle = driveAngle.plus(new Rotation2d(config.shooterAngleOffsetRad));
+      turretAngle = turretAngle.plus(new Rotation2d(config.shooterAngleOffsetRad));
     }
 
     // Heading error for confidence calculation
-    double headingErrorRad = MathUtil.angleModulus(driveAngle.getRadians() - heading);
+    // TODO: Not accurate for turret, remove
+    double headingErrorRad = MathUtil.angleModulus(turretAngle.getRadians() - heading);
 
     // Angular velocity feedforward: rate of change of aim angle
-    double driveAngularVelocity = 0;
+    double turretAngularVelocityRad = 0;
     if (!velocityFiltered && distance > 0.1) {
       // tangential velocity / distance gives angular rate
       double tangentialVel = (ry * vx - rx * vy) / distance;
-      driveAngularVelocity = tangentialVel / distance;
+      turretAngularVelocityRad = tangentialVel / distance;
+
+      // corner angular rate - chassis angular rate = turret angular rate feed forward
+      turretAngularVelocityRad = turretAngularVelocityRad - fieldVel.omegaRadiansPerSecond;
     }
 
     // Solver convergence quality
@@ -494,8 +502,8 @@ public class ShotCalculator {
     return new LaunchParameters(
         effectiveRPMValue,
         effectiveTOF,
-        driveAngle,
-        driveAngularVelocity,
+        turretAngle,
+        turretAngularVelocityRad,
         true,
         confidence,
         distance,

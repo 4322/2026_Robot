@@ -1,6 +1,7 @@
 package frc.robot.subsystems.shooter;
 
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -283,10 +284,12 @@ public class Shooter extends SubsystemBase {
 
         if (Robot.alliance == DriverStation.Alliance.Red) {
           hubCenter = FieldConstants.Red.hubTranslation;
-          hubForward = new Translation2d(1, 0);
+          hubForward = new Translation2d(-1, 0);
+          hubCenter.plus(new Translation2d(Units.inchesToMeters(-3), 0));
         } else {
           hubCenter = FieldConstants.Blue.hubTranslation;
-          hubForward = new Translation2d(-1, 0);
+          hubForward = new Translation2d(1, 0);
+          hubCenter.plus(new Translation2d(Units.inchesToMeters(3), 0));
         }
 
         ShotCalculator.ShotInputs inputs =
@@ -302,10 +305,10 @@ public class Shooter extends SubsystemBase {
                 );
 
         ShotCalculator.LaunchParameters shot = shotCalc.calculate(inputs);
-        if (shot.isValid() && shot.confidence() > Constants.ShotCalculator.minConfidence) {
+        if (shot.isValid()) {
           targetHoodAngleDeg = shotCalc.getHoodAngle(shot.solvedDistanceM());
           targetFlywheelSpeedRPS = shot.rpm() / 60.0;
-          targetTurretAngleDeg = shot.driveAngle().getDegrees();
+          targetTurretAngleDeg = shot.turretAngle().getDegrees();
           targetTunnelSpeedRPS = Constants.Tunnel.shootRPS;
           targetSpindexerSpeedRPS = Constants.Spindexer.shootRPS;
           return;

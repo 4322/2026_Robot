@@ -643,14 +643,7 @@ public class Simulator extends SubsystemBase {
               EventType.MOVE_JOYSTICK_DRIVE,
               new Pose2d(0, 1, Rotation2d.kZero)),
           new SimEvent(
-              t += 1.5, "Stop", EventType.MOVE_JOYSTICK_DRIVE, new Pose2d(0, 0, Rotation2d.kZero)),
-          new SimEvent(
-              t += 0.1,
-              "Spin No Shoot",
-              EventType.MOVE_JOYSTICK_TURN,
-              new Pose2d(0, 1, Rotation2d.kZero)),
-          new SimEvent(
-              t += 1.5, "Stop", EventType.MOVE_JOYSTICK_TURN, new Pose2d(0, 0, Rotation2d.kZero)),
+              t += 3, "Stop", EventType.MOVE_JOYSTICK_DRIVE, new Pose2d(0, 0, Rotation2d.kZero)),
           new SimEvent(t += 0.1, "Start shooting", EventType.HOLD_RIGHT_TRIGGER),
           new SimEvent(
               t += 2,
@@ -658,14 +651,14 @@ public class Simulator extends SubsystemBase {
               EventType.MOVE_JOYSTICK_DRIVE,
               new Pose2d(0, -1, Rotation2d.kZero)),
           new SimEvent(
-              t += 1.5, "Stop", EventType.MOVE_JOYSTICK_DRIVE, new Pose2d(0, 0, Rotation2d.kZero)),
+              t += 3.5, "Stop", EventType.MOVE_JOYSTICK_DRIVE, new Pose2d(0, 0, Rotation2d.kZero)),
           new SimEvent(
               t += 0.1,
               "Spin Shoot",
               EventType.MOVE_JOYSTICK_TURN,
               new Pose2d(0, 1, Rotation2d.kZero)),
           new SimEvent(
-              t += 1.5, "Stop", EventType.MOVE_JOYSTICK_TURN, new Pose2d(0, 0, Rotation2d.kZero)),
+              t += 10, "Stop", EventType.MOVE_JOYSTICK_TURN, new Pose2d(0, 0, Rotation2d.kZero)),
           new SimEvent(t += 0.1, "Stop shooting", EventType.RELEASE_RIGHT_TRIGGER),
           new SimEvent(t += 0.1, "End", EventType.END_OF_SCENARIO));
 
