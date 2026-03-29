@@ -249,7 +249,7 @@ public final class Constants {
   }
 
   public class Rollers {
-    public static final double voltageIntake = 6;
+    public static final double voltageIntake = 7.5;
     public static final double voltageEject = -6;
     public static final double voltageDeploy = -1;
     public static final double voltageIdle = 0;
