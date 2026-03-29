@@ -5,8 +5,6 @@ import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -14,7 +12,6 @@ import frc.robot.constants.Constants;
 import frc.robot.constants.FieldConstants;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.vision.visionGlobalPose.VisionGlobalPoseIO.GlobalPoseObservation;
-import frc.robot.util.GeomUtil;
 import java.util.ArrayList;
 import java.util.List;
 import org.littletonrobotics.junction.Logger;
@@ -102,39 +99,6 @@ public class VisionGlobalPose extends SubsystemBase {
           } else {
             disambiguatedRobotPose = observation.altPose();
             avgTagDistance = observation.averageTagDistanceAlt();
-          }
-
-          if (Constants.VisionGlobalPose.enableGlobalPoseTrigEstimation) {
-            Pose2d visionRobotPose = disambiguatedRobotPose.toPose2d();
-            Pose2d tagPos =
-                FieldConstants.aprilTagFieldLayout
-                    .getTagPose(inputs[cameraIndex].singleTagFiducialID)
-                    .get()
-                    .toPose2d();
-            // Use gyro to correct for vision errors
-            Rotation2d robotThetaError = drive.getRotation().minus(visionRobotPose.getRotation());
-
-            // Account for rotation discontinuity from bound (-179,180]
-            if (Math.abs(robotThetaError.getRadians()) > Math.PI) {
-              double minThetaError =
-                  robotThetaError.getDegrees() + (Math.signum(robotThetaError.getDegrees()) * -360);
-              robotThetaError = Rotation2d.fromDegrees(minThetaError);
-            }
-
-            Pose2d tagToRobotPose = visionRobotPose.relativeTo(tagPos);
-            visionRobotPose =
-                tagPos.transformBy(
-                    GeomUtil.poseToTransform(tagToRobotPose.rotateBy(robotThetaError)));
-
-            disambiguatedRobotPose =
-                new Pose3d(
-                    new Translation3d(
-                        visionRobotPose.getX(),
-                        visionRobotPose.getY(),
-                        disambiguatedRobotPose.getZ()),
-                    new Rotation3d(visionRobotPose.getRotation()));
-
-            Logger.recordOutput("Vision/TrigGlobalPose", disambiguatedRobotPose.toPose2d());
           }
         }
 
