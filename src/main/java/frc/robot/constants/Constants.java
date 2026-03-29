@@ -51,8 +51,6 @@ public final class Constants {
   public static SubsystemMode turretMode = SubsystemMode.NORMAL;
   public static final SubsystemMode deployerMode = SubsystemMode.NORMAL;
   public static final SubsystemMode rollerMode = SubsystemMode.NORMAL;
-  public static final SubsystemMode intakeMode = SubsystemMode.NORMAL;
-  public static final SubsystemMode climberMode = SubsystemMode.DISABLED;
   public static final SubsystemMode ledMode = SubsystemMode.DISABLED;
   public static final SubsystemMode visionGlobalPose = SubsystemMode.NORMAL;
   public static final SubsystemMode visionObjectDetection = SubsystemMode.DISABLED;
@@ -151,7 +149,7 @@ public final class Constants {
     public static final double statorCurrentLimit = 120;
     public static final double supplyCurrentLimit = 40;
     public static final InvertedValue motorInvert = InvertedValue.Clockwise_Positive;
-    public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
+    public static final NeutralModeValue neutralMode = NeutralModeValue.Coast;
 
     // max RPS for a burst is 75 due to drop in battery voltage
     public static final double kS = 0.32;

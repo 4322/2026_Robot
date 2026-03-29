@@ -32,10 +32,6 @@ public class Rollers {
     // Nothing here currently
   }
 
-  public void setBrakeMode(boolean enable) {
-    rollersIO.enableBrakeMode(enable);
-  }
-
   public void setState(RollersState state) {
     Logger.recordOutput("Intake/Rollers/State", state);
     switch (state) {

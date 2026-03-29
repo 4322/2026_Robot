@@ -425,7 +425,6 @@ public class RobotContainer {
 
   public void setBrakeMode(boolean brake) {
     deployer.setBrakeMode(brake);
-    flywheel.enableBrakeMode(brake);
     hood.enableBrakeMode(brake);
     spindexer.enableBrakeMode(brake);
     turret.setBrakeMode(brake);

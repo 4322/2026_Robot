@@ -32,6 +32,4 @@ public interface RollersIO {
   public default TalonFX getTalonFX() {
     return null;
   }
-
-  public default void enableBrakeMode(boolean enable) {}
 }

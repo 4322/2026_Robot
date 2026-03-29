@@ -7,7 +7,6 @@ import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
-import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.reduxrobotics.sensors.canandcolor.Canandcolor;
 import com.reduxrobotics.sensors.canandcolor.CanandcolorSettings;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -154,11 +153,6 @@ public class FlywheelIOTalonFx implements FlywheelIO {
   public void stop() {
     motor.stopMotor();
     lastRequestedVelocity = 0;
-  }
-
-  @Override
-  public void enableBrakeMode(boolean enable) {
-    motor.setNeutralMode(enable ? NeutralModeValue.Brake : NeutralModeValue.Coast);
   }
 
   public TalonFX getTalonFX() {

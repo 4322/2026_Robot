@@ -27,11 +27,6 @@ public class FlywheelIOSim implements FlywheelIO {
     targetVelocity = 0.0;
   }
 
-  @Override
-  public void enableBrakeMode(boolean enable) {
-    return;
-  }
-
   private void simVelocity() {
     if (mechanismRotationsPerSec < targetVelocity) {
       mechanismRotationsPerSec += Constants.Sim.flywheelRate;

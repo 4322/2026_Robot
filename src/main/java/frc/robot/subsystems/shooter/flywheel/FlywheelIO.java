@@ -36,7 +36,5 @@ public interface FlywheelIO {
     return null;
   }
 
-  public default void enableBrakeMode(boolean enable) {}
-
   public default void setTargetMechanismRPS(double speedMechanismRotations) {}
 }

@@ -46,10 +46,6 @@ public class Flywheel {
     Logger.recordOutput("Shooter/Flywheel/RequestedSetpoint", requestedSetpoint);
   }
 
-  public void enableBrakeMode(boolean enable) {
-    io.enableBrakeMode(enable);
-  }
-
   public boolean isAtGoal() {
     return Math.abs(inputs.leaderMechanismRPS - requestedSetpoint)
             < Constants.Flywheel.smallToleranceRPS
