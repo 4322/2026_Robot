@@ -1,7 +1,6 @@
 package frc.robot.subsystems.shooter;
 
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -9,11 +8,9 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 import frc.robot.constants.Constants;
 import frc.robot.constants.Constants.ShotCalculatorParameters;
-import frc.robot.constants.FieldConstants;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.led.LED;
-import frc.robot.subsystems.shooter.areaManager.AreaManager;
-import frc.robot.subsystems.shooter.areaManager.AreaManager.Zone;
+import frc.robot.subsystems.shooter.firingManager.FiringManager;
 import frc.robot.subsystems.shooter.flywheel.Flywheel;
 import frc.robot.subsystems.shooter.hood.Hood;
 import frc.robot.subsystems.shooter.spindexer.Spindexer;
@@ -284,85 +281,36 @@ public class Shooter extends SubsystemBase {
         targetTurretAngleDeg = Constants.fixedSolutionRed.turretAngleDeg;
       }
     } else {
-      Translation2d shootTarget;
+      Translation2d shootTarget = FiringManager.getShootingTarget(drive.getTurretTranslation());
       Translation2d shootForward;
       ShotCalculator.ShotInputs inputs;
 
       if (isScoring) {
         if (Robot.alliance == DriverStation.Alliance.Red) {
-          shootTarget = FieldConstants.Red.hubTranslation;
           shootForward = new Translation2d(-1, 0);
-          shootTarget.plus(new Translation2d(Units.inchesToMeters(-3), 0));
         } else {
-          shootTarget = FieldConstants.Blue.hubTranslation;
           shootForward = new Translation2d(1, 0);
-          shootTarget.plus(new Translation2d(Units.inchesToMeters(3), 0));
         }
-
-        inputs =
-            new ShotCalculator.ShotInputs(
-                drive.getRobotPose(),
-                drive.getFieldRelativeVelocity(),
-                drive.getRobotRelativeVelocity(),
-                shootTarget,
-                shootForward,
-                0.9, // vision confidence, 0 to 1
-                0, // pitch for tilt gate (0.0 if no gyro)
-                0 // roll for tilt gate (0.0 if no gyro)
-                );
-
       } else {
-        Zone zone = AreaManager.getZoneOfPosition(drive.getTurretTranslation());
-
         if (Robot.alliance == DriverStation.Alliance.Red) {
-          if (zone == Zone.LEFT_NEUTRAL) {
-            shootTarget = Constants.FiringTargetTranslations.Red.neutralLeftTranslation;
-            shootForward = new Translation2d(1, 0);
-          } else if (zone == Zone.RIGHT_NEUTRAL) {
-            shootTarget = Constants.FiringTargetTranslations.Red.neutralRightTranslation;
-            shootForward = new Translation2d(1, 0);
-          } else if (zone == Zone.LEFT_OPPOSITION) {
-            shootTarget = Constants.FiringTargetTranslations.Red.allianceLeftTranslation;
-            shootForward = new Translation2d(1, 0);
-          } else if (zone == Zone.RIGHT_OPPOSITION) {
-            shootTarget = Constants.FiringTargetTranslations.Red.allianceRightTranslation;
-            shootForward = new Translation2d(1, 0);
-          } else {
-            Logger.recordOutput("SOTF/InShootingZone", false);
-            return;
-          }
+          shootForward = new Translation2d(1, 0);
         } else {
-          if (zone == Zone.LEFT_NEUTRAL) {
-            shootTarget = Constants.FiringTargetTranslations.Blue.neutralLeftTranslation;
-            shootForward = new Translation2d(-1, 0);
-          } else if (zone == Zone.RIGHT_NEUTRAL) {
-            shootTarget = Constants.FiringTargetTranslations.Blue.neutralRightTranslation;
-            shootForward = new Translation2d(-1, 0);
-          } else if (zone == Zone.LEFT_OPPOSITION) {
-            shootTarget = Constants.FiringTargetTranslations.Blue.allianceLeftTranslation;
-            shootForward = new Translation2d(-1, 0);
-          } else if (zone == Zone.RIGHT_OPPOSITION) {
-            shootTarget = Constants.FiringTargetTranslations.Blue.allianceRightTranslation;
-            shootForward = new Translation2d(-1, 0);
-          } else {
-            Logger.recordOutput("SOTF/InShootingZone", false);
-            return;
-          }
+          shootForward = new Translation2d(-1, 0);
         }
-        inputs =
-            new ShotCalculator.ShotInputs(
-                drive.getRobotPose(),
-                drive.getFieldRelativeVelocity(),
-                drive.getRobotRelativeVelocity(),
-                shootTarget,
-                shootForward,
-                0.9, // vision confidence, 0 to 1
-                0, // pitch for tilt gate (0.0 if no gyro)
-                0 // roll for tilt gate (0.0 if no gyro)
-                );
       }
 
-      Logger.recordOutput("SOTF/InShootingZone", true);
+      inputs =
+          new ShotCalculator.ShotInputs(
+              drive.getRobotPose(),
+              drive.getFieldRelativeVelocity(),
+              drive.getRobotRelativeVelocity(),
+              shootTarget,
+              shootForward,
+              0.9, // vision confidence, 0 to 1
+              0, // pitch for tilt gate (0.0 if no gyro)
+              0 // roll for tilt gate (0.0 if no gyro)
+              );
+
       ShotCalculator.LaunchParameters shot = shotCalc.calculate(inputs);
       if (shot.isValid()) {
         targetHoodAngleDeg = shotCalc.getHoodAngle(shot.solvedDistanceM());

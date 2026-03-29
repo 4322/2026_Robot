@@ -27,6 +27,8 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.util.Units;
+import frc.robot.constants.Constants;
 import org.littletonrobotics.junction.Logger;
 
 /**
@@ -303,6 +305,15 @@ public class ShotCalculator {
     double heading = compensatedPose.getRotation().getRadians();
 
     Translation2d hubCenter = inputs.hubCenter();
+
+    // If scoring into hub (center of field), use offset to score into edge of hub
+    if (hubCenter.getY() == Constants.FiringTargetTranslations.Blue.hubTranslation.getY()) {
+      hubCenter =
+          hubCenter.plus(
+              new Translation2d(Units.inchesToMeters(3), 0)
+                  .rotateBy(hubCenter.minus(compensatedPose.getTranslation()).getAngle()));
+    }
+
     double hubX = hubCenter.getX();
     double hubY = hubCenter.getY();
 
