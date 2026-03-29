@@ -20,6 +20,4 @@ public interface HoodIO {
   public default void setPulseWidth(int pulseWidth) {}
 
   public default void simEstimatedPosition() {}
-
-  public default void setBrakeMode(boolean brake) {}
 }

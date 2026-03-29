@@ -33,6 +33,7 @@ public class Hood {
 
   public Hood(HoodIO io) {
     this.io = io;
+    moveServoToPosition(0); // avoid initial pop-up of servo when powered on
   }
 
   public void inputsPeriodic() {
@@ -171,9 +172,5 @@ public class Hood {
 
   public double getPositionDegrees() {
     return inputs.hoodDegrees;
-  }
-
-  public void enableBrakeMode(boolean brake) {
-    io.setBrakeMode(brake);
   }
 }
