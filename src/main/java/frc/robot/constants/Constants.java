@@ -208,11 +208,11 @@ public final class Constants {
     // Encoder calibration procedure:
     // 1. Put turret in locked position and insert lock bolt (90 degrees)
     // 2. Set magnetic offsets to 0 on both encoders in Phoenix Tuner
-    // 3. Record the negative of the magnetic offsets below
+    // 3. Enter the negative of the AbsolutePosition below
     //    CANCoderOne = Encoder 9
     //    CANCoderTwo = Encoder 4.73
-    public static final double CANCoderOneOffsetRot = -0.5414;
-    public static final double CANCoderTwoOffsetRot = -0.5235;
+    public static final double CANCoderOneOffsetRot = -0.5446;
+    public static final double CANCoderTwoOffsetRot = -0.0092;
   }
 
   public static class Hood {
