@@ -33,6 +33,7 @@ public class Hood {
 
   public Hood(HoodIO io) {
     this.io = io;
+    moveServoToPosition(0); // avoid initial pop-up of servo when powered on
   }
 
   public void inputsPeriodic() {
@@ -48,10 +49,8 @@ public class Hood {
       }
       case TUNING -> {
         if (!homed) {
-          io.setEncoderHomed();
-          homed = true;
-        }
-        if (tuningPulseWidth.get() == 0) {
+          homeHood();
+        } else if (tuningPulseWidth.get() == 0) {
           setGoal(tuningGoalDeg.get());
           moveServoToPosition(requestedAngleDeg);
         } else if (++burstIntervalCount > tuningBurstInterval.getAsDouble()) {
@@ -66,20 +65,8 @@ public class Hood {
           io.simEstimatedPosition();
           homed = true;
         }
-        if (!DriverStation.isEnabled()) {
-          homingTimer.stop();
-          homingTimer.reset();
-        } else if (!homed) {
-          moveServoToPosition(0);
-          homingTimer.start();
-          if (homingTimer.hasElapsed(Constants.Hood.minHomingSec)
-              && Math.abs(inputs.encoderRPS) <= Constants.Hood.homingVelocityThresholdRPS) {
-            io.setEncoderHomed();
-            setGoal(0);
-            homed = true;
-            homingTimer.stop();
-            homingTimer.reset();
-          }
+        if (!homed) {
+          homeHood();
         } else {
           moveServoToPosition(requestedAngleDeg);
           updateAtGoalTimer();
@@ -91,6 +78,24 @@ public class Hood {
     Logger.recordOutput("Shooter/Hood/homed", homed);
     Logger.recordOutput("Shooter/Hood/isAtGoal", isAtGoal());
     Logger.recordOutput("Shooter/Hood/goalDegrees", requestedAngleDeg);
+  }
+
+  private void homeHood() {
+    if (!DriverStation.isEnabled()) {
+      homingTimer.stop();
+      homingTimer.reset();
+    } else {
+      moveServoToPosition(0);
+      homingTimer.start();
+      if (homingTimer.hasElapsed(Constants.Hood.minHomingSec)
+          && Math.abs(inputs.encoderRPS) <= Constants.Hood.homingVelocityThresholdRPS) {
+        io.setEncoderHomed();
+        setGoal(0);
+        homed = true;
+        homingTimer.stop();
+        homingTimer.reset();
+      }
+    }
   }
 
   private void updateAtGoalTimer() {
@@ -132,8 +137,16 @@ public class Hood {
         hoodDegrees
             * Constants.Hood.encoderToHoodGearRatio
             * Constants.Hood.servoToEncoderGearRatio;
+    double pulseWidthToDegreeRatio = 0.9;
     int pulseWdith =
-        MathUtil.clamp(Constants.Hood.homePulseWidth + (int) (servoDegrees * 0.9), 500, 2500);
+        MathUtil.clamp(
+            Constants.Hood.homePulseWidth
+                + (int)
+                    (servoDegrees
+                        / pulseWidthToDegreeRatio
+                        * Constants.Hood.servoPositionScaleFactor),
+            500,
+            2500);
     io.setPulseWidth(pulseWdith);
   }
 
@@ -171,9 +184,5 @@ public class Hood {
 
   public double getPositionDegrees() {
     return inputs.hoodDegrees;
-  }
-
-  public void enableBrakeMode(boolean brake) {
-    io.setBrakeMode(brake);
   }
 }

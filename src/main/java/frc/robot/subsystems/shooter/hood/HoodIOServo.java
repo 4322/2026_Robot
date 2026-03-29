@@ -36,8 +36,6 @@ public class HoodIOServo implements HoodIO {
     servoHub.setBankPulsePeriod(Bank.kBank3_5, 20000);
 
     servo.setPowered(true);
-
-    // Enables "brake" mode on servos
     servo.setEnabled(true);
   }
 
@@ -61,10 +59,5 @@ public class HoodIOServo implements HoodIO {
   public void setPulseWidth(int pulseWidth) {
     servo.setPulseWidth(pulseWidth);
     Logger.recordOutput("Shooter/Hood/pulseWidth", pulseWidth);
-  }
-
-  @Override
-  public void setBrakeMode(boolean brake) {
-    servo.setEnabled(brake);
   }
 }

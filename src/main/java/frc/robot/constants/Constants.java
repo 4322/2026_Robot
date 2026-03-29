@@ -50,7 +50,7 @@ public final class Constants {
   public static final SubsystemMode spindexerMode = SubsystemMode.NORMAL;
   public static final SubsystemMode tunnelMode = SubsystemMode.NORMAL;
   public static SubsystemMode turretMode = SubsystemMode.NORMAL;
-  public static final SubsystemMode deployerMode = SubsystemMode.DISABLED;
+  public static final SubsystemMode deployerMode = SubsystemMode.NORMAL;
   public static final SubsystemMode rollerMode = SubsystemMode.NORMAL;
   public static final SubsystemMode ledMode = SubsystemMode.DISABLED;
   public static final SubsystemMode visionGlobalPose = SubsystemMode.NORMAL;
@@ -58,11 +58,15 @@ public final class Constants {
   public static final SubsystemMode firingManagerMode = SubsystemMode.NORMAL;
   public static final boolean turretLocked = false;
   public static boolean shootOnTheMoveEnabled = false;
-  public static boolean tuningWithLoggableNumbers = false;
   public static final boolean frontRightCameraEnable = true;
   public static final boolean frontLeftCameraEnable = true;
   public static final boolean backRightCameraEnable = true;
   public static final boolean backLeftCameraEnable = true;
+  public static final boolean tuningWithLoggableNumbers =
+      (driveMode == SubsystemMode.TUNING
+          || firingManagerMode == SubsystemMode.TUNING
+          || hoodMode == SubsystemMode.TUNING
+          || visionGlobalPose == SubsystemMode.TUNING);
 
   public static final double scoringDoubleToleranceTime = 0.5;
   public static final double passingDoubleToleranceTime = 0.25;
@@ -76,12 +80,6 @@ public final class Constants {
     }
     if (Constants.Drive.zeroTurnEncoders) {
       driveMode = SubsystemMode.TUNING;
-    }
-    if (driveMode == SubsystemMode.TUNING
-        || firingManagerMode == SubsystemMode.TUNING
-        || hoodMode == SubsystemMode.TUNING
-        || visionGlobalPose == SubsystemMode.TUNING) {
-      tuningWithLoggableNumbers = true;
     }
   }
 
@@ -237,7 +235,8 @@ public final class Constants {
     public static final double homingVelocityThresholdRPS = 0.02;
     public static final double minHomingSec = 0.4; // allow for servo latency + enable overhead
     public static final int homePulseWidth = 515; // calibrate after replacing servo, min 500
-    public static final double smallToleranceDeg = 0.3;
+    public static final double servoPositionScaleFactor = 1.015; // variations in potentiometer
+    public static final double smallToleranceDeg = 0.4;
     public static final double largeToleranceDeg = 2.0;
     public static final int idleTimeout = 0;
   }
