@@ -27,7 +27,7 @@ public class Hood {
   private static final LoggedTunableNumber tuningPulseWidth =
       new LoggedTunableNumber("Hood/tuningpulseWidth", 0);
   private static final LoggedTunableNumber burstInterval =
-      new LoggedTunableNumber("Hood/pulseBurstDutyCycle", 0);
+      new LoggedTunableNumber("Hood/burstInterval", 0);
 
   private HoodIO io;
   private HoodIOInputsAutoLogged inputs = new HoodIOInputsAutoLogged();
