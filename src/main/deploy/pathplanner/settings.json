@@ -5,14 +5,15 @@
   "pathFolders": [
     "C_DepotOutpost",
     "LT",
-    "R_ROutpost",
+    "New Folder",
     "R_2Sweep",
     "R_Half_SuperSweep",
     "R_NeutralGeneral",
     "R_NeutralRMid",
     "R_NeutralR_Disrupt",
     "R_NeutralR_Full",
-    "R_NeutralR_Midline"
+    "R_NeutralR_Midline",
+    "R_ROutpost"
   ],
   "autoFolders": [
     "C",
