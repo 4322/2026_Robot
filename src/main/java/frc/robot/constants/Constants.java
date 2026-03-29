@@ -227,7 +227,8 @@ public final class Constants {
     public static final double homingVelocityThresholdRPS = 0.02;
     public static final double minHomingSec = 0.4; // allow for servo latency + enable overhead
     public static final int homePulseWidth = 515; // calibrate after replacing servo, min 500
-    public static final double smallToleranceDeg = 0.3;
+    public static final double servoPositionScaleFactor = 1.015; // variations in potentiometer
+    public static final double smallToleranceDeg = 0.4;
     public static final double largeToleranceDeg = 2.0;
     public static final int idleTimeout = 0;
   }
