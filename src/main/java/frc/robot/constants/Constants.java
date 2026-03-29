@@ -431,7 +431,8 @@ public final class Constants {
       putFiringMapEntryPassing(13.691, new FiringParameters(90, 38, 1, 35, 7));
     }
 
-    public static final boolean alwaysTargetAllianceZone = true;
+    // can't maintain burst for full field passes due to battery voltage drop
+    public static final boolean alwaysTargetAllianceZone = false;
   }
 
   public static final double fixedSolutionBlueDeg = -73;
