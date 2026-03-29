@@ -49,10 +49,8 @@ public class Hood {
       }
       case TUNING -> {
         if (!homed) {
-          io.setEncoderHomed();
-          homed = true;
-        }
-        if (tuningPulseWidth.get() == 0) {
+          homeHood();
+        } else if (tuningPulseWidth.get() == 0) {
           setGoal(tuningGoalDeg.get());
           moveServoToPosition(requestedAngleDeg);
         } else if (++burstIntervalCount > tuningBurstInterval.getAsDouble()) {
@@ -67,20 +65,8 @@ public class Hood {
           io.simEstimatedPosition();
           homed = true;
         }
-        if (!DriverStation.isEnabled()) {
-          homingTimer.stop();
-          homingTimer.reset();
-        } else if (!homed) {
-          moveServoToPosition(0);
-          homingTimer.start();
-          if (homingTimer.hasElapsed(Constants.Hood.minHomingSec)
-              && Math.abs(inputs.encoderRPS) <= Constants.Hood.homingVelocityThresholdRPS) {
-            io.setEncoderHomed();
-            setGoal(0);
-            homed = true;
-            homingTimer.stop();
-            homingTimer.reset();
-          }
+        if (!homed) {
+          homeHood();
         } else {
           moveServoToPosition(requestedAngleDeg);
           updateAtGoalTimer();
@@ -92,6 +78,24 @@ public class Hood {
     Logger.recordOutput("Shooter/Hood/homed", homed);
     Logger.recordOutput("Shooter/Hood/isAtGoal", isAtGoal());
     Logger.recordOutput("Shooter/Hood/goalDegrees", requestedAngleDeg);
+  }
+
+  private void homeHood() {
+    if (!DriverStation.isEnabled()) {
+      homingTimer.stop();
+      homingTimer.reset();
+    } else {
+      moveServoToPosition(0);
+      homingTimer.start();
+      if (homingTimer.hasElapsed(Constants.Hood.minHomingSec)
+          && Math.abs(inputs.encoderRPS) <= Constants.Hood.homingVelocityThresholdRPS) {
+        io.setEncoderHomed();
+        setGoal(0);
+        homed = true;
+        homingTimer.stop();
+        homingTimer.reset();
+      }
+    }
   }
 
   private void updateAtGoalTimer() {
