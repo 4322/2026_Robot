@@ -1,6 +1,7 @@
 package frc.robot.subsystems.shooter.hood;
 
 import edu.wpi.first.math.MathUtil;
+import org.littletonrobotics.junction.Logger;
 
 public class HoodIOSim implements HoodIO {
   private double velocity = 0;
@@ -14,7 +15,7 @@ public class HoodIOSim implements HoodIO {
   public void updateInputs(HoodIOInputs inputs) {
     inputs.encoderConnected = true;
     inputs.encoderRotations = rotations; // Convert degrees to rotations
-    inputs.degrees = position;
+    inputs.hoodDegrees = position;
     inputs.encoderRPS = velocity;
     inputs.servoEnabled = true;
   }
@@ -27,15 +28,14 @@ public class HoodIOSim implements HoodIO {
 
   @Override
   public void simEstimatedPosition() {
-
     this.position =
         MathUtil.clamp((this.maxRPS * this.degreePerSecond * this.velocity), 0, 38) + prevPosition;
     prevPosition = position;
   }
 
   @Override
-  public void setServoVelocity(double velocity, double requestedAngleDeg) {
-    this.velocity = ((int) MathUtil.clamp(velocity, -1, 1));
-    simEstimatedPosition();
+  public void setPulseWidth(int pulseWidth) {
+    // TODO
+    Logger.recordOutput("Shooter/Hood/pulseWidth", pulseWidth);
   }
 }

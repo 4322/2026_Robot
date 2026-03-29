@@ -10,24 +10,16 @@ import frc.robot.util.LoggedTunableNumber;
 import org.littletonrobotics.junction.Logger;
 
 public class Hood {
-  private static final LoggedTunableNumber fastVelocity =
-      new LoggedTunableNumber("Hood/fastVelocity", Constants.Hood.fastVelocity);
-  private static final LoggedTunableNumber mediumVelocity =
-      new LoggedTunableNumber("Hood/mediumVelocity", Constants.Hood.mediumVelocity);
-  private static final LoggedTunableNumber slowVelocity =
-      new LoggedTunableNumber("Hood/slowVelocity", Constants.Hood.slowVelocity);
   private static final LoggedTunableNumber largeToleranceDeg =
       new LoggedTunableNumber("Hood/largeToleranceDeg", Constants.Hood.largeToleranceDeg);
-  private static final LoggedTunableNumber mediumToleranceDeg =
-      new LoggedTunableNumber("Hood/mediumToleranceDeg", Constants.Hood.mediumToleranceDeg);
   private static final LoggedTunableNumber smallToleranceDeg =
       new LoggedTunableNumber("Hood/smallToleranceDeg", Constants.Hood.smallToleranceDeg);
   private static final LoggedTunableNumber tuningGoalDeg =
       new LoggedTunableNumber("Hood/tuningGoalDeg", 0);
   private static final LoggedTunableNumber tuningPulseWidth =
       new LoggedTunableNumber("Hood/tuningpulseWidth", 0);
-  private static final LoggedTunableNumber burstInterval =
-      new LoggedTunableNumber("Hood/burstInterval", 0);
+  private static final LoggedTunableNumber tuningBurstInterval =
+      new LoggedTunableNumber("Hood/tuningBurstInterval", 0);
 
   private HoodIO io;
   private HoodIOInputsAutoLogged inputs = new HoodIOInputsAutoLogged();
@@ -37,7 +29,7 @@ public class Hood {
   private int burstIntervalCount = 0;
   private boolean homed = false;
   private boolean trenchOverride = false;
-  private double lastVelocity = 0;
+  private boolean isScoring = false;
 
   public Hood(HoodIO io) {
     this.io = io;
@@ -49,6 +41,7 @@ public class Hood {
   }
 
   public void outputsPeriodic() {
+    updateAtGoalTimer();
     switch (Constants.hoodMode) {
       case DISABLED -> {
         homed = true;
@@ -60,8 +53,8 @@ public class Hood {
         }
         if (tuningPulseWidth.get() == 0) {
           setGoal(tuningGoalDeg.get());
-          setVelocity();
-        } else if (burstInterval.getAsDouble() >= burstIntervalCount++) {
+          moveServoToPosition(requestedAngleDeg);
+        } else if (++burstIntervalCount > tuningBurstInterval.getAsDouble()) {
           burstIntervalCount = 0;
           io.setPulseWidth((int) tuningPulseWidth.get());
         } else {
@@ -73,24 +66,23 @@ public class Hood {
           io.simEstimatedPosition();
           homed = true;
         }
-        if (!homed && DriverStation.isEnabled()) {
-          io.setServoVelocity(Constants.Hood.homingVelocity, 0);
+        if (!DriverStation.isEnabled()) {
+          homingTimer.stop();
+          homingTimer.reset();
+        } else if (!homed) {
+          moveServoToPosition(0);
           homingTimer.start();
-          if (Math.abs(inputs.encoderRPS) > Constants.Hood.homingVelocityThresholdRPS) {
-            homingTimer.reset();
-          } else if (homingTimer.hasElapsed(0.1)) {
+          if (homingTimer.hasElapsed(Constants.Hood.minHomingSec)
+              && Math.abs(inputs.encoderRPS) <= Constants.Hood.homingVelocityThresholdRPS) {
             io.setEncoderHomed();
-            io.setServoVelocity(0, 0);
+            setGoal(0);
             homed = true;
             homingTimer.stop();
             homingTimer.reset();
           }
-        } else if (DriverStation.isEnabled()) {
-          setVelocity();
         } else {
-          io.setServoVelocity(0, 0);
-          homingTimer.stop();
-          homingTimer.reset();
+          moveServoToPosition(requestedAngleDeg);
+          updateAtGoalTimer();
         }
         updateNetworkTableValues();
       }
@@ -101,48 +93,8 @@ public class Hood {
     Logger.recordOutput("Shooter/Hood/goalDegrees", requestedAngleDeg);
   }
 
-  private void setVelocity() {
-    double velocity = 0;
-    updateAtGoalTimer();
-    if (Math.abs(inputs.degrees - requestedAngleDeg) < smallToleranceDeg.get()) {
-      velocity = 0;
-    } else if (inputs.degrees > requestedAngleDeg + largeToleranceDeg.get()
-        || (requestedAngleDeg == Constants.Hood.safeAngleDeg
-            && inputs.degrees > Constants.Hood.safeAngleDeg)) {
-      velocity = -fastVelocity.get();
-    } else if (inputs.degrees < requestedAngleDeg - largeToleranceDeg.get()) {
-      velocity = fastVelocity.get();
-    } else if (inputs.degrees > requestedAngleDeg + mediumToleranceDeg.get()) {
-      velocity = -mediumVelocity.get();
-    } else if (inputs.degrees < requestedAngleDeg - mediumToleranceDeg.get()) {
-      velocity = mediumVelocity.get();
-    } else {
-      if (lastVelocity > 0) {
-        if (inputs.degrees > requestedAngleDeg) {
-          velocity = 0;
-        } else {
-          velocity = slowVelocity.get();
-        }
-      } else if (lastVelocity < 0) {
-        if (inputs.degrees < requestedAngleDeg) {
-          velocity = 0;
-        } else {
-          velocity = -slowVelocity.get();
-        }
-      }
-    }
-    if (burstInterval.getAsDouble() >= burstIntervalCount++) {
-      burstIntervalCount = 0;
-      io.setServoVelocity(velocity, requestedAngleDeg);
-      lastVelocity = velocity;
-    } else {
-      io.setServoVelocity(0, 0);
-    }
-    Logger.recordOutput("Shooter/Hood/requestedServoVelocity", velocity);
-  }
-
   private void updateAtGoalTimer() {
-    if (Math.abs(inputs.degrees - requestedAngleDeg) < mediumToleranceDeg.get()) {
+    if (Math.abs(inputs.hoodDegrees - requestedAngleDeg) < largeToleranceDeg.get()) {
       atGoalTimer.start();
     } else {
       atGoalTimer.stop();
@@ -152,7 +104,7 @@ public class Hood {
 
   private void updateNetworkTableValues() {
     if (isAtGoal()) {
-      if (lastVelocity == 0) {
+      if (isWithinSmallTolerance()) {
         SmartDashboard.putString("Hood/HoodAtGoal", Constants.NetworkTables.green.toHexString());
       } else {
         SmartDashboard.putString("Hood/HoodAtGoal", Constants.NetworkTables.yellow.toHexString());
@@ -160,10 +112,11 @@ public class Hood {
     } else {
       SmartDashboard.putString("Hood/HoodAtGoal", Constants.NetworkTables.red.toHexString());
     }
-    SmartDashboard.putNumber("Hood/HoodAngle", inputs.degrees);
+    SmartDashboard.putNumber("Hood/HoodDegrees", inputs.hoodDegrees);
   }
 
-  public void requestGoal(double degrees) {
+  public void requestGoal(double degrees, boolean isScoring) {
+    this.isScoring = isScoring;
     if (Constants.hoodMode == SubsystemMode.NORMAL && !trenchOverride) {
       setGoal(degrees);
     }
@@ -174,14 +127,13 @@ public class Hood {
     updateAtGoalTimer();
   }
 
-  private void servoSeekPosition(double hoodDegrees) {
+  private void moveServoToPosition(double hoodDegrees) {
     double servoDegrees =
         hoodDegrees
             * Constants.Hood.encoderToHoodGearRatio
             * Constants.Hood.servoToEncoderGearRatio;
     int pulseWdith =
-        MathUtil.clamp(
-            500 + Constants.Hood.homeMicroSecOffset + (int) (servoDegrees * 0.9), 500, 2500);
+        MathUtil.clamp(Constants.Hood.homePulseWidth + (int) (servoDegrees * 0.9), 500, 2500);
     io.setPulseWidth(pulseWdith);
   }
 
@@ -199,11 +151,18 @@ public class Hood {
       return false;
     } else if (Constants.currentMode == Constants.Mode.SIM) {
       return true; // TODO temporary until we get hood sim working
-    } else if (lastVelocity == 0 || atGoalTimer.hasElapsed(Constants.Hood.atGoalTimeoutSec)) {
+    } else if (isWithinSmallTolerance()
+        || (isScoring
+            ? atGoalTimer.hasElapsed(Constants.scoringDoubleToleranceTime)
+            : atGoalTimer.hasElapsed(Constants.passingDoubleToleranceTime))) {
       return true;
     } else {
       return false;
     }
+  }
+
+  private boolean isWithinSmallTolerance() {
+    return Math.abs(inputs.hoodDegrees - requestedAngleDeg) < smallToleranceDeg.get();
   }
 
   public boolean isHomed() {
@@ -211,7 +170,7 @@ public class Hood {
   }
 
   public double getPositionDegrees() {
-    return inputs.degrees;
+    return inputs.hoodDegrees;
   }
 
   public void enableBrakeMode(boolean brake) {

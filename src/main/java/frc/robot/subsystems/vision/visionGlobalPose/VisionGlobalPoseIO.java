@@ -11,7 +11,6 @@ public interface VisionGlobalPoseIO {
     public TargetObservation latestTargetObservation =
         new TargetObservation(Rotation2d.kZero, Rotation2d.kZero);
     public GlobalPoseObservation[] globalPoseObservations = new GlobalPoseObservation[0];
-    public int singleTagFiducialID = 1;
   }
 
   /** Represents the angle to a simple target, not used for pose estimation. */

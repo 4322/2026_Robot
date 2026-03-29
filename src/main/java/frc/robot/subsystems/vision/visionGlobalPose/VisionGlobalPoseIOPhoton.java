@@ -15,8 +15,6 @@ public class VisionGlobalPoseIOPhoton implements VisionGlobalPoseIO {
   protected final PhotonCamera camera;
   protected final Transform3d robotToCamera;
 
-  private int singleTagFiducialID = 1;
-
   /**
    * Creates a new VisionIOPhotonVision.
    *
@@ -31,7 +29,6 @@ public class VisionGlobalPoseIOPhoton implements VisionGlobalPoseIO {
   @Override
   public void updateInputs(VisionGlobalPoseIOInputs inputs) {
     inputs.connected = camera.isConnected();
-    inputs.singleTagFiducialID = singleTagFiducialID;
 
     // Read new camera observations
     List<GlobalPoseObservation> globalPoseObservations = new LinkedList<>();

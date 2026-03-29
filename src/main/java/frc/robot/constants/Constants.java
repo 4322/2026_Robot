@@ -50,7 +50,7 @@ public final class Constants {
   public static final SubsystemMode spindexerMode = SubsystemMode.NORMAL;
   public static final SubsystemMode tunnelMode = SubsystemMode.NORMAL;
   public static SubsystemMode turretMode = SubsystemMode.NORMAL;
-  public static final SubsystemMode deployerMode = SubsystemMode.NORMAL;
+  public static final SubsystemMode deployerMode = SubsystemMode.DISABLED;
   public static final SubsystemMode rollerMode = SubsystemMode.NORMAL;
   public static final SubsystemMode ledMode = SubsystemMode.DISABLED;
   public static final SubsystemMode visionGlobalPose = SubsystemMode.NORMAL;
@@ -58,6 +58,7 @@ public final class Constants {
   public static final SubsystemMode firingManagerMode = SubsystemMode.NORMAL;
   public static final boolean turretLocked = false;
   public static boolean shootOnTheMoveEnabled = false;
+  public static boolean tuningWithLoggableNumbers = false;
   public static final boolean frontRightCameraEnable = true;
   public static final boolean frontLeftCameraEnable = true;
   public static final boolean backRightCameraEnable = true;
@@ -76,6 +77,12 @@ public final class Constants {
     if (Constants.Drive.zeroTurnEncoders) {
       driveMode = SubsystemMode.TUNING;
     }
+    if (driveMode == SubsystemMode.TUNING
+        || firingManagerMode == SubsystemMode.TUNING
+        || hoodMode == SubsystemMode.TUNING
+        || visionGlobalPose == SubsystemMode.TUNING) {
+      tuningWithLoggableNumbers = true;
+    }
   }
 
   public static final boolean buzz = false;
@@ -83,7 +90,6 @@ public final class Constants {
   public static final long minFreeSpace = 1000000000; // 1 GB
   public static final int dioCoastButton = 8;
   public static final double coastButtonDelaySec = 10.0;
-  public static final boolean tuningWithLoggableNumbers = true;
   public static final double brownoutVoltage = 5.75;
 
   // only set this if loop cycles are significantly below 20 ms
@@ -160,7 +166,6 @@ public final class Constants {
     public static final double kP = 0.5;
     public static final double kI = 0;
     public static final double kD = 0;
-    public static final double flywheelHoodAdjustmentFactor = -2.0;
 
     public static final double motorToMechanismRatio = 1;
     public static final double largeToleranceRPS = 4.0;
@@ -229,19 +234,12 @@ public final class Constants {
     public static final double encoderToHoodGearRatio = 164 / 11.0;
     public static final double servoToEncoderGearRatio = 45 / 32.0;
     public static final double safeAngleDeg = 0;
-    public static final double homingVelocityThresholdRPS = 0.01;
-    public static final double homingVelocity = -0.4;
-    public static final int homeMicroSecOffset = 50; // calibrate after replacing servo
-    public static final double mediumVelocity = 0.35;
-    public static final double fastVelocity = 1.0;
-    public static final double slowVelocity = 0.3; // no kS compensation, kS can be 0.1 to 0.2
-    public static final double smallToleranceDeg =
-        0.5; // don't exceed 1.0 to avoid hitting the trench
-    public static final double mediumToleranceDeg = 3.5;
-    public static final double largeToleranceDeg = 9.0;
-    public static final double atGoalTimeoutSec = 0.5; // full travel time 1.1s
+    public static final double homingVelocityThresholdRPS = 0.02;
+    public static final double minHomingSec = 0.4; // allow for servo latency + enable overhead
+    public static final int homePulseWidth = 515; // calibrate after replacing servo, min 500
+    public static final double smallToleranceDeg = 0.3;
+    public static final double largeToleranceDeg = 2.0;
     public static final int idleTimeout = 0;
-    public static final int kSPulseWidth = 50; // power to hold hood position
   }
 
   public static class Control {
@@ -484,8 +482,6 @@ public final class Constants {
   }
 
   public static final class VisionGlobalPose {
-    // TODO
-    public static final boolean enableGlobalPoseTrigEstimation = false;
     // See if this helps with NT/CPU stability
     public static final boolean enableVerbosePoseLogging = false;
     // Camera names, must match names configured on coprocessor
@@ -527,13 +523,11 @@ public final class Constants {
             new Rotation3d(0, Units.degreesToRadians(-19.8534025106), Units.degreesToRadians(135)));
 
     // Basic filtering thresholds
-    // TODO
     public static double maxAmbiguity = 0.15;
     public static double maxZError = 0.75;
-    public static double maxAvgTagDistance = 3;
-
+    public static double maxAvgTagDistance = 30; // Basically allow tags from any distance
     public static double stdDevBaseline = 0.2;
-    public static double thetaStdDevBaseline = 0.075;
+    public static double singleTagStdDevAdjuster = 3;
   }
 
   public static final class VisionObjectDetection {

@@ -5,8 +5,6 @@ import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -14,8 +12,7 @@ import frc.robot.constants.Constants;
 import frc.robot.constants.FieldConstants;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.vision.visionGlobalPose.VisionGlobalPoseIO.GlobalPoseObservation;
-import frc.robot.util.GeomUtil;
-import frc.robot.util.PolynomialRegression;
+import frc.robot.util.LoggedTunableNumber;
 import java.util.ArrayList;
 import java.util.List;
 import org.littletonrobotics.junction.Logger;
@@ -25,24 +22,14 @@ public class VisionGlobalPose extends SubsystemBase {
   private final VisionGlobalPoseIO[] io;
   private final VisionGlobalPoseIOInputsAutoLogged[] inputs;
   private final Drive drive;
-  public int tagId;
-
-  private PolynomialRegression xyStdDevModel =
-      new PolynomialRegression(
-          new double[] {
-            0.752358, 1.016358, 1.296358, 1.574358, 1.913358, 2.184358, 2.493358, 2.758358,
-            3.223358, 4.093358, 4.726358
-          },
-          new double[] {0.005, 0.0135, 0.016, 0.038, 0.0515, 0.0925, 0.12, 0.14, 0.17, 0.27, 0.38},
-          2);
-  private PolynomialRegression thetaStdDevModel =
-      new PolynomialRegression(
-          new double[] {
-            0.752358, 1.016358, 1.296358, 1.574358, 1.913358, 2.184358, 2.493358, 2.758358,
-            3.223358, 4.093358, 4.726358
-          },
-          new double[] {0.008, 0.027, 0.015, 0.044, 0.04, 0.078, 0.049, 0.027, 0.059, 0.029, 0.068},
-          1);
+  private static final LoggedTunableNumber baseStdDev =
+      new LoggedTunableNumber("GlobalPose/baseStdDev", Constants.VisionGlobalPose.stdDevBaseline);
+  private static final LoggedTunableNumber singleTagStdDev =
+      new LoggedTunableNumber(
+          "GlobalPose/singleTagStdDev", Constants.VisionGlobalPose.singleTagStdDevAdjuster);
+  private static final LoggedTunableNumber maxAvgTagDistance =
+      new LoggedTunableNumber(
+          "GlobalPose/maxAvgTagDistance", Constants.VisionGlobalPose.maxAvgTagDistance);
 
   public VisionGlobalPose(Drive drive, VisionGlobalPoseIO... io) {
     this.drive = drive;
@@ -121,39 +108,6 @@ public class VisionGlobalPose extends SubsystemBase {
             disambiguatedRobotPose = observation.altPose();
             avgTagDistance = observation.averageTagDistanceAlt();
           }
-
-          if (Constants.VisionGlobalPose.enableGlobalPoseTrigEstimation) {
-            Pose2d visionRobotPose = disambiguatedRobotPose.toPose2d();
-            Pose2d tagPos =
-                FieldConstants.aprilTagFieldLayout
-                    .getTagPose(inputs[cameraIndex].singleTagFiducialID)
-                    .get()
-                    .toPose2d();
-            // Use gyro to correct for vision errors
-            Rotation2d robotThetaError = drive.getRotation().minus(visionRobotPose.getRotation());
-
-            // Account for rotation discontinuity from bound (-179,180]
-            if (Math.abs(robotThetaError.getRadians()) > Math.PI) {
-              double minThetaError =
-                  robotThetaError.getDegrees() + (Math.signum(robotThetaError.getDegrees()) * -360);
-              robotThetaError = Rotation2d.fromDegrees(minThetaError);
-            }
-
-            Pose2d tagToRobotPose = visionRobotPose.relativeTo(tagPos);
-            visionRobotPose =
-                tagPos.transformBy(
-                    GeomUtil.poseToTransform(tagToRobotPose.rotateBy(robotThetaError)));
-
-            disambiguatedRobotPose =
-                new Pose3d(
-                    new Translation3d(
-                        visionRobotPose.getX(),
-                        visionRobotPose.getY(),
-                        disambiguatedRobotPose.getZ()),
-                    new Rotation3d(visionRobotPose.getRotation()));
-
-            Logger.recordOutput("Vision/TrigGlobalPose", disambiguatedRobotPose.toPose2d());
-          }
         }
 
         // Check whether to reject pose
@@ -170,7 +124,7 @@ public class VisionGlobalPose extends SubsystemBase {
                 || disambiguatedRobotPose.getX() > FieldConstants.fieldLength + 0.5
                 || disambiguatedRobotPose.getY() < -0.5
                 || disambiguatedRobotPose.getY() > FieldConstants.fieldWidth + 0.5
-                || avgTagDistance > Constants.VisionGlobalPose.maxAvgTagDistance;
+                || avgTagDistance > maxAvgTagDistance.get();
 
         // Add pose to log
         if (Constants.VisionGlobalPose.enableVerbosePoseLogging) {
@@ -192,64 +146,48 @@ public class VisionGlobalPose extends SubsystemBase {
         double thetaStdDev = 0.0;
 
         if (observation.useMultiTag()) {
-          xyStdDev = Math.pow(avgTagDistance, 2.0) / observation.tagCount();
-          thetaStdDev = Math.pow(avgTagDistance, 2.0) / observation.tagCount();
+          xyStdDev = (avgTagDistance * avgTagDistance) / observation.tagCount();
+          thetaStdDev = (avgTagDistance * avgTagDistance) / observation.tagCount();
 
           consumer.accept(
               disambiguatedRobotPose.toPose2d(),
               observation.timestamp(),
               VecBuilder.fill(
-                  Constants.VisionGlobalPose.stdDevBaseline
-                      * Constants.VisionGlobalPose.thetaStdDevBaseline
-                      * xyStdDev,
-                  Constants.VisionGlobalPose.stdDevBaseline
-                      * Constants.VisionGlobalPose.thetaStdDevBaseline
-                      * xyStdDev,
-                  Constants.VisionGlobalPose.stdDevBaseline
-                      * Constants.VisionGlobalPose.thetaStdDevBaseline
-                      * thetaStdDev));
+                  baseStdDev.get() * xyStdDev,
+                  baseStdDev.get() * xyStdDev,
+                  baseStdDev.get() * thetaStdDev));
           if (Constants.VisionGlobalPose.enableVerbosePoseLogging) {
             Logger.recordOutput(
                 "VisionGlobalPose/Camera" + Integer.toString(cameraIndex) + "/StdDev/XY",
-                Constants.VisionGlobalPose.stdDevBaseline
-                    * xyStdDev
-                    * Constants.VisionGlobalPose.thetaStdDevBaseline);
+                baseStdDev.get() * xyStdDev);
             Logger.recordOutput(
                 "VisionGlobalPose/Camera" + Integer.toString(cameraIndex) + "/StdDev/Theta",
-                Constants.VisionGlobalPose.stdDevBaseline
-                    * thetaStdDev
-                    * Constants.VisionGlobalPose.thetaStdDevBaseline);
+                baseStdDev.get() * thetaStdDev);
           }
         } else {
-          xyStdDev = Math.max(xyStdDevModel.predict(avgTagDistance), 0.000001);
-
-          if (Constants.VisionGlobalPose.enableGlobalPoseTrigEstimation) {
-            thetaStdDev = 4322.0;
-          } else {
-            thetaStdDev = Math.max(thetaStdDevModel.predict(avgTagDistance), 0.000001);
-          }
+          xyStdDev = avgTagDistance * avgTagDistance;
+          thetaStdDev = avgTagDistance * avgTagDistance;
 
           consumer.accept(
               disambiguatedRobotPose.toPose2d(),
               observation.timestamp(),
               VecBuilder.fill(
-                  Constants.VisionGlobalPose.stdDevBaseline * xyStdDev,
-                  Constants.VisionGlobalPose.stdDevBaseline * xyStdDev,
-                  Constants.VisionGlobalPose.stdDevBaseline * thetaStdDev));
+                  baseStdDev.get() * xyStdDev * singleTagStdDev.get(),
+                  baseStdDev.get() * xyStdDev * singleTagStdDev.get(),
+                  baseStdDev.get() * thetaStdDev * singleTagStdDev.get()));
 
           if (Constants.VisionGlobalPose.enableVerbosePoseLogging) {
             Logger.recordOutput(
                 "VisionGlobalPose/Camera" + Integer.toString(cameraIndex) + "/StdDev/XY",
-                Constants.VisionGlobalPose.stdDevBaseline * xyStdDev);
+                baseStdDev.get() * xyStdDev * singleTagStdDev.get());
             Logger.recordOutput(
                 "VisionGlobalPose/Camera" + Integer.toString(cameraIndex) + "/StdDev/Theta",
-                Constants.VisionGlobalPose.stdDevBaseline * thetaStdDev);
+                baseStdDev.get() * thetaStdDev * singleTagStdDev.get());
           }
         }
       }
 
-      // Log camera datadata
-
+      // Log camera data
       if (Constants.VisionGlobalPose.enableVerbosePoseLogging) {
         Logger.recordOutput(
             "VisionGlobalPose/Camera" + Integer.toString(cameraIndex) + "/RobotPosesAccepted",
