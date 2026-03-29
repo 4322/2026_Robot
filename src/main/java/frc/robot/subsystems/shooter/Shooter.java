@@ -95,6 +95,12 @@ public class Shooter extends SubsystemBase {
     config.headingReferenceDistance =
         Constants.ShotCalculator
             .headingReferenceDistance; // heading tolerance scales with distance from hub
+    config.minScoringDistance = 0;
+    config.maxScoringDistance = 100;
+    config.minSOTMSpeed = 0.1;
+    config.maxSOTMSpeed = 100;
+    config.tofMin = 0.05;
+    config.tofMax = 100;
 
     shotCalc = new ShotCalculator(config);
 
