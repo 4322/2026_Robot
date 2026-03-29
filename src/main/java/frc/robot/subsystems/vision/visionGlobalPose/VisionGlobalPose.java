@@ -12,6 +12,7 @@ import frc.robot.constants.Constants;
 import frc.robot.constants.FieldConstants;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.vision.visionGlobalPose.VisionGlobalPoseIO.GlobalPoseObservation;
+import frc.robot.util.LoggedTunableNumber;
 import java.util.ArrayList;
 import java.util.List;
 import org.littletonrobotics.junction.Logger;
@@ -21,7 +22,14 @@ public class VisionGlobalPose extends SubsystemBase {
   private final VisionGlobalPoseIO[] io;
   private final VisionGlobalPoseIOInputsAutoLogged[] inputs;
   private final Drive drive;
-  public int tagId;
+  private static final LoggedTunableNumber baseStdDev =
+      new LoggedTunableNumber("GlobalPose/baseStdDev", Constants.VisionGlobalPose.stdDevBaseline);
+  private static final LoggedTunableNumber singleTagStdDev =
+      new LoggedTunableNumber(
+          "GlobalPose/singleTagStdDev", Constants.VisionGlobalPose.singleTagStdDevAdjuster);
+  private static final LoggedTunableNumber maxAvgTagDistance =
+      new LoggedTunableNumber(
+          "GlobalPose/maxAvgTagDistance", Constants.VisionGlobalPose.maxAvgTagDistance);
 
   public VisionGlobalPose(Drive drive, VisionGlobalPoseIO... io) {
     this.drive = drive;
@@ -116,7 +124,7 @@ public class VisionGlobalPose extends SubsystemBase {
                 || disambiguatedRobotPose.getX() > FieldConstants.fieldLength + 0.5
                 || disambiguatedRobotPose.getY() < -0.5
                 || disambiguatedRobotPose.getY() > FieldConstants.fieldWidth + 0.5
-                || avgTagDistance > Constants.VisionGlobalPose.maxAvgTagDistance;
+                || avgTagDistance > maxAvgTagDistance.get();
 
         // Add pose to log
         if (Constants.VisionGlobalPose.enableVerbosePoseLogging) {
@@ -145,16 +153,16 @@ public class VisionGlobalPose extends SubsystemBase {
               disambiguatedRobotPose.toPose2d(),
               observation.timestamp(),
               VecBuilder.fill(
-                  Constants.VisionGlobalPose.stdDevBaseline * xyStdDev,
-                  Constants.VisionGlobalPose.stdDevBaseline * xyStdDev,
-                  Constants.VisionGlobalPose.stdDevBaseline * thetaStdDev));
+                  baseStdDev.get() * xyStdDev,
+                  baseStdDev.get() * xyStdDev,
+                  baseStdDev.get() * thetaStdDev));
           if (Constants.VisionGlobalPose.enableVerbosePoseLogging) {
             Logger.recordOutput(
                 "VisionGlobalPose/Camera" + Integer.toString(cameraIndex) + "/StdDev/XY",
-                Constants.VisionGlobalPose.stdDevBaseline * xyStdDev);
+                baseStdDev.get() * xyStdDev);
             Logger.recordOutput(
                 "VisionGlobalPose/Camera" + Integer.toString(cameraIndex) + "/StdDev/Theta",
-                Constants.VisionGlobalPose.stdDevBaseline * thetaStdDev);
+                baseStdDev.get() * thetaStdDev);
           }
         } else {
           xyStdDev = avgTagDistance * avgTagDistance;
@@ -164,27 +172,17 @@ public class VisionGlobalPose extends SubsystemBase {
               disambiguatedRobotPose.toPose2d(),
               observation.timestamp(),
               VecBuilder.fill(
-                  Constants.VisionGlobalPose.stdDevBaseline
-                      * xyStdDev
-                      * Constants.VisionGlobalPose.singleTagStdDevAdjuster,
-                  Constants.VisionGlobalPose.stdDevBaseline
-                      * xyStdDev
-                      * Constants.VisionGlobalPose.singleTagStdDevAdjuster,
-                  Constants.VisionGlobalPose.stdDevBaseline
-                      * thetaStdDev
-                      * Constants.VisionGlobalPose.singleTagStdDevAdjuster));
+                  baseStdDev.get() * xyStdDev * singleTagStdDev.get(),
+                  baseStdDev.get() * xyStdDev * singleTagStdDev.get(),
+                  baseStdDev.get() * thetaStdDev * singleTagStdDev.get()));
 
           if (Constants.VisionGlobalPose.enableVerbosePoseLogging) {
             Logger.recordOutput(
                 "VisionGlobalPose/Camera" + Integer.toString(cameraIndex) + "/StdDev/XY",
-                Constants.VisionGlobalPose.stdDevBaseline
-                    * xyStdDev
-                    * Constants.VisionGlobalPose.singleTagStdDevAdjuster);
+                baseStdDev.get() * xyStdDev * singleTagStdDev.get());
             Logger.recordOutput(
                 "VisionGlobalPose/Camera" + Integer.toString(cameraIndex) + "/StdDev/Theta",
-                Constants.VisionGlobalPose.stdDevBaseline
-                    * thetaStdDev
-                    * Constants.VisionGlobalPose.singleTagStdDevAdjuster);
+                baseStdDev.get() * thetaStdDev * singleTagStdDev.get());
           }
         }
       }
