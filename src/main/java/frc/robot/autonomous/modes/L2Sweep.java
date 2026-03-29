@@ -34,7 +34,6 @@ public class L2Sweep extends SequentialCommandGroup {
                 drive.setPose(startPoseRed);
               }
             }),
-        new ParallelCommandGroup(
             IntakeCommands.intake(intake),
             new SequentialCommandGroup(
                 AutoBuilder.followPath(Robot.L_2SWEEP_A),
@@ -56,6 +55,6 @@ public class L2Sweep extends SequentialCommandGroup {
                         Constants.Autonomous.smooshDelaySecondPass,
                         Constants.Autonomous.shootTimeSecondPass)),
                 AutoBuilder.followPath(Robot.L_2SWEEP_CG),
-                AutoBuilder.followPath(Robot.L_2SWEEP_H))));
+                AutoBuilder.followPath(Robot.L_2SWEEP_H)));
   }
 }
