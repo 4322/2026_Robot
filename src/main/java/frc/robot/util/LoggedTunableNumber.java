@@ -1,7 +1,6 @@
 package frc.robot.util;
 
 import frc.robot.constants.Constants;
-import frc.robot.constants.Constants.SubsystemMode;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -21,7 +20,6 @@ public class LoggedTunableNumber implements DoubleSupplier {
   private double defaultValue;
   private LoggedNetworkNumber dashboardNumber;
   private Map<Integer, Double> lastHasChangedValues = new HashMap<>();
-  private boolean tuningWithLoggableNumbers = false;
 
   /**
    * Create a new LoggedTunableNumber
@@ -30,13 +28,6 @@ public class LoggedTunableNumber implements DoubleSupplier {
    */
   public LoggedTunableNumber(String dashboardKey) {
     this.key = tableKey + "/" + dashboardKey;
-    if (Constants.driveMode == SubsystemMode.TUNING
-        || Constants.firingManagerMode == SubsystemMode.TUNING
-        || Constants.hoodMode == SubsystemMode.TUNING
-        || Constants.visionGlobalPose == SubsystemMode.TUNING) {
-      // can't be set automatically in Constants because it's too late
-      tuningWithLoggableNumbers = true;
-    }
   }
 
   /**
@@ -59,7 +50,7 @@ public class LoggedTunableNumber implements DoubleSupplier {
     if (!hasDefault) {
       hasDefault = true;
       this.defaultValue = defaultValue;
-      if (tuningWithLoggableNumbers) {
+      if (Constants.tuningWithLoggableNumbers) {
         dashboardNumber = new LoggedNetworkNumber(key, defaultValue);
       }
     }
@@ -74,7 +65,7 @@ public class LoggedTunableNumber implements DoubleSupplier {
     if (!hasDefault) {
       return 0.0;
     } else {
-      return tuningWithLoggableNumbers ? dashboardNumber.get() : defaultValue;
+      return Constants.tuningWithLoggableNumbers ? dashboardNumber.get() : defaultValue;
     }
   }
 
