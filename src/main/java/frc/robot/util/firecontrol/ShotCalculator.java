@@ -20,6 +20,8 @@
 
 package frc.robot.util.firecontrol;
 
+import org.littletonrobotics.junction.Logger;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -262,6 +264,7 @@ public class ShotCalculator {
         || inputs.robotPose() == null
         || inputs.fieldVelocity() == null
         || inputs.robotVelocity() == null) {
+      Logger.recordOutput("SOTF/error", "Null robot poses");
       return LaunchParameters.INVALID;
     }
 
@@ -275,6 +278,7 @@ public class ShotCalculator {
         || Double.isNaN(poseY)
         || Double.isInfinite(poseX)
         || Double.isInfinite(poseY)) {
+      Logger.recordOutput("SOTF/error", "None");
       return LaunchParameters.INVALID;
     }
 
@@ -336,6 +340,7 @@ public class ShotCalculator {
     double distance = Math.hypot(rx, ry);
 
     if (distance < config.minScoringDistance || distance > config.maxScoringDistance) {
+      Logger.recordOutput("SOTF/error", "Out of distance bounds");
       return LaunchParameters.INVALID;
     }
 
@@ -343,6 +348,7 @@ public class ShotCalculator {
 
     // Speed cap: shots above this speed are out of calibration range
     if (robotSpeed > config.maxSOTMSpeed) {
+      Logger.recordOutput("SOTF/error", "Larger than max robot speed");
       return LaunchParameters.INVALID;
     }
 
@@ -394,6 +400,7 @@ public class ShotCalculator {
         if (projDist < 0.01) {
           tof = effectiveTOF(distance);
           iterationsUsed = maxIter + 1; // flag as diverged
+          Logger.recordOutput("SOTF/error", "DistTooClose");
           break;
         }
 
@@ -498,6 +505,12 @@ public class ShotCalculator {
             solverQuality, robotSpeed, headingErrorRad, distance, inputs.visionConfidence());
 
     previousSpeed = robotSpeed;
+
+    Logger.recordOutput("SOTF/RPM", effectiveRPMValue);
+    Logger.recordOutput("SOTF/TOF", effectiveTOF);
+    Logger.recordOutput("SOTF/turretAngle", turretAngle);
+    Logger.recordOutput("SOTF/turretRadPerSecFF", turretAngularVelocityRad);
+    Logger.recordOutput("SOTF/error", "None");
 
     return new LaunchParameters(
         effectiveRPMValue,

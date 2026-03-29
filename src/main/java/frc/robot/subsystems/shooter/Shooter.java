@@ -12,6 +12,8 @@ import frc.robot.constants.Constants.ShotCalculatorParameters;
 import frc.robot.constants.FieldConstants;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.led.LED;
+import frc.robot.subsystems.shooter.areaManager.AreaManager;
+import frc.robot.subsystems.shooter.areaManager.AreaManager.Zone;
 import frc.robot.subsystems.shooter.firingManager.FiringManager;
 import frc.robot.subsystems.shooter.flywheel.Flywheel;
 import frc.robot.subsystems.shooter.hood.Hood;
@@ -277,52 +279,100 @@ public class Shooter extends SubsystemBase {
         targetTurretAngleDeg = Constants.fixedSolutionRed.turretAngleDeg;
       }
     } else {
+      Translation2d shootTarget;
+      Translation2d shootForward;
+      ShotCalculator.ShotInputs inputs;
 
       if (isScoring) {
-        Translation2d hubCenter;
-        Translation2d hubForward;
-
         if (Robot.alliance == DriverStation.Alliance.Red) {
-          hubCenter = FieldConstants.Red.hubTranslation;
-          hubForward = new Translation2d(-1, 0);
-          hubCenter.plus(new Translation2d(Units.inchesToMeters(-3), 0));
+          shootTarget = FieldConstants.Red.hubTranslation;
+          shootForward = new Translation2d(-1, 0);
+          shootTarget.plus(new Translation2d(Units.inchesToMeters(-3), 0));
         } else {
-          hubCenter = FieldConstants.Blue.hubTranslation;
-          hubForward = new Translation2d(1, 0);
-          hubCenter.plus(new Translation2d(Units.inchesToMeters(3), 0));
+          shootTarget = FieldConstants.Blue.hubTranslation;
+          shootForward = new Translation2d(1, 0);
+          shootTarget.plus(new Translation2d(Units.inchesToMeters(3), 0));
         }
 
-        ShotCalculator.ShotInputs inputs =
+        inputs =
             new ShotCalculator.ShotInputs(
                 drive.getRobotPose(),
                 drive.getFieldRelativeVelocity(),
                 drive.getRobotRelativeVelocity(),
-                hubCenter,
-                hubForward,
+                shootTarget,
+                shootForward,
                 0.9, // vision confidence, 0 to 1
                 0, // pitch for tilt gate (0.0 if no gyro)
                 0 // roll for tilt gate (0.0 if no gyro)
                 );
 
-        ShotCalculator.LaunchParameters shot = shotCalc.calculate(inputs);
-        if (shot.isValid()) {
-          targetHoodAngleDeg = shotCalc.getHoodAngle(shot.solvedDistanceM());
-          targetFlywheelSpeedRPS = shot.rpm() / 60.0;
-          targetTurretAngleDeg = shot.turretAngle().getDegrees();
-          targetTunnelSpeedRPS = Constants.Tunnel.shootRPS;
-          targetSpindexerSpeedRPS = Constants.Spindexer.shootRPS;
-          return;
-        }
-
       } else {
-        FiringSolution firingSolution =
-            FiringManager.getFiringSolution(drive.getTurretPose(), drive.getVelocity(), isScoring);
+        Zone zone = AreaManager.getZoneOfPosition(drive.getTurretTranslation());
 
-        targetHoodAngleDeg = firingSolution.hoodAngle;
-        targetFlywheelSpeedRPS = firingSolution.flywheelSpeedRPS;
-        targetTurretAngleDeg = firingSolution.turretAngleDeg;
-        targetTunnelSpeedRPS = firingSolution.tunnelSpeedRPS;
-        targetSpindexerSpeedRPS = firingSolution.indexerSpeedRPS;
+        if (Robot.alliance == DriverStation.Alliance.Red) {
+          if (zone == Zone.LEFT_NEUTRAL) {
+            shootTarget = Constants.FiringTargetTranslations.Red.neutralLeftTranslation;
+            shootForward = new Translation2d(1, 0);
+          }
+          else if (zone == Zone.RIGHT_NEUTRAL) {
+            shootTarget = Constants.FiringTargetTranslations.Red.neutralRightTranslation;
+            shootForward = new Translation2d(1, 0);
+          }
+          else if (zone == Zone.LEFT_OPPOSITION) {
+            shootTarget = Constants.FiringTargetTranslations.Red.allianceLeftTranslation;
+            shootForward = new Translation2d(1, 0);
+          }
+          else if (zone == Zone.RIGHT_OPPOSITION) {
+            shootTarget = Constants.FiringTargetTranslations.Red.allianceRightTranslation;
+            shootForward = new Translation2d(1, 0);
+          }
+          else {
+            Logger.recordOutput("SOTF/InShootingZone", false);
+            return;
+          } 
+        } else {
+          if (zone == Zone.LEFT_NEUTRAL) {
+            shootTarget = Constants.FiringTargetTranslations.Blue.neutralLeftTranslation;
+            shootForward = new Translation2d(-1, 0);
+          }
+          else if (zone == Zone.RIGHT_NEUTRAL) {
+            shootTarget = Constants.FiringTargetTranslations.Blue.neutralRightTranslation;
+            shootForward = new Translation2d(-1, 0);
+          }
+          else if (zone == Zone.LEFT_OPPOSITION) {
+            shootTarget = Constants.FiringTargetTranslations.Blue.allianceLeftTranslation;
+            shootForward = new Translation2d(-1, 0);
+          }
+          else if (zone == Zone.RIGHT_OPPOSITION) {
+            shootTarget = Constants.FiringTargetTranslations.Blue.allianceRightTranslation;
+            shootForward = new Translation2d(-1, 0);
+          }
+          else {
+            Logger.recordOutput("SOTF/InShootingZone", false);
+            return;
+          }
+        }
+        inputs =
+            new ShotCalculator.ShotInputs(
+                drive.getRobotPose(),
+                drive.getFieldRelativeVelocity(),
+                drive.getRobotRelativeVelocity(),
+                shootTarget,
+                shootForward,
+                0.9, // vision confidence, 0 to 1
+                0, // pitch for tilt gate (0.0 if no gyro)
+                0 // roll for tilt gate (0.0 if no gyro)
+                );
+      }
+
+      Logger.recordOutput("SOTF/InShootingZone", true);
+      ShotCalculator.LaunchParameters shot = shotCalc.calculate(inputs);
+      if (shot.isValid()) {
+        targetHoodAngleDeg = shotCalc.getHoodAngle(shot.solvedDistanceM());
+        targetFlywheelSpeedRPS = shot.rpm() / 60.0;
+        targetTurretAngleDeg = shot.turretAngle().getDegrees();
+        targetTunnelSpeedRPS = Constants.Tunnel.shootRPS;
+        targetSpindexerSpeedRPS = Constants.Spindexer.shootRPS;
       }
     }
   }
