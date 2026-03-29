@@ -212,6 +212,12 @@ public final class Constants {
     //    CANCoderTwo = Encoder 4.73
     public static final double CANCoderOneOffsetRot = 0.25 - 0.5446;
     public static final double CANCoderTwoOffsetRot = 0.8157 - 0.0092;
+
+    // Derivation of above values:
+    // 290 degrees * 90/10 = encoder 1 should have rotated 7.25 rotations -> 
+    //   encoder 1 reads 0.25 in locked position
+    // 290 degrees * 90/19 = encoder 2 should have rotated 3.815789 rotations -> 
+    //   encoder 2 reads 3341.0/4096.0 = 0.8157 in locked position
   }
 
   public static class Hood {
