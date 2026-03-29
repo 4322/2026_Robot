@@ -223,19 +223,17 @@ public class Turret {
     2.111111 rotations, if we overrotate this gives us 20 degrees of buffer before
     we get into extreme trouble, although during normal operation we should never
     actually get into this range.
+
+    (0, 0) should be -200 degrees. Our locked turret position is at +90 degrees, so
+    that's +290 degrees of offset.
+
+    290 degrees * 90/10 = encoder 1 should have rotated 7.25 rotations -> reads 0.25
+    290 degrees * 90/19 = encoder 2 should have rotated 3.815789 rotations -> reads 3341.0/4096.0
+
     */
 
-    final double MIDPOINT = Units.degreesToRotations(470);
-    final double NEGATIVE_OFFSET = Units.degreesToRotations(670);
-    final double POSITIVE_OFFSET = Units.degreesToRotations(90);
+    return crtRotations - 200.0;
 
-    if (crtRotations > MIDPOINT) {
-      // 490-760 degrees CRT -> -180-+90 degrees
-      return crtRotations - NEGATIVE_OFFSET;
-    } else {
-      // 0-450 degrees CRT -> +90-+540 degrees
-      return crtRotations + POSITIVE_OFFSET;
-    }
   }
 
   // Returns rotations relative to locked position
