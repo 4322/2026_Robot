@@ -49,7 +49,7 @@ public final class Constants {
   public static final SubsystemMode spindexerMode = SubsystemMode.NORMAL;
   public static final SubsystemMode tunnelMode = SubsystemMode.NORMAL;
   public static SubsystemMode turretMode = SubsystemMode.NORMAL;
-  public static final SubsystemMode deployerMode = SubsystemMode.DISABLED;
+  public static final SubsystemMode deployerMode = SubsystemMode.NORMAL;
   public static final SubsystemMode rollerMode = SubsystemMode.NORMAL;
   public static final SubsystemMode ledMode = SubsystemMode.DISABLED;
   public static final SubsystemMode visionGlobalPose = SubsystemMode.NORMAL;
@@ -57,7 +57,6 @@ public final class Constants {
   public static final SubsystemMode firingManagerMode = SubsystemMode.NORMAL;
   public static final boolean turretLocked = false;
   public static boolean shootOnTheMoveEnabled = false;
-  public static boolean tuningWithLoggableNumbers = false;
   public static final boolean frontRightCameraEnable = true;
   public static final boolean frontLeftCameraEnable = true;
   public static final boolean backRightCameraEnable = true;
@@ -75,12 +74,6 @@ public final class Constants {
     }
     if (Constants.Drive.zeroTurnEncoders) {
       driveMode = SubsystemMode.TUNING;
-    }
-    if (driveMode == SubsystemMode.TUNING
-        || firingManagerMode == SubsystemMode.TUNING
-        || hoodMode == SubsystemMode.TUNING
-        || visionGlobalPose == SubsystemMode.TUNING) {
-      tuningWithLoggableNumbers = true;
     }
   }
 
