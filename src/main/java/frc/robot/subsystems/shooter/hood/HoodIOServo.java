@@ -54,10 +54,8 @@ public class HoodIOServo implements HoodIO {
   @Override
   public void updateInputs(HoodIOInputs inputs) {
     inputs.encoderConnected = encoder.isConnected();
-    inputs.encoderRotations =
-        encoder.getPosition().getValueAsDouble(); // Convert degrees to rotations
-    inputs.degrees =
-        inputs.encoderRotations * 360.0 / Constants.Hood.gearRatio; // Convert rotations to degrees
+    inputs.encoderRotations = encoder.getPosition().getValueAsDouble();
+    inputs.degrees = inputs.encoderRotations * 360.0 / Constants.Hood.encoderToHoodGearRatio;
     inputs.encoderRPS = encoder.getVelocity().getValueAsDouble();
     inputs.servoEnabled =
         servo.isEnabled(); // Assuming a threshold of 0.1A to determine if the servo is powered
@@ -78,13 +76,13 @@ public class HoodIOServo implements HoodIO {
       pulseWidth = Math.min(pulseWidth, (int) -kSPulseWidth.get());
     }
     pulseWidth += 1500; // add in zero velocity pulse width
-    servo.setPulseWidth(pulseWidth);
-    Logger.recordOutput("Hood/pulseWidth", pulseWidth);
+    setPulseWidth(pulseWidth);
   }
 
   @Override
   public void setPulseWidth(int pulseWidth) {
     servo.setPulseWidth(pulseWidth);
+    Logger.recordOutput("Shooter/Hood/pulseWidth", pulseWidth);
   }
 
   @Override

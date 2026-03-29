@@ -208,20 +208,22 @@ public final class Constants {
     // Encoder calibration procedure:
     // 1. Put turret in locked position and insert lock bolt (90 degrees)
     // 2. Set magnetic offsets to 0 on both encoders in Phoenix Tuner
-    // 3. Record the negative of the magnetic offsets below
+    // 3. Enter the negative of the AbsolutePosition below
     //    CANCoderOne = Encoder 9
     //    CANCoderTwo = Encoder 4.73
-    public static final double CANCoderOneOffsetRot = -0.5414;
-    public static final double CANCoderTwoOffsetRot = -0.5235;
+    public static final double CANCoderOneOffsetRot = -0.5446;
+    public static final double CANCoderTwoOffsetRot = -0.0092;
   }
 
   public static class Hood {
     public static final int servoChannel = 3;
     public static final int encoderId = 3;
-    public static final double gearRatio = 164 / 11.0;
+    public static final double encoderToHoodGearRatio = 164 / 11.0;
+    public static final double servoToEncoderGearRatio = 45 / 32.0;
     public static final double safeAngleDeg = 0;
     public static final double homingVelocityThresholdRPS = 0.01;
     public static final double homingVelocity = -0.4;
+    public static final int homeMicroSecOffset = 50; // calibrate after replacing servo
     public static final double mediumVelocity = 0.35;
     public static final double fastVelocity = 1.0;
     public static final double slowVelocity = 0.3; // no kS compensation, kS can be 0.1 to 0.2

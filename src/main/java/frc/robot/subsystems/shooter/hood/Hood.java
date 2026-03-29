@@ -1,5 +1,6 @@
 package frc.robot.subsystems.shooter.hood;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -159,7 +160,6 @@ public class Hood {
     } else {
       SmartDashboard.putString("Hood/HoodAtGoal", Constants.NetworkTables.red.toHexString());
     }
-
     SmartDashboard.putNumber("Hood/HoodAngle", inputs.degrees);
   }
 
@@ -172,6 +172,17 @@ public class Hood {
   private void setGoal(double degrees) {
     requestedAngleDeg = degrees;
     updateAtGoalTimer();
+  }
+
+  private void servoSeekPosition(double hoodDegrees) {
+    double servoDegrees =
+        hoodDegrees
+            * Constants.Hood.encoderToHoodGearRatio
+            * Constants.Hood.servoToEncoderGearRatio;
+    int pulseWdith =
+        MathUtil.clamp(
+            500 + Constants.Hood.homeMicroSecOffset + (int) (servoDegrees * 0.9), 500, 2500);
+    io.setPulseWidth(pulseWdith);
   }
 
   public void trenchOverride(boolean override) {
