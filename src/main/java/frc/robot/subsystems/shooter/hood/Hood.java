@@ -137,8 +137,16 @@ public class Hood {
         hoodDegrees
             * Constants.Hood.encoderToHoodGearRatio
             * Constants.Hood.servoToEncoderGearRatio;
+    double pulseWidthToDegreeRatio = 0.9;
     int pulseWdith =
-        MathUtil.clamp(Constants.Hood.homePulseWidth + (int) (servoDegrees * 0.9), 500, 2500);
+        MathUtil.clamp(
+            Constants.Hood.homePulseWidth
+                + (int)
+                    (servoDegrees
+                        / pulseWidthToDegreeRatio
+                        * Constants.Hood.servoPositionScaleFactor),
+            500,
+            2500);
     io.setPulseWidth(pulseWdith);
   }
 
