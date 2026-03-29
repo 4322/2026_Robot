@@ -145,9 +145,4 @@ public class Intake extends SubsystemBase {
   public boolean hasExtended() {
     return hasExtended;
   }
-
-  public void setBrakeMode(boolean enable) {
-    deployer.setBrakeMode(enable);
-    rollers.setBrakeMode(enable);
-  }
 }

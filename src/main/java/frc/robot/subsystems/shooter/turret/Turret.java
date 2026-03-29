@@ -33,7 +33,7 @@ public class Turret {
     // Temporary until we can,
     // Temporary until we can,
     io.updateInputs(inputs);
-    io.setPosition(getRotation() + 0.25); // adjust for offset locked (calibrated) position
+    io.setPosition(getRotation()); // adjust for offset locked (calibrated) position
     crtTimer.start();
   }
 
@@ -45,8 +45,7 @@ public class Turret {
   public void outputsPeriodic() {
     if (crtTimer.hasElapsed(2.0)) {
       crtTimer.restart();
-      Logger.recordOutput(
-          "Shooter/Turret/crtDegrees", Units.rotationsToDegrees(getRotation() + 0.25));
+      Logger.recordOutput("Shooter/Turret/crtDegrees", Units.rotationsToDegrees(getRotation()));
     }
     switch (Constants.turretMode) {
       case DISABLED -> {}
@@ -213,14 +212,38 @@ public class Turret {
     }
   }
 
+  private static double crtToTurretRotations(double crtRotations) {
+    /*
+    Turret range is -180 degrees to +540 degrees
+    Locked position/CRT zero is at +90 degrees
+    490-760 degrees is -180 to +90 degrees
+    0-450 degrees is +90 to +540 degrees
+
+    Midpoint: +470 degrees; even though the turret can physically rotate more than
+    2.111111 rotations, if we overrotate this gives us 20 degrees of buffer before
+    we get into extreme trouble, although during normal operation we should never
+    actually get into this range.
+
+    (0, 0) should be -200 degrees. Our locked turret position is at +90 degrees, so
+    that's +290 degrees of offset.
+
+    290 degrees * 90/10 = encoder 1 should have rotated 7.25 rotations -> reads 0.25
+    290 degrees * 90/19 = encoder 2 should have rotated 3.815789 rotations -> reads 3341.0/4096.0
+
+    */
+
+    return crtRotations - 200.0 / 360.0;
+  }
+
   // Returns rotations relative to locked position
+  // These rotations are in turret units
   private double getRotation() {
 
     // Based off of 4522's "brute force" solver:
     // https://www.chiefdelphi.com/uploads/short-url/vvrM1V1pqvDnnZfHtAhS02mBVIi.pdf
 
     // HACK: Look. I know this value works, okay?
-    final int GCD = 90;
+    final int RATIO_LCM_SLOTS = 90;
     final double LCM = lcm(Constants.Turret.CANCoderOneRatio, Constants.Turret.CANCoderTwoRatio);
     // Range of motion in rotations
     final double ROTATIONAL_RANGE =
@@ -233,11 +256,11 @@ public class Turret {
     double turretFullRotations = 0.5;
 
     // look for the entry in both lists of possible values that is the same.
-    for (int i = 0; i < GCD; i++) {
+    for (int i = 0; i < RATIO_LCM_SLOTS; i++) {
       // generate the candidate rotation value from encoder 1
       double candidate1 =
           mod((encoderOne + (double) i) / Constants.Turret.CANCoderOneRatio, ROTATIONAL_RANGE);
-      for (int j = 0; j < GCD; j++) {
+      for (int j = 0; j < RATIO_LCM_SLOTS; j++) {
         // generate the candidate rotation value from encoder 2
         double candidate2 =
             mod(((encoderTwo + (double) j) / Constants.Turret.CANCoderTwoRatio), ROTATIONAL_RANGE);
@@ -250,7 +273,7 @@ public class Turret {
     }
     Logger.recordOutput("Shooter/Turret/rotationRange", ROTATIONAL_RANGE);
     Logger.recordOutput("Shooter/Turret/fullRotations", turretFullRotations);
-    return turretFullRotations;
+    return crtToTurretRotations(turretFullRotations);
   }
 
   private void updateNetworkTableValues() {

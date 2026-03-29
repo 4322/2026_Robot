@@ -397,25 +397,21 @@ public class Robot extends LoggedRobot {
   /** This function is called periodically when disabled. */
   @Override
   public void disabledPeriodic() {
-
-    if (Constants.currentMode != Constants.Mode.SIM) {}
-
-    if (!coastButton.get() && Constants.currentMode != Constants.Mode.SIM) {
-      // RobotContainer.getSuperstructure().CoastMotors();
-      DriverStation.reportWarning("Coast Mode Trying To Activate", false);
-      coastButtonTimer.start();
-      // button is pressed in
-    }
-
-    if (coastButtonTimer.hasElapsed(0.1)) {
-      robotContainer.setBrakeMode(false);
-    }
-
-    if (coastButtonTimer.hasElapsed(10)) {
-      DriverStation.reportWarning("Brake Mode Trying To Activate", false);
-      robotContainer.setBrakeMode(true);
-      coastButtonTimer.stop();
-      coastButtonTimer.reset();
+    if (Constants.currentMode != Constants.Mode.SIM) {
+      if (!coastButton.get()) {
+        // button is pressed in
+        DriverStation.reportWarning("Activating Coast Mode", false);
+        coastButtonTimer.start();
+      }
+      if (coastButtonTimer.hasElapsed(0.1)) {
+        robotContainer.setBrakeMode(false);
+      }
+      if (coastButtonTimer.hasElapsed(10)) {
+        DriverStation.reportWarning("Activating Brake Mode", false);
+        robotContainer.setBrakeMode(true);
+        coastButtonTimer.stop();
+        coastButtonTimer.reset();
+      }
     }
   }
 

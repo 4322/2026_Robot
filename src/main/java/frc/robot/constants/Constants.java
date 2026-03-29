@@ -49,10 +49,8 @@ public final class Constants {
   public static final SubsystemMode spindexerMode = SubsystemMode.NORMAL;
   public static final SubsystemMode tunnelMode = SubsystemMode.NORMAL;
   public static SubsystemMode turretMode = SubsystemMode.NORMAL;
-  public static final SubsystemMode deployerMode = SubsystemMode.NORMAL;
+  public static final SubsystemMode deployerMode = SubsystemMode.DISABLED;
   public static final SubsystemMode rollerMode = SubsystemMode.NORMAL;
-  public static final SubsystemMode intakeMode = SubsystemMode.NORMAL;
-  public static final SubsystemMode climberMode = SubsystemMode.DISABLED;
   public static final SubsystemMode ledMode = SubsystemMode.DISABLED;
   public static final SubsystemMode visionGlobalPose = SubsystemMode.NORMAL;
   public static final SubsystemMode visionObjectDetection = SubsystemMode.DISABLED;
@@ -151,7 +149,7 @@ public final class Constants {
     public static final double statorCurrentLimit = 120;
     public static final double supplyCurrentLimit = 40;
     public static final InvertedValue motorInvert = InvertedValue.Clockwise_Positive;
-    public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
+    public static final NeutralModeValue neutralMode = NeutralModeValue.Coast;
 
     // max RPS for a burst is 75 due to drop in battery voltage
     public static final double kS = 0.32;
@@ -159,7 +157,6 @@ public final class Constants {
     public static final double kP = 0.5;
     public static final double kI = 0;
     public static final double kD = 0;
-    public static final double flywheelHoodAdjustmentFactor = -2.0;
 
     public static final double motorToMechanismRatio = 1;
     public static final double largeToleranceRPS = 4.0;
@@ -208,30 +205,32 @@ public final class Constants {
     // Encoder calibration procedure:
     // 1. Put turret in locked position and insert lock bolt (90 degrees)
     // 2. Set magnetic offsets to 0 on both encoders in Phoenix Tuner
-    // 3. Record the negative of the magnetic offsets below
+    // 3. Set CANCoderOneOffsetRot = 0.25 - (PhoenixTuner AbsolutePosition)
+    // 4. Set CANCoderTwoOffsetRot = 0.8157 - (PhoenixTuner AbsolutePosition)
     //    CANCoderOne = Encoder 9
     //    CANCoderTwo = Encoder 4.73
-    public static final double CANCoderOneOffsetRot = -0.5414;
-    public static final double CANCoderTwoOffsetRot = -0.5235;
+    public static final double CANCoderOneOffsetRot = 0.25 - 0.5446;
+    public static final double CANCoderTwoOffsetRot = 0.8157 - 0.0092;
+
+    // Derivation of above values:
+    // 290 degrees * 90/10 = encoder 1 should have rotated 7.25 rotations ->
+    //   encoder 1 reads 0.25 in locked position
+    // 290 degrees * 90/19 = encoder 2 should have rotated 3.815789 rotations ->
+    //   encoder 2 reads 3341.0/4096.0 = 0.8157 in locked position
   }
 
   public static class Hood {
     public static final int servoChannel = 3;
     public static final int encoderId = 3;
-    public static final double gearRatio = 164 / 11.0;
+    public static final double encoderToHoodGearRatio = 164 / 11.0;
+    public static final double servoToEncoderGearRatio = 45 / 32.0;
     public static final double safeAngleDeg = 0;
-    public static final double homingVelocityThresholdRPS = 0.01;
-    public static final double homingVelocity = -0.4;
-    public static final double mediumVelocity = 0.35;
-    public static final double fastVelocity = 1.0;
-    public static final double slowVelocity = 0.3; // no kS compensation, kS can be 0.1 to 0.2
-    public static final double smallToleranceDeg =
-        0.5; // don't exceed 1.0 to avoid hitting the trench
-    public static final double mediumToleranceDeg = 3.5;
-    public static final double largeToleranceDeg = 9.0;
-    public static final double atGoalTimeoutSec = 0.5; // full travel time 1.1s
+    public static final double homingVelocityThresholdRPS = 0.02;
+    public static final double minHomingSec = 0.4; // allow for servo latency + enable overhead
+    public static final int homePulseWidth = 515; // calibrate after replacing servo, min 500
+    public static final double smallToleranceDeg = 0.25;
+    public static final double largeToleranceDeg = 1.0;
     public static final int idleTimeout = 0;
-    public static final int kSPulseWidth = 50; // power to hold hood position
   }
 
   public static class Control {

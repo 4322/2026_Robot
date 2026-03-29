@@ -36,10 +36,6 @@ public class FiringManager {
       new LoggedTunableNumber("FiringManager/tunnelSpeedRPS", 0);
   private static final LoggedTunableNumber tunableIndexerSpeedRPS =
       new LoggedTunableNumber("FiringManager/indexerSpeedRPS", 0);
-  private static final LoggedTunableNumber tunableFlywheelAdjustFactor =
-      new LoggedTunableNumber(
-          "FiringManager/flywheelHoodAdjustmentFactor",
-          Constants.Flywheel.flywheelHoodAdjustmentFactor);
 
   public static FiringSolution getFiringSolution(
       Pose2d turretPosition, Translation2d robotVelocity, boolean isScoring) {
@@ -186,20 +182,6 @@ public class FiringManager {
           .rotateBy(RobotContainer.drive.getRotation().unaryMinus())
           .getDegrees();
     }
-  }
-
-  // Adjust flywheel speed to compensate for quantization of hood position because
-  // it's hard to move the hood servo a small amount.
-  public static FiringSolution adjustForHoodOffset(
-      FiringSolution calculatedSolution, double idealHoodAngle) {
-    if (RobotContainer.shooter.hoodAtGoal()) {
-      double deltaDegrees = RobotContainer.shooter.getHoodPositionDegrees() - idealHoodAngle;
-      calculatedSolution.flywheelSpeedRPS += deltaDegrees * tunableFlywheelAdjustFactor.get();
-      if (calculatedSolution.flywheelSpeedRPS < 0) {
-        calculatedSolution.flywheelSpeedRPS = 0;
-      }
-    }
-    return calculatedSolution;
   }
 
   public static double velocityToEffectiveDistance(double velocity, boolean isScoring) {

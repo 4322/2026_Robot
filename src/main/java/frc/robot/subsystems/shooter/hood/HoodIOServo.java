@@ -9,18 +9,13 @@ import com.revrobotics.servohub.ServoHub.Bank;
 import com.revrobotics.servohub.config.ServoChannelConfig;
 import com.revrobotics.servohub.config.ServoChannelConfig.BehaviorWhenDisabled;
 import com.revrobotics.servohub.config.ServoHubConfig;
-import edu.wpi.first.math.MathUtil;
 import frc.robot.constants.Constants;
-import frc.robot.util.LoggedTunableNumber;
 import org.littletonrobotics.junction.Logger;
 
 public class HoodIOServo implements HoodIO {
   private ServoHub servoHub;
   private ServoChannel servo;
   private CANcoder encoder;
-
-  private static final LoggedTunableNumber kSPulseWidth =
-      new LoggedTunableNumber("Hood/kSPulseWidth", Constants.Hood.kSPulseWidth);
 
   private ServoHubConfig config = new ServoHubConfig();
 
@@ -29,20 +24,15 @@ public class HoodIOServo implements HoodIO {
     servo = servoHub.getServoChannel(ChannelId.fromInt(Constants.Hood.servoChannel));
     encoder = new CANcoder(Constants.Hood.encoderId);
 
-    configServo();
-  }
-
-  private void configServo() {
     servoHub.configure(config, ResetMode.kResetSafeParameters);
 
     ServoChannelConfig channelConfig =
         new ServoChannelConfig(ChannelId.fromInt(Constants.Hood.servoChannel));
     channelConfig.disableBehavior(
         BehaviorWhenDisabled.kDoNotSupplyPower); // Config "coast" mode by disabling channel
-    channelConfig.pulseRange(1000, 1500, 2000); // Default PWM pulses recommended by REV
+    channelConfig.pulseRange(500, 1500, 2500);
     config.apply(ChannelId.fromInt(Constants.Hood.servoChannel), channelConfig);
-
-    servoHub.setBankPulsePeriod(Bank.kBank0_2, 20000);
+    servoHub.setBankPulsePeriod(Bank.kBank0_2, 20000); // this value has least latency, why?
     servoHub.setBankPulsePeriod(Bank.kBank3_5, 20000);
 
     servo.setPowered(true);
@@ -54,11 +44,10 @@ public class HoodIOServo implements HoodIO {
   @Override
   public void updateInputs(HoodIOInputs inputs) {
     inputs.encoderConnected = encoder.isConnected();
-    inputs.encoderRotations =
-        encoder.getPosition().getValueAsDouble(); // Convert degrees to rotations
-    inputs.degrees =
-        inputs.encoderRotations * 360.0 / Constants.Hood.gearRatio; // Convert rotations to degrees
+    inputs.encoderRotations = encoder.getPosition().getValueAsDouble();
+    inputs.hoodDegrees = inputs.encoderRotations * 360.0 / Constants.Hood.encoderToHoodGearRatio;
     inputs.encoderRPS = encoder.getVelocity().getValueAsDouble();
+    inputs.servoAmps = servo.getCurrent();
     inputs.servoEnabled =
         servo.isEnabled(); // Assuming a threshold of 0.1A to determine if the servo is powered
   }
@@ -69,22 +58,9 @@ public class HoodIOServo implements HoodIO {
   }
 
   @Override
-  public void setServoVelocity(double velocity, double requestedAngleDeg) {
-    // negative velocity raises hood
-    double adjustedVelocity = -MathUtil.clamp(velocity, -1, 1);
-    int pulseWidth = (int) (adjustedVelocity * 500);
-    if (pulseWidth <= 0 && requestedAngleDeg > Constants.Hood.safeAngleDeg) {
-      // hold hood up in position if not in safe position
-      pulseWidth = Math.min(pulseWidth, (int) -kSPulseWidth.get());
-    }
-    pulseWidth += 1500; // add in zero velocity pulse width
-    servo.setPulseWidth(pulseWidth);
-    Logger.recordOutput("Hood/pulseWidth", pulseWidth);
-  }
-
-  @Override
   public void setPulseWidth(int pulseWidth) {
     servo.setPulseWidth(pulseWidth);
+    Logger.recordOutput("Shooter/Hood/pulseWidth", pulseWidth);
   }
 
   @Override

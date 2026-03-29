@@ -6,7 +6,6 @@ import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
-import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.constants.Constants;
 
@@ -101,10 +100,5 @@ public class RollersIOTalonFX implements RollersIO {
   @Override
   public TalonFX getTalonFX() {
     return leaderMotor;
-  }
-
-  @Override
-  public void enableBrakeMode(boolean enable) {
-    leaderMotor.setNeutralMode(enable ? NeutralModeValue.Brake : NeutralModeValue.Coast);
   }
 }
