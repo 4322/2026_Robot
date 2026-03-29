@@ -590,7 +590,7 @@ public final class Constants {
     public static final double minConfidence = 1;
 
     public static double phaseDelayMs = 30.0; // your vision pipeline latency
-    public static double mechLatencyMs = 20.0; // how long the mechanism takes to respond
+    public static double mechLatencyMs = 100.0; // how long the mechanism takes to respond
     public static double maxTiltDeg =
         5.0; // suppress firing when chassis tilts past this (bumps/ramps)
     public static double headingSpeedScalar =
