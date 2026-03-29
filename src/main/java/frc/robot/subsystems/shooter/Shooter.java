@@ -14,7 +14,6 @@ import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.led.LED;
 import frc.robot.subsystems.shooter.areaManager.AreaManager;
 import frc.robot.subsystems.shooter.areaManager.AreaManager.Zone;
-import frc.robot.subsystems.shooter.firingManager.FiringManager;
 import frc.robot.subsystems.shooter.flywheel.Flywheel;
 import frc.robot.subsystems.shooter.hood.Hood;
 import frc.robot.subsystems.shooter.spindexer.Spindexer;
@@ -319,41 +318,33 @@ public class Shooter extends SubsystemBase {
           if (zone == Zone.LEFT_NEUTRAL) {
             shootTarget = Constants.FiringTargetTranslations.Red.neutralLeftTranslation;
             shootForward = new Translation2d(1, 0);
-          }
-          else if (zone == Zone.RIGHT_NEUTRAL) {
+          } else if (zone == Zone.RIGHT_NEUTRAL) {
             shootTarget = Constants.FiringTargetTranslations.Red.neutralRightTranslation;
             shootForward = new Translation2d(1, 0);
-          }
-          else if (zone == Zone.LEFT_OPPOSITION) {
+          } else if (zone == Zone.LEFT_OPPOSITION) {
             shootTarget = Constants.FiringTargetTranslations.Red.allianceLeftTranslation;
             shootForward = new Translation2d(1, 0);
-          }
-          else if (zone == Zone.RIGHT_OPPOSITION) {
+          } else if (zone == Zone.RIGHT_OPPOSITION) {
             shootTarget = Constants.FiringTargetTranslations.Red.allianceRightTranslation;
             shootForward = new Translation2d(1, 0);
-          }
-          else {
+          } else {
             Logger.recordOutput("SOTF/InShootingZone", false);
             return;
-          } 
+          }
         } else {
           if (zone == Zone.LEFT_NEUTRAL) {
             shootTarget = Constants.FiringTargetTranslations.Blue.neutralLeftTranslation;
             shootForward = new Translation2d(-1, 0);
-          }
-          else if (zone == Zone.RIGHT_NEUTRAL) {
+          } else if (zone == Zone.RIGHT_NEUTRAL) {
             shootTarget = Constants.FiringTargetTranslations.Blue.neutralRightTranslation;
             shootForward = new Translation2d(-1, 0);
-          }
-          else if (zone == Zone.LEFT_OPPOSITION) {
+          } else if (zone == Zone.LEFT_OPPOSITION) {
             shootTarget = Constants.FiringTargetTranslations.Blue.allianceLeftTranslation;
             shootForward = new Translation2d(-1, 0);
-          }
-          else if (zone == Zone.RIGHT_OPPOSITION) {
+          } else if (zone == Zone.RIGHT_OPPOSITION) {
             shootTarget = Constants.FiringTargetTranslations.Blue.allianceRightTranslation;
             shootForward = new Translation2d(-1, 0);
-          }
-          else {
+          } else {
             Logger.recordOutput("SOTF/InShootingZone", false);
             return;
           }
