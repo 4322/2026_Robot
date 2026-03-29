@@ -1,11 +1,14 @@
 package frc.robot.subsystems.shooter;
 
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 import frc.robot.constants.Constants;
+import frc.robot.constants.Constants.ShotCalculatorParameters;
+import frc.robot.constants.FieldConstants;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.led.LED;
 import frc.robot.subsystems.shooter.firingManager.FiringManager;
@@ -15,6 +18,8 @@ import frc.robot.subsystems.shooter.spindexer.Spindexer;
 import frc.robot.subsystems.shooter.tunnel.Tunnel;
 import frc.robot.subsystems.shooter.turret.Turret;
 import frc.robot.subsystems.vision.visionGlobalPose.VisionGlobalPose;
+import frc.robot.util.firecontrol.ShotCalculator;
+import frc.robot.util.firecontrol.ShotLUT;
 import org.littletonrobotics.junction.Logger;
 
 public class Shooter extends SubsystemBase {
@@ -51,6 +56,8 @@ public class Shooter extends SubsystemBase {
   private Timer idleTimer = new Timer();
   private boolean resetIdleTimeout = false;
 
+  private ShotCalculator shotCalc;
+
   public Shooter(
       Flywheel flywheel,
       Hood hood,
@@ -67,6 +74,36 @@ public class Shooter extends SubsystemBase {
     this.turret = turret;
     this.led = led;
     this.drive = drive;
+
+    ShotCalculator.Config config = new ShotCalculator.Config();
+    config.launcherOffsetX =
+        Constants.Turret.originToTurret
+            .getX(); // how far forward the launcher is from robot center (m)
+    config.launcherOffsetY = Constants.Turret.originToTurret.getY(); // how far left, 0 if centered
+    config.phaseDelayMs = Constants.ShotCalculator.phaseDelayMs; // your vision pipeline latency
+    config.mechLatencyMs =
+        Constants.ShotCalculator.mechLatencyMs; // how long the mechanism takes to respond
+    config.maxTiltDeg =
+        Constants.ShotCalculator
+            .maxTiltDeg; // suppress firing when chassis tilts past this (bumps/ramps)
+    config.headingSpeedScalar =
+        Constants.ShotCalculator
+            .headingSpeedScalar; // heading tolerance tightens with robot speed (0 to disable)
+    config.headingReferenceDistance =
+        Constants.ShotCalculator
+            .headingReferenceDistance; // heading tolerance scales with distance from hub
+
+    shotCalc = new ShotCalculator(config);
+
+    ShotLUT lut = new ShotLUT();
+    for (ShotCalculatorParameters params : Constants.FiringManager.firingParametersListScoring) {
+      lut.put(
+          params.distanceMeters(),
+          params.flywheelRPS() * 60.0,
+          params.hoodAngleDeg(),
+          params.timeOfFlightSec());
+    }
+    shotCalc.loadShotLUT(lut);
   }
 
   public double getTargetTurretAngleDeg() {
@@ -239,16 +276,53 @@ public class Shooter extends SubsystemBase {
         targetTurretAngleDeg = Constants.fixedSolutionRed.turretAngleDeg;
       }
     } else {
-      FiringSolution firingSolution =
-          FiringManager.getFiringSolution(drive.getTurretPose(), drive.getVelocity(), isScoring);
-      Logger.recordOutput("Shooter/rawTargetFlywheelSpeedRPS", targetFlywheelSpeedRPS);
-      firingSolution = FiringManager.adjustForHoodOffset(firingSolution, targetHoodAngleDeg);
 
-      targetHoodAngleDeg = firingSolution.hoodAngle;
-      targetFlywheelSpeedRPS = firingSolution.flywheelSpeedRPS;
-      targetTurretAngleDeg = firingSolution.turretAngleDeg;
-      targetTunnelSpeedRPS = firingSolution.tunnelSpeedRPS;
-      targetSpindexerSpeedRPS = firingSolution.indexerSpeedRPS;
+      if (isScoring) {
+        Translation2d hubCenter;
+        Translation2d hubForward;
+
+        if (Robot.alliance == DriverStation.Alliance.Red) {
+          hubCenter = FieldConstants.Red.hubTranslation;
+          hubForward = new Translation2d(1, 0);
+        } else {
+          hubCenter = FieldConstants.Blue.hubTranslation;
+          hubForward = new Translation2d(-1, 0);
+        }
+
+        ShotCalculator.ShotInputs inputs =
+            new ShotCalculator.ShotInputs(
+                drive.getRobotPose(),
+                drive.getFieldRelativeVelocity(),
+                drive.getRobotRelativeVelocity(),
+                hubCenter,
+                hubForward,
+                0.9, // vision confidence, 0 to 1
+                0, // pitch for tilt gate (0.0 if no gyro)
+                0 // roll for tilt gate (0.0 if no gyro)
+                );
+
+        ShotCalculator.LaunchParameters shot = shotCalc.calculate(inputs);
+        if (shot.isValid() && shot.confidence() > Constants.ShotCalculator.minConfidence) {
+          targetHoodAngleDeg = shotCalc.getHoodAngle(shot.solvedDistanceM());
+          targetFlywheelSpeedRPS = shot.rpm() / 60.0;
+          targetTurretAngleDeg = shot.driveAngle().getDegrees();
+          targetTunnelSpeedRPS = Constants.Tunnel.shootRPS;
+          targetSpindexerSpeedRPS = Constants.Spindexer.shootRPS;
+          return;
+        }
+
+      } else {
+        FiringSolution firingSolution =
+            FiringManager.getFiringSolution(drive.getTurretPose(), drive.getVelocity(), isScoring);
+        Logger.recordOutput("Shooter/rawTargetFlywheelSpeedRPS", targetFlywheelSpeedRPS);
+        firingSolution = FiringManager.adjustForHoodOffset(firingSolution, targetHoodAngleDeg);
+
+        targetHoodAngleDeg = firingSolution.hoodAngle;
+        targetFlywheelSpeedRPS = firingSolution.flywheelSpeedRPS;
+        targetTurretAngleDeg = firingSolution.turretAngleDeg;
+        targetTunnelSpeedRPS = firingSolution.tunnelSpeedRPS;
+        targetSpindexerSpeedRPS = firingSolution.indexerSpeedRPS;
+      }
     }
   }
 

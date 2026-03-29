@@ -392,6 +392,14 @@ public class Drive extends SubsystemBase {
         getChassisSpeeds().vxMetersPerSecond, getChassisSpeeds().vyMetersPerSecond);
   }
 
+  public ChassisSpeeds getFieldRelativeVelocity() {
+    return new ChassisSpeeds(); // TODO
+  }
+
+  public ChassisSpeeds getRobotRelativeVelocity() {
+    return new ChassisSpeeds(); // TODO
+  }
+
   public Pose2d getPoseAtTimestamp(double timestampSeconds) {
     return poseEstimator.sampleAt(timestampSeconds).orElse(null);
   }

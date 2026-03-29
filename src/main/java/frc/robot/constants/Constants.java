@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.util.Color;
 import frc.robot.subsystems.shooter.FiringSolution;
 import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetection.ObjectDetectionType;
+import java.util.ArrayList;
 
 /**
  * This class defines the runtime mode used by AdvantageKit. The mode is always "real" when running
@@ -122,6 +123,7 @@ public final class Constants {
     public static final double motorToMechanismRatio = 12.0; // 10 inch wheel
     // Normally 7 RPS for shooting
     public static final double unjamRPS = -4.0;
+    public static final double shootRPS = 7;
   }
 
   public static class Tunnel {
@@ -141,6 +143,7 @@ public final class Constants {
     public static final double minPercentVelocity = 0.95;
     // Normally 37 RPS for shooting
     public static final double unjamRPS = -25.0;
+    public static final double shootRPS = 35;
   }
 
   public static class Flywheel {
@@ -214,9 +217,9 @@ public final class Constants {
     public static final double CANCoderTwoOffsetRot = 0.8157 - 0.0092;
 
     // Derivation of above values:
-    // 290 degrees * 90/10 = encoder 1 should have rotated 7.25 rotations -> 
+    // 290 degrees * 90/10 = encoder 1 should have rotated 7.25 rotations ->
     //   encoder 1 reads 0.25 in locked position
-    // 290 degrees * 90/19 = encoder 2 should have rotated 3.815789 rotations -> 
+    // 290 degrees * 90/19 = encoder 2 should have rotated 3.815789 rotations ->
     //   encoder 2 reads 3341.0/4096.0 = 0.8157 in locked position
   }
 
@@ -342,6 +345,14 @@ public final class Constants {
     }
   }
 
+  public static record ShotCalculatorParameters(
+      double flywheelRPS,
+      double hoodAngleDeg,
+      double timeOfFlightSec,
+      double tunnelRPS,
+      double indexerRPS,
+      double distanceMeters) {}
+
   public static class FiringManager {
     public static final double minTimeOfFlight = 0; // TODO
     public static final double maxTimeOfFlight = 4; // TODO
@@ -362,11 +373,22 @@ public final class Constants {
     public static final double latencyCompensationScoring = 0.01;
     public static final double latencyCompensationPassing = 0.01;
 
+    public static ArrayList<ShotCalculatorParameters> firingParametersListScoring =
+        new ArrayList<ShotCalculatorParameters>();
+
     // Add entry to both maps
     public static void putFiringMapEntryScoring(double meters, FiringParameters params) {
       firingMapScoring.put(meters, params);
       double velocity = meters / params.getTimeOfFlightSec();
       velocityToDistanceMapScoring.put(velocity, meters);
+      firingParametersListScoring.add(
+          new ShotCalculatorParameters(
+              params.getFlywheelRPS(),
+              params.getHoodAngleDeg(),
+              params.getTimeOfFlightSec(),
+              params.getTunnelRPS(),
+              params.getIndexerRPS(),
+              meters));
     }
 
     public static void putFiringMapEntryPassing(double meters, FiringParameters params) {
@@ -562,5 +584,18 @@ public final class Constants {
     public static final Color red = new Color(255, 0, 0);
     public static final Color green = new Color(0, 255, 0);
     public static final Color yellow = new Color(255, 255, 0);
+  }
+
+  public static class ShotCalculator {
+    public static final double minConfidence = 1;
+
+    public static double phaseDelayMs = 30.0; // your vision pipeline latency
+    public static double mechLatencyMs = 20.0; // how long the mechanism takes to respond
+    public static double maxTiltDeg =
+        5.0; // suppress firing when chassis tilts past this (bumps/ramps)
+    public static double headingSpeedScalar =
+        1.0; // heading tolerance tightens with robot speed (0 to disable)
+    public static double headingReferenceDistance =
+        2.5; // heading tolerance scales with distance from hub
   }
 }
