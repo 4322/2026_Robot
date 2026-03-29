@@ -454,8 +454,6 @@ public final class Constants {
   }
 
   public static final class VisionGlobalPose {
-    // TODO
-    public static final boolean enableGlobalPoseTrigEstimation = false;
     // See if this helps with NT/CPU stability
     public static final boolean enableVerbosePoseLogging = false;
     // Camera names, must match names configured on coprocessor
@@ -497,13 +495,11 @@ public final class Constants {
             new Rotation3d(0, Units.degreesToRadians(-19.8534025106), Units.degreesToRadians(135)));
 
     // Basic filtering thresholds
-    // TODO
     public static double maxAmbiguity = 0.15;
     public static double maxZError = 0.75;
-    public static double maxAvgTagDistance = 3;
-
+    public static double maxAvgTagDistance = 30; // Basically allow tags from any distance
     public static double stdDevBaseline = 0.2;
-    public static double thetaStdDevBaseline = 0.075;
+    public static double singleTagStdDevAdjuster = 3;
   }
 
   public static final class VisionObjectDetection {
