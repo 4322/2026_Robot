@@ -29,6 +29,7 @@ public class Hood {
   private int burstIntervalCount = 0;
   private boolean homed = false;
   private boolean trenchOverride = false;
+  private boolean isScoring = false;
 
   public Hood(HoodIO io) {
     this.io = io;
@@ -65,24 +66,23 @@ public class Hood {
           io.simEstimatedPosition();
           homed = true;
         }
-        if (!homed && DriverStation.isEnabled()) {
-          io.setPulseWidth(500);
+        if (!DriverStation.isEnabled()) {
+          homingTimer.stop();
+          homingTimer.reset();
+        } else if (!homed) {
+          moveServoToPosition(0);
           homingTimer.start();
-          if (Math.abs(inputs.encoderRPS) > Constants.Hood.homingVelocityThresholdRPS) {
-            homingTimer.reset();
-          } else if (homingTimer.hasElapsed(0.1)) {
+          if (homingTimer.hasElapsed(Constants.Hood.minHomingSec)
+              && Math.abs(inputs.encoderRPS) <= Constants.Hood.homingVelocityThresholdRPS) {
             io.setEncoderHomed();
             setGoal(0);
             homed = true;
             homingTimer.stop();
             homingTimer.reset();
           }
-        } else if (DriverStation.isEnabled()) {
+        } else {
           moveServoToPosition(requestedAngleDeg);
           updateAtGoalTimer();
-        } else {
-          homingTimer.stop();
-          homingTimer.reset();
         }
         updateNetworkTableValues();
       }
@@ -115,7 +115,8 @@ public class Hood {
     SmartDashboard.putNumber("Hood/HoodDegrees", inputs.hoodDegrees);
   }
 
-  public void requestGoal(double degrees) {
+  public void requestGoal(double degrees, boolean isScoring) {
+    this.isScoring = isScoring;
     if (Constants.hoodMode == SubsystemMode.NORMAL && !trenchOverride) {
       setGoal(degrees);
     }
@@ -151,7 +152,9 @@ public class Hood {
     } else if (Constants.currentMode == Constants.Mode.SIM) {
       return true; // TODO temporary until we get hood sim working
     } else if (isWithinSmallTolerance()
-        || atGoalTimer.hasElapsed(Constants.Hood.atGoalTimeoutSec)) {
+        || (isScoring
+            ? atGoalTimer.hasElapsed(Constants.scoringDoubleToleranceTime)
+            : atGoalTimer.hasElapsed(Constants.passingDoubleToleranceTime))) {
       return true;
     } else {
       return false;

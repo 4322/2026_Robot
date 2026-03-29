@@ -32,8 +32,8 @@ public class HoodIOServo implements HoodIO {
         BehaviorWhenDisabled.kDoNotSupplyPower); // Config "coast" mode by disabling channel
     channelConfig.pulseRange(500, 1500, 2500);
     config.apply(ChannelId.fromInt(Constants.Hood.servoChannel), channelConfig);
-    servoHub.setBankPulsePeriod(Bank.kBank0_2, 2500);
-    servoHub.setBankPulsePeriod(Bank.kBank3_5, 2500);
+    servoHub.setBankPulsePeriod(Bank.kBank0_2, 20000); // this value has least latency, why?
+    servoHub.setBankPulsePeriod(Bank.kBank3_5, 20000);
 
     servo.setPowered(true);
 
