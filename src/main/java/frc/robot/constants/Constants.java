@@ -57,6 +57,7 @@ public final class Constants {
   public static final SubsystemMode firingManagerMode = SubsystemMode.NORMAL;
   public static final boolean turretLocked = false;
   public static boolean shootOnTheMoveEnabled = false;
+  public static boolean tuningWithLoggableNumbers = false;
   public static final boolean frontRightCameraEnable = true;
   public static final boolean frontLeftCameraEnable = true;
   public static final boolean backRightCameraEnable = true;
@@ -75,6 +76,12 @@ public final class Constants {
     if (Constants.Drive.zeroTurnEncoders) {
       driveMode = SubsystemMode.TUNING;
     }
+    if (driveMode == SubsystemMode.TUNING
+        || firingManagerMode == SubsystemMode.TUNING
+        || hoodMode == SubsystemMode.TUNING
+        || visionGlobalPose == SubsystemMode.TUNING) {
+      tuningWithLoggableNumbers = true;
+    }
   }
 
   public static final boolean buzz = false;
@@ -82,7 +89,6 @@ public final class Constants {
   public static final long minFreeSpace = 1000000000; // 1 GB
   public static final int dioCoastButton = 8;
   public static final double coastButtonDelaySec = 10.0;
-  public static final boolean tuningWithLoggableNumbers = true;
   public static final double brownoutVoltage = 5.75;
 
   // only set this if loop cycles are significantly below 20 ms
