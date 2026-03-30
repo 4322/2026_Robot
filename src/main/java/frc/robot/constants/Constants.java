@@ -68,8 +68,8 @@ public final class Constants {
           || hoodMode == SubsystemMode.TUNING
           || visionGlobalPose == SubsystemMode.TUNING);
 
-  public static final double scoringDoubleToleranceTime = 0.5;
-  public static final double passingDoubleToleranceTime = 0.25;
+  public static final double scoringDoubleToleranceTime = .5;
+  public static final double passingDoubleToleranceTime = .25;
 
   { // set dependent operational modes
     if (firingManagerMode == SubsystemMode.TUNING) {
@@ -103,26 +103,26 @@ public final class Constants {
     public static double turnSupplyCurrentLimit = 30;
 
     // Scales max speeds for X, Y, and omega respectively
-    public static double maxLinearSpeedPercentShooting = 0.15;
-    public static double maxAngularSpeedPercentShooting = 0.15;
-    public static double maxLinearSpeedPercentPassing = 0.3;
-    public static double maxAngularSpeedPercentPassing = 0.3;
+    public static double maxLinearSpeedPercentShooting = .15;
+    public static double maxAngularSpeedPercentShooting = .15;
+    public static double maxLinearSpeedPercentPassing = .3;
+    public static double maxAngularSpeedPercentPassing = .3;
   }
 
   public static class Spindexer {
     public static final int spindexerMotorId = 4;
     public static final double supplyCurrentLimit = 60;
     public static final double supplyCurrentLowerLimit = 40;
-    public static final double supplyCurrentLowerTime = 0.5; // fast start
+    public static final double supplyCurrentLowerTime = .5; // fast start
     public static final double statorCurrentLimit = 120;
     public static final InvertedValue motorInvert = InvertedValue.CounterClockwise_Positive;
     public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
-    public static final double kS = 0.34;
+    public static final double kS = .34;
     public static final double kV = 1.47;
     public static final double kP = 5.0;
     public static final double kI = 0;
     public static final double kD = 0;
-    public static final double stoppedMechanismRotationsPerSec = 0.1; // TODO
+    public static final double stoppedMechanismRotationsPerSec = .1; // TODO
 
     public static final double motorToMechanismRatio = 12.0; // 10 inch wheel
     // Normally 7 RPS for shooting
@@ -136,9 +136,9 @@ public final class Constants {
     public static final double supplyCurrentLimit = 40;
     public static final InvertedValue motorInvert = InvertedValue.CounterClockwise_Positive;
     public static final NeutralModeValue neutralMode = NeutralModeValue.Coast;
-    public static final double kS = 0.31;
-    public static final double kV = 0.19;
-    public static final double kP = 0.5;
+    public static final double kS = .31;
+    public static final double kV = .19;
+    public static final double kP = .5;
     public static final double kI = 0;
     public static final double kD = 0;
 
@@ -159,9 +159,9 @@ public final class Constants {
     public static final NeutralModeValue neutralMode = NeutralModeValue.Coast;
 
     // max RPS for a burst is 75 due to drop in battery voltage
-    public static final double kS = 0.32;
-    public static final double kV = 0.123;
-    public static final double kP = 0.5;
+    public static final double kS = .32;
+    public static final double kV = .123;
+    public static final double kP = .5;
     public static final double kI = 0;
     public static final double kD = 0;
 
@@ -173,12 +173,12 @@ public final class Constants {
 
     public static final int canandcolorId = 0;
     public static final boolean canAndColorEnabled = false;
-    public static final double minFuelDetectionProximity = 0.2;
+    public static final double minFuelDetectionProximity = .2;
   }
 
   public static class Turret {
     public static final int motorId = 22;
-    public static final double kS = 0.26;
+    public static final double kS = .26;
     public static final double kV = 0;
     public static final double kP = 250;
     public static final double kI = 0;
@@ -216,8 +216,8 @@ public final class Constants {
     // 4. Set CANCoderTwoOffsetRot = 0.8157 - (PhoenixTuner AbsolutePosition)
     //    CANCoderOne = Encoder 9
     //    CANCoderTwo = Encoder 4.73
-    public static final double CANCoderOneOffsetRot = 0.25 - 0.538;
-    public static final double CANCoderTwoOffsetRot = 0.8157 - 0.7473;
+    public static final double CANCoderOneOffsetRot = .25 - .538;
+    public static final double CANCoderTwoOffsetRot = .8157 - .7473;
 
     // Derivation of above values:
     // 290 degrees * 90/10 = encoder 1 should have rotated 7.25 rotations ->
@@ -233,10 +233,10 @@ public final class Constants {
     public static final double servoToEncoderGearRatio = 45 / 32.0;
     public static final double safeAngleDeg = 0;
     public static final double homingVelocityThresholdRPS = 0.02;
-    public static final double minHomingSec = 0.4; // allow for servo latency + enable overhead
+    public static final double minHomingSec = .4; // allow for servo latency + enable overhead
     public static final int homePulseWidth = 515; // calibrate after replacing servo, min 500
     public static final double servoPositionScaleFactor = 1.015; // variations in potentiometer
-    public static final double smallToleranceDeg = 0.4;
+    public static final double smallToleranceDeg = .4;
     public static final double largeToleranceDeg = 2.0;
     public static final int idleTimeout = 0;
   }
@@ -277,16 +277,16 @@ public final class Constants {
     public static final SensorDirectionValue sensorDirection =
         SensorDirectionValue.CounterClockwise_Positive;
     public static final double kP = 1000;
-    public static final double kG = 0.65;
+    public static final double kG = .65;
     public static final double kI = 0;
     public static final double kD = 0;
-    public static final double motionMagicCruiseVelocity = 0.3;
+    public static final double motionMagicCruiseVelocity = .3;
     public static final double motionMagicAcceleration = 1.2;
     public static final int CANCoderID = 2;
     public static final double sensorToMechanismRatio = 3.0;
     public static final double RotorToSensorRatio = 12.0;
     public static final double tolerance = 2.0;
-    public static final double SesnorOffsetRotations = 0.39; // retract pos > 0.02 to avoid wrapping
+    public static final double SesnorOffsetRotations = .39; // retract pos > 0.02 to avoid wrapping
     public static final double alreadyDeployedMaxDeg = 13;
     public static final double alreadyDeployedMoveThreshold = 3;
   }
@@ -367,8 +367,8 @@ public final class Constants {
     public static final InterpolatingDoubleTreeMap velocityToDistanceMapPassing =
         new InterpolatingDoubleTreeMap();
 
-    public static final double latencyCompensationScoring = 0.01;
-    public static final double latencyCompensationPassing = 0.01;
+    public static final double latencyCompensationScoring = .01;
+    public static final double latencyCompensationPassing = .01;
 
     public static ArrayList<ShotCalculatorParameters> firingParametersListScoring =
         new ArrayList<ShotCalculatorParameters>();
@@ -479,9 +479,9 @@ public final class Constants {
   public static class Sim {
 
     public static final double tunnelRate = 2;
-    public static final double spindexerRate = 0.2;
+    public static final double spindexerRate = .2;
     public static final double flywheelRate = 2;
-    public static final double servoRate = 0.2;
+    public static final double servoRate = .2;
   }
 
   public static final class VisionGlobalPose {
@@ -559,7 +559,7 @@ public final class Constants {
 
     public static final double pathPlannerDrivekP = 5; // TODO probably increase
     public static final double pathPlannerRotationkP = 4;
-    public static final double unjamTimeSec = 0.5;
+    public static final double unjamTimeSec = .5;
     public static final double smooshDelayFirstPass = 1.5;
     public static final double smooshDelaySecondPass = 2.5;
     public static final double smooshDelaySinglePass = 1.5;
@@ -573,7 +573,7 @@ public final class Constants {
   public static class LED {
     public static final int CANdleID = 99;
     public static final StripTypeValue stripType = StripTypeValue.RGBW; // TODO set these
-    public static final double brightnessScalar = 0.5;
+    public static final double brightnessScalar = .5;
     public static final int ledStart = 0;
     public static final int ledEnd = 0;
   }
