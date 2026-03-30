@@ -43,6 +43,7 @@ public class Shooter extends SubsystemBase {
   private Turret turret;
   private Drive drive;
   private LED led;
+  private Double hoodOvrDeg;
 
   private double targetHoodAngleDeg;
   private double targetFlywheelSpeedRPS;
@@ -192,13 +193,16 @@ public class Shooter extends SubsystemBase {
         } else {
           flywheel.requestGoal(targetFlywheelSpeedRPS, isScoring);
         }
+        if (hoodOvrDeg != null) {
+          hood.requestGoal(hoodOvrDeg, isScoring);
+        } else if (idleTimer.hasElapsed(Constants.Hood.idleTimeout)) {
 
-        if (idleTimer.hasElapsed(Constants.Hood.idleTimeout)) {
           hood.requestGoal(Constants.Hood.safeAngleDeg, isScoring);
         } else {
           hood.requestGoal(targetHoodAngleDeg, isScoring);
         }
       }
+
       case STOP -> {
         resetIdleTimeout = true;
         flywheel.requestGoal(0, isScoring);
@@ -357,7 +361,8 @@ public class Shooter extends SubsystemBase {
     }
   }
 
-  public void requestIdle() {
+  public void requestIdle(Double hoodOverrideDegree) {
+    this.hoodOvrDeg = hoodOverrideDegree;
     requestedState = ShooterState.IDLE;
     state = ShooterState.IDLE;
     Logger.recordOutput("Shooter/currentMethod", "requestIdle()");

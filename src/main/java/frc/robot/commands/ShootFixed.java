@@ -17,6 +17,6 @@ public class ShootFixed extends Command {
 
   @Override
   public void end(boolean interrupted) {
-    shooter.requestIdle();
+    shooter.requestIdle(null);
   }
 }
