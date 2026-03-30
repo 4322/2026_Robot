@@ -39,10 +39,10 @@ public class ShooterCommands {
         new Shoot(shooter, drive));
   }
 
-  public static Command idle(Shooter shooter, Intake intake, Double hoodAngle) {
+  public static Command idle(Shooter shooter, Intake intake, Double hoodAngle, Double flywheelRPS) {
     return Commands.run(
             () -> {
-              shooter.requestIdle(hoodAngle);
+              shooter.requestIdle(hoodAngle, flywheelRPS);
             },
             shooter)
         .onlyIf(() -> intake.hasExtended());

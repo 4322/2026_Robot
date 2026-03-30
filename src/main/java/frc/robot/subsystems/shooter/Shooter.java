@@ -43,7 +43,8 @@ public class Shooter extends SubsystemBase {
   private Turret turret;
   private Drive drive;
   private LED led;
-  private Double hoodOverrideDeg;
+  private Double hoodOverrideDeg = null;
+  private Double flywheelOverrideRPS = null;
 
   private double targetHoodAngleDeg;
   private double targetFlywheelSpeedRPS;
@@ -155,6 +156,7 @@ public class Shooter extends SubsystemBase {
       // Reset variable in case disabling during unwind
       doUnwind = false;
       hoodOverrideDeg = null;
+      flywheelOverrideRPS = null;
       state = ShooterState.DISABLED;
     }
 
@@ -189,11 +191,15 @@ public class Shooter extends SubsystemBase {
           tunnel.requestIdle();
         }
 
-        if (idleTimer.hasElapsed(Constants.Flywheel.idleTimeout)) {
+        if (flywheelOverrideRPS != null) {
+          flywheel.requestGoal(flywheelOverrideRPS, isScoring);
+        }
+        else if (idleTimer.hasElapsed(Constants.Flywheel.idleTimeout)) {
           flywheel.requestGoal(Constants.Flywheel.idleRPS, isScoring);
         } else {
           flywheel.requestGoal(targetFlywheelSpeedRPS, isScoring);
         }
+
         if (hoodOverrideDeg != null) {
           hood.requestGoal(hoodOverrideDeg, isScoring);
         } else if (idleTimer.hasElapsed(Constants.Hood.idleTimeout)) {
@@ -362,8 +368,9 @@ public class Shooter extends SubsystemBase {
     }
   }
 
-  public void requestIdle(Double hoodOverrideDegree) {
+  public void requestIdle(Double hoodOverrideDegree, Double flywheelOverideRPS) {
     this.hoodOverrideDeg = hoodOverrideDegree;
+    this.flywheelOverrideRPS = flywheelOverideRPS;
     requestedState = ShooterState.IDLE;
     state = ShooterState.IDLE;
     Logger.recordOutput("Shooter/currentMethod", "requestIdle()");
