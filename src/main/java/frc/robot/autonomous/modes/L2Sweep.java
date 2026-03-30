@@ -48,7 +48,8 @@ public class L2Sweep extends SequentialCommandGroup {
                         Constants.Autonomous.smooshDelayFirstPass,
                         Constants.Autonomous.shootTimeFirstPass)
                     .andThen(new WaitCommand(2))),
-            new WaitUntilCommand(() -> shooter.getState() == ShooterState.SHOOT).andThen(AutoBuilder.followPath(Robot.L_2SWEEP_CG))),
+            new WaitUntilCommand(() -> shooter.getState() == ShooterState.SHOOT)
+                .andThen(AutoBuilder.followPath(Robot.L_2SWEEP_CG))),
         new WaitUntilCommand(() -> shooter.isHoodLowered()),
         AutoBuilder.followPath(Robot.L_2SWEEP_D),
         AutoBuilder.followPath(Robot.L_2SWEEP_E),
@@ -61,7 +62,8 @@ public class L2Sweep extends SequentialCommandGroup {
                         Constants.Autonomous.smooshDelayFirstPass,
                         Constants.Autonomous.shootTimeFirstPass)
                     .andThen(new WaitCommand(2))),
-            new WaitUntilCommand(() -> shooter.getState() == ShooterState.SHOOT).andThen(AutoBuilder.followPath(Robot.L_2SWEEP_CG))),
+            new WaitUntilCommand(() -> shooter.getState() == ShooterState.SHOOT)
+                .andThen(AutoBuilder.followPath(Robot.L_2SWEEP_CG))),
         new WaitUntilCommand(() -> shooter.isHoodLowered()),
         AutoBuilder.followPath(Robot.L_2SWEEP_H));
   }
