@@ -51,9 +51,7 @@ public class L2Sweep extends SequentialCommandGroup {
             new WaitUntilCommand(() -> shooter.getState() == ShooterState.SHOOT)
                 .andThen(AutoBuilder.followPath(Robot.L_2SWEEP_CG))),
         new WaitUntilCommand(() -> shooter.isHoodLowered()),
-        AutoBuilder.followPath(Robot.L_2SWEEP_D),
-        AutoBuilder.followPath(Robot.L_2SWEEP_E),
-        AutoBuilder.followPath(Robot.L_2SWEEP_F),
+        AutoBuilder.followPath(Robot.L_2SWEEP_DEF),
         new ParallelCommandGroup(
             new ParallelRaceGroup(
                 ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake),
