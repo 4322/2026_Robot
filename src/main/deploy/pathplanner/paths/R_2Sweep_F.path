@@ -60,13 +60,13 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0.1,
+    "velocity": 0.0,
     "rotation": 90.0
   },
   "reversed": false,
   "folder": "R_2Sweep",
   "idealStartingState": {
-    "velocity": 0.0,
+    "velocity": 1.0,
     "rotation": -90.0
   },
   "useDefaultConstraints": false
