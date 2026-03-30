@@ -18,6 +18,10 @@ public class SpindexerIOTalonFx implements SpindexerIO {
   public SpindexerIOTalonFx() {
     motor = new TalonFX(Constants.Spindexer.spindexerMotorId, Constants.CANivore.CANBus);
 
+    config.HardwareLimitSwitch.ForwardLimitEnable = false;
+    config.HardwareLimitSwitch.ReverseLimitEnable = false;
+    config.SoftwareLimitSwitch.ReverseSoftLimitEnable = false;
+    config.SoftwareLimitSwitch.ForwardSoftLimitEnable = false;
     config.CurrentLimits.StatorCurrentLimit = Constants.Spindexer.statorCurrentLimit;
     config.CurrentLimits.StatorCurrentLimitEnable = true;
     config.CurrentLimits.SupplyCurrentLimit = Constants.Spindexer.supplyCurrentLimit;

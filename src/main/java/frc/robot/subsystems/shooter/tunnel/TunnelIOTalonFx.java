@@ -18,10 +18,15 @@ public class TunnelIOTalonFx implements TunnelIO {
   public TunnelIOTalonFx() {
     motor = new TalonFX(Constants.Tunnel.tunnelMotorId, Constants.CANivore.CANBus);
 
+    config.HardwareLimitSwitch.ForwardLimitEnable = false;
+    config.HardwareLimitSwitch.ReverseLimitEnable = false;
+    config.SoftwareLimitSwitch.ReverseSoftLimitEnable = false;
+    config.SoftwareLimitSwitch.ForwardSoftLimitEnable = false;
     config.CurrentLimits.StatorCurrentLimit = Constants.Tunnel.statorCurrentLimit;
     config.CurrentLimits.SupplyCurrentLimit = Constants.Tunnel.supplyCurrentLimit;
     config.CurrentLimits.SupplyCurrentLimitEnable = true;
     config.CurrentLimits.StatorCurrentLimitEnable = true;
+    config.CurrentLimits.SupplyCurrentLowerTime = 0;
 
     config.MotorOutput.Inverted = Constants.Tunnel.motorInvert;
     config.MotorOutput.NeutralMode = Constants.Tunnel.neutralMode;

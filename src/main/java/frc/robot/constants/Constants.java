@@ -132,7 +132,7 @@ public final class Constants {
 
   public static class Tunnel {
     public static final int tunnelMotorId = 20;
-    public static final double statorCurrentLimit = 60;
+    public static final double statorCurrentLimit = 80;
     public static final double supplyCurrentLimit = 40;
     public static final InvertedValue motorInvert = InvertedValue.CounterClockwise_Positive;
     public static final NeutralModeValue neutralMode = NeutralModeValue.Coast;
@@ -256,7 +256,7 @@ public final class Constants {
     public static final double voltageSmoosh = 3;
     public static final int leaderMotorId = 1;
     public static final int followerMotorId = 5;
-    public static final double statorCurrentLimit = 60;
+    public static final double statorCurrentLimit = 80;
     public static final double supplyCurrentLimit = 40;
     public static final NeutralModeValue neutralMode = NeutralModeValue.Coast;
     public static final InvertedValue leaderMotorInvert = InvertedValue.Clockwise_Positive;
@@ -270,7 +270,7 @@ public final class Constants {
     public static final double smooshDeg = (extendDeg + retractDeg) / 2.0;
     public static final double maxGravityDegrees = 125 - 180; // range is +/- 90 degrees
     public static final int motorId = 25;
-    public static final double statorCurrentLimit = 60;
+    public static final double statorCurrentLimit = 120;
     public static final double supplyCurrentLimit = 40;
     public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
     public static final InvertedValue motorInvert = InvertedValue.Clockwise_Positive;
