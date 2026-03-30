@@ -25,8 +25,12 @@ public class TurretIOTalonFx implements TurretIO {
     turretMotor = new TalonFX(Constants.Turret.motorId, Constants.CANivore.CANBus);
     CANcoderOne = new CANcoder(Constants.Turret.CANCoderOneId, Constants.CANivore.CANBus);
     CANcoderTwo = new CANcoder(Constants.Turret.CANCoderTwoId, Constants.CANivore.CANBus);
+
     config.CurrentLimits.StatorCurrentLimit = Constants.Turret.statorCurrentLimit;
     config.CurrentLimits.SupplyCurrentLimit = Constants.Turret.supplyCurrentLimit;
+    config.CurrentLimits.SupplyCurrentLimitEnable = true;
+    config.CurrentLimits.StatorCurrentLimitEnable = true;
+    config.CurrentLimits.SupplyCurrentLowerTime = 0;
 
     config.MotorOutput.Inverted = Constants.Turret.motorInvert;
     config.MotorOutput.NeutralMode = Constants.Turret.neutralMode;
@@ -38,9 +42,6 @@ public class TurretIOTalonFx implements TurretIO {
     config.Slot0.kP = Constants.Turret.kP;
     config.Slot0.kI = Constants.Turret.kI;
     config.Slot0.kD = Constants.Turret.kD;
-
-    config.CurrentLimits.SupplyCurrentLimitEnable = true;
-    config.CurrentLimits.StatorCurrentLimitEnable = true;
 
     config.HardwareLimitSwitch.ReverseLimitEnable = false;
     config.HardwareLimitSwitch.ForwardLimitEnable = false;

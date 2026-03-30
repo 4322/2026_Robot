@@ -31,10 +31,15 @@ public class DeployerIOTalonFX implements DeployerIO {
     motorConfigs.Feedback.SensorToMechanismRatio =
         Constants.Deployer.sensorToMechanismRatio * Constants.Deployer.RotorToSensorRatio;
     motorConfigs.Feedback.RotorToSensorRatio = Constants.Deployer.RotorToSensorRatio;
+    motorConfigs.HardwareLimitSwitch.ForwardLimitEnable = false;
+    motorConfigs.HardwareLimitSwitch.ReverseLimitEnable = false;
+    motorConfigs.SoftwareLimitSwitch.ReverseSoftLimitEnable = false;
+    motorConfigs.SoftwareLimitSwitch.ForwardSoftLimitEnable = false;
     motorConfigs.CurrentLimits.StatorCurrentLimit = Constants.Deployer.statorCurrentLimit;
     motorConfigs.CurrentLimits.SupplyCurrentLimit = Constants.Deployer.supplyCurrentLimit;
     motorConfigs.CurrentLimits.SupplyCurrentLimitEnable = true;
     motorConfigs.CurrentLimits.StatorCurrentLimitEnable = true;
+    motorConfigs.CurrentLimits.SupplyCurrentLowerTime = 0;
 
     motorConfigs.MotorOutput.Inverted = Constants.Deployer.motorInvert;
     motorConfigs.MotorOutput.NeutralMode = Constants.Deployer.neutralMode;

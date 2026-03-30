@@ -28,6 +28,10 @@ public class FlywheelIOTalonFx implements FlywheelIO {
     motor = new TalonFX(Constants.Flywheel.motorId);
     followerMotor = new TalonFX(Constants.Flywheel.followerMotorId);
 
+    config.HardwareLimitSwitch.ForwardLimitEnable = false;
+    config.HardwareLimitSwitch.ReverseLimitEnable = false;
+    config.SoftwareLimitSwitch.ReverseSoftLimitEnable = false;
+    config.SoftwareLimitSwitch.ForwardSoftLimitEnable = false;
     config.CurrentLimits.StatorCurrentLimit = Constants.Flywheel.statorCurrentLimit;
     config.CurrentLimits.StatorCurrentLimitEnable = true;
     config.CurrentLimits.SupplyCurrentLimit = Constants.Flywheel.supplyCurrentLimit;

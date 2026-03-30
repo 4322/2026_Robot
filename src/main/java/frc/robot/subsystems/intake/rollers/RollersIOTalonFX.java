@@ -25,10 +25,13 @@ public class RollersIOTalonFX implements RollersIO {
 
     motorConfigs.HardwareLimitSwitch.ForwardLimitEnable = false;
     motorConfigs.HardwareLimitSwitch.ReverseLimitEnable = false;
+    motorConfigs.SoftwareLimitSwitch.ReverseSoftLimitEnable = false;
+    motorConfigs.SoftwareLimitSwitch.ForwardSoftLimitEnable = false;
     motorConfigs.CurrentLimits.StatorCurrentLimit = Constants.Rollers.statorCurrentLimit;
     motorConfigs.CurrentLimits.SupplyCurrentLimit = Constants.Rollers.supplyCurrentLimit;
     motorConfigs.CurrentLimits.SupplyCurrentLimitEnable = true;
     motorConfigs.CurrentLimits.StatorCurrentLimitEnable = true;
+    motorConfigs.CurrentLimits.SupplyCurrentLowerTime = 0;
 
     motorConfigs.MotorOutput.Inverted = Constants.Rollers.leaderMotorInvert;
     motorConfigs.MotorOutput.NeutralMode = Constants.Rollers.neutralMode;

@@ -28,7 +28,7 @@ public class Shoot extends Command {
     if ((!AreaManager.isShootingArea(drive.getTurretTranslation())
             || AreaManager.isTrench(drive.getTurretTranslation()))
         && !ignoreArea) {
-      shooter.requestIdle();
+      shooter.requestIdle(null);
     } else {
       if (AreaManager.getZoneOfPosition(drive.getTurretTranslation()) == Zone.ALLIANCE_ZONE
           || AreaManager.isTrench(drive.getTurretTranslation())) {
@@ -41,6 +41,6 @@ public class Shoot extends Command {
 
   @Override
   public void end(boolean interrupted) {
-    shooter.requestIdle();
+    shooter.requestIdle(null);
   }
 }
