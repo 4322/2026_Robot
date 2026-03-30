@@ -538,7 +538,7 @@ public class Simulator extends SubsystemBase {
               "Spin",
               EventType.MOVE_JOYSTICK_TURN,
               new Pose2d(0.0, 0.3, Rotation2d.kZero)),
-          new SimEvent(t += 20.0, "Start unjam button", EventType.HOLD_RIGHT_POV),
+          new SimEvent(t += 1.0, "Start unjam button", EventType.HOLD_RIGHT_BUMPER),
           new SimEvent(
               t += 20.0,
               "Spin",
