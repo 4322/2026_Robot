@@ -82,4 +82,13 @@ public class ShooterCommands {
   public static Command autoShootWithAreaCheck(Shooter shooter, Drive drive, Intake intake) {
     return new Shoot(shooter, drive).onlyIf(() -> intake.hasExtended());
   }
+
+  public static Command autoUnjam(Shooter shooter, double timeout) {
+    return Commands.run(
+            () -> {
+              shooter.unjamOverride(true);
+            })
+        .finallyDo(() -> shooter.unjamOverride(false))
+        .withTimeout(timeout);
+  }
 }

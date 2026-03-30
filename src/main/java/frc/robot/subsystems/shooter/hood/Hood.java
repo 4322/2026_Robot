@@ -155,6 +155,10 @@ public class Hood {
     trenchOverride = override;
   }
 
+  public boolean isSafeAngle() {
+    return inputs.hoodDegrees < Constants.Hood.safeAngleDeg + Constants.Hood.largeToleranceDeg;
+  }
+
   public void rehome() {
     homed = false;
   }

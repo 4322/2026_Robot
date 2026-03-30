@@ -5,9 +5,11 @@ import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Robot;
 import frc.robot.commands.IntakeCommands;
 import frc.robot.commands.ShooterCommands;
@@ -24,7 +26,6 @@ public class R2Sweep extends SequentialCommandGroup {
     Pose2d startPoseRed = path.flipPath().getStartingHolonomicPose().get();
 
     setName("R_2_SWEEP");
-
     addCommands(
         new InstantCommand(
             () -> {
@@ -34,26 +35,32 @@ public class R2Sweep extends SequentialCommandGroup {
                 drive.setPose(startPoseRed);
               }
             }),
-        new SequentialCommandGroup(
-            IntakeCommands.intake(intake),
-            new SequentialCommandGroup(
-                AutoBuilder.followPath(Robot.R_2SWEEP_A),
-                AutoBuilder.followPath(Robot.R_2SWEEP_B),
-                new ParallelRaceGroup(
-                    ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake),
-                    AutoBuilder.followPath(Robot.L_2SWEEP_CG),
-                    new SequentialCommandGroup(
-                        new WaitCommand(Constants.Autonomous.smooshDelayFirstPass),
-                        IntakeCommands.autoSmoosh(intake))),
-                AutoBuilder.followPath(Robot.R_2SWEEP_D),
-                AutoBuilder.followPath(Robot.R_2SWEEP_E),
-                AutoBuilder.followPath(Robot.R_2SWEEP_F),
-                new ParallelRaceGroup(
-                    ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake),
-                    AutoBuilder.followPath(Robot.L_2SWEEP_CG),
-                    new SequentialCommandGroup(
-                        new WaitCommand(Constants.Autonomous.smooshDelaySecondPass),
-                        IntakeCommands.autoSmoosh(intake))),
-                AutoBuilder.followPath(Robot.R_2SWEEP_H))));
+        IntakeCommands.intake(intake),
+        AutoBuilder.followPath(Robot.R_2SWEEP_A),
+        AutoBuilder.followPath(Robot.R_2SWEEP_B),
+        new ParallelCommandGroup(
+            new ParallelRaceGroup(
+                ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake),
+                IntakeCommands.autoSmoosh(
+                        intake,
+                        Constants.Autonomous.smooshDelayFirstPass,
+                        Constants.Autonomous.shootTimeFirstPass)
+                    .andThen(new WaitCommand(2))),
+            AutoBuilder.followPath(Robot.R_2SWEEP_CG)),
+        new WaitUntilCommand(() -> shooter.isHoodLowered()),
+        AutoBuilder.followPath(Robot.R_2SWEEP_D),
+        AutoBuilder.followPath(Robot.R_2SWEEP_E),
+        AutoBuilder.followPath(Robot.R_2SWEEP_F),
+        new ParallelCommandGroup(
+            new ParallelRaceGroup(
+                ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake),
+                IntakeCommands.autoSmoosh(
+                        intake,
+                        Constants.Autonomous.smooshDelayFirstPass,
+                        Constants.Autonomous.shootTimeFirstPass)
+                    .andThen(new WaitCommand(2))),
+            AutoBuilder.followPath(Robot.R_2SWEEP_CG)),
+        new WaitUntilCommand(() -> shooter.isHoodLowered()),
+        AutoBuilder.followPath(Robot.R_2SWEEP_H));
   }
 }

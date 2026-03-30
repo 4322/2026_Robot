@@ -33,15 +33,13 @@ public class LSweepBump extends SequentialCommandGroup {
                 drive.setPose(startPoseRed);
               }
             }),
+        IntakeCommands.intake(intake),
+        AutoBuilder.followPath(Robot.L_2SWEEP_A),
+        AutoBuilder.followPath(Robot.L_2SWEEP_B),
         new ParallelCommandGroup(
-            IntakeCommands.intake(intake),
+            ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake),
             new SequentialCommandGroup(
-                AutoBuilder.followPath(Robot.L_2SWEEP_A),
-                AutoBuilder.followPath(Robot.L_2SWEEP_B),
-                new ParallelCommandGroup(
-                    ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake),
-                    new SequentialCommandGroup(
-                        new WaitCommand(Constants.Autonomous.smooshDelaySinglePass),
-                        IntakeCommands.autoSmoosh(intake))))));
+                new WaitCommand(Constants.Autonomous.smooshDelaySinglePass),
+                IntakeCommands.autoSmoosh(intake))));
   }
 }

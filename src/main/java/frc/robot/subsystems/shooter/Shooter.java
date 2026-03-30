@@ -330,6 +330,10 @@ public class Shooter extends SubsystemBase {
     return hood.isAtGoal();
   }
 
+  public boolean isHoodLowered() {
+    return hood.isSafeAngle();
+  }
+
   // Needs to be continuously called in order to start shooting balls
   public void requestShoot(boolean fixedPosition, boolean isScoring) {
     this.isScoring = isScoring;
