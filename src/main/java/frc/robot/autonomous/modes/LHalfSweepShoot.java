@@ -5,7 +5,6 @@ import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Robot;
@@ -36,15 +35,13 @@ public class LHalfSweepShoot extends SequentialCommandGroup {
                 drive.setPose(startPoseRed);
               }
             }),
-        new ParallelCommandGroup(
-            IntakeCommands.intake(intake),
-            new SequentialCommandGroup(
-                AutoBuilder.followPath(Robot.L_StartL_To_NeutralL_Intake),
-                AutoBuilder.followPath(Robot.L_NeutralL_Intake_To_Mid),
-                AutoBuilder.followPath(Robot.L_NeutralL_Intake_Mid_Flip),
-                AutoBuilder.followPath(Robot.L_NeutralLMid_To_ShootL),
-                ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake),
-                new WaitCommand(Constants.Autonomous.smooshDelaySinglePass),
-                IntakeCommands.autoSmoosh(intake))));
+        IntakeCommands.intake(intake),
+        AutoBuilder.followPath(Robot.L_StartL_To_NeutralL_Intake),
+        AutoBuilder.followPath(Robot.L_NeutralL_Intake_To_Mid),
+        AutoBuilder.followPath(Robot.L_NeutralL_Intake_Mid_Flip),
+        AutoBuilder.followPath(Robot.L_NeutralLMid_To_ShootL),
+        ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake),
+        new WaitCommand(Constants.Autonomous.smooshDelaySinglePass),
+        IntakeCommands.autoSmoosh(intake));
   }
 }

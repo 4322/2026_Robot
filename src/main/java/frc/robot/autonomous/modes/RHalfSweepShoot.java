@@ -5,7 +5,6 @@ import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Robot;
@@ -26,7 +25,6 @@ public class RHalfSweepShoot extends SequentialCommandGroup {
     Pose2d startPoseRed = path.flipPath().getStartingHolonomicPose().get();
 
     setName("R_HALF_SWEEP_SHOOT");
-
     addCommands(
         new InstantCommand(
             () -> {
@@ -36,15 +34,13 @@ public class RHalfSweepShoot extends SequentialCommandGroup {
                 drive.setPose(startPoseRed);
               }
             }),
-        new ParallelCommandGroup(
-            IntakeCommands.intake(intake),
-            new SequentialCommandGroup(
-                AutoBuilder.followPath(Robot.R_StartR_To_NeutralR_Intake),
-                AutoBuilder.followPath(Robot.R_NeutralR_Intake_To_Mid),
-                AutoBuilder.followPath(Robot.R_NeutralR_Intake_Mid_Flip),
-                AutoBuilder.followPath(Robot.R_NeutralRMid_To_ShootR),
-                ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake),
-                new WaitCommand(Constants.Autonomous.smooshDelaySinglePass),
-                IntakeCommands.autoSmoosh(intake))));
+        IntakeCommands.intake(intake),
+        AutoBuilder.followPath(Robot.R_StartR_To_NeutralR_Intake),
+        AutoBuilder.followPath(Robot.R_NeutralR_Intake_To_Mid),
+        AutoBuilder.followPath(Robot.R_NeutralR_Intake_Mid_Flip),
+        AutoBuilder.followPath(Robot.R_NeutralRMid_To_ShootR),
+        ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake),
+        new WaitCommand(Constants.Autonomous.smooshDelaySinglePass),
+        IntakeCommands.autoSmoosh(intake));
   }
 }

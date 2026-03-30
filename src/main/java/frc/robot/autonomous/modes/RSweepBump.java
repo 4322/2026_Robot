@@ -24,7 +24,6 @@ public class RSweepBump extends SequentialCommandGroup {
     Pose2d startPoseRed = path.flipPath().getStartingHolonomicPose().get();
 
     setName("R_SWEEP_BUMP");
-
     addCommands(
         new InstantCommand(
             () -> {
@@ -34,14 +33,13 @@ public class RSweepBump extends SequentialCommandGroup {
                 drive.setPose(startPoseRed);
               }
             }),
+        IntakeCommands.intake(intake),
+        AutoBuilder.followPath(Robot.R_2SWEEP_A),
+        AutoBuilder.followPath(Robot.R_2SWEEP_B),
         new ParallelCommandGroup(
-            IntakeCommands.intake(intake),
+            ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake),
             new SequentialCommandGroup(
-                AutoBuilder.followPath(Robot.R_2SWEEP_A),
-                AutoBuilder.followPath(Robot.R_2SWEEP_B),
-                ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake),
-                new SequentialCommandGroup(
-                    new WaitCommand(Constants.Autonomous.smooshDelaySinglePass),
-                    IntakeCommands.autoSmoosh(intake)))));
+                new WaitCommand(Constants.Autonomous.smooshDelaySinglePass),
+                IntakeCommands.autoSmoosh(intake))));
   }
 }
