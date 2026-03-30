@@ -220,8 +220,7 @@ public class ShotCalculator {
     this.forScoring = forScoring;
     if (forScoring) {
       this.logPath += "Scoring/";
-    }
-    else {
+    } else {
       this.logPath += "Passing/";
     }
   }

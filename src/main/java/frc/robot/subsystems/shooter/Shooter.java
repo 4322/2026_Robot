@@ -114,7 +114,7 @@ public class Shooter extends SubsystemBase {
           params.timeOfFlightSec());
     }
     scoreCalc.loadShotLUT(scoreLUT);
-    
+
     ShotLUT passLUT = new ShotLUT();
     for (ShotCalculatorParameters params : Constants.FiringManager.firingParametersListPassing) {
       passLUT.put(
@@ -206,8 +206,7 @@ public class Shooter extends SubsystemBase {
 
         if (flywheelOverrideRPS != null) {
           flywheel.requestGoal(flywheelOverrideRPS, isScoring);
-        }
-        else if (idleTimer.hasElapsed(Constants.Flywheel.idleTimeout)) {
+        } else if (idleTimer.hasElapsed(Constants.Flywheel.idleTimeout)) {
           flywheel.requestGoal(Constants.Flywheel.idleRPS, isScoring);
         } else {
           flywheel.requestGoal(targetFlywheelSpeedRPS, isScoring);
@@ -343,8 +342,7 @@ public class Shooter extends SubsystemBase {
           hasBeenScoring = true;
         }
         shot = scoreCalc.calculate(inputs);
-      }
-      else {
+      } else {
         if (hasBeenScoring) {
           // Reset stale accel/tof values in calculator upon switching to passing
           passCalc.resetWarmStart();

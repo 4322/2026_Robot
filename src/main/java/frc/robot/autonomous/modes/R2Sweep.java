@@ -18,6 +18,7 @@ import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.led.LED;
 import frc.robot.subsystems.shooter.Shooter;
+import frc.robot.subsystems.shooter.Shooter.ShooterState;
 
 public class R2Sweep extends SequentialCommandGroup {
   public R2Sweep(Drive drive, LED led, Intake intake, Shooter shooter) {
@@ -26,6 +27,7 @@ public class R2Sweep extends SequentialCommandGroup {
     Pose2d startPoseRed = path.flipPath().getStartingHolonomicPose().get();
 
     setName("R_2_SWEEP");
+
     addCommands(
         new InstantCommand(
             () -> {
@@ -37,7 +39,9 @@ public class R2Sweep extends SequentialCommandGroup {
             }),
         IntakeCommands.intake(intake),
         AutoBuilder.followPath(Robot.R_2SWEEP_A),
-        AutoBuilder.followPath(Robot.R_2SWEEP_B),
+        new ParallelRaceGroup(
+            ShooterCommands.idle(shooter, intake, 14.0, 40.0),
+            AutoBuilder.followPath(Robot.R_2SWEEP_B)),
         new ParallelCommandGroup(
             new ParallelRaceGroup(
                 ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake),
@@ -45,12 +49,14 @@ public class R2Sweep extends SequentialCommandGroup {
                         intake,
                         Constants.Autonomous.smooshDelayFirstPass,
                         Constants.Autonomous.shootTimeFirstPass)
-                    .andThen(new WaitCommand(0.5))),
-            AutoBuilder.followPath(Robot.R_2SWEEP_CG)),
+                    .andThen(new WaitCommand(.5))),
+            new WaitUntilCommand(() -> shooter.getState() == ShooterState.SHOOT)
+                .andThen(AutoBuilder.followPath(Robot.R_2SWEEP_CG))),
         new WaitUntilCommand(() -> shooter.isHoodLowered()),
         AutoBuilder.followPath(Robot.R_2SWEEP_DE),
         new ParallelRaceGroup(
-            AutoBuilder.followPath(Robot.R_2SWEEP_F), ShooterCommands.idle(shooter, intake, 14.0, 40.0)),
+            AutoBuilder.followPath(Robot.R_2SWEEP_F),
+            ShooterCommands.idle(shooter, intake, 14.0, 40.0)),
         new ParallelCommandGroup(
             ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake),
             IntakeCommands.autoSmoosh(
