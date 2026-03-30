@@ -33,7 +33,7 @@ public class Shooter extends SubsystemBase {
     STOP // Everything but flywheel stopped
   }
 
-  private ShooterState state = ShooterState.STARTING_CONFIG;
+  private ShooterState statee = ShooterState.STARTING_CONFIG;
   private ShooterState requestedState = ShooterState.STARTING_CONFIG;
 
   private Flywheel flywheel;
@@ -151,28 +151,28 @@ public class Shooter extends SubsystemBase {
       }
       return;
     }
-    if (DriverStation.isDisabled() && state != ShooterState.STARTING_CONFIG) {
+    if (DriverStation.isDisabled() && statee != ShooterState.STARTING_CONFIG) {
       // Reset variable in case disabling during unwind
       doUnwind = false;
-      state = ShooterState.DISABLED;
+      statee = ShooterState.DISABLED;
     }
 
-    // Turret unwind logic blocks all other incoming state requests from commands
-    // Once unwind is complete, other state requests are allowed and in cases where
-    // no state request is made, goes back to previous state
+    // Turret unwind logic blocks all other incoming statee requests from commands
+    // Once unwind is complete, other statee requests are allowed and in cases where
+    // no statee request is made, goes back to previous statee
     if (turret.needsToUnwind() || turret.isUnwinding()) {
-      state = ShooterState.UNWIND;
+      statee = ShooterState.UNWIND;
     }
 
-    switch (state) {
+    switch (statee) {
       case STARTING_CONFIG -> {
         // Intake has to be down first before using shooter
-        // Commands will take state out of starting config only if intake was first deployed
+        // Commands will take statee out of starting config only if intake was first deployed
       }
       case DISABLED -> {
         resetIdleTimeout = true;
         if (DriverStation.isEnabled()) {
-          state = ShooterState.IDLE;
+          statee = ShooterState.IDLE;
         }
       }
       case IDLE -> {
@@ -212,7 +212,7 @@ public class Shooter extends SubsystemBase {
         tunnel.requestIdle();
       }
       case UNWIND -> {
-        // Optimization: Keep requesting target states while waiting for unwind if shooting
+        // Optimization: Keep requesting target statees while waiting for unwind if shooting
         if (requestedState == ShooterState.PRESHOOT) {
           hood.requestGoal(targetHoodAngleDeg, isScoring);
           flywheel.requestGoal(targetFlywheelSpeedRPS, isScoring);
@@ -232,10 +232,10 @@ public class Shooter extends SubsystemBase {
 
         if (turret.atUnwindLimit() || Constants.turretLocked) {
           doUnwind = false;
-          // Exit unwind state when completed
+          // Exit unwind statee when completed
           // In next loop cycle if no command sends shooter request,
-          // shooter will go to last requested state before unwind started
-          state = requestedState;
+          // shooter will go to last requested statee before unwind started
+          statee = requestedState;
         }
         turret.unwind(doUnwind);
       }
@@ -265,7 +265,7 @@ public class Shooter extends SubsystemBase {
       turret.outputsPeriodic();
     }
 
-    Logger.recordOutput("Shooter/State", state.toString());
+    Logger.recordOutput("Shooter/State", statee.toString());
     Logger.recordOutput("Shooter/TargetHoodAngleDeg", targetHoodAngleDeg);
     Logger.recordOutput("Shooter/TargetFlywheelSpeedRPS", targetFlywheelSpeedRPS);
     Logger.recordOutput("Shooter/TargetTurretAngleDeg", targetTurretAngleDeg);
@@ -327,7 +327,7 @@ public class Shooter extends SubsystemBase {
   }
 
   public ShooterState getState() {
-    return state;
+    return statee;
   }
 
   public boolean hoodAtGoal() {
@@ -347,15 +347,15 @@ public class Shooter extends SubsystemBase {
       return;
     }
 
-    if (state != ShooterState.SHOOT) {
-      if (state == ShooterState.PRESHOOT) {
+    if (statee != ShooterState.SHOOT) {
+      if (statee == ShooterState.PRESHOOT) {
         if (hood.isAtGoal() && flywheel.isAtGoal() && turret.isAtGoal()) {
-          state = ShooterState.SHOOT;
+          statee = ShooterState.SHOOT;
         }
       } else {
-        // Never set requested state to SHOOT to ensure after turret unwinds
+        // Never set requested statee to SHOOT to ensure after turret unwinds
         // we wait for everything to get to setpoint before starting to shoot again
-        state = ShooterState.PRESHOOT;
+        statee = ShooterState.PRESHOOT;
         requestedState = ShooterState.PRESHOOT;
       }
     }
@@ -364,13 +364,13 @@ public class Shooter extends SubsystemBase {
   public void requestIdle(Double hoodOverrideDegree) {
     this.hoodOvrDeg = hoodOverrideDegree;
     requestedState = ShooterState.IDLE;
-    state = ShooterState.IDLE;
+    statee = ShooterState.IDLE;
     Logger.recordOutput("Shooter/currentMethod", "requestIdle()");
   }
 
   public void requestStop() {
     requestedState = ShooterState.STOP;
-    state = ShooterState.STOP;
+    statee = ShooterState.STOP;
     Logger.recordOutput("Shooter/currentMethod", "requestStop()");
   }
 

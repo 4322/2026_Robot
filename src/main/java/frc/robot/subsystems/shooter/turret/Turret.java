@@ -26,7 +26,7 @@ public class Turret {
     SET_TURRET_ANGLE,
   }
 
-  public turretState state = turretState.DISABLED;
+  public turretState statee = turretState.DISABLED;
 
   public Turret(TurretIO io) {
     this.io = io;
@@ -54,10 +54,10 @@ public class Turret {
         updateAtGoalTimer();
 
         if (DriverStation.isDisabled()) {
-          state = turretState.DISABLED;
+          statee = turretState.DISABLED;
         }
 
-        switch (state) {
+        switch (statee) {
           case DISABLED -> {
             // If ever disabled during unwind, ensure variable is reset
             // Ensure turret remains in position upon re-enabling after moving while disabled
@@ -65,7 +65,7 @@ public class Turret {
             prevDeg = inputs.turretDegs;
             needsToUnwind = false;
             if (!DriverStation.isDisabled()) {
-              state = turretState.SET_TURRET_ANGLE;
+              statee = turretState.SET_TURRET_ANGLE;
             }
             break;
           }
@@ -79,7 +79,7 @@ public class Turret {
         }
 
         updateNetworkTableValues();
-        Logger.recordOutput("Shooter/Turret/State", state);
+        Logger.recordOutput("Shooter/Turret/State", statee);
         Logger.recordOutput("Shooter/Turret/needToUnwind", needsToUnwind());
         Logger.recordOutput("Shooter/Turret/isUnwinding", isUnwinding());
         Logger.recordOutput("Shooter/Turret/atGoal", isAtGoal());
@@ -95,7 +95,7 @@ public class Turret {
       return;
     }
 
-    if (state == turretState.SET_TURRET_ANGLE) {
+    if (statee == turretState.SET_TURRET_ANGLE) {
       if (desiredDeg != null) {
         desiredDeg = calculateAngle(desiredDeg, inputs.turretDegs);
         if (needsToUnwind()) {
@@ -143,7 +143,7 @@ public class Turret {
   }
 
   public void setTurretAngleState() {
-    state = turretState.SET_TURRET_ANGLE;
+    statee = turretState.SET_TURRET_ANGLE;
   }
 
   public boolean atUnwindLimit() {

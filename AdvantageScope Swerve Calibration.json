@@ -5,7 +5,7 @@
       "y": 95,
       "width": 1100,
       "height": 650,
-      "state": {
+      "statee": {
         "sidebar": {
           "width": 300,
           "expanded": [
@@ -33,7 +33,7 @@
               "controller": {
                 "sources": [
                   {
-                    "type": "states",
+                    "type": "statees",
                     "logKey": "/RealOutputs/SwerveStates/Measured",
                     "logType": "SwerveModuleState[]",
                     "visible": true,
@@ -43,7 +43,7 @@
                     }
                   },
                   {
-                    "type": "states",
+                    "type": "statees",
                     "logKey": "/RealOutputs/SwerveStates/SetpointsOptimized",
                     "logType": "SwerveModuleState[]",
                     "visible": true,

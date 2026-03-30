@@ -18,7 +18,7 @@ public class Spindexer {
     UNJAM
   }
 
-  private SpindexerStates state = SpindexerStates.DISABLED;
+  private SpindexerStates statee = SpindexerStates.DISABLED;
 
   public Spindexer(SpindexerIO io) {
     this.io = io;
@@ -34,15 +34,15 @@ public class Spindexer {
       case TUNING -> {}
       case NORMAL -> {
         if (DriverStation.isDisabled()) {
-          state = SpindexerStates.DISABLED;
+          statee = SpindexerStates.DISABLED;
         }
 
-        switch (state) {
+        switch (statee) {
           case DISABLED -> {
             // Reset variables
             unjamOverride = false;
             if (DriverStation.isEnabled()) {
-              state = SpindexerStates.IDLE;
+              statee = SpindexerStates.IDLE;
             }
           }
           case IDLE -> {
@@ -59,21 +59,21 @@ public class Spindexer {
       case DISABLED -> {}
     }
 
-    Logger.recordOutput("Shooter/Spindexer/State", state.toString());
+    Logger.recordOutput("Shooter/Spindexer/State", statee.toString());
     Logger.recordOutput("Shooter/Spindexer/RequestedSpeed", requestedSpeed);
     Logger.recordOutput("Shooter/Spindexer/Stopped", isStopped());
   }
 
   public void requestIdle() {
     if (!unjamOverride) {
-      state = SpindexerStates.IDLE;
+      statee = SpindexerStates.IDLE;
       requestedSpeed = 0;
     }
   }
 
   public void requestGoal(double speed) {
     if (!unjamOverride) {
-      state = SpindexerStates.INDEXING;
+      statee = SpindexerStates.INDEXING;
       requestedSpeed = speed;
     }
   }
@@ -81,11 +81,11 @@ public class Spindexer {
   public void unjamOverride(boolean unjamOverride) {
     this.unjamOverride = unjamOverride;
     if (unjamOverride) {
-      state = SpindexerStates.UNJAM;
+      statee = SpindexerStates.UNJAM;
       requestedSpeed = Constants.Spindexer.unjamRPS;
     } else {
       // Default to idle when unjam isn't desired
-      state = SpindexerStates.IDLE;
+      statee = SpindexerStates.IDLE;
       requestedSpeed = 0;
     }
   }

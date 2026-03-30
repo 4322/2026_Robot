@@ -13,7 +13,7 @@ import org.littletonrobotics.junction.Logger;
 public class Intake extends SubsystemBase {
   private final Deployer deployer;
   private final Rollers rollers;
-  private IntakeState state = IntakeState.STARING_CONFIG;
+  private IntakeState statee = IntakeState.STARING_CONFIG;
   private IntakeState prevState = IntakeState.STARING_CONFIG;
   private boolean hasExtended = false;
   private Timer deployCheckTimer = new Timer();
@@ -42,11 +42,11 @@ public class Intake extends SubsystemBase {
 
   public void periodicOutputs() {
 
-    if (DriverStation.isDisabled() && state != IntakeState.STARING_CONFIG) {
+    if (DriverStation.isDisabled() && statee != IntakeState.STARING_CONFIG) {
       setState(IntakeState.IDLE);
     }
 
-    switch (state) {
+    switch (statee) {
       case STARING_CONFIG -> {
         deployer.setState(DeployerState.DISABLED);
         rollers.setState(RollersState.DISABLED);
@@ -71,7 +71,7 @@ public class Intake extends SubsystemBase {
               deployer.seedPosition(
                   currentDeployerAngle + (360 / Constants.Deployer.sensorToMechanismRatio));
               hasExtended = true;
-              state = prevState;
+              statee = prevState;
             } else {
               alreadyDeployedCheckFailed = true;
             }
@@ -82,7 +82,7 @@ public class Intake extends SubsystemBase {
 
         if (deployer.isExtended()) {
           hasExtended = true;
-          state = prevState;
+          statee = prevState;
           alreadyDeployedCheckFailed = true;
           deployCheckTimer.stop();
           deployCheckTimer.reset();
@@ -109,27 +109,27 @@ public class Intake extends SubsystemBase {
     deployer.outputsPeriodic();
     rollers.outputsPeriodic();
 
-    Logger.recordOutput("Intake/CurrentState", state);
+    Logger.recordOutput("Intake/CurrentState", statee);
     Logger.recordOutput("Intake/hasExtended", hasExtended);
     Logger.recordOutput("Intake/alreadyDeployCheckFailed", alreadyDeployedCheckFailed);
   }
 
   public IntakeState getState() {
-    return state;
+    return statee;
   }
 
   public IntakeState getPrevState() {
     return prevState;
   }
 
-  public void setState(IntakeState state) {
-    Logger.recordOutput("Intake/RequestedState", state);
+  public void setState(IntakeState statee) {
+    Logger.recordOutput("Intake/RequestedState", statee);
     if (hasExtended) {
-      prevState = this.state;
-      this.state = state;
+      prevState = this.statee;
+      this.statee = statee;
     } else {
-      prevState = state;
-      this.state = IntakeState.DEPLOY;
+      prevState = statee;
+      this.statee = IntakeState.DEPLOY;
     }
   }
 

@@ -16,7 +16,7 @@ public class Rollers {
     DISABLED
   }
 
-  public RollersState state = RollersState.DISABLED;
+  public RollersState statee = RollersState.DISABLED;
 
   public Rollers(RollersIO rollersIO) {
     this.rollersIO = rollersIO;
@@ -32,9 +32,9 @@ public class Rollers {
     // Nothing here currently
   }
 
-  public void setState(RollersState state) {
-    Logger.recordOutput("Intake/Rollers/State", state);
-    switch (state) {
+  public void setState(RollersState statee) {
+    Logger.recordOutput("Intake/Rollers/State", statee);
+    switch (statee) {
       case DISABLED -> {
         rollersIO.stopMotor();
       }

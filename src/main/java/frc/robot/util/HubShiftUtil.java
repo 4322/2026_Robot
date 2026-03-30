@@ -106,14 +106,14 @@ public class HubShiftUtil {
   private static ShiftInfo getShiftInfo(
       boolean[] currentSchedule, double[] shiftStartTimes, double[] shiftEndTimes) {
     double currentTime = shiftTimer.get();
-    double stateTimeElapsed = shiftTimer.get();
-    double stateTimeRemaining = 0.0;
+    double stateeTimeElapsed = shiftTimer.get();
+    double stateeTimeRemaining = 0.0;
     boolean active = false;
     ShiftEnum currentShift = ShiftEnum.DISABLED;
 
     if (DriverStation.isAutonomousEnabled()) {
-      stateTimeElapsed = currentTime;
-      stateTimeRemaining = autoEndTime - currentTime;
+      stateeTimeElapsed = currentTime;
+      stateeTimeRemaining = autoEndTime - currentTime;
       active = true;
       currentShift = ShiftEnum.AUTO;
     } else if (DriverStation.isEnabled()) {
@@ -130,27 +130,27 @@ public class HubShiftUtil {
       }
 
       // Calculate elapsed and remaining time in the current shift, ignoring combined shifts
-      stateTimeElapsed = currentTime - shiftStartTimes[currentShiftIndex];
-      stateTimeRemaining = shiftEndTimes[currentShiftIndex] - currentTime;
+      stateeTimeElapsed = currentTime - shiftStartTimes[currentShiftIndex];
+      stateeTimeRemaining = shiftEndTimes[currentShiftIndex] - currentTime;
 
-      // If the state is the same as the last shift, combine the elapsed time
+      // If the statee is the same as the last shift, combine the elapsed time
       if (currentShiftIndex > 0) {
         if (currentSchedule[currentShiftIndex] == currentSchedule[currentShiftIndex - 1]) {
-          stateTimeElapsed = currentTime - shiftStartTimes[currentShiftIndex - 1];
+          stateeTimeElapsed = currentTime - shiftStartTimes[currentShiftIndex - 1];
         }
       }
 
-      // If the state is the same as the next shift, combine the remaining time
+      // If the statee is the same as the next shift, combine the remaining time
       if (currentShiftIndex < shiftEndTimes.length - 1) {
         if (currentSchedule[currentShiftIndex] == currentSchedule[currentShiftIndex + 1]) {
-          stateTimeRemaining = shiftEndTimes[currentShiftIndex + 1] - currentTime;
+          stateeTimeRemaining = shiftEndTimes[currentShiftIndex + 1] - currentTime;
         }
       }
 
       active = currentSchedule[currentShiftIndex];
       currentShift = shiftsEnums[currentShiftIndex];
     }
-    ShiftInfo shiftInfo = new ShiftInfo(currentShift, stateTimeElapsed, stateTimeRemaining, active);
+    ShiftInfo shiftInfo = new ShiftInfo(currentShift, stateeTimeElapsed, stateeTimeRemaining, active);
     return shiftInfo;
   }
 

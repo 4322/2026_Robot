@@ -17,7 +17,7 @@ public class Tunnel {
     UNJAM
   }
 
-  private TunnelStates state = TunnelStates.DISABLED;
+  private TunnelStates statee = TunnelStates.DISABLED;
 
   public Tunnel(TunnelIO io) {
     this.io = io;
@@ -34,15 +34,15 @@ public class Tunnel {
       case DISABLED -> {}
       case NORMAL -> {
         if (DriverStation.isDisabled()) {
-          state = TunnelStates.DISABLED;
+          statee = TunnelStates.DISABLED;
         }
 
-        switch (state) {
+        switch (statee) {
           case DISABLED -> {
             // Reset variables
             unjamOverride = false;
             if (DriverStation.isEnabled()) {
-              state = TunnelStates.IDLE;
+              statee = TunnelStates.IDLE;
             }
           }
           case IDLE -> {
@@ -58,14 +58,14 @@ public class Tunnel {
       }
     }
 
-    Logger.recordOutput("Shooter/Tunnel/State", state.toString());
+    Logger.recordOutput("Shooter/Tunnel/State", statee.toString());
     Logger.recordOutput("Shooter/Tunnel/RequestedSpeed", requestedSpeed);
     Logger.recordOutput("Shooter/Tunnel/Stopped", isStopped());
   }
 
   public void requestIdle() {
     if (!unjamOverride) {
-      state = TunnelStates.IDLE;
+      statee = TunnelStates.IDLE;
       requestedSpeed = 0;
     }
   }
@@ -73,18 +73,18 @@ public class Tunnel {
   public void unjamOverride(boolean unjamOverride) {
     this.unjamOverride = unjamOverride;
     if (unjamOverride) {
-      state = TunnelStates.UNJAM;
+      statee = TunnelStates.UNJAM;
       requestedSpeed = Constants.Tunnel.unjamRPS;
     } else {
       // Default to idle when unjam isn't desired
-      state = TunnelStates.IDLE;
+      statee = TunnelStates.IDLE;
       requestedSpeed = 0;
     }
   }
 
   public void requestGoal(double speed) {
     if (!unjamOverride) {
-      state = TunnelStates.INDEXING;
+      statee = TunnelStates.INDEXING;
       requestedSpeed = speed;
     }
   }

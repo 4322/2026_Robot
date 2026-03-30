@@ -8,7 +8,7 @@ import frc.robot.util.HubShiftUtil;
 import org.littletonrobotics.junction.Logger;
 
 public class LED extends SubsystemBase {
-  private LEDState state = LEDState.DISABLED;
+  private LEDState statee = LEDState.DISABLED;
 
   private boolean climberDeployed = false;
   private boolean autoFuelPickup = false;
@@ -46,7 +46,7 @@ public class LED extends SubsystemBase {
 
   @Override
   public void periodic() {
-    Logger.recordOutput("LED/State", state.toString());
+    Logger.recordOutput("LED/State", statee.toString());
     if (DriverStation.isDisabled()) {
       setLEDState(LEDState.DISABLED);
     } else if (climberDeployed) {
@@ -68,11 +68,11 @@ public class LED extends SubsystemBase {
   }
 
   private void setLEDState(LEDState newState) {
-    if (state != newState) {
-      state = newState;
+    if (statee != newState) {
+      statee = newState;
       io.clearLEDs();
 
-      switch (state) {
+      switch (statee) {
         case DISABLED -> {
           io.setLEDs(AnimationType.RAINBOW, 0);
         }

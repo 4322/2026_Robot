@@ -48,7 +48,7 @@ public class LocalADStarAK implements Pathfinder {
    * Get the most recently calculated path
    *
    * @param constraints The path constraints to use when creating the path
-   * @param goalEndState The goal end state to use when creating the path
+   * @param goalEndState The goal end statee to use when creating the path
    * @return The PathPlannerPath created from the points calculated by the pathfinder
    */
   @Override

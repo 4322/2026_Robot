@@ -309,7 +309,7 @@ public class DriveCommands {
   /** Measures the robot's wheel radius by spinning in a circle. */
   public static Command wheelRadiusCharacterization(Drive drive) {
     SlewRateLimiter limiter = new SlewRateLimiter(WHEEL_RADIUS_RAMP_RATE);
-    WheelRadiusCharacterizationState state = new WheelRadiusCharacterizationState();
+    WheelRadiusCharacterizationState statee = new WheelRadiusCharacterizationState();
 
     return Commands.parallel(
         // Drive control sequence
@@ -336,17 +336,17 @@ public class DriveCommands {
             // Record starting measurement
             Commands.runOnce(
                 () -> {
-                  state.positions = drive.getWheelRadiusCharacterizationPositions();
-                  state.lastAngle = drive.getRotation();
-                  state.gyroDelta = 0.0;
+                  statee.positions = drive.getWheelRadiusCharacterizationPositions();
+                  statee.lastAngle = drive.getRotation();
+                  statee.gyroDelta = 0.0;
                 }),
 
             // Update gyro delta
             Commands.run(
                     () -> {
                       var rotation = drive.getRotation();
-                      state.gyroDelta += Math.abs(rotation.minus(state.lastAngle).getRadians());
-                      state.lastAngle = rotation;
+                      statee.gyroDelta += Math.abs(rotation.minus(statee.lastAngle).getRadians());
+                      statee.lastAngle = rotation;
                     })
 
                 // When cancelled, calculate and print results
@@ -355,9 +355,9 @@ public class DriveCommands {
                       double[] positions = drive.getWheelRadiusCharacterizationPositions();
                       double wheelDelta = 0.0;
                       for (int i = 0; i < 4; i++) {
-                        wheelDelta += Math.abs(positions[i] - state.positions[i]) / 4.0;
+                        wheelDelta += Math.abs(positions[i] - statee.positions[i]) / 4.0;
                       }
-                      double wheelRadius = (state.gyroDelta * Drive.DRIVE_BASE_RADIUS) / wheelDelta;
+                      double wheelRadius = (statee.gyroDelta * Drive.DRIVE_BASE_RADIUS) / wheelDelta;
 
                       NumberFormat formatter = new DecimalFormat("#0.000");
                       System.out.println(
@@ -365,7 +365,7 @@ public class DriveCommands {
                       System.out.println(
                           "\tWheel Delta: " + formatter.format(wheelDelta) + " radians");
                       System.out.println(
-                          "\tGyro Delta: " + formatter.format(state.gyroDelta) + " radians");
+                          "\tGyro Delta: " + formatter.format(statee.gyroDelta) + " radians");
                       System.out.println(
                           "\tWheel Radius: "
                               + formatter.format(wheelRadius)

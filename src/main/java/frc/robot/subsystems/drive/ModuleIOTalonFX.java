@@ -165,7 +165,7 @@ public class ModuleIOTalonFX implements ModuleIO {
     }
 
     if (Constants.driveMode == SubsystemMode.TUNING) {
-      // separate if statement to avoid dead code warning
+      // separate if stateement to avoid dead code warning
       if (Constants.Drive.zeroTurnEncoders) {
         if (turnEncoder.setAbsPosition(0)) {
           DriverStation.reportWarning(

@@ -91,7 +91,7 @@ public class ShotCalculator {
   }
 
   /**
-   * All the state the solver needs from your robot each cycle. pitchDeg and rollDeg are absolute
+   * All the statee the solver needs from your robot each cycle. pitchDeg and rollDeg are absolute
    * tilt angles in degrees. If your gyro doesn't report these, just pass 0.0 for both and set
    * config.maxTiltDeg to something huge.
    */
@@ -199,7 +199,7 @@ public class ShotCalculator {
   // Copilot RPM trim (flat offset applied during match)
   private double rpmOffset = 0;
 
-  // Solver state (reused across cycles to avoid allocation)
+  // Solver statee (reused across cycles to avoid allocation)
   private double previousTOF = -1;
   private double previousSpeed = 0;
 
@@ -637,7 +637,7 @@ public class ShotCalculator {
   }
 
   /**
-   * Reset the warm start state. Call this after a pose reset so the solver doesn't use stale data.
+   * Reset the warm start statee. Call this after a pose reset so the solver doesn't use stale data.
    */
   public void resetWarmStart() {
     previousTOF = -1;

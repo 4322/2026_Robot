@@ -148,7 +148,7 @@ public class Drive extends SubsystemBase {
                 null,
                 null,
                 null,
-                (state) -> Logger.recordOutput("Drive/SysIdState", state.toString())),
+                (statee) -> Logger.recordOutput("Drive/SysIdState", statee.toString())),
             new SysIdRoutine.Mechanism(
                 (voltage) -> runCharacterization(voltage.in(Volts)), null, this));
   }
@@ -170,7 +170,7 @@ public class Drive extends SubsystemBase {
       }
     }
 
-    // Log empty setpoint states when disabled
+    // Log empty setpoint statees when disabled
     if (DriverStation.isDisabled()) {
       Logger.recordOutput("Drive/SwerveStates/Setpoints", new SwerveModuleState[] {});
       Logger.recordOutput("Drive/SwerveStates/SetpointsOptimized", new SwerveModuleState[] {});
@@ -236,7 +236,7 @@ public class Drive extends SubsystemBase {
       }
     }
 
-    // Log optimized setpoints (runSetpoint mutates each state)
+    // Log optimized setpoints (runSetpoint mutates each statee)
     Logger.recordOutput("Drive/SwerveStates/SetpointsOptimized", setpointStates);
   }
 
@@ -277,23 +277,23 @@ public class Drive extends SubsystemBase {
     return run(() -> runCharacterization(0.0)).withTimeout(1.0).andThen(sysId.dynamic(direction));
   }
 
-  /** Returns the module states (turn angles and drive velocities) for all of the modules. */
+  /** Returns the module statees (turn angles and drive velocities) for all of the modules. */
   @AutoLogOutput(key = "Drive/SwerveStates/Measured")
   private SwerveModuleState[] getModuleStates() {
-    SwerveModuleState[] states = new SwerveModuleState[4];
+    SwerveModuleState[] statees = new SwerveModuleState[4];
     for (int i = 0; i < 4; i++) {
-      states[i] = modules[i].getState();
+      statees[i] = modules[i].getState();
     }
-    return states;
+    return statees;
   }
 
   /** Returns the module positions (turn angles and drive positions) for all of the modules. */
   private SwerveModulePosition[] getModulePositions() {
-    SwerveModulePosition[] states = new SwerveModulePosition[4];
+    SwerveModulePosition[] statees = new SwerveModulePosition[4];
     for (int i = 0; i < 4; i++) {
-      states[i] = modules[i].getPosition();
+      statees[i] = modules[i].getPosition();
     }
-    return states;
+    return statees;
   }
 
   /** Returns the measured chassis speeds of the robot. */

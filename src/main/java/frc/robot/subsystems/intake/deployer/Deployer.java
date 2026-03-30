@@ -52,8 +52,8 @@ public class Deployer {
     }
   }
 
-  public void setState(DeployerState state) {
-    switch (state) {
+  public void setState(DeployerState statee) {
+    switch (statee) {
       case DISABLED -> {
         break;
       }
@@ -66,7 +66,7 @@ public class Deployer {
         deployerIO.setPosition(requestedPos);
       }
     }
-    Logger.recordOutput("Intake/Deployer/state", state);
+    Logger.recordOutput("Intake/Deployer/statee", statee);
     Logger.recordOutput("Intake/Deployer/requestedPos", requestedPos);
   }
 

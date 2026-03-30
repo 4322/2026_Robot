@@ -71,15 +71,15 @@ public class Module {
     turnEncoderDisconnectedAlert.set(!inputs.turnEncoderConnected);
   }
 
-  /** Runs the module with the specified setpoint state. Mutates the state to optimize it. */
-  public void runSetpoint(SwerveModuleState state) {
+  /** Runs the module with the specified setpoint statee. Mutates the statee to optimize it. */
+  public void runSetpoint(SwerveModuleState statee) {
     // Optimize velocity setpoint
-    state.optimize(getAngle());
-    state.cosineScale(inputs.turnPosition);
+    statee.optimize(getAngle());
+    statee.cosineScale(inputs.turnPosition);
 
     // Apply setpoints
-    io.setDriveVelocity(state.speedMetersPerSecond / constants.WheelRadius);
-    io.setTurnPosition(state.angle);
+    io.setDriveVelocity(statee.speedMetersPerSecond / constants.WheelRadius);
+    io.setTurnPosition(statee.angle);
   }
 
   /** Runs the module with the specified output while controlling to zero degrees. */
@@ -114,7 +114,7 @@ public class Module {
     return new SwerveModulePosition(getPositionMeters(), getAngle());
   }
 
-  /** Returns the module state (turn angle and drive velocity). */
+  /** Returns the module statee (turn angle and drive velocity). */
   public SwerveModuleState getState() {
     return new SwerveModuleState(getVelocityMetersPerSec(), getAngle());
   }
