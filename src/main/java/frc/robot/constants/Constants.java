@@ -256,7 +256,7 @@ public final class Constants {
     public static final double voltageSmoosh = 3;
     public static final int leaderMotorId = 1;
     public static final int followerMotorId = 5;
-    public static final double statorCurrentLimit = 80;
+    public static final double statorCurrentLimit = 100;
     public static final double supplyCurrentLimit = 40;
     public static final NeutralModeValue neutralMode = NeutralModeValue.Coast;
     public static final InvertedValue leaderMotorInvert = InvertedValue.Clockwise_Positive;
