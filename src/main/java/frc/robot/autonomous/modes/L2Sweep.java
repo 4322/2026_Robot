@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Robot;
 import frc.robot.commands.IntakeCommands;
@@ -44,7 +45,8 @@ public class L2Sweep extends SequentialCommandGroup {
                 IntakeCommands.autoSmoosh(
                     intake,
                     Constants.Autonomous.smooshDelayFirstPass,
-                    Constants.Autonomous.shootTimeFirstPass)),
+                    Constants.Autonomous.shootTimeFirstPass)
+                    .andThen(new WaitCommand(2))),
             AutoBuilder.followPath(Robot.L_2SWEEP_CG)),
         new WaitUntilCommand(() -> shooter.isHoodLowered()),
         AutoBuilder.followPath(Robot.L_2SWEEP_D),
@@ -56,7 +58,8 @@ public class L2Sweep extends SequentialCommandGroup {
                 IntakeCommands.autoSmoosh(
                     intake,
                     Constants.Autonomous.smooshDelayFirstPass,
-                    Constants.Autonomous.shootTimeFirstPass)),
+                    Constants.Autonomous.shootTimeFirstPass)
+                    .andThen(new WaitCommand(2))),
             AutoBuilder.followPath(Robot.L_2SWEEP_CG)),
         new WaitUntilCommand(() -> shooter.isHoodLowered()),
         AutoBuilder.followPath(Robot.L_2SWEEP_H));
