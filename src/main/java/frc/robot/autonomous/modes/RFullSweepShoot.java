@@ -6,6 +6,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Robot;
@@ -34,15 +35,18 @@ public class RFullSweepShoot extends SequentialCommandGroup {
                 drive.setPose(startPoseRed);
               }
             }),
-        new ParallelCommandGroup(
-            IntakeCommands.intake(intake),
-            new SequentialCommandGroup(
-                AutoBuilder.followPath(Robot.R_StartR_To_NeutralR_Intake),
+        IntakeCommands.intake(intake),
+        new SequentialCommandGroup(
+            AutoBuilder.followPath(Robot.R_StartR_To_NeutralR_Intake),
+            new ParallelRaceGroup(
                 AutoBuilder.followPath(Robot.R_NeutralR_Intake_Full),
-                AutoBuilder.followPath(Robot.R_NeutralR_Intake_Full_Flip),
-                AutoBuilder.followPath(Robot.R_Neutral_Mid_To_ShootR),
+                ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake)),
+            AutoBuilder.followPath(Robot.R_NeutralR_Intake_Full_Flip),
+            AutoBuilder.followPath(Robot.R_Neutral_Mid_To_ShootR),
+            new ParallelCommandGroup(
                 ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake),
-                new WaitCommand(Constants.Autonomous.smooshDelaySinglePass),
-                IntakeCommands.autoSmoosh(intake))));
+                new SequentialCommandGroup(
+                    new WaitCommand(Constants.Autonomous.smooshDelaySinglePass),
+                    IntakeCommands.autoSmoosh(intake)))));
   }
 }
