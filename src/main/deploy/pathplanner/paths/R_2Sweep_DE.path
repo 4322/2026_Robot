@@ -39,25 +39,9 @@
         "x": 6.20423487544484,
         "y": 4.535302491103202
       },
-      "nextControl": {
-        "x": 6.176860981631983,
-        "y": 2.0990259417586934
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 2.732253922967189,
-        "y": 2.566462196861627
-      },
-      "prevControl": {
-        "x": 5.085278766310795,
-        "y": 2.5018149466192163
-      },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "R.2Sweep_C"
+      "linkedName": "R.2Sweep_Mid"
     }
   ],
   "rotationTargets": [
@@ -70,11 +54,11 @@
       "rotationDegrees": -126.8091239775365
     },
     {
-      "waypointRelativePos": 2.0176565008025964,
+      "waypointRelativePos": 2,
       "rotationDegrees": -90.0
     },
     {
-      "waypointRelativePos": 2.653290529695058,
+      "waypointRelativePos": 2,
       "rotationDegrees": 135.0
     }
   ],
@@ -82,7 +66,7 @@
     {
       "name": "Constraints Zone",
       "minWaypointRelativePos": 0.9990089197224967,
-      "maxWaypointRelativePos": 2.0753221010901983,
+      "maxWaypointRelativePos": 2,
       "constraints": {
         "maxVelocity": 2.0,
         "maxAcceleration": 3.0,
@@ -105,7 +89,7 @@
   },
   "goalEndState": {
     "velocity": 0.1,
-    "rotation": 90.0
+    "rotation": -90.0
   },
   "reversed": false,
   "folder": "R_2Sweep",
