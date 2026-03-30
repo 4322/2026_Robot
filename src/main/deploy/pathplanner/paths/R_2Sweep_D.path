@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.106192170818506,
-        "y": 0.6297153024911029
+        "x": 3.535954922894425,
+        "y": 0.6404744958481603
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.161803084223014,
-        "y": 0.14555160142348772
+        "x": 7.463060498220641,
+        "y": 0.016441281138789954
       },
       "isLocked": false,
       "linkedName": "R.2Sweep_D"
@@ -47,7 +47,7 @@
   "reversed": false,
   "folder": "R_2Sweep",
   "idealStartingState": {
-    "velocity": 0.1,
+    "velocity": 0.0,
     "rotation": 90.0
   },
   "useDefaultConstraints": true
