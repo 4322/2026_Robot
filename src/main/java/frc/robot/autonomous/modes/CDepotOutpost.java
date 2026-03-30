@@ -38,7 +38,7 @@ public class CDepotOutpost extends SequentialCommandGroup {
         new ParallelCommandGroup(
             ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake),
             new SequentialCommandGroup(
-              IntakeCommands.intake(intake),
+                IntakeCommands.intake(intake),
                 AutoBuilder.followPath(Robot.C_Start_To_Depot),
                 AutoBuilder.followPath(Robot.C_Depot_To_Outpost),
                 new WaitCommand(Constants.Autonomous.smooshDelaySinglePass + 3),
