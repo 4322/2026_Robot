@@ -432,7 +432,6 @@ public final class Constants {
       putFiringMapEntryPassing(7.4, new FiringParameters(59, 37, 1.25, 35, 7));
       putFiringMapEntryPassing(8.1, new FiringParameters(62, 37, 1.5, 35, 7));
       putFiringMapEntryPassing(9.1, new FiringParameters(67, 36, 1.52, 35, 7));
-    
     }
 
     // can't maintain burst for full field passes due to battery voltage drop
