@@ -129,7 +129,6 @@ public class Shooter extends SubsystemBase {
 
   public void outputsPeriodic() {
     calculateFiringSolution();
-    SmartDashboard.putNumber("Shooter/TargetFlywheelSpeedRPS", targetFlywheelSpeedRPS);
 
     if (Constants.firingManagerMode == Constants.SubsystemMode.TUNING) {
 
@@ -265,12 +264,7 @@ public class Shooter extends SubsystemBase {
       turret.outputsPeriodic();
     }
 
-    Logger.recordOutput("Shooter/State", statee.toString());
-    Logger.recordOutput("Shooter/TargetHoodAngleDeg", targetHoodAngleDeg);
-    Logger.recordOutput("Shooter/TargetFlywheelSpeedRPS", targetFlywheelSpeedRPS);
-    Logger.recordOutput("Shooter/TargetTurretAngleDeg", targetTurretAngleDeg);
-    Logger.recordOutput("Shooter/TargetTunnelSpeedRPS", targetTunnelSpeedRPS);
-    Logger.recordOutput("Shooter/TargetIndexerSpeedRPS", targetSpindexerSpeedRPS);
+
   }
 
   private void calculateFiringSolution() {
@@ -342,7 +336,7 @@ public class Shooter extends SubsystemBase {
   public void requestShoot(boolean fixedPosition, boolean isScoring) {
     this.isScoring = isScoring;
     this.fixedPositionShooting = fixedPosition;
-    Logger.recordOutput("Shooter/currentMethod", "requestShoot()");
+
     if (Constants.firingManagerMode == Constants.SubsystemMode.TUNING) {
       return;
     }
@@ -365,13 +359,13 @@ public class Shooter extends SubsystemBase {
     this.hoodOvrDeg = hoodOverrideDegree;
     requestedState = ShooterState.IDLE;
     statee = ShooterState.IDLE;
-    Logger.recordOutput("Shooter/currentMethod", "requestIdle()");
+ 
   }
 
   public void requestStop() {
     requestedState = ShooterState.STOP;
     statee = ShooterState.STOP;
-    Logger.recordOutput("Shooter/currentMethod", "requestStop()");
+ 
   }
 
   public void unjamOverride(boolean unjamOverride) {

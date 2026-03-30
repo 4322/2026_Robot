@@ -24,8 +24,7 @@ public class Tunnel {
   }
 
   public void inputsPeriodic() {
-    io.updateInputs(inputs);
-    Logger.processInputs("Shooter/Tunnel", inputs);
+
   }
 
   public void outputsPeriodic() {
@@ -58,9 +57,7 @@ public class Tunnel {
       }
     }
 
-    Logger.recordOutput("Shooter/Tunnel/State", statee.toString());
-    Logger.recordOutput("Shooter/Tunnel/RequestedSpeed", requestedSpeed);
-    Logger.recordOutput("Shooter/Tunnel/Stopped", isStopped());
+   
   }
 
   public void requestIdle() {

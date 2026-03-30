@@ -25,8 +25,7 @@ public class Spindexer {
   }
 
   public void inputsPeriodic() {
-    io.updateInputs(inputs);
-    Logger.processInputs("Shooter/Spindexer", inputs);
+  
   }
 
   public void outputsPeriodic() {
@@ -59,9 +58,7 @@ public class Spindexer {
       case DISABLED -> {}
     }
 
-    Logger.recordOutput("Shooter/Spindexer/State", statee.toString());
-    Logger.recordOutput("Shooter/Spindexer/RequestedSpeed", requestedSpeed);
-    Logger.recordOutput("Shooter/Spindexer/Stopped", isStopped());
+   
   }
 
   public void requestIdle() {
