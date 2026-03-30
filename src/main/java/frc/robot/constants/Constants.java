@@ -421,14 +421,18 @@ public final class Constants {
 
       // Passing
       // need to be 112 inches past the blue line to clear the net
-      putFiringMapEntryPassing(3.750, new FiringParameters(43, 15, 1, 35, 7));
-      putFiringMapEntryPassing(5.352, new FiringParameters(60, 5, 1, 35, 7));
-      putFiringMapEntryPassing(5.873, new FiringParameters(60, 18, 1, 35, 7));
-      putFiringMapEntryPassing(6.918, new FiringParameters(63, 24, 1, 35, 7));
-      putFiringMapEntryPassing(7.306, new FiringParameters(63, 20, 1, 35, 7));
-      putFiringMapEntryPassing(7.750, new FiringParameters(65, 26, 1, 35, 7));
-      putFiringMapEntryPassing(8.767, new FiringParameters(67, 28, 1, 35, 7));
-      putFiringMapEntryPassing(13.691, new FiringParameters(90, 38, 1, 35, 7));
+      putFiringMapEntryPassing(3.46, new FiringParameters(38, 30, 1.1, 35, 7));
+      putFiringMapEntryPassing(3.87, new FiringParameters(40, 30, 1.2, 35, 7));
+      putFiringMapEntryPassing(4.38, new FiringParameters(43, 30, 1.05, 35, 7));
+      putFiringMapEntryPassing(4.82, new FiringParameters(46, 30, 1.1, 35, 7));
+      putFiringMapEntryPassing(5.27, new FiringParameters(48.2, 30, 1.12, 35, 7));
+      putFiringMapEntryPassing(5.8, new FiringParameters(50, 30, 1.14, 35, 7));
+      putFiringMapEntryPassing(6.28, new FiringParameters(53, 30, 1.26, 35, 7));
+      putFiringMapEntryPassing(6.90, new FiringParameters(56, 30, 1.32, 35, 7));
+      putFiringMapEntryPassing(7.4, new FiringParameters(59, 37, 1.25, 35, 7));
+      putFiringMapEntryPassing(8.1, new FiringParameters(62, 37, 1.5, 35, 7));
+      putFiringMapEntryPassing(9.1, new FiringParameters(67, 36, 1.52, 35, 7));
+    
     }
 
     // can't maintain burst for full field passes due to battery voltage drop
