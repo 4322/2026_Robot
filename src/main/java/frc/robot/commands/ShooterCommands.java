@@ -65,6 +65,14 @@ public class ShooterCommands {
         .finallyDo(() -> shooter.trenchOverride(false));
   }
 
+  public static Command turretUnjamOverride(Shooter shooter) {
+    return Commands.run(
+            () -> {
+              shooter.turretUnjamOverride(true);
+            })
+        .finallyDo(() -> shooter.turretUnjamOverride(false));
+  }
+
   // Don't require shooter since this is an override meant to be done anytime
   public static Command unjam(Shooter shooter) {
     return Commands.run(

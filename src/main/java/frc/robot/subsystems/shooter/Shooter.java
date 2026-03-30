@@ -193,8 +193,7 @@ public class Shooter extends SubsystemBase {
 
         if (flywheelOverrideRPS != null) {
           flywheel.requestGoal(flywheelOverrideRPS, isScoring);
-        }
-        else if (idleTimer.hasElapsed(Constants.Flywheel.idleTimeout)) {
+        } else if (idleTimer.hasElapsed(Constants.Flywheel.idleTimeout)) {
           flywheel.requestGoal(Constants.Flywheel.idleRPS, isScoring);
         } else {
           flywheel.requestGoal(targetFlywheelSpeedRPS, isScoring);
@@ -397,5 +396,9 @@ public class Shooter extends SubsystemBase {
 
   public double getHoodPositionDegrees() {
     return hood.getPositionDegrees();
+  }
+
+  public void turretUnjamOverride(boolean override) {
+    turret.unjamOverride(override);
   }
 }

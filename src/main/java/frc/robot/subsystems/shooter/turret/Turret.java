@@ -120,9 +120,22 @@ public class Turret {
         : (desiredDeg - Constants.Turret.midPointPhysicalDeg) < 0 ? desiredDeg + 360 : desiredDeg;
   }
 
+  private double getTargetUnjamAngle() {
+    Logger.recordOutput("Shooter/Turret/currentMethod", "getTargetAngleInMidpoint()");
+    return (prevDeg - desiredDeg) > 0
+        ? prevDeg - 60
+        : (prevDeg - desiredDeg) < 0 ? prevDeg + 60 : desiredDeg;
+  }
+
   public boolean needsToUnwind() {
     return (inputs.turretDegs >= Constants.Turret.maxUnwindLimitDeg
         || inputs.turretDegs <= Constants.Turret.minUnwindLimitDeg);
+  }
+
+  public void unjamOverride(boolean override) {
+    if (override) {
+      desiredDeg = getTargetUnjamAngle();
+    }
   }
 
   public boolean isAtGoal() {
