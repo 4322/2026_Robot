@@ -34,15 +34,17 @@ public class RROutpost extends SequentialCommandGroup {
                 drive.setPose(startPoseRed);
               }
             }),
-        new SequentialCommandGroup(
+        new ParallelCommandGroup(
+            ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake),
+            new SequentialCommandGroup(
+                AutoBuilder.followPath(Robot.R_ROutpost_A),
+                new WaitCommand(Constants.Autonomous.outpostWaitTime)),
+            IntakeCommands.intake(intake),
+            AutoBuilder.followPath(Robot.R_ROutpost_B),
             new ParallelCommandGroup(
                 ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake),
                 new SequentialCommandGroup(
-                    AutoBuilder.followPath(Robot.R_ROutpost_A),
-                    new WaitCommand(4),
-                    AutoBuilder.followPath(Robot.R_ROutpost_B),
-                    new SequentialCommandGroup(
-                        new WaitCommand(Constants.Autonomous.smooshDelaySinglePass),
-                        IntakeCommands.autoSmoosh(intake))))));
+                    new WaitCommand(Constants.Autonomous.smooshDelaySinglePass),
+                    IntakeCommands.autoSmoosh(intake)))));
   }
 }

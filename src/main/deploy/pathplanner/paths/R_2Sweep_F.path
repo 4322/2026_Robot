@@ -28,7 +28,12 @@
       "linkedName": "R.2Sweep_C"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.24237560192616267,
+      "rotationDegrees": 45.0
+    }
+  ],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [],
@@ -42,7 +47,7 @@
   },
   "goalEndState": {
     "velocity": 0.1,
-    "rotation": -123.254
+    "rotation": 90.0
   },
   "reversed": false,
   "folder": "R_2Sweep",

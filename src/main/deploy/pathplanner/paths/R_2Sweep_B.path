@@ -51,7 +51,7 @@
   },
   "goalEndState": {
     "velocity": 0.01,
-    "rotation": -123.254
+    "rotation": 90.0
   },
   "reversed": false,
   "folder": "R_2Sweep",

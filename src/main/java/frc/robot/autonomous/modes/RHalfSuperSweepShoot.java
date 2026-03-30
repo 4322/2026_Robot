@@ -6,6 +6,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Robot;
@@ -38,14 +39,15 @@ public class RHalfSuperSweepShoot extends SequentialCommandGroup {
             IntakeCommands.intake(intake),
             new SequentialCommandGroup(
                 AutoBuilder.followPath(Robot.R_StartR_To_NeutralR_Intake_Disrupt),
-                ShooterCommands.autoShootWithAreaCheck(shooter, drive, intake),
-                AutoBuilder.followPath(Robot.R_Half_SuperSweep_B),
-                ShooterCommands.autoShootWithAreaCheck(shooter, drive, intake),
-                AutoBuilder.followPath(Robot.R_Half_SuperSweep_C),
+                new ParallelRaceGroup(
+                    ShooterCommands.autoShootWithAreaCheck(shooter, drive, intake),
+                    new SequentialCommandGroup(
+                        AutoBuilder.followPath(Robot.R_Half_SuperSweep_B),
+                        AutoBuilder.followPath(Robot.R_Half_SuperSweep_C))),
                 AutoBuilder.followPath(Robot.R_Half_SuperSweep_D),
                 AutoBuilder.followPath(Robot.R_Half_SuperSweep_E),
                 AutoBuilder.followPath(Robot.R_Half_SuperSweep_F),
-                ShooterCommands.autoShootWithAreaCheck(shooter, drive, intake),
+                ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake),
                 new WaitCommand(Constants.Autonomous.smooshDelaySinglePass),
                 IntakeCommands.autoSmoosh(intake))));
   }
