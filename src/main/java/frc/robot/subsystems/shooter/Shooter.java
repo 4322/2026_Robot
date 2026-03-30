@@ -56,8 +56,10 @@ public class Shooter extends SubsystemBase {
   private boolean isScoring = true;
   private Timer idleTimer = new Timer();
   private boolean resetIdleTimeout = false;
+  private boolean hasBeenScoring = false;
 
-  private ShotCalculator shotCalc;
+  private ShotCalculator scoreCalc;
+  private ShotCalculator passCalc;
 
   public Shooter(
       Flywheel flywheel,
@@ -100,17 +102,28 @@ public class Shooter extends SubsystemBase {
     config.tofMin = 0.05;
     config.tofMax = 100;
 
-    shotCalc = new ShotCalculator(config);
+    scoreCalc = new ShotCalculator(config, true);
+    passCalc = new ShotCalculator(config, false);
 
-    ShotLUT lut = new ShotLUT();
+    ShotLUT scoreLUT = new ShotLUT();
     for (ShotCalculatorParameters params : Constants.FiringManager.firingParametersListScoring) {
-      lut.put(
+      scoreLUT.put(
           params.distanceMeters(),
           params.flywheelRPS() * 60.0,
           params.hoodAngleDeg(),
           params.timeOfFlightSec());
     }
-    shotCalc.loadShotLUT(lut);
+    scoreCalc.loadShotLUT(scoreLUT);
+    
+    ShotLUT passLUT = new ShotLUT();
+    for (ShotCalculatorParameters params : Constants.FiringManager.firingParametersListPassing) {
+      passLUT.put(
+          params.distanceMeters(),
+          params.flywheelRPS() * 60.0,
+          params.hoodAngleDeg(),
+          params.timeOfFlightSec());
+    }
+    passCalc.loadShotLUT(passLUT);
   }
 
   public double getTargetTurretAngleDeg() {
@@ -322,9 +335,26 @@ public class Shooter extends SubsystemBase {
               0 // roll for tilt gate (0.0 if no gyro)
               );
 
-      ShotCalculator.LaunchParameters shot = shotCalc.calculate(inputs);
+      ShotCalculator.LaunchParameters shot;
+      if (isScoring) {
+        if (!hasBeenScoring) {
+          // Reset stale accel/tof values in calculator upon switching to scoring
+          scoreCalc.resetWarmStart();
+          hasBeenScoring = true;
+        }
+        shot = scoreCalc.calculate(inputs);
+      }
+      else {
+        if (hasBeenScoring) {
+          // Reset stale accel/tof values in calculator upon switching to passing
+          passCalc.resetWarmStart();
+          hasBeenScoring = false;
+        }
+        shot = passCalc.calculate(inputs);
+      }
+
       if (shot.isValid()) {
-        targetHoodAngleDeg = shotCalc.getHoodAngle(shot.solvedDistanceM());
+        targetHoodAngleDeg = shot.hoodAngle();
         targetFlywheelSpeedRPS = shot.rpm() / 60.0;
         targetTurretAngleDeg = shot.turretAngle().getDegrees();
         targetTunnelSpeedRPS = Constants.Tunnel.shootRPS;

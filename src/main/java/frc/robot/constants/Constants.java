@@ -373,6 +373,9 @@ public final class Constants {
     public static ArrayList<ShotCalculatorParameters> firingParametersListScoring =
         new ArrayList<ShotCalculatorParameters>();
 
+    public static ArrayList<ShotCalculatorParameters> firingParametersListPassing =
+        new ArrayList<ShotCalculatorParameters>();
+
     // Add entry to both maps
     public static void putFiringMapEntryScoring(double meters, FiringParameters params) {
       firingMapScoring.put(meters, params);
@@ -392,6 +395,14 @@ public final class Constants {
       firingMapPassing.put(meters, params);
       double velocity = meters / params.getTimeOfFlightSec();
       velocityToDistanceMapPassing.put(velocity, meters);
+      firingParametersListPassing.add(
+          new ShotCalculatorParameters(
+              params.getFlywheelRPS(),
+              params.getHoodAngleDeg(),
+              params.getTimeOfFlightSec(),
+              params.getTunnelRPS(),
+              params.getIndexerRPS(),
+              meters));
     }
 
     static {
