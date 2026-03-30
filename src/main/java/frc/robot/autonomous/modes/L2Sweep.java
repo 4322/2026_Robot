@@ -40,7 +40,7 @@ public class L2Sweep extends SequentialCommandGroup {
         IntakeCommands.intake(intake),
         AutoBuilder.followPath(Robot.L_2SWEEP_A),
         new ParallelRaceGroup(
-            ShooterCommands.idle(shooter, intake), AutoBuilder.followPath(Robot.L_2SWEEP_B)),
+            ShooterCommands.idle(shooter, intake, 14.0), AutoBuilder.followPath(Robot.L_2SWEEP_B)),
         new ParallelCommandGroup(
             new ParallelRaceGroup(
                 ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake),
