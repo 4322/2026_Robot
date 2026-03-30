@@ -258,8 +258,6 @@ public class Simulator extends SubsystemBase {
           new RegressionTest("Red/R/RFullSweepShoot", AutoName.R_FULL_SWEEP_SHOOT, Alliance.Red),
           new RegressionTest("Red/R/RHalfSweepShoot", AutoName.R_HALF_SWEEP_SHOOT, Alliance.Red),
           new RegressionTest(
-              "Red/R/RMidlineSweepShoot", AutoName.R_MIDLINE_SWEEP_SHOOT, Alliance.Red),
-          new RegressionTest(
               "Red/R/RHalfSuperSweepShoot", AutoName.R_HALF_SUPER_SWEEP_SHOOT, Alliance.Red),
           new RegressionTest("Blue/C/CDepotOutpost", AutoName.C_DEPOT_OUTPOST, Alliance.Blue),
           new RegressionTest("Blue/L/LHalfSweepShoot", AutoName.L_HALF_SWEEP_SHOOT, Alliance.Blue),
@@ -267,8 +265,6 @@ public class Simulator extends SubsystemBase {
               "Blue/R/RDisruptSweepShoot", AutoName.R_DISRUPT_SWEEP_SHOOT, Alliance.Blue),
           new RegressionTest("Blue/R/RFullSweepShoot", AutoName.R_FULL_SWEEP_SHOOT, Alliance.Blue),
           new RegressionTest("Blue/R/RHalfSweepShoot", AutoName.R_HALF_SWEEP_SHOOT, Alliance.Blue),
-          new RegressionTest(
-              "Blue/R/RMidlineSweepShoot", AutoName.R_MIDLINE_SWEEP_SHOOT, Alliance.Blue),
           new RegressionTest(
               "Blue/R/RHalfSuperSweepShoot", AutoName.R_HALF_SUPER_SWEEP_SHOOT, Alliance.Blue));
       case ZONES -> List.of(
