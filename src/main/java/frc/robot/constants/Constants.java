@@ -103,10 +103,10 @@ public final class Constants {
     public static double turnSupplyCurrentLimit = 30;
 
     // Scales max speeds for X, Y, and omega respectively
-    public static double maxLinearSpeedPercentShooting = 0.1;
-    public static double maxAngularSpeedPercentShooting = 0.1;
-    public static double maxLinearSpeedPercentPassing = 0.4;
-    public static double maxAngularSpeedPercentPassing = 0.4;
+    public static double maxLinearSpeedPercentShooting = 0.15;
+    public static double maxAngularSpeedPercentShooting = 0.15;
+    public static double maxLinearSpeedPercentPassing = 0.3;
+    public static double maxAngularSpeedPercentPassing = 0.3;
   }
 
   public static class Spindexer {
@@ -180,7 +180,7 @@ public final class Constants {
     public static final int motorId = 22;
     public static final double kS = 0.26;
     public static final double kV = 0;
-    public static final double kP = 150;
+    public static final double kP = 250;
     public static final double kI = 0;
     public static final double kD = 0;
 
@@ -249,11 +249,11 @@ public final class Constants {
   }
 
   public class Rollers {
-    public static final double voltageIntake = 7.5;
+    public static final double voltageIntake = 8.0;
     public static final double voltageEject = -6;
     public static final double voltageDeploy = -1;
     public static final double voltageIdle = 0;
-    public static final double voltageSmoosh = 3; // TODO
+    public static final double voltageSmoosh = 3;
     public static final int leaderMotorId = 1;
     public static final int followerMotorId = 5;
     public static final double statorCurrentLimit = 60;
