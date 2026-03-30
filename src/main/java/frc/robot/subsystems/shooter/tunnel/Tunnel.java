@@ -44,38 +44,13 @@ public class Tunnel {
               statee = TunnelStates.IDLE;
             }
           }
-          case IDLE -> {
-            io.stop();
-          }
-          case INDEXING -> {
-            io.setTargetMechanismRotations(requestedSpeed);
-          }
-          case UNJAM -> {
-            io.setTargetMechanismRotations(Constants.Tunnel.unjamRPS);
-          }
         }
       }
     }
 
    
   }
-
-  public void requestIdle() {
-    if (!unjamOverride) {
-      statee = TunnelStates.IDLE;
-      requestedSpeed = 0;
-    }
-  }
-
-  public void unjamOverride(boolean unjamOverride) {
-    this.unjamOverride = unjamOverride;
-    if (unjamOverride) {
-      statee = TunnelStates.UNJAM;
-      requestedSpeed = Constants.Tunnel.unjamRPS;
-    } else {
-      // Default to idle when unjam isn't desired
-      statee = TunnelStates.IDLE;
-      requestedSpeed = 0;
+eed = 0;
     }
   }
 

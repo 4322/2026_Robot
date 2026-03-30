@@ -18,14 +18,15 @@ public class Spindexer {
     UNJAM
   }
 
-  private SpindexerStates statee = SpindexerStates.DISABLED;
+  private SpindexerStates state = SpindexerStates.DISABLED;
 
   public Spindexer(SpindexerIO io) {
     this.io = io;
   }
 
   public void inputsPeriodic() {
-  
+    io.updateInputs(inputs);
+    Logger.processInputs("Shooter/Spindexer", inputs);
   }
 
   public void outputsPeriodic() {
@@ -33,15 +34,15 @@ public class Spindexer {
       case TUNING -> {}
       case NORMAL -> {
         if (DriverStation.isDisabled()) {
-          statee = SpindexerStates.DISABLED;
+          state = SpindexerStates.DISABLED;
         }
 
-        switch (statee) {
+        switch (state) {
           case DISABLED -> {
             // Reset variables
             unjamOverride = false;
             if (DriverStation.isEnabled()) {
-              statee = SpindexerStates.IDLE;
+              state = SpindexerStates.IDLE;
             }
           }
           case IDLE -> {
@@ -58,19 +59,21 @@ public class Spindexer {
       case DISABLED -> {}
     }
 
-   
+    Logger.recordOutput("Shooter/Spindexer/State", state.toString());
+    Logger.recordOutput("Shooter/Spindexer/RequestedSpeed", requestedSpeed);
+    Logger.recordOutput("Shooter/Spindexer/Stopped", isStopped());
   }
 
   public void requestIdle() {
     if (!unjamOverride) {
-      statee = SpindexerStates.IDLE;
+      state = SpindexerStates.IDLE;
       requestedSpeed = 0;
     }
   }
 
   public void requestGoal(double speed) {
     if (!unjamOverride) {
-      statee = SpindexerStates.INDEXING;
+      state = SpindexerStates.INDEXING;
       requestedSpeed = speed;
     }
   }
@@ -78,11 +81,11 @@ public class Spindexer {
   public void unjamOverride(boolean unjamOverride) {
     this.unjamOverride = unjamOverride;
     if (unjamOverride) {
-      statee = SpindexerStates.UNJAM;
+      state = SpindexerStates.UNJAM;
       requestedSpeed = Constants.Spindexer.unjamRPS;
     } else {
       // Default to idle when unjam isn't desired
-      statee = SpindexerStates.IDLE;
+      state = SpindexerStates.IDLE;
       requestedSpeed = 0;
     }
   }
