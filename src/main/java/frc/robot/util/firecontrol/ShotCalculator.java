@@ -28,7 +28,6 @@ import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
-import frc.robot.constants.Constants;
 import org.littletonrobotics.junction.Logger;
 
 /**
@@ -79,6 +78,7 @@ public class ShotCalculator {
       double rpm,
       double timeOfFlightSec,
       Rotation2d turretAngle,
+      double hoodAngle,
       double turretAngularVelocityRadPerSec,
       boolean isValid,
       double confidence,
@@ -87,7 +87,7 @@ public class ShotCalculator {
       boolean warmStartUsed) {
 
     public static final LaunchParameters INVALID =
-        new LaunchParameters(0, 0, new Rotation2d(), 0, false, 0, 0, 0, false);
+        new LaunchParameters(0, 0, new Rotation2d(), 0, 0, false, 0, 0, 0, false);
   }
 
   /**
@@ -208,13 +208,26 @@ public class ShotCalculator {
   private double prevRobotVy = 0;
   private double prevRobotOmega = 0;
 
-  public ShotCalculator(Config config) {
+  // Determines whether to modify target based on if scoring or not
+  // If scoring, modify hub target
+  private boolean forScoring;
+
+  // For easier logging
+  private String logPath = "SOTF/";
+
+  public ShotCalculator(Config config, boolean forScoring) {
     this.config = config;
+    this.forScoring = forScoring;
+    if (forScoring) {
+      this.logPath += "Scoring/";
+    } else {
+      this.logPath += "Passing/";
+    }
   }
 
   /** Default config. You still need to call loadLUTEntry() to fill the lookup tables. */
   public ShotCalculator() {
-    this(new Config());
+    this(new Config(), true);
   }
 
   /**
@@ -231,6 +244,11 @@ public class ShotCalculator {
     double base = shotLUT != null ? shotLUT.getRPM(distance) : rpmMap.get(distance);
     Double correction = correctionRpmMap.get(distance);
     return base + (correction != null ? correction : 0.0) + rpmOffset;
+  }
+
+  // TODO: Add correction and offset if needed, not used on any LUTs anyway so not important
+  double effectiveHoodAngle(double distance) {
+    return shotLUT.getAngle(distance);
   }
 
   double effectiveTOF(double distance) {
@@ -265,7 +283,7 @@ public class ShotCalculator {
         || inputs.robotPose() == null
         || inputs.fieldVelocity() == null
         || inputs.robotVelocity() == null) {
-      Logger.recordOutput("SOTF/error", "Null robot poses");
+      Logger.recordOutput(logPath + "error", "Null robot poses");
       return LaunchParameters.INVALID;
     }
 
@@ -279,7 +297,7 @@ public class ShotCalculator {
         || Double.isNaN(poseY)
         || Double.isInfinite(poseX)
         || Double.isInfinite(poseY)) {
-      Logger.recordOutput("SOTF/error", "None");
+      Logger.recordOutput(logPath + "error", "None");
       return LaunchParameters.INVALID;
     }
 
@@ -307,7 +325,7 @@ public class ShotCalculator {
     Translation2d hubCenter = inputs.hubCenter();
 
     // If scoring into hub (center of field), use offset to score into edge of hub
-    if (hubCenter.getY() == Constants.FiringTargetTranslations.Blue.hubTranslation.getY()) {
+    if (forScoring) {
       hubCenter =
           hubCenter.plus(
               new Translation2d(Units.inchesToMeters(3), 0)
@@ -350,7 +368,7 @@ public class ShotCalculator {
     double distance = Math.hypot(rx, ry);
 
     if (distance < config.minScoringDistance || distance > config.maxScoringDistance) {
-      Logger.recordOutput("SOTF/error", "Out of distance bounds");
+      Logger.recordOutput(logPath + "error", "Out of distance bounds");
       return LaunchParameters.INVALID;
     }
 
@@ -358,7 +376,7 @@ public class ShotCalculator {
 
     // Speed cap: shots above this speed are out of calibration range
     if (robotSpeed > config.maxSOTMSpeed) {
-      Logger.recordOutput("SOTF/error", "Larger than max robot speed");
+      Logger.recordOutput(logPath + "error", "Larger than max robot speed");
       return LaunchParameters.INVALID;
     }
 
@@ -410,7 +428,7 @@ public class ShotCalculator {
         if (projDist < 0.01) {
           tof = effectiveTOF(distance);
           iterationsUsed = maxIter + 1; // flag as diverged
-          Logger.recordOutput("SOTF/error", "DistTooClose");
+          Logger.recordOutput(logPath + "error", "DistTooClose");
           break;
         }
 
@@ -456,6 +474,9 @@ public class ShotCalculator {
 
     // RPM from LUT at solved distance
     double effectiveRPMValue = effectiveRPM(projDist);
+
+    // Hood from LUT at solved distance
+    double effectiveHoodAngleValue = effectiveHoodAngle(projDist);
 
     // Drive angle: aim at velocity-compensated target position
     double compTargetX;
@@ -516,16 +537,22 @@ public class ShotCalculator {
 
     previousSpeed = robotSpeed;
 
-    Logger.recordOutput("SOTF/RPM", effectiveRPMValue);
-    Logger.recordOutput("SOTF/TOF", effectiveTOF);
-    Logger.recordOutput("SOTF/turretAngle", turretAngle);
-    Logger.recordOutput("SOTF/turretRadPerSecFF", turretAngularVelocityRad);
-    Logger.recordOutput("SOTF/error", "None");
+    Logger.recordOutput(logPath + "RPM", effectiveRPMValue);
+    Logger.recordOutput(logPath + "TOF", effectiveTOF);
+    Logger.recordOutput(logPath + "turretAngle", turretAngle);
+    Logger.recordOutput(logPath + "hoodAngle", effectiveHoodAngleValue);
+    Logger.recordOutput(logPath + "turretRadPerSecFF", turretAngularVelocityRad);
+    Logger.recordOutput(logPath + "error", "None");
+    Logger.recordOutput(logPath + "warmStart", warmStartUsed);
+    Logger.recordOutput(logPath + "normalDistToTarget", distance);
+    Logger.recordOutput(logPath + "projDistToTarget", projDist);
+    Logger.recordOutput(logPath + "targetPosition", hubCenter);
 
     return new LaunchParameters(
         effectiveRPMValue,
         effectiveTOF,
         turretAngle,
+        effectiveHoodAngleValue,
         turretAngularVelocityRad,
         true,
         confidence,

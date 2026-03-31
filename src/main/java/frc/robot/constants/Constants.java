@@ -258,7 +258,7 @@ public final class Constants {
     public static final double voltageSmoosh = 3;
     public static final int leaderMotorId = 1;
     public static final int followerMotorId = 5;
-    public static final double statorCurrentLimit = 80;
+    public static final double statorCurrentLimit = 100;
     public static final double supplyCurrentLimit = 40;
     public static final NeutralModeValue neutralMode = NeutralModeValue.Coast;
     public static final InvertedValue leaderMotorInvert = InvertedValue.Clockwise_Positive;
@@ -375,6 +375,9 @@ public final class Constants {
     public static ArrayList<ShotCalculatorParameters> firingParametersListScoring =
         new ArrayList<ShotCalculatorParameters>();
 
+    public static ArrayList<ShotCalculatorParameters> firingParametersListPassing =
+        new ArrayList<ShotCalculatorParameters>();
+
     // Add entry to both maps
     public static void putFiringMapEntryScoring(double meters, FiringParameters params) {
       firingMapScoring.put(meters, params);
@@ -394,6 +397,14 @@ public final class Constants {
       firingMapPassing.put(meters, params);
       double velocity = meters / params.getTimeOfFlightSec();
       velocityToDistanceMapPassing.put(velocity, meters);
+      firingParametersListPassing.add(
+          new ShotCalculatorParameters(
+              params.getFlywheelRPS(),
+              params.getHoodAngleDeg(),
+              params.getTimeOfFlightSec(),
+              params.getTunnelRPS(),
+              params.getIndexerRPS(),
+              meters));
     }
 
     static {
@@ -559,6 +570,7 @@ public final class Constants {
 
   public static class Autonomous {
 
+    public static final double shootStopTime = 0.5;
     public static final double pathPlannerDrivekP = 5; // TODO probably increase
     public static final double pathPlannerRotationkP = 4;
     public static final double unjamTimeSec = 0.5;
