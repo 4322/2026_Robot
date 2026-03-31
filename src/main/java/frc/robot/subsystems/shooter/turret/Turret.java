@@ -57,7 +57,6 @@ public class Turret {
 
         if (DriverStation.isDisabled()) {
           state = turretState.DISABLED;
-
         }
 
         switch (state) {
@@ -74,6 +73,9 @@ public class Turret {
             break;
           }
           case SET_TURRET_ANGLE -> {
+            // Doing it this way so we are
+            // constantly updating new desired angle while unamming so we can immediately snap to
+            // position and keep being offset if we move.
             if (unjamOverride) {
               io.setAngle(getTargetUnjamAngle(), 0);
             } else if (desiredDeg != null) {
@@ -96,28 +98,28 @@ public class Turret {
   }
 
   public void requestAngle(Double angle, Boolean isScoring, double ffRadPerSec) {
-      this.desiredDeg = angle;
-      this.ffRadPerrSec = ffRadPerSec;
-      azimuth = desiredDeg;
-      if (Constants.turretLocked) {
-        return;
-      }
+    this.desiredDeg = angle;
+    this.ffRadPerrSec = ffRadPerSec;
+    azimuth = desiredDeg;
+    if (Constants.turretLocked) {
+      return;
+    }
 
-      if (state == turretState.SET_TURRET_ANGLE) {
-        if (desiredDeg != null) {
-          desiredDeg = calculateAngle(desiredDeg, inputs.turretDegs);
-          if (needsToUnwind()) {
-            desiredDeg =
-                MathUtil.clamp(
-                    desiredDeg,
-                    Constants.Turret.minPhysicalLimitDeg,
-                    Constants.Turret.maxPhysicalLimitDeg);
-          }
-          prevDeg = desiredDeg;
-        } else {
-          desiredDeg = prevDeg;
+    if (state == turretState.SET_TURRET_ANGLE) {
+      if (desiredDeg != null) {
+        desiredDeg = calculateAngle(desiredDeg, inputs.turretDegs);
+        if (needsToUnwind()) {
+          desiredDeg =
+              MathUtil.clamp(
+                  desiredDeg,
+                  Constants.Turret.minPhysicalLimitDeg,
+                  Constants.Turret.maxPhysicalLimitDeg);
         }
+        prevDeg = desiredDeg;
+      } else {
+        desiredDeg = prevDeg;
       }
+    }
     this.isScoring = isScoring;
   }
 
