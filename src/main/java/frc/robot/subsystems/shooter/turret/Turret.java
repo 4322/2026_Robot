@@ -135,12 +135,12 @@ public class Turret {
   private double getTargetUnjamAngle() {
     if (desiredDeg > inputs.turretDegs) {
       return MathUtil.clamp(
-          inputs.turretDegs + Constants.Turret.unjamDeg,
+          inputs.turretDegs - Constants.Turret.unjamDeg,
           Constants.Turret.maxUnwindLimitDeg,
           Constants.Turret.minUnwindLimitDeg);
     } else if (desiredDeg < inputs.turretDegs) {
       return MathUtil.clamp(
-          inputs.turretDegs - Constants.Turret.unjamDeg,
+          inputs.turretDegs + Constants.Turret.unjamDeg,
           Constants.Turret.minUnwindLimitDeg,
           Constants.Turret.maxUnwindLimitDeg);
     } else {
