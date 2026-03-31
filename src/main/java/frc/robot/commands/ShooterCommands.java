@@ -66,7 +66,7 @@ public class ShooterCommands {
   }
 
   public static Command turretUnjamOverride(Shooter shooter, boolean override) {
-    return Commands.run(
+    return Commands.runOnce(
             () -> {
               shooter.turretUnjamOverride(override);
             })

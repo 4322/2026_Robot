@@ -23,7 +23,6 @@ public class Turret {
   private double ffRadPerrSec = 0;
   private boolean unjamOverride;
   private double unjamDeg = 0.0;
-  private boolean ableToUnjam = false;
 
   public enum turretState {
     DISABLED,
@@ -81,10 +80,10 @@ public class Turret {
             if (unjamOverride) {
               io.setAngle(unjamDeg, 0);
             } else if (desiredDeg != null) {
-              ableToUnjam = true;
+   
               io.setAngle(desiredDeg, ffRadPerrSec);
             } else {
-              ableToUnjam = true;
+   
               io.setAngle(prevDeg, ffRadPerrSec);
             }
           }
@@ -157,9 +156,8 @@ public class Turret {
 
   public void unjamOverride(boolean override) {
     this.unjamOverride = override;
-    if (override && ableToUnjam) {
+    if (override) {
       unjamDeg = getTargetUnjamAngle();
-      ableToUnjam = false;
     }
   }
 
