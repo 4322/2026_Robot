@@ -72,7 +72,7 @@ public class Turret {
             break;
           }
           case SET_TURRET_ANGLE -> {
-            if (unjamOverride) {
+            if (unjamOverride && !isScoring) {
               io.setAngle(getTargetUnjamAngle(), 0);
             } else if (desiredDeg != null) {
               io.setAngle(desiredDeg, ffRadPerrSec);
