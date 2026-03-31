@@ -407,7 +407,8 @@ public class RobotContainer {
     controller.leftBumper().onTrue(IntakeCommands.toggleIntake(intake, controller));
     controller.x().onTrue(IntakeCommands.eject(intake)).onFalse(IntakeCommands.toggleOff(intake));
     controller.y().onTrue(IntakeCommands.smoosh(intake)).onFalse(IntakeCommands.toggleOff(intake));
-    controller.rightBumper().whileTrue(ShooterCommands.turretUnjamOverride(shooter));
+    controller.rightBumper().onTrue(ShooterCommands.turretUnjamOverride(shooter, true));
+    controller.rightBumper().onFalse(ShooterCommands.turretUnjamOverride(shooter, false));
   }
 
   @Override

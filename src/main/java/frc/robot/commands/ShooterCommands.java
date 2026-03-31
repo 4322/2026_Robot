@@ -65,12 +65,11 @@ public class ShooterCommands {
         .finallyDo(() -> shooter.trenchOverride(false));
   }
 
-  public static Command turretUnjamOverride(Shooter shooter) {
+  public static Command turretUnjamOverride(Shooter shooter, boolean override) {
     return Commands.run(
             () -> {
-              shooter.turretUnjamOverride(true);
+              shooter.turretUnjamOverride(override);
             })
-        .finallyDo(() -> shooter.turretUnjamOverride(false))
         .onlyIf(
             () ->
                 !(shooter.getState() == Shooter.ShooterState.SHOOT
