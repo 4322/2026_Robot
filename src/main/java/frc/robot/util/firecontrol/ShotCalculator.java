@@ -546,6 +546,7 @@ public class ShotCalculator {
     Logger.recordOutput(logPath + "warmStart", warmStartUsed);
     Logger.recordOutput(logPath + "normalDistToTarget", distance);
     Logger.recordOutput(logPath + "projDistToTarget", projDist);
+    Logger.recordOutput(logPath + "targetPosition", hubCenter);
 
     return new LaunchParameters(
         effectiveRPMValue,
