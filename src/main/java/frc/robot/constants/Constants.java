@@ -104,7 +104,7 @@ public final class Constants {
 
     // Scales max speeds for X, Y, and omega respectively
     public static double maxLinearSpeedPercentShooting = 0.15;
-    public static double maxAngularSpeedPercentShooting = 0.09;
+    public static double maxAngularSpeedPercentShooting = 0.15;
     public static double maxLinearSpeedPercentPassing = 0.3;
     public static double maxAngularSpeedPercentPassing = 0.18;
   }
@@ -180,9 +180,10 @@ public final class Constants {
     public static final int motorId = 22;
     public static final double kS = 0.26;
     public static final double kV = 0;
-    public static final double kP = 250;
+    public static final double kP = 150;
     public static final double kI = 0;
     public static final double kD = 0;
+    public static final double rotCompensationkV = 1.0;
 
     public static final double motionMagicCruiseVelocity = 3.5;
     public static final double motionMagicAcceleration = 14.0;

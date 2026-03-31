@@ -18,7 +18,7 @@ public interface TurretIO {
 
   public default void updateInputs(TurretIOInputs inputs) {}
 
-  public default void setAngle(double angle) {}
+  public default void setAngle(double angle, double ffRadPerSec) {}
 
   public default void setBrakeMode(boolean mode) {}
 
