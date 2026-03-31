@@ -49,7 +49,7 @@ public class L2Sweep extends SequentialCommandGroup {
                         intake,
                         Constants.Autonomous.smooshDelayFirstPass,
                         Constants.Autonomous.shootTimeFirstPass)
-                    .andThen(new WaitCommand(.5))),
+                    .andThen(new WaitCommand(Constants.Autonomous.shootStopTime))),
             new WaitUntilCommand(() -> shooter.getState() == ShooterState.SHOOT)
                 .andThen(AutoBuilder.followPath(Robot.L_2SWEEP_CG))),
         new WaitUntilCommand(() -> shooter.isHoodLowered()),
