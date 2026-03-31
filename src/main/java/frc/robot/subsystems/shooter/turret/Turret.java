@@ -80,10 +80,10 @@ public class Turret {
             if (unjamOverride) {
               io.setAngle(unjamDeg, 0);
             } else if (desiredDeg != null) {
-   
+
               io.setAngle(desiredDeg, ffRadPerrSec);
             } else {
-   
+
               io.setAngle(prevDeg, ffRadPerrSec);
             }
           }
@@ -103,7 +103,6 @@ public class Turret {
   public void requestAngle(Double angle, Boolean isScoring, double ffRadPerSec) {
     this.desiredDeg = angle;
     this.ffRadPerrSec = ffRadPerSec;
-    ableToUnjam = true;
     azimuth = desiredDeg;
     if (Constants.turretLocked) {
       return;
