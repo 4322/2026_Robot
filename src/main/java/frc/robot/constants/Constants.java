@@ -104,9 +104,9 @@ public final class Constants {
 
     // Scales max speeds for X, Y, and omega respectively
     public static double maxLinearSpeedPercentShooting = 0.15;
-    public static double maxAngularSpeedPercentShooting = 0.15;
+    public static double maxAngularSpeedPercentShooting = 0.09;
     public static double maxLinearSpeedPercentPassing = 0.3;
-    public static double maxAngularSpeedPercentPassing = 0.3;
+    public static double maxAngularSpeedPercentPassing = 0.18;
   }
 
   public static class Spindexer {
