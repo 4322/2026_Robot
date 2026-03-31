@@ -45,7 +45,7 @@ public class TurretIOSim implements TurretIO {
   }
 
   @Override
-  public void setAngle(double angleDeg) {
+  public void setAngle(double angleDeg, double ffRadPerSec) {
     this.requestedAngle = angleDeg;
   }
 

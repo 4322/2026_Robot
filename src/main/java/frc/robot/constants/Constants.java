@@ -180,9 +180,10 @@ public final class Constants {
     public static final int motorId = 22;
     public static final double kS = 0.26;
     public static final double kV = 0;
-    public static final double kP = 250;
+    public static final double kP = 150;
     public static final double kI = 0;
     public static final double kD = 0;
+    public static final double rotCompensationkV = 1.0;
 
     public static final double motionMagicCruiseVelocity = 3.5;
     public static final double motionMagicAcceleration = 14.0;

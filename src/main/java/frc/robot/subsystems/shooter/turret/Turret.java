@@ -20,6 +20,7 @@ public class Turret {
   private Timer atGoalTimer = new Timer();
   private boolean isScoring = false;
   private Timer crtTimer = new Timer();
+  private double ffRadPerrSec = 0;
 
   public enum turretState {
     DISABLED,
@@ -71,9 +72,9 @@ public class Turret {
           }
           case SET_TURRET_ANGLE -> {
             if (desiredDeg != null) {
-              io.setAngle(desiredDeg);
+              io.setAngle(desiredDeg, ffRadPerrSec);
             } else {
-              io.setAngle(prevDeg);
+              io.setAngle(prevDeg, ffRadPerrSec);
             }
           }
         }
@@ -88,8 +89,9 @@ public class Turret {
     }
   }
 
-  public void requestAngle(Double angle, Boolean isScoring) {
+  public void requestAngle(Double angle, Boolean isScoring, double ffRadPerSec) {
     this.desiredDeg = angle;
+    this.ffRadPerrSec = ffRadPerSec;
     azimuth = desiredDeg;
     if (Constants.turretLocked) {
       return;

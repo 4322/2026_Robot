@@ -51,6 +51,7 @@ public class Shooter extends SubsystemBase {
   private double targetTurretAngleDeg;
   private double targetTunnelSpeedRPS;
   private double targetSpindexerSpeedRPS;
+  private double targetFFRadPerSec;
   private boolean doUnwind = false;
   private boolean fixedPositionShooting = false;
   private boolean isScoring = true;
@@ -150,7 +151,7 @@ public class Shooter extends SubsystemBase {
       flywheel.requestGoal(targetFlywheelSpeedRPS, false);
       hood.requestGoal(targetHoodAngleDeg, false);
 
-      turret.requestAngle(targetTurretAngleDeg, false);
+      turret.requestAngle(targetTurretAngleDeg, false, 0);
 
       tunnel.requestGoal(targetTunnelSpeedRPS);
       spindexer.requestGoal(targetSpindexerSpeedRPS);
@@ -198,7 +199,7 @@ public class Shooter extends SubsystemBase {
         }
 
         spindexer.requestIdle();
-        turret.requestAngle(targetTurretAngleDeg, isScoring);
+        turret.requestAngle(targetTurretAngleDeg, isScoring, 0);
 
         if (spindexer.isStopped()) {
           tunnel.requestIdle();
@@ -226,7 +227,7 @@ public class Shooter extends SubsystemBase {
         resetIdleTimeout = true;
         flywheel.requestGoal(0, isScoring);
         hood.requestGoal(targetHoodAngleDeg, isScoring);
-        turret.requestAngle(targetTurretAngleDeg, isScoring);
+        turret.requestAngle(targetTurretAngleDeg, isScoring, 0);
         spindexer.requestIdle();
         tunnel.requestIdle();
       }
@@ -239,7 +240,7 @@ public class Shooter extends SubsystemBase {
 
         // Keep sending turret angle requests and unwind logic will continuously adjust target
         // setpoint within range of physical midpoint
-        turret.requestAngle(targetTurretAngleDeg, isScoring);
+        turret.requestAngle(targetTurretAngleDeg, isScoring, 0);
         spindexer.requestIdle();
 
         if (spindexer.isStopped()) {
@@ -263,13 +264,13 @@ public class Shooter extends SubsystemBase {
         spindexer.requestIdle();
         flywheel.requestGoal(targetFlywheelSpeedRPS, isScoring);
         hood.requestGoal(targetHoodAngleDeg, isScoring);
-        turret.requestAngle(targetTurretAngleDeg, isScoring);
+        turret.requestAngle(targetTurretAngleDeg, isScoring, targetFFRadPerSec);
       }
       case SHOOT -> {
         resetIdleTimeout = true;
         flywheel.requestGoal(targetFlywheelSpeedRPS, isScoring);
         hood.requestGoal(targetHoodAngleDeg, isScoring);
-        turret.requestAngle(targetTurretAngleDeg, isScoring);
+        turret.requestAngle(targetTurretAngleDeg, isScoring, targetFFRadPerSec);
         tunnel.requestGoal(targetTunnelSpeedRPS);
         spindexer.requestGoal(targetSpindexerSpeedRPS);
       }
@@ -298,6 +299,7 @@ public class Shooter extends SubsystemBase {
       targetFlywheelSpeedRPS = Constants.fixedSolutionBlue.flywheelSpeedRPS;
       targetTunnelSpeedRPS = Constants.fixedSolutionBlue.tunnelSpeedRPS;
       targetSpindexerSpeedRPS = Constants.fixedSolutionBlue.indexerSpeedRPS;
+      targetFFRadPerSec = 0;
       if (Robot.alliance == DriverStation.Alliance.Blue) {
         targetTurretAngleDeg = Constants.fixedSolutionBlue.turretAngleDeg;
       } else {
@@ -355,6 +357,7 @@ public class Shooter extends SubsystemBase {
         targetHoodAngleDeg = shot.hoodAngle();
         targetFlywheelSpeedRPS = shot.rpm() / 60.0;
         targetTurretAngleDeg = shot.turretAngle().getDegrees();
+        targetFFRadPerSec = shot.turretAngularVelocityRadPerSec();
         targetTunnelSpeedRPS = Constants.Tunnel.shootRPS;
         targetSpindexerSpeedRPS = Constants.Spindexer.shootRPS;
       }

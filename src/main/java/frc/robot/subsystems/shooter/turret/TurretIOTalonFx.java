@@ -116,9 +116,12 @@ public class TurretIOTalonFx implements TurretIO {
   }
 
   @Override
-  public void setAngle(double degs) {
+  public void setAngle(double degs, double ffRadPerSec) {
     turretMotor.setControl(
-        new MotionMagicVoltage(Units.degreesToRotations(degs)).withEnableFOC(true).withSlot(0));
+        new MotionMagicVoltage(Units.degreesToRotations(degs))
+            .withEnableFOC(true)
+            .withSlot(0)
+            .withFeedForward(ffRadPerSec * Constants.Turret.rotCompensationkV));
   }
 
   @Override
