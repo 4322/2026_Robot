@@ -267,7 +267,8 @@ public final class Constants {
     // 0 degrees is stowed postion
     // postive degrees when extending
     public static final double retractDeg = 7; // allow for net (starting config = 3.87)
-    public static final double extendDeg = 125.6; // fully against the bumper = 127.8
+    public static final double extendDeg = 125.6;
+    public static final double pressedIntoBumperDeg = 127.8;
     public static final double smooshDeg = (extendDeg + retractDeg) / 2.0;
     public static final double maxGravityDegrees = 125 - 180; // range is +/- 90 degrees
     public static final int motorId = 25;
@@ -286,10 +287,12 @@ public final class Constants {
     public static final int CANCoderID = 2;
     public static final double sensorToMechanismRatio = 3.0;
     public static final double RotorToSensorRatio = 12.0;
-    public static final double tolerance = 2.0;
+    public static final double tolerance = 4.0;
     public static final double SesnorOffsetRotations = 0.39; // retract pos > 0.02 to avoid wrapping
     public static final double alreadyDeployedMaxDeg = 13;
     public static final double alreadyDeployedMoveThreshold = 3;
+    public static final double deployVoltage = 12.0;
+    public static final double deploySec = 1.5;
   }
 
   public static class FiringParameters {

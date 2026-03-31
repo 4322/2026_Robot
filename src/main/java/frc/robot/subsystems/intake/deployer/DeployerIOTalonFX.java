@@ -4,6 +4,7 @@ import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
+import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
@@ -115,6 +116,11 @@ public class DeployerIOTalonFX implements DeployerIO {
         new MotionMagicVoltage(Units.degreesToRotations(requestedPosDeg))
             .withSlot(0)
             .withEnableFOC(true));
+  }
+
+  @Override
+  public void setVoltage(double voltage) {
+    deployerMotor.setControl(new VoltageOut(voltage).withEnableFOC(true));
   }
 
   @Override
