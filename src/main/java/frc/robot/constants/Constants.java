@@ -210,7 +210,7 @@ public final class Constants {
     public static final Translation2d originToTurret =
         new Translation2d(Units.inchesToMeters(-4.6111), Units.inchesToMeters(5.8889));
 
-    public static final double unjamDeg = 360.0;
+    public static final double unjamDeg = 90.0;
 
     // Encoder calibration procedure:
     // 1. Put turret in locked position and insert lock bolt (90 degrees)
