@@ -57,6 +57,7 @@ public class Turret {
 
         if (DriverStation.isDisabled()) {
           state = turretState.DISABLED;
+
         }
 
         switch (state) {
@@ -66,13 +67,14 @@ public class Turret {
             desiredDeg = inputs.turretDegs;
             prevDeg = inputs.turretDegs;
             needsToUnwind = false;
+            unjamOverride = false;
             if (!DriverStation.isDisabled()) {
               state = turretState.SET_TURRET_ANGLE;
             }
             break;
           }
           case SET_TURRET_ANGLE -> {
-            if (unjamOverride && !isScoring) {
+            if (unjamOverride) {
               io.setAngle(getTargetUnjamAngle(), 0);
             } else if (desiredDeg != null) {
               io.setAngle(desiredDeg, ffRadPerrSec);
