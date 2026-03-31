@@ -81,8 +81,10 @@ public class Turret {
             if (unjamOverride) {
               io.setAngle(unjamDeg, 0);
             } else if (desiredDeg != null) {
+              ableToUnjam = true;
               io.setAngle(desiredDeg, ffRadPerrSec);
             } else {
+              ableToUnjam = true;
               io.setAngle(prevDeg, ffRadPerrSec);
             }
           }
