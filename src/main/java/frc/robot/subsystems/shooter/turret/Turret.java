@@ -129,13 +129,13 @@ public class Turret {
     if (desiredDeg > inputs.turretDegs) {
       return MathUtil.clamp(
           inputs.turretDegs - Constants.Turret.unjamDeg,
-          Constants.Turret.minPhysicalLimitDeg,
-          Constants.Turret.maxPhysicalLimitDeg);
+          Constants.Turret.maxUnwindLimitDeg,
+          Constants.Turret.minUnwindLimitDeg);
     } else if (desiredDeg < inputs.turretDegs) {
       return MathUtil.clamp(
           inputs.turretDegs + Constants.Turret.unjamDeg,
-          Constants.Turret.minPhysicalLimitDeg,
-          Constants.Turret.maxPhysicalLimitDeg);
+          Constants.Turret.minUnwindLimitDeg,
+          Constants.Turret.maxUnwindLimitDeg);
     } else {
       return inputs.turretDegs;
     }
