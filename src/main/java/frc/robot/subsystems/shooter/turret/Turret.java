@@ -127,17 +127,21 @@ public class Turret {
 
   private double getTargetUnjamAngle() {
     Logger.recordOutput("Shooter/Turret/currentMethod", "getTargetUnjamAngle()");
-    return (desiredDeg - inputs.turretDegs) > 0
-        ? MathUtil.clamp(
+    if (desiredDeg > inputs.turretDegs){
+        return MathUtil.clamp(
             inputs.turretDegs - Constants.Turret.unjamDeg,
             Constants.Turret.minPhysicalLimitDeg,
-            Constants.Turret.maxPhysicalLimitDeg)
-        : (desiredDeg - inputs.turretDegs) < 0
-            ? MathUtil.clamp(
+            Constants.Turret.maxPhysicalLimitDeg);
+    }
+    else if (desiredDeg < inputs.turretDegs){
+           return MathUtil.clamp(
                 inputs.turretDegs + Constants.Turret.unjamDeg,
                 Constants.Turret.minPhysicalLimitDeg,
-                Constants.Turret.maxPhysicalLimitDeg)
-            : inputs.turretDegs;
+                Constants.Turret.maxPhysicalLimitDeg);
+    } else {
+        return inputs.turretDegs;
+    }
+   
   }
 
   public boolean needsToUnwind() {
