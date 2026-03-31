@@ -292,7 +292,7 @@ public final class Constants {
     public static final double alreadyDeployedMaxDeg = 13;
     public static final double alreadyDeployedMoveThreshold = 3;
     public static final double deployVoltage = 12.0;
-    public static final double deploySec = 1.5;
+    public static final double deploySec = 1.0;
   }
 
   public static class FiringParameters {
