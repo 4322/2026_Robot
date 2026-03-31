@@ -59,8 +59,8 @@ public class Turret {
 
         switch (statee) {
           case DISABLED -> {
-            // If ever disabled during unwind, ensure variable is reset
-            // Ensure turret remains in position upon re-enabling after moving while disabled
+            //                If ever disabled during unwind, ensure variable is reset
+            //                Ensure turret remains in position upon re-enabling after moving while disabled
             desiredDeg = inputs.turretDegs;
             prevDeg = inputs.turretDegs;
             needsToUnwind = false;

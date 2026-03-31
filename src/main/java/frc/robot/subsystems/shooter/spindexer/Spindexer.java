@@ -84,7 +84,7 @@ public class Spindexer {
       state = SpindexerStates.UNJAM;
       requestedSpeed = Constants.Spindexer.unjamRPS;
     } else {
-      // Default to idle when unjam isn't desired
+      //                        Default to idle when unjam isn't desired
       state = SpindexerStates.IDLE;
       requestedSpeed = 0;
     }
