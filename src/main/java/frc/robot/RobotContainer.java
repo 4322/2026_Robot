@@ -411,12 +411,6 @@ public class RobotContainer {
     controller.rightBumper().onFalse(ShooterCommands.turretUnjamOverride(shooter, false));
   }
 
-  @Override
-  public int hashCode() {
-    // TODO Auto-generated method stub
-    return super.hashCode();
-  }
-
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
