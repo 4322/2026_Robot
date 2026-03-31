@@ -20,6 +20,7 @@ public class Turret {
   private Timer atGoalTimer = new Timer();
   private boolean isScoring = false;
   private Timer crtTimer = new Timer();
+  private boolean unjamOverride;
 
   public enum turretState {
     DISABLED,
@@ -70,7 +71,9 @@ public class Turret {
             break;
           }
           case SET_TURRET_ANGLE -> {
-            if (desiredDeg != null) {
+            if (unjamOverride) {
+              io.setAngle(getTargetUnjamAngle());
+            } else if (desiredDeg != null) {
               io.setAngle(desiredDeg);
             } else {
               io.setAngle(prevDeg);
@@ -89,25 +92,27 @@ public class Turret {
   }
 
   public void requestAngle(Double angle, Boolean isScoring) {
-    this.desiredDeg = angle;
-    azimuth = desiredDeg;
-    if (Constants.turretLocked) {
-      return;
-    }
+    if (!unjamOverride) {
+      this.desiredDeg = angle;
+      azimuth = desiredDeg;
+      if (Constants.turretLocked) {
+        return;
+      }
 
-    if (state == turretState.SET_TURRET_ANGLE) {
-      if (desiredDeg != null) {
-        desiredDeg = calculateAngle(desiredDeg, inputs.turretDegs);
-        if (needsToUnwind()) {
-          desiredDeg =
-              MathUtil.clamp(
-                  desiredDeg,
-                  Constants.Turret.minPhysicalLimitDeg,
-                  Constants.Turret.maxPhysicalLimitDeg);
+      if (state == turretState.SET_TURRET_ANGLE) {
+        if (desiredDeg != null) {
+          desiredDeg = calculateAngle(desiredDeg, inputs.turretDegs);
+          if (needsToUnwind()) {
+            desiredDeg =
+                MathUtil.clamp(
+                    desiredDeg,
+                    Constants.Turret.minPhysicalLimitDeg,
+                    Constants.Turret.maxPhysicalLimitDeg);
+          }
+          prevDeg = desiredDeg;
+        } else {
+          desiredDeg = prevDeg;
         }
-        prevDeg = desiredDeg;
-      } else {
-        desiredDeg = prevDeg;
       }
     }
     this.isScoring = isScoring;
@@ -121,10 +126,18 @@ public class Turret {
   }
 
   private double getTargetUnjamAngle() {
-    Logger.recordOutput("Shooter/Turret/currentMethod", "getTargetAngleInMidpoint()");
-    return (prevDeg - desiredDeg) > 0
-        ? prevDeg - 60
-        : (prevDeg - desiredDeg) < 0 ? prevDeg + 60 : desiredDeg;
+    Logger.recordOutput("Shooter/Turret/currentMethod", "getTargetUnjamAngle()");
+    return (desiredDeg - inputs.turretDegs) > 0
+        ? MathUtil.clamp(
+            inputs.turretDegs - Constants.Turret.unjamDeg,
+            Constants.Turret.minPhysicalLimitDeg,
+            Constants.Turret.maxPhysicalLimitDeg)
+        : (desiredDeg - inputs.turretDegs) < 0
+            ? MathUtil.clamp(
+                inputs.turretDegs + Constants.Turret.unjamDeg,
+                Constants.Turret.minPhysicalLimitDeg,
+                Constants.Turret.maxPhysicalLimitDeg)
+            : inputs.turretDegs;
   }
 
   public boolean needsToUnwind() {
@@ -133,9 +146,8 @@ public class Turret {
   }
 
   public void unjamOverride(boolean override) {
-    if (override) {
-      desiredDeg = getTargetUnjamAngle();
-    }
+    Logger.recordOutput("Shooter/Turret/currentMethod", "Unjamming()");
+    this.unjamOverride = override;
   }
 
   public boolean isAtGoal() {
@@ -168,7 +180,7 @@ public class Turret {
   }
 
   public void unwind(boolean needsUnwindFinish) {
-    if (needsUnwindFinish) {
+    if (needsUnwindFinish && !unjamOverride) {
       if (needsToUnwind()) {
         desiredDeg = calculateAngle(azimuth, inputs.turretDegs);
       }
