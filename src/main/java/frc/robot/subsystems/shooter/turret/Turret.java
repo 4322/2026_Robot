@@ -87,6 +87,7 @@ public class Turret {
         Logger.recordOutput("Shooter/Turret/isUnwinding", isUnwinding());
         Logger.recordOutput("Shooter/Turret/atGoal", isAtGoal());
         Logger.recordOutput("Shooter/Turret/desiredDeg", desiredDeg);
+        Logger.recordOutput("Shooter/Turret/unjamDeg", getTargetUnjamAngle());
       }
     }
   }
@@ -119,14 +120,12 @@ public class Turret {
   }
 
   private double getTargetAngleInMidpoint() {
-    Logger.recordOutput("Shooter/Turret/currentMethod", "getTargetAngleInMidpoint()");
     return (desiredDeg - Constants.Turret.midPointPhysicalDeg) > 0
         ? desiredDeg - 360
         : (desiredDeg - Constants.Turret.midPointPhysicalDeg) < 0 ? desiredDeg + 360 : desiredDeg;
   }
 
   private double getTargetUnjamAngle() {
-    Logger.recordOutput("Shooter/Turret/currentMethod", "getTargetUnjamAngle()");
     if (desiredDeg > inputs.turretDegs) {
       return MathUtil.clamp(
           inputs.turretDegs - Constants.Turret.unjamDeg,
@@ -148,7 +147,6 @@ public class Turret {
   }
 
   public void unjamOverride(boolean override) {
-    Logger.recordOutput("Shooter/Turret/currentMethod", "Unjamming()");
     this.unjamOverride = override;
   }
 
