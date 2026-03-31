@@ -22,6 +22,8 @@ public class Turret {
   private Timer crtTimer = new Timer();
   private double ffRadPerrSec = 0;
   private boolean unjamOverride;
+  private double unjamDeg = 0.0;
+  private boolean ableToUnjam = false;
 
   public enum turretState {
     DISABLED,
@@ -77,7 +79,7 @@ public class Turret {
             // constantly updating new desired angle while unamming so we can immediately snap to
             // position and keep being offset if we move.
             if (unjamOverride) {
-              io.setAngle(getTargetUnjamAngle(), 0);
+              io.setAngle(unjamDeg, 0);
             } else if (desiredDeg != null) {
               io.setAngle(desiredDeg, ffRadPerrSec);
             } else {
@@ -100,6 +102,7 @@ public class Turret {
   public void requestAngle(Double angle, Boolean isScoring, double ffRadPerSec) {
     this.desiredDeg = angle;
     this.ffRadPerrSec = ffRadPerSec;
+    ableToUnjam = true;
     azimuth = desiredDeg;
     if (Constants.turretLocked) {
       return;
@@ -152,6 +155,10 @@ public class Turret {
 
   public void unjamOverride(boolean override) {
     this.unjamOverride = override;
+    if (override && ableToUnjam) {
+    unjamDeg = getTargetUnjamAngle();
+     ableToUnjam = false;
+    }
   }
 
   public boolean isAtGoal() {

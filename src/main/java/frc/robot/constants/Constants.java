@@ -50,8 +50,8 @@ public final class Constants {
   public static final SubsystemMode spindexerMode = SubsystemMode.NORMAL;
   public static final SubsystemMode tunnelMode = SubsystemMode.NORMAL;
   public static SubsystemMode turretMode = SubsystemMode.NORMAL;
-  public static final SubsystemMode deployerMode = SubsystemMode.NORMAL;
-  public static final SubsystemMode rollerMode = SubsystemMode.NORMAL;
+  public static final SubsystemMode deployerMode = SubsystemMode.DISABLED;
+  public static final SubsystemMode rollerMode = SubsystemMode.DISABLED;
   public static final SubsystemMode ledMode = SubsystemMode.DISABLED;
   public static final SubsystemMode visionGlobalPose = SubsystemMode.NORMAL;
   public static final SubsystemMode visionObjectDetection = SubsystemMode.DISABLED;
