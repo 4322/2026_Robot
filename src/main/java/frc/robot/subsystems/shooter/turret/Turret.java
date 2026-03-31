@@ -136,8 +136,8 @@ public class Turret {
     if (desiredDeg > inputs.turretDegs) {
       return MathUtil.clamp(
           inputs.turretDegs - Constants.Turret.unjamDeg,
-          Constants.Turret.maxUnwindLimitDeg,
-          Constants.Turret.minUnwindLimitDeg);
+          Constants.Turret.minUnwindLimitDeg,
+          Constants.Turret.maxUnwindLimitDeg);
     } else if (desiredDeg < inputs.turretDegs) {
       return MathUtil.clamp(
           inputs.turretDegs + Constants.Turret.unjamDeg,
