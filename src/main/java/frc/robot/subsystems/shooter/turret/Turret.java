@@ -96,7 +96,6 @@ public class Turret {
   }
 
   public void requestAngle(Double angle, Boolean isScoring, double ffRadPerSec) {
-    if (!unjamOverride) {
       this.desiredDeg = angle;
       this.ffRadPerrSec = ffRadPerSec;
       azimuth = desiredDeg;
@@ -119,7 +118,6 @@ public class Turret {
           desiredDeg = prevDeg;
         }
       }
-    }
     this.isScoring = isScoring;
   }
 
@@ -184,7 +182,7 @@ public class Turret {
   }
 
   public void unwind(boolean needsUnwindFinish) {
-    if (needsUnwindFinish && !unjamOverride) {
+    if (needsUnwindFinish) {
       if (needsToUnwind()) {
         desiredDeg = calculateAngle(azimuth, inputs.turretDegs);
       }
