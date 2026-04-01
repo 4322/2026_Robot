@@ -242,6 +242,7 @@ public class Shooter extends SubsystemBase {
         // setpoint within range of physical midpoint
         turret.requestAngle(targetTurretAngleDeg, isScoring, 0);
         spindexer.requestIdle();
+        tunnel.requestIdle();
 
         if (spindexer.isStopped()) {
           // Since requested turret angle is constantly updating while we're unwinding
@@ -265,6 +266,7 @@ public class Shooter extends SubsystemBase {
         flywheel.requestGoal(targetFlywheelSpeedRPS, isScoring);
         hood.requestGoal(targetHoodAngleDeg, isScoring);
         turret.requestAngle(targetTurretAngleDeg, isScoring, targetFFRadPerSec);
+        tunnel.requestIdle();
       }
       case SHOOT -> {
         resetIdleTimeout = true;
