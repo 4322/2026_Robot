@@ -276,7 +276,7 @@ public final class Constants {
     public static final int motorId = 25;
     public static final double statorCurrentLimit = 120;
     public static final double supplyCurrentLimit = 40;
-    public static final NeutralModeValue neutralMode = NeutralModeValue.Coast;
+    public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
     public static final InvertedValue motorInvert = InvertedValue.Clockwise_Positive;
     public static final SensorDirectionValue sensorDirection =
         SensorDirectionValue.CounterClockwise_Positive;

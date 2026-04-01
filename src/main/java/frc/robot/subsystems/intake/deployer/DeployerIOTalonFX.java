@@ -9,6 +9,7 @@ import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.GravityTypeValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.constants.Constants;
@@ -135,5 +136,10 @@ public class DeployerIOTalonFX implements DeployerIO {
   @Override
   public void seedPosition(double newAngleDeg) {
     deployerMotor.setPosition(Units.degreesToRotations(newAngleDeg));
+  }
+
+  @Override
+  public void setBrakeMode(boolean mode) {
+    deployerMotor.setNeutralMode(mode ? NeutralModeValue.Brake : NeutralModeValue.Coast);
   }
 }

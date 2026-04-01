@@ -116,4 +116,8 @@ public class Deployer {
   public double getAngle() {
     return inputs.angleDeg;
   }
+
+  public void setBrakeMode(Boolean mode) {
+    deployerIO.setBrakeMode(mode);
+  }
 }

@@ -24,6 +24,8 @@ public interface DeployerIO {
 
   public default void setVoltage(double voltage) {}
 
+  public default void setBrakeMode(Boolean mode) {}
+
   public default void stop() {}
 
   public default TalonFX getTalonFX() {
