@@ -3,9 +3,10 @@
   "robotLength": 0.811,
   "holonomicMode": true,
   "pathFolders": [
+    "C_Depot",
     "C_DepotOutpost",
     "LT",
-    "New Folder",
+    "New New Folder",
     "R_2Sweep",
     "R_Half_SuperSweep",
     "R_NeutralGeneral",
