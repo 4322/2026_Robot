@@ -25,13 +25,13 @@
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "R.2Sweep_C"
+      "linkedName": null
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.6532905296950582,
-      "rotationDegrees": 135.0
+      "waypointRelativePos": 0.2877442273534615,
+      "rotationDegrees": -135.0
     }
   ],
   "constraintZones": [
@@ -53,7 +53,7 @@
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 4.0,
-    "maxAcceleration": 3.0,
+    "maxAcceleration": 4.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
@@ -61,12 +61,12 @@
   },
   "goalEndState": {
     "velocity": 0.0,
-    "rotation": 45.0
+    "rotation": -135.0
   },
   "reversed": false,
   "folder": "R_2Sweep",
   "idealStartingState": {
-    "velocity": 2.5,
+    "velocity": 2.0,
     "rotation": -90.0
   },
   "useDefaultConstraints": false
