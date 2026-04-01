@@ -18,7 +18,6 @@ import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.led.LED;
 import frc.robot.subsystems.shooter.Shooter;
-import frc.robot.subsystems.shooter.Shooter.ShooterState;
 
 public class L2Sweep extends SequentialCommandGroup {
   public L2Sweep(Drive drive, LED led, Intake intake, Shooter shooter) {
@@ -50,7 +49,7 @@ public class L2Sweep extends SequentialCommandGroup {
                         Constants.Autonomous.smooshDelayFirstPass,
                         Constants.Autonomous.shootTimeFirstPass)
                     .andThen(new WaitCommand(Constants.Autonomous.shootStopTime))),
-                AutoBuilder.followPath(Robot.L_2SWEEP_CG)),
+            AutoBuilder.followPath(Robot.L_2SWEEP_CG)),
         new WaitUntilCommand(() -> shooter.isHoodLowered()),
         AutoBuilder.followPath(Robot.L_2SWEEP_DE),
         new ParallelRaceGroup(
