@@ -53,6 +53,7 @@ public class Intake extends SubsystemBase {
         if (deployer.isExtended()) {
           hasExtended = true;
           state = prevState;
+          rollers.setState(RollersState.IDLE);
         }
       }
       case IDLE -> {

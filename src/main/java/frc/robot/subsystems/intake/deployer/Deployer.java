@@ -35,10 +35,6 @@ public class Deployer {
     Logger.recordOutput("Intake/Deployer/isStowed", isStowed());
   }
 
-  public void setBrakeMode(boolean mode) {
-    deployerIO.setBrakeMode(mode);
-  }
-
   public void setDeployerState(DeployerState state) {
     deployerState = state;
     if (deployerState != DeployerState.FIRST_EXTEND) {
@@ -60,7 +56,11 @@ public class Deployer {
       }
       case EXTEND -> {
         requestedPos = Constants.Deployer.extendDeg;
-        deployerIO.setPosition(requestedPos);
+        if (isExtended()) {
+          deployerIO.setVoltage(0); // drop to bumper in coast mode to avoid stalling motor
+        } else {
+          deployerIO.setPosition(requestedPos);
+        }
       }
       case SMOOSH -> {
         requestedPos = Constants.Deployer.smooshDeg;
