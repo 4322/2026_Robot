@@ -2,6 +2,7 @@ package frc.robot.subsystems.shooter.hood;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.Timer;
+import frc.robot.constants.Constants;
 
 import java.util.LinkedList;
 import java.util.Queue;
@@ -19,6 +20,7 @@ public class HoodIOSim implements HoodIO {
   private double degreePerSecond = 37;
   private double prevPosition = 0;
   public Queue<Producer> positionQueue = new LinkedList<>();
+  public int degrees;
 
   @Override
   public void updateInputs(HoodIOInputs inputs) {
@@ -35,15 +37,20 @@ public class HoodIOSim implements HoodIO {
     this.position = 0;
   }
 
-  @Override
-  public void simEstimatedPosition() {
-   
-  }
+
 
   @Override
-  public void setPulseWidth(int pulseWidth) {
-    // TODO
-    Logger.recordOutput("Shooter/Hood/pulseWidth", pulseWidth);
+  public void setPulseWidth(int pulsewidth) {
+    double pulseWidthToDegreeRatio = 0.9;
+    this.degrees =
+        MathUtil.clamp(
+            Constants.Hood.homePulseWidth
+                + (int)
+                    (pulsewidth
+                        * pulseWidthToDegreeRatio
+                        * Constants.Hood.servoPositionScaleFactor),
+            0,
+            38);
   }
 
   public class Producer {
@@ -54,32 +61,42 @@ public class HoodIOSim implements HoodIO {
       this.timeAdded = timeAdded;
     }
   }
-  
+
   public void requestPosition(double offeredPosition, double timeAdded) {
     timeAdded = Timer.getFPGATimestamp();
     positionQueue.offer(new Producer(offeredPosition, timeAdded));}
 
    public class Consumer {
-    private double timerCurrentValue;
     private double requestedPosition;
-    public Consumer(double timerCurrentValue, double requestedPosition) {
-      this.timerCurrentValue = timerCurrentValue;
+    public Consumer( double requestedPosition) {
       this.requestedPosition = requestedPosition;
     }
 
-    public void checkPosition() {
+    public double getPosition() {
       if (positionQueue.isEmpty()) {
-        return;
+        return requestedPosition;
       }
-      timerCurrentValue = (Timer.getFPGATimestamp() - positionQueue.peek().timeAdded);
+      double timerCurrentValue = (Timer.getFPGATimestamp() - positionQueue.peek().timeAdded);
       if (timerCurrentValue >= 0.120) {
-        requestedPosition = positionQueue.poll().offeredPosition;
+      requestedPosition = positionQueue.poll().offeredPosition;
      }
+     return requestedPosition;
     }
 
-    public double getRequestedPosition() {
-      return requestedPosition;
-    }
+    
+  }
+  
+  @Override
+  public void simEstimatedPosition() {
+    Consumer consumer = new Consumer(0);
+    double wantedPosition = consumer.getPosition();
+    if (wantedPosition > this.position) {
+      velocity = MathUtil.clamp(degreePerSecond, 0, maxRPS * 360);
+      this.position += velocity * 0.02;
+    } else if (wantedPosition < this.position) {
+      velocity = MathUtil.clamp(-degreePerSecond, -maxRPS * 360, 0);
+      this.position -= velocity * 0.02;
+    } 
   }
 
 
