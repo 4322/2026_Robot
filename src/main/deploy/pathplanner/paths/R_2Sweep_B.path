@@ -25,17 +25,17 @@
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "R_2SweepB_End"
     }
   ],
   "rotationTargets": [
     {
       "waypointRelativePos": 0.36034115138592615,
-      "rotationDegrees": 45.0
+      "rotationDegrees": 135.0
     },
     {
       "waypointRelativePos": 0.8976545842217432,
-      "rotationDegrees": 45.0
+      "rotationDegrees": 135.0
     }
   ],
   "constraintZones": [
@@ -65,13 +65,13 @@
   },
   "goalEndState": {
     "velocity": 0.0,
-    "rotation": 45.0
+    "rotation": 135.0
   },
   "reversed": false,
   "folder": "R_2Sweep",
   "idealStartingState": {
     "velocity": 1.0,
-    "rotation": 119.99999999999999
+    "rotation": 90.0
   },
   "useDefaultConstraints": false
 }

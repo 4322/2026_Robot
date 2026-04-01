@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.55,
-        "y": 5.95
+        "x": 3.4956348074179737,
+        "y": 4.028530670470756
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.550000000000001,
-        "y": 5.95
+        "x": 2.495634807417975,
+        "y": 4.028530670470756
       },
       "isLocked": false,
       "linkedName": "C.LeftBump.Start"
     },
     {
       "anchor": {
-        "x": 0.7,
-        "y": 5.95
+        "x": 0.8432097004279597,
+        "y": 5.063623395149786
       },
       "prevControl": {
-        "x": 1.6999999999999995,
-        "y": 5.95
+        "x": 1.8432097004279593,
+        "y": 5.063623395149786
       },
       "nextControl": null,
       "isLocked": false,
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": -135.0
   },
   "reversed": false,
   "folder": "C_DepotOutpost",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": 90.0
   },
   "useDefaultConstraints": true
 }

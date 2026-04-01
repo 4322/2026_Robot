@@ -12,7 +12,7 @@
         "y": 0.8879359430604987
       },
       "isLocked": false,
-      "linkedName": "R.2Sweep_C"
+      "linkedName": "R_2SweepB_End"
     },
     {
       "anchor": {
@@ -48,7 +48,7 @@
   "folder": "R_2Sweep",
   "idealStartingState": {
     "velocity": 0.0,
-    "rotation": 45.0
+    "rotation": 135.0
   },
   "useDefaultConstraints": false
 }

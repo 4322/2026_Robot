@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.7,
-        "y": 5.95
+        "x": 0.8432097004279597,
+        "y": 5.063623395149786
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.5677746077032806,
-        "y": 5.283580599144081
+        "x": 1.7109843081312404,
+        "y": 4.397203994293867
       },
       "isLocked": false,
       "linkedName": "C.Depot"
@@ -64,7 +64,7 @@
   "folder": "C_DepotOutpost",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": -135.0
   },
   "useDefaultConstraints": false
 }
