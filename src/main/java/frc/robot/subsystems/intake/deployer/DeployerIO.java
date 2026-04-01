@@ -22,7 +22,7 @@ public interface DeployerIO {
 
   public default void setPosition(double requestedPosDeg) {}
 
-  public default void setBrakeMode(boolean mode) {}
+  public default void setVoltage(double voltage) {}
 
   public default void stop() {}
 

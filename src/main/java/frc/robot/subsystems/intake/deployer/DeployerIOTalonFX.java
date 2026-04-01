@@ -4,11 +4,11 @@ import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
+import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.GravityTypeValue;
-import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.constants.Constants;
@@ -118,6 +118,11 @@ public class DeployerIOTalonFX implements DeployerIO {
   }
 
   @Override
+  public void setVoltage(double voltage) {
+    deployerMotor.setControl(new VoltageOut(voltage).withEnableFOC(true));
+  }
+
+  @Override
   public void stop() {
     deployerMotor.stopMotor();
   }
@@ -125,11 +130,6 @@ public class DeployerIOTalonFX implements DeployerIO {
   @Override
   public TalonFX getTalonFX() {
     return deployerMotor;
-  }
-
-  @Override
-  public void setBrakeMode(boolean mode) {
-    deployerMotor.setNeutralMode(mode ? NeutralModeValue.Brake : NeutralModeValue.Coast);
   }
 
   @Override

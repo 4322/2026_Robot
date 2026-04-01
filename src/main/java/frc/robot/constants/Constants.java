@@ -127,7 +127,7 @@ public final class Constants {
     public static final double motorToMechanismRatio = 12.0; // 10 inch wheel
     // Normally 7 RPS for shooting
     public static final double unjamRPS = -4.0;
-    public static final double shootRPS = 7;
+    public static final double shootRPS = 5.5;
   }
 
   public static class Tunnel {
@@ -269,13 +269,14 @@ public final class Constants {
     // 0 degrees is stowed postion
     // postive degrees when extending
     public static final double retractDeg = 7; // allow for net (starting config = 3.87)
-    public static final double extendDeg = 125.6; // fully against the bumper = 127.8
-    public static final double smooshDeg = (extendDeg + retractDeg) / 2.0;
+    public static final double extendDeg = 113.0; // allow for backlash, 125.6 resting on bumper
+    public static final double pressedIntoBumperDeg = 127.8;
+    public static final double smooshDeg = 59.0;
     public static final double maxGravityDegrees = 125 - 180; // range is +/- 90 degrees
     public static final int motorId = 25;
     public static final double statorCurrentLimit = 120;
     public static final double supplyCurrentLimit = 40;
-    public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
+    public static final NeutralModeValue neutralMode = NeutralModeValue.Coast;
     public static final InvertedValue motorInvert = InvertedValue.Clockwise_Positive;
     public static final SensorDirectionValue sensorDirection =
         SensorDirectionValue.CounterClockwise_Positive;
@@ -283,15 +284,15 @@ public final class Constants {
     public static final double kG = 0.65;
     public static final double kI = 0;
     public static final double kD = 0;
-    public static final double motionMagicCruiseVelocity = 0.3;
-    public static final double motionMagicAcceleration = 1.2;
+    public static final double motionMagicCruiseVelocity = 0.7;
+    public static final double motionMagicAcceleration = 2.8;
     public static final int CANCoderID = 2;
     public static final double sensorToMechanismRatio = 3.0;
     public static final double RotorToSensorRatio = 12.0;
-    public static final double tolerance = 2.0;
+    public static final double tolerance = 3.0;
     public static final double SesnorOffsetRotations = 0.39; // retract pos > 0.02 to avoid wrapping
-    public static final double alreadyDeployedMaxDeg = 13;
-    public static final double alreadyDeployedMoveThreshold = 3;
+    public static final double deployVoltage = 12.0;
+    public static final double deploySec = 1.0;
   }
 
   public static class FiringParameters {
