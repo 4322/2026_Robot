@@ -10,6 +10,7 @@ public class Deployer {
   private DeployerIOInputsAutoLogged inputs = new DeployerIOInputsAutoLogged();
   private double requestedPos;
   private Timer deployTimer = new Timer();
+  private Timer deployPosSetTimer = new Timer();
   private DeployerState deployerState = DeployerState.DISABLED;
 
   public enum DeployerState {
@@ -40,6 +41,8 @@ public class Deployer {
     if (deployerState != DeployerState.FIRST_EXTEND) {
       deployTimer.stop();
       deployTimer.reset();
+      deployPosSetTimer.stop();
+      deployPosSetTimer.reset();
     }
     switch (deployerState) {
       case DISABLED -> {
@@ -48,8 +51,13 @@ public class Deployer {
       case FIRST_EXTEND -> {
         deployerIO.setVoltage(Constants.Deployer.deployVoltage);
         deployTimer.start();
-        if (deployTimer.hasElapsed(Constants.Deployer.deploySec)) {
+        if (deployTimer.hasElapsed(Constants.Deployer.deploySec)
+            && !deployPosSetTimer.isRunning()) {
           deployerIO.seedPosition(Constants.Deployer.pressedIntoBumperDeg);
+          deployPosSetTimer.start();
+        }
+        if (deployPosSetTimer.hasElapsed(Constants.Deployer.deployPosSetSec)) {
+          // maintain chain tension until position set has taken effect
           deployerIO.setVoltage(0);
           deployerState = DeployerState.EXTEND;
         }

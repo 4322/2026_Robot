@@ -269,7 +269,7 @@ public final class Constants {
     // 0 degrees is stowed postion
     // postive degrees when extending
     public static final double retractDeg = 7; // allow for net (starting config = 3.87)
-    public static final double extendDeg = 113.0; // allow for backlash, 125.6 resting on bumper
+    public static final double extendDeg = 122.0; // allow for backlash, 125.6 resting on bumper
     public static final double pressedIntoBumperDeg = 127.8;
     public static final double smooshDeg = 59.0;
     public static final double maxGravityDegrees = 125 - 180; // range is +/- 90 degrees
@@ -292,7 +292,8 @@ public final class Constants {
     public static final double tolerance = 3.0;
     public static final double SesnorOffsetRotations = 0.39; // retract pos > 0.02 to avoid wrapping
     public static final double deployVoltage = 12.0;
-    public static final double deploySec = 1.0;
+    public static final double deploySec = 0.9;
+    public static final double deployPosSetSec = 0.1;
   }
 
   public static class FiringParameters {
