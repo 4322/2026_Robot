@@ -53,13 +53,11 @@ public class HoodIOSim implements HoodIO {
       this.offeredPosition = offeredPosition;
       this.timeAdded = timeAdded;
     }
-    public void addPosition(double offeredPosition) {
-      timeAdded = Timer.getFPGATimestamp();
-      positionQueue.offer(new Producer(offeredPosition, timeAdded));
-    }
-   
   }
-
+  
+  public void requestPosition(double offeredPosition, double timeAdded) {
+    timeAdded = Timer.getFPGATimestamp();
+    positionQueue.offer(new Producer(offeredPosition, timeAdded));}
 
    public class Consumer {
     private double timerCurrentValue;
