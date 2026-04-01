@@ -83,6 +83,7 @@ public class Tunnel {
   }
 
   public void requestGoal(double speed) {
+    // Constant in shooter
     if (!unjamOverride) {
       state = TunnelStates.INDEXING;
       requestedSpeed = speed;

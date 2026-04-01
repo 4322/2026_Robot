@@ -45,6 +45,7 @@ public class Shooter extends SubsystemBase {
   private LED led;
   private Double hoodOverrideDeg = null;
   private Double flywheelOverrideRPS = null;
+  private Timer spindexerFullSpdTimer = new Timer();
 
   private double targetHoodAngleDeg;
   private double targetFlywheelSpeedRPS;
@@ -181,6 +182,11 @@ public class Shooter extends SubsystemBase {
       state = ShooterState.UNWIND;
     }
 
+    if (state != ShooterState.SHOOT && spindexerFullSpdTimer.isRunning()) {
+        spindexerFullSpdTimer.stop();
+        spindexerFullSpdTimer.reset();
+    }
+
     switch (state) {
       case STARTING_CONFIG -> {
         // Intake has to be down first before using shooter
@@ -216,7 +222,6 @@ public class Shooter extends SubsystemBase {
         if (hoodOverrideDeg != null) {
           hood.requestGoal(hoodOverrideDeg, isScoring);
         } else if (idleTimer.hasElapsed(Constants.Hood.idleTimeout)) {
-
           hood.requestGoal(Constants.Hood.safeAngleDeg, isScoring);
         } else {
           hood.requestGoal(targetHoodAngleDeg, isScoring);
@@ -262,17 +267,23 @@ public class Shooter extends SubsystemBase {
       case PRESHOOT -> {
         resetIdleTimeout = true;
         spindexer.requestIdle();
+        tunnel.requestIdle();
         flywheel.requestGoal(targetFlywheelSpeedRPS, isScoring);
         hood.requestGoal(targetHoodAngleDeg, isScoring);
         turret.requestAngle(targetTurretAngleDeg, isScoring, targetFFRadPerSec);
       }
       case SHOOT -> {
         resetIdleTimeout = true;
+        spindexerFullSpdTimer.start();
         flywheel.requestGoal(targetFlywheelSpeedRPS, isScoring);
         hood.requestGoal(targetHoodAngleDeg, isScoring);
         turret.requestAngle(targetTurretAngleDeg, isScoring, targetFFRadPerSec);
         tunnel.requestGoal(targetTunnelSpeedRPS);
+        if (spindexerFullSpdTimer.hasElapsed(Constants.Spindexer.superShootTimeout)) {
         spindexer.requestGoal(targetSpindexerSpeedRPS);
+        } else {
+         spindexer.requestGoal(Constants.Spindexer.superShootRPS);
+        }
       }
     }
 

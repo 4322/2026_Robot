@@ -50,8 +50,8 @@ public final class Constants {
   public static final SubsystemMode spindexerMode = SubsystemMode.NORMAL;
   public static final SubsystemMode tunnelMode = SubsystemMode.NORMAL;
   public static SubsystemMode turretMode = SubsystemMode.NORMAL;
-  public static final SubsystemMode deployerMode = SubsystemMode.NORMAL;
-  public static final SubsystemMode rollerMode = SubsystemMode.NORMAL;
+  public static final SubsystemMode deployerMode = SubsystemMode.DISABLED;
+  public static final SubsystemMode rollerMode = SubsystemMode.DISABLED;
   public static final SubsystemMode ledMode = SubsystemMode.DISABLED;
   public static final SubsystemMode visionGlobalPose = SubsystemMode.NORMAL;
   public static final SubsystemMode visionObjectDetection = SubsystemMode.DISABLED;
@@ -127,7 +127,9 @@ public final class Constants {
     public static final double motorToMechanismRatio = 12.0; // 10 inch wheel
     // Normally 7 RPS for shooting
     public static final double unjamRPS = -4.0;
-    public static final double shootRPS = 7;
+    public static final double shootRPS = 7.0;
+    public static final double superShootTimeout = 0.5; 
+    public static final double superShootRPS = 9.0; // for first 0.5 seconds of shooting to reduce slip
   }
 
   public static class Tunnel {

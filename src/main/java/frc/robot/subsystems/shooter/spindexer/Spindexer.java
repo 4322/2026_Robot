@@ -72,6 +72,7 @@ public class Spindexer {
   }
 
   public void requestGoal(double speed) {
+    // Constant in shooter
     if (!unjamOverride) {
       state = SpindexerStates.INDEXING;
       requestedSpeed = speed;
