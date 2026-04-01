@@ -18,7 +18,6 @@ import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.led.LED;
 import frc.robot.subsystems.shooter.Shooter;
-import frc.robot.subsystems.shooter.Shooter.ShooterState;
 
 public class R2Sweep extends SequentialCommandGroup {
   public R2Sweep(Drive drive, LED led, Intake intake, Shooter shooter) {
