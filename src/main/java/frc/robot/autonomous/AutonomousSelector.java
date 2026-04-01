@@ -104,7 +104,8 @@ public class AutonomousSelector {
             new Auto(AutoName.R_SWEEP_BUMP, new RSweepBump(drive, led, intake, shooter)),
             new Auto(AutoName.R_2_SWEEP, new R2Sweep(drive, led, intake, shooter)),
             new Auto(AutoName.L_2_SWEEP, new L2Sweep(drive, led, intake, shooter)),
-             new Auto(AutoName.C_START_TO_DEPOT, new CenterStartToDepot(drive, led, intake, shooter)),
+            new Auto(
+                AutoName.C_START_TO_DEPOT, new CenterStartToDepot(drive, led, intake, shooter)),
             new Auto(
                 AutoName.DRIVE_WHEEL_RADIUS_CHARACTERIZATION,
                 new SequentialCommandGroup(
