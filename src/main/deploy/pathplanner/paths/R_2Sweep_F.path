@@ -66,7 +66,7 @@
   "reversed": false,
   "folder": "R_2Sweep",
   "idealStartingState": {
-    "velocity": 2.0,
+    "velocity": 2.5,
     "rotation": -90.0
   },
   "useDefaultConstraints": false
