@@ -45,7 +45,7 @@ public class Shooter extends SubsystemBase {
   private LED led;
   private Double hoodOverrideDeg = null;
   private Double flywheelOverrideRPS = null;
-  private Timer spindexerFullSpdTimer = new Timer();
+  private Timer superSpindexerTimer = new Timer();
 
   private double targetHoodAngleDeg;
   private double targetFlywheelSpeedRPS;
@@ -182,9 +182,9 @@ public class Shooter extends SubsystemBase {
       state = ShooterState.UNWIND;
     }
 
-    if (state != ShooterState.SHOOT && spindexerFullSpdTimer.isRunning()) {
-        spindexerFullSpdTimer.stop();
-        spindexerFullSpdTimer.reset();
+    if (state != ShooterState.SHOOT && superSpindexerTimer.isRunning()) {
+      superSpindexerTimer.stop();
+      superSpindexerTimer.reset();
     }
 
     switch (state) {
@@ -265,24 +265,25 @@ public class Shooter extends SubsystemBase {
         turret.unwind(doUnwind);
       }
       case PRESHOOT -> {
+        // Arent requesting tunnel cause we keep it running even if we request unwind and we are
+        // saving value for shoot once unjam is done
         resetIdleTimeout = true;
         spindexer.requestIdle();
-        tunnel.requestIdle();
         flywheel.requestGoal(targetFlywheelSpeedRPS, isScoring);
         hood.requestGoal(targetHoodAngleDeg, isScoring);
         turret.requestAngle(targetTurretAngleDeg, isScoring, targetFFRadPerSec);
       }
       case SHOOT -> {
         resetIdleTimeout = true;
-        spindexerFullSpdTimer.start();
+        superSpindexerTimer.start();
         flywheel.requestGoal(targetFlywheelSpeedRPS, isScoring);
         hood.requestGoal(targetHoodAngleDeg, isScoring);
         turret.requestAngle(targetTurretAngleDeg, isScoring, targetFFRadPerSec);
         tunnel.requestGoal(targetTunnelSpeedRPS);
-        if (spindexerFullSpdTimer.hasElapsed(Constants.Spindexer.superShootTimeout)) {
-        spindexer.requestGoal(targetSpindexerSpeedRPS);
+        if (superSpindexerTimer.hasElapsed(Constants.Spindexer.superShootTimeout)) {
+          spindexer.requestGoal(targetSpindexerSpeedRPS);
         } else {
-         spindexer.requestGoal(Constants.Spindexer.superShootRPS);
+          spindexer.requestGoal(Constants.Spindexer.superShootRPS);
         }
       }
     }

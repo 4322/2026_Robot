@@ -128,8 +128,9 @@ public final class Constants {
     // Normally 7 RPS for shooting
     public static final double unjamRPS = -4.0;
     public static final double shootRPS = 7.0;
-    public static final double superShootTimeout = 0.5; 
-    public static final double superShootRPS = 9.0; // for first 0.5 seconds of shooting to reduce slip
+    public static final double superShootTimeout = 0.5;
+    public static final double superShootRPS =
+        9.0; // for first 0.5 seconds of shooting to reduce slip
   }
 
   public static class Tunnel {
