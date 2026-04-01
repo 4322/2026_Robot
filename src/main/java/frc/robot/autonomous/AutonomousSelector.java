@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.autonomous.modes.CDepotOutpost;
+import frc.robot.autonomous.modes.CenterStartToDepot;
 import frc.robot.autonomous.modes.DoNothing;
 import frc.robot.autonomous.modes.L2Sweep;
 import frc.robot.autonomous.modes.LHalfSweepShoot;
@@ -48,6 +49,8 @@ public class AutonomousSelector {
     R_SWEEP_BUMP,
     L_SWEEP_BUMP,
     R_ROUTPOST,
+
+    C_START_TO_DEPOT,
 
     DRIVE_WHEEL_RADIUS_CHARACTERIZATION,
     DRIVE_SIMPLE_FF_CHARACTERIZATION,
@@ -101,6 +104,7 @@ public class AutonomousSelector {
             new Auto(AutoName.R_SWEEP_BUMP, new RSweepBump(drive, led, intake, shooter)),
             new Auto(AutoName.R_2_SWEEP, new R2Sweep(drive, led, intake, shooter)),
             new Auto(AutoName.L_2_SWEEP, new L2Sweep(drive, led, intake, shooter)),
+             new Auto(AutoName.C_START_TO_DEPOT, new CenterStartToDepot(drive, led, intake, shooter)),
             new Auto(
                 AutoName.DRIVE_WHEEL_RADIUS_CHARACTERIZATION,
                 new SequentialCommandGroup(

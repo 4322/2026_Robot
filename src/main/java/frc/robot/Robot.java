@@ -77,7 +77,7 @@ public class Robot extends LoggedRobot {
   public static PathPlannerPath C_Depot_To_Outpost;
   public static PathPlannerPath C_Start_To_Depot;
 
-  public static PathPlannerPath Start_To_Depot;
+  public static PathPlannerPath C_To_Depot;
 
   public static PathPlannerPath R_Half_SuperSweep_B;
   public static PathPlannerPath R_Half_SuperSweep_C;
@@ -270,7 +270,7 @@ public class Robot extends LoggedRobot {
       R_ROutpost_A = PathPlannerPath.fromPathFile("R_ROutpost_A");
       R_ROutpost_B = PathPlannerPath.fromPathFile("R_ROutpost_B");
 
-      Start_To_Depot = PathPlannerPath.fromPathFile("Start_To_Depot");
+      C_To_Depot = PathPlannerPath.fromPathFile("Start_To_Depot");
 
       L_NeutralL_Intake_Mid_Flip = R_NeutralR_Intake_Mid_Flip.mirrorPath();
       L_NeutralLMid_To_ShootL = R_NeutralRMid_To_ShootR.mirrorPath();

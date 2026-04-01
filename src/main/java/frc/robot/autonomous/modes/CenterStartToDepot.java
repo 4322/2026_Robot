@@ -26,7 +26,7 @@ public class CenterStartToDepot extends SequentialCommandGroup{
     PathPlannerPath path = Robot.C_Start_To_Depot;
     Pose2d startPoseBlue = path.getStartingHolonomicPose().get();
     Pose2d startPoseRed = path.flipPath().getStartingHolonomicPose().get();
-    setName("Start_To_DEPOT");
+    setName("C_Start_To_DEPOT");
 
     addCommands(
         new InstantCommand(() -> Logger.recordOutput("Autonomous/autoStarted", true)),
@@ -43,7 +43,7 @@ public class CenterStartToDepot extends SequentialCommandGroup{
                 IntakeCommands.intake(intake),
                 new WaitUntilCommand(() -> intake.hasExtended()),
                 ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake)),
-            AutoBuilder.followPath(Robot.Start_To_Depot),
+            AutoBuilder.followPath(Robot.C_To_Depot),
             ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake)));
   }
 }
