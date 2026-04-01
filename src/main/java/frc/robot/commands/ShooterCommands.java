@@ -65,6 +65,17 @@ public class ShooterCommands {
         .finallyDo(() -> shooter.trenchOverride(false));
   }
 
+  public static Command turretUnjamOverride(Shooter shooter, boolean override) {
+    return Commands.runOnce(
+            () -> {
+              shooter.turretUnjamOverride(override);
+            })
+        .onlyIf(
+            () ->
+                !(shooter.getState() == Shooter.ShooterState.SHOOT
+                    || shooter.getState() == Shooter.ShooterState.PRESHOOT));
+  }
+
   // Don't require shooter since this is an override meant to be done anytime
   public static Command unjam(Shooter shooter) {
     return Commands.run(

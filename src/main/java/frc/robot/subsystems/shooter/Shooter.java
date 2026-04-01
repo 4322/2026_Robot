@@ -429,4 +429,8 @@ public class Shooter extends SubsystemBase {
   public double getHoodPositionDegrees() {
     return hood.getPositionDegrees();
   }
+
+  public void turretUnjamOverride(boolean override) {
+    turret.unjamOverride(override);
+  }
 }
