@@ -42,8 +42,8 @@ public class R2Sweep extends SequentialCommandGroup {
         new ParallelRaceGroup(
             ShooterCommands.idle(shooter, intake, 14.0, 40.0),
             AutoBuilder.followPath(Robot.R_2SWEEP_B)),
-        new ParallelCommandGroup(
-            new ParallelRaceGroup(
+        new ParallelRaceGroup(
+            new ParallelCommandGroup(
                 ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake),
                 IntakeCommands.autoSmoosh(
                         intake,
