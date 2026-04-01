@@ -31,11 +31,11 @@
   "rotationTargets": [
     {
       "waypointRelativePos": 0.36034115138592615,
-      "rotationDegrees": 135.0
+      "rotationDegrees": 45.0
     },
     {
       "waypointRelativePos": 0.8976545842217432,
-      "rotationDegrees": 135.0
+      "rotationDegrees": 45.0
     }
   ],
   "constraintZones": [],
@@ -51,7 +51,7 @@
   },
   "goalEndState": {
     "velocity": 0.0,
-    "rotation": 135.15794749113084
+    "rotation": 45.0
   },
   "reversed": false,
   "folder": "R_2Sweep",
