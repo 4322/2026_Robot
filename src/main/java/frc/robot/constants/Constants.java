@@ -254,7 +254,7 @@ public final class Constants {
   public class Rollers {
     public static final double voltageIntake = 8.0;
     public static final double voltageEject = -6;
-    public static final double voltageDeploy = 0; // -1 to clear net, doesn't work with extgra top bar
+    public static final double voltageDeploy = 0; // -1 to clear net, not good with extra top bar
     public static final double voltageIdle = 0;
     public static final double voltageSmoosh = 3;
     public static final int leaderMotorId = 1;
