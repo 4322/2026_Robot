@@ -282,8 +282,8 @@ public final class Constants {
     public static final double kG = 0.65;
     public static final double kI = 0;
     public static final double kD = 0;
-    public static final double motionMagicCruiseVelocity = 0.3;
-    public static final double motionMagicAcceleration = 1.2;
+    public static final double motionMagicCruiseVelocity = 0.7;
+    public static final double motionMagicAcceleration = 2.8;
     public static final int CANCoderID = 2;
     public static final double sensorToMechanismRatio = 3.0;
     public static final double RotorToSensorRatio = 12.0;
