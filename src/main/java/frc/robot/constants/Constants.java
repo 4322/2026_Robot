@@ -219,8 +219,8 @@ public final class Constants {
     // 4. Set CANCoderTwoOffsetRot = 0.8157 - (PhoenixTuner AbsolutePosition)
     //    CANCoderOne = Encoder 9
     //    CANCoderTwo = Encoder 4.73
-    public static final double CANCoderOneOffsetRot = 0.25 - 0.538;
-    public static final double CANCoderTwoOffsetRot = 0.8157 - 0.7473;
+    public static final double CANCoderOneOffsetRot = 0.25 - 0.5305;
+    public static final double CANCoderTwoOffsetRot = 0.8157 - 0.4746;
 
     // Derivation of above values:
     // 290 degrees * 90/10 = encoder 1 should have rotated 7.25 rotations ->
@@ -237,11 +237,44 @@ public final class Constants {
     public static final double safeAngleDeg = 0;
     public static final double homingVelocityThresholdRPS = 0.02;
     public static final double minHomingSec = 0.4; // allow for servo latency + enable overhead
-    public static final int homePulseWidth = 515; // calibrate after replacing servo, min 500
-    public static final double servoPositionScaleFactor = 1.015; // variations in potentiometer
     public static final double smallToleranceDeg = 0.4;
     public static final double largeToleranceDeg = 2.0;
     public static final int idleTimeout = 0;
+
+    // Calibrate hood after replacing servo, shaft gears or sector gear
+    // 1. Remove encoder shaft gear
+    // 2. Connect programmer to servo
+    // 3. Set switch to S position
+    // 4. Press P once to program position mode
+    // 5. Press S twice one second apart to enter test mode
+    // 6. Verify servo operation using L and R buttons (minimum 4 turns)
+    // 7. Press L to place servo in lowest position
+    // 8. Remove power from the servo
+    // 9. Rotate servo gear 90 degrees clockwise
+    // 10. Lower hood all the way to the turret plate
+    // 11. Install encoder shaft gear
+    // 12. Connect programmer to servo
+    // 13. Press S twice one second apart to enter test mode
+    // 14. Verify that hood raises fully when R is pressed and lowers fully when L is pressed
+    // 15. Reconnect servo to normal PWN cable to servo hub
+    // 16. Turn on the robot
+    // 17. Deploy code with hood tuning mode enabled
+    // 18. Open Elastic and add field for tuningPulseWidth
+    // 19. Enable the robot
+    // 20. Find the highest value of tuningPulseWidth that makes the hood go all the way down
+    //     (Start with 600 and work down - if 500 doesn't lower the hood, repeat the above)
+    // 21. Set homePulseWidth below to found value
+    // 22. Set servoPositionScaleFactor below to 1.0
+    // 23. Redeploy
+    // 24. Enable the robot
+    // 25. Set goal degree to 38
+    // 26. Observe report HoodDegrees on AdvantageScope
+    // 27. Set servoPositionScaleFactor = 38 / HoodDegrees to make hood angle match goal angle
+    // 28. Deploy code with hood in normal mode
+    // 29. Move hood to different positions and observe correct angle in AdvantageScope
+
+    public static final int homePulseWidth = 590; // min 500
+    public static final double servoPositionScaleFactor = 1.09; // variations in potentiometer
   }
 
   public static class Control {
