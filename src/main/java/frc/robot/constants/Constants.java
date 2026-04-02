@@ -262,14 +262,16 @@ public final class Constants {
     // 18. Open Elastic and add field for tuningPulseWidth
     // 19. Enable the robot
     // 20. Find the highest value of tuningPulseWidth that makes the hood go all the way down
-    //     (Start with 600 and work down - if 500 doesn't lower the hood, repeat the above)
-    // 21. Set homePulseWidth below to found value
+    //     Start with 700 and work down
+    //     For each trial, go up to 800 and then down to the position being tested
+    //     If 500 doesn't lower the hood fully, repeat the above steps properly
+    // 21. Set homePulseWidth below to the found value + 5 to reduce servo current
     // 22. Set servoPositionScaleFactor below to 1.0
     // 23. Redeploy
     // 24. Enable the robot
-    // 25. Set goal degree to 38
-    // 26. Observe report HoodDegrees on AdvantageScope
-    // 27. Set servoPositionScaleFactor = 38 / HoodDegrees to make hood angle match goal angle
+    // 25. Set goal degree to 25
+    // 26. Observe reported HoodDegrees on AdvantageScope
+    // 27. Set servoPositionScaleFactor = 25 / HoodDegrees
     // 28. Deploy code with hood in normal mode
     // 29. Move hood to different positions and observe correct angle in AdvantageScope
 
