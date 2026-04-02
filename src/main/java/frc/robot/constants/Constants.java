@@ -273,8 +273,8 @@ public final class Constants {
     // 28. Deploy code with hood in normal mode
     // 29. Move hood to different positions and observe correct angle in AdvantageScope
 
-    public static final int homePulseWidth = 590; // min 500
-    public static final double servoPositionScaleFactor = 1.09; // variations in potentiometer
+    public static final int homePulseWidth = 595; // min 500
+    public static final double servoPositionScaleFactor = 1.06; // variations in potentiometer
   }
 
   public static class Control {
