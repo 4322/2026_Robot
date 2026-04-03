@@ -12,7 +12,6 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
-
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Angle;
@@ -147,12 +146,11 @@ public class TurretIOTalonFx implements TurretIO {
   @Override
   public void updateInputs(TurretIOInputs inputs) {
     var motorStatus =
-        BaseStatusSignal.refreshAll(position, velocity, appliedVolts, statorCurrent, supplyCurrent, temp);
-    var encoderOneStatus =
-        BaseStatusSignal.refreshAll(absolutePositionOne);
-    var encoderTwoStatus =
-        BaseStatusSignal.refreshAll(absolutePositionTwo);
-        
+        BaseStatusSignal.refreshAll(
+            position, velocity, appliedVolts, statorCurrent, supplyCurrent, temp);
+    var encoderOneStatus = BaseStatusSignal.refreshAll(absolutePositionOne);
+    var encoderTwoStatus = BaseStatusSignal.refreshAll(absolutePositionTwo);
+
     inputs.motorConnected = motorConnectedDebounce.calculate(motorStatus.isOK());
     inputs.encoderOneConnected = encoderOneConnectedDebounce.calculate(encoderOneStatus.isOK());
     inputs.encoderTwoConnected = encoderTwoConnectedDebounce.calculate(encoderTwoStatus.isOK());

@@ -12,7 +12,6 @@ import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.reduxrobotics.sensors.canandcolor.Canandcolor;
 import com.reduxrobotics.sensors.canandcolor.CanandcolorSettings;
-
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
@@ -89,7 +88,8 @@ public class FlywheelIOTalonFx implements FlywheelIO {
     StatusCode leaderConfigStatus = leaderMotor.getConfigurator().apply(config);
     StatusCode followerConfigStatus = leaderMotor.getConfigurator().apply(config);
     StatusCode followerMotorSetStatus =
-        followerMotor.setControl(new Follower(leaderMotor.getDeviceID(), MotorAlignmentValue.Opposed));
+        followerMotor.setControl(
+            new Follower(leaderMotor.getDeviceID(), MotorAlignmentValue.Opposed));
 
     canandcolorConfig.setColorFramePeriod(10); // Set color frame period to 10ms
 
@@ -163,9 +163,19 @@ public class FlywheelIOTalonFx implements FlywheelIO {
   @Override
   public void updateInputs(FlywheelIOInputs inputs) {
     var leaderMotorStatus =
-        BaseStatusSignal.refreshAll(leaderVelocity, leaderAppliedVolts, leaderStatorCurrent, leaderSupplyCurrent, leaderTemp);
+        BaseStatusSignal.refreshAll(
+            leaderVelocity,
+            leaderAppliedVolts,
+            leaderStatorCurrent,
+            leaderSupplyCurrent,
+            leaderTemp);
     var followerMotorStatus =
-        BaseStatusSignal.refreshAll(followerVelocity, followerAppliedVolts, followerStatorCurrent, followerSupplyCurrent, followerTemp);
+        BaseStatusSignal.refreshAll(
+            followerVelocity,
+            followerAppliedVolts,
+            followerStatorCurrent,
+            followerSupplyCurrent,
+            followerTemp);
 
     inputs.leaderMotorConnected = leaderConnectedDebounce.calculate(leaderMotorStatus.isOK());
     inputs.leaderMechanismRPS = leaderVelocity.getValueAsDouble();

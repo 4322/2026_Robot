@@ -8,7 +8,6 @@ import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.ParentDevice;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
@@ -77,12 +76,7 @@ public class SpindexerIOTalonFx implements SpindexerIO {
 
     // Configure periodic frames
     BaseStatusSignal.setUpdateFrequencyForAll(
-        50.0,
-        velocity,
-        appliedVolts,
-        statorCurrent,
-        supplyCurrent,
-        temp);
+        50.0, velocity, appliedVolts, statorCurrent, supplyCurrent, temp);
     ParentDevice.optimizeBusUtilizationForAll(motor);
   }
 

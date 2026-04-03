@@ -13,7 +13,6 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Angle;
@@ -141,15 +140,14 @@ public class DeployerIOTalonFX implements DeployerIO {
   public void updateInputs(DeployerIOInputs inputs) {
     // Implementation for updating inputs from the TalonFX hardware
     var motorStatus =
-        BaseStatusSignal.refreshAll(position, velocity, appliedVolts, statorCurrent, supplyCurrent, temp);
+        BaseStatusSignal.refreshAll(
+            position, velocity, appliedVolts, statorCurrent, supplyCurrent, temp);
 
-    var encoderStatus =
-        BaseStatusSignal.refreshAll(absolutePosition);
+    var encoderStatus = BaseStatusSignal.refreshAll(absolutePosition);
 
     inputs.motorConnected = motorConnectedDebounce.calculate(motorStatus.isOK());
     inputs.angleDeg = Units.rotationsToDegrees(position.getValueAsDouble());
-    inputs.motorDegreesPerSec =
-        Units.rotationsToDegrees(velocity.getValueAsDouble());
+    inputs.motorDegreesPerSec = Units.rotationsToDegrees(velocity.getValueAsDouble());
     inputs.supplyCurrentAmps = supplyCurrent.getValueAsDouble();
     inputs.statorCurrentAmps = statorCurrent.getValueAsDouble();
     inputs.motorTempCelcius = temp.getValueAsDouble();

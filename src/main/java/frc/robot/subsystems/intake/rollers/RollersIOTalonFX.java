@@ -9,9 +9,7 @@ import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.ParentDevice;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
-
 import edu.wpi.first.math.filter.Debouncer;
-import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Temperature;
@@ -124,10 +122,20 @@ public class RollersIOTalonFX implements RollersIO {
   @Override
   public void updateInputs(RollersIOInputs inputs) {
     var leaderMotorStatus =
-        BaseStatusSignal.refreshAll(leaderVelocity, leaderAppliedVolts, leaderStatorCurrent, leaderSupplyCurrent, leaderTemp);
+        BaseStatusSignal.refreshAll(
+            leaderVelocity,
+            leaderAppliedVolts,
+            leaderStatorCurrent,
+            leaderSupplyCurrent,
+            leaderTemp);
 
     var followerMotorStatus =
-        BaseStatusSignal.refreshAll(followerVelocity, followerAppliedVolts, followerStatorCurrent, followerSupplyCurrent, followerTemp);
+        BaseStatusSignal.refreshAll(
+            followerVelocity,
+            followerAppliedVolts,
+            followerStatorCurrent,
+            followerSupplyCurrent,
+            followerTemp);
 
     inputs.leaderConnected = leaderConnectedDebounce.calculate(leaderMotorStatus.isOK());
     inputs.leaderVolts = leaderAppliedVolts.getValueAsDouble();

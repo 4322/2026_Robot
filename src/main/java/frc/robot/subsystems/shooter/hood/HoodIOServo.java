@@ -11,7 +11,6 @@ import com.revrobotics.servohub.ServoHub.Bank;
 import com.revrobotics.servohub.config.ServoChannelConfig;
 import com.revrobotics.servohub.config.ServoChannelConfig.BehaviorWhenDisabled;
 import com.revrobotics.servohub.config.ServoHubConfig;
-
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
@@ -58,8 +57,7 @@ public class HoodIOServo implements HoodIO {
 
   @Override
   public void updateInputs(HoodIOInputs inputs) {
-    var encoderStatus =
-        BaseStatusSignal.refreshAll(position, velocity);
+    var encoderStatus = BaseStatusSignal.refreshAll(position, velocity);
 
     inputs.encoderConnected = encoderConnectedDebounce.calculate(encoderStatus.isOK());
     inputs.encoderRotations = position.getValueAsDouble();
