@@ -2,6 +2,8 @@ package frc.robot.subsystems.shooter.hood;
 
 import org.littletonrobotics.junction.AutoLog;
 
+import frc.robot.subsystems.Simulator;
+
 public interface HoodIO {
   @AutoLog
   public static class HoodIOInputs {
@@ -20,4 +22,5 @@ public interface HoodIO {
   public default void setPulseWidth(int pulseWidth) {}
 
   public default void simEstimatedPosition() {}
+
 }

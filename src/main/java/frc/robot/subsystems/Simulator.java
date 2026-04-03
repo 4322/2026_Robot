@@ -689,7 +689,7 @@ public class Simulator extends SubsystemBase {
   private SimEvent currentEvent;
   private Alliance currentAlliance;
   private final Timer disabledTimer = new Timer();
-  private final Timer matchTimer = new Timer();
+  private static final Timer matchTimer = new Timer();
   XboxController hid = RobotContainer.controller.getHID(); // the real WPILib XboxController
   int hidPort = hid.getPort();
   int activeButtonBitmask;
@@ -709,6 +709,7 @@ public class Simulator extends SubsystemBase {
 
   @Override
   public void periodic() {
+
     // wait for PathPanner and other libraries to initialize
     if (warmupTimer.isRunning()) {
       if (warmupTimer.hasElapsed(4)) {
@@ -746,6 +747,7 @@ public class Simulator extends SubsystemBase {
         return;
       }
     }
+    
 
     Logger.recordOutput("Sim/MatchTime", matchTimer.get());
     Logger.recordOutput("Sim/RegressionTest", currentRegressionTest.name);
@@ -982,6 +984,10 @@ public class Simulator extends SubsystemBase {
     return autoScenario;
   }
 
+  public static double getCurrentSimTime() {
+    return matchTimer.getTimestamp();
+  }
+
   private void configureControllerTestBindings() {
     RobotContainer.controller
         .x()
@@ -1068,4 +1074,6 @@ public class Simulator extends SubsystemBase {
                   Logger.recordOutput("Sim/Debug", "Right Trigger False");
                 }));
   }
+
+
 }

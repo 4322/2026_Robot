@@ -3,6 +3,8 @@ package frc.robot.subsystems.shooter.hood;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.constants.Constants;
+import frc.robot.constants.Constants.Sim;
+import frc.robot.subsystems.Simulator;
 
 import java.util.LinkedList;
 import java.util.Queue;
@@ -21,9 +23,11 @@ public class HoodIOSim implements HoodIO {
   private double prevPosition = 0;
   public Queue<Producer> positionQueue = new LinkedList<>();
   public int degrees;
+  private double wantedPosition;
 
   @Override
   public void updateInputs(HoodIOInputs inputs) {
+    simEstimatedPosition();
     inputs.encoderConnected = true;
     inputs.encoderRotations = rotations; // Convert degrees to rotations
     inputs.hoodDegrees = position;
@@ -39,6 +43,7 @@ public class HoodIOSim implements HoodIO {
 
 
 
+//Instead requets a degree value in sim with same pulse width method
   @Override
   public void setPulseWidth(int pulsewidth) {
     double pulseWidthToDegreeRatio = 0.9;
@@ -51,6 +56,7 @@ public class HoodIOSim implements HoodIO {
                         * Constants.Hood.servoPositionScaleFactor),
             0,
             38);
+      requestPosition(degrees);
   }
 
   public class Producer {
@@ -62,9 +68,9 @@ public class HoodIOSim implements HoodIO {
     }
   }
 
-  public void requestPosition(double offeredPosition, double timeAdded) {
-    timeAdded = Timer.getFPGATimestamp();
-    positionQueue.offer(new Producer(offeredPosition, timeAdded));}
+  public void requestPosition(double offeredPosition) {
+    positionQueue.add(new Producer(offeredPosition, Simulator.getCurrentSimTime()));
+  }
 
    public class Consumer {
     private double requestedPosition;
@@ -76,7 +82,7 @@ public class HoodIOSim implements HoodIO {
       if (positionQueue.isEmpty()) {
         return requestedPosition;
       }
-      double timerCurrentValue = (Timer.getFPGATimestamp() - positionQueue.peek().timeAdded);
+      double timerCurrentValue = (Simulator.getCurrentSimTime() - positionQueue.peek().timeAdded);
       if (timerCurrentValue >= 0.120) {
       requestedPosition = positionQueue.poll().offeredPosition;
      }
@@ -89,7 +95,7 @@ public class HoodIOSim implements HoodIO {
   @Override
   public void simEstimatedPosition() {
     Consumer consumer = new Consumer(0);
-    double wantedPosition = consumer.getPosition();
+    this.wantedPosition = consumer.getPosition();
     if (wantedPosition > this.position) {
       velocity = MathUtil.clamp(degreePerSecond, 0, maxRPS * 360);
       this.position += velocity * 0.02;
