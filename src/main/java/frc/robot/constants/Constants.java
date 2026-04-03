@@ -58,10 +58,10 @@ public final class Constants {
   public static final SubsystemMode firingManagerMode = SubsystemMode.NORMAL;
   public static final boolean turretLocked = false;
   public static boolean shootOnTheMoveEnabled = false;
-  public static final boolean frontRightCameraEnable = false;
+  public static final boolean frontRightCameraEnable = true;
   public static final boolean frontLeftCameraEnable = true;
   public static final boolean backRightCameraEnable = true;
-  public static final boolean backLeftCameraEnable = false;
+  public static final boolean backLeftCameraEnable = true;
   public static final boolean tuningWithLoggableNumbers =
       (driveMode == SubsystemMode.TUNING
           || firingManagerMode == SubsystemMode.TUNING
