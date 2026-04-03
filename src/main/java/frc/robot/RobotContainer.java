@@ -7,14 +7,12 @@
 
 package frc.robot;
 
-import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.autonomous.AutonomousSelector;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.IntakeCommands;
@@ -70,7 +68,6 @@ import frc.robot.subsystems.vision.visionGlobalPose.VisionGlobalPoseIOSim;
 import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetection;
 import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetectionIO;
 import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetectionIOPhoton;
-import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -103,9 +100,6 @@ public class RobotContainer {
 
   // Controller
   public static final CommandXboxController controller = new CommandXboxController(0);
-
-  // Dashboard inputs
-  private final LoggedDashboardChooser<Command> testCommandChooser;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -338,37 +332,18 @@ public class RobotContainer {
       }
     }
 
-    // Set up test commands
-    // TODO Ellie: This should NOT call AutoBuilder.buildAutoChooser()
-    testCommandChooser =
-        new LoggedDashboardChooser<>("TestCommands", AutoBuilder.buildAutoChooser());
-
-    // Set up SysId routines
-    testCommandChooser.addOption(
-        "Drive Wheel Radius Characterization", DriveCommands.wheelRadiusCharacterization(drive));
-    testCommandChooser.addOption(
-        "Drive Simple FF Characterization", DriveCommands.feedforwardCharacterization(drive));
-    testCommandChooser.addOption(
-        "Drive SysId (Quasistatic Forward)",
-        drive.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
-    testCommandChooser.addOption(
-        "Drive SysId (Quasistatic Reverse)",
-        drive.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
-    testCommandChooser.addOption(
-        "Drive SysId (Dynamic Forward)", drive.sysIdDynamic(SysIdRoutine.Direction.kForward));
-    testCommandChooser.addOption(
-        "Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
-
     // Configure the button bindings
     configureButtonBindings();
 
-    field = new Field2d();
-    SmartDashboard.putData("Field", field);
-    FieldConstants.plotZones();
+    if (Constants.debugZoneAreas) {
+      field = new Field2d();
+      SmartDashboard.putData("Field", field);
+      FieldConstants.plotZones();
+    }
   }
 
   public static Field2d getField() {
-    return field;
+    return Constants.debugZoneAreas ? field : new Field2d();
   }
 
   /**
