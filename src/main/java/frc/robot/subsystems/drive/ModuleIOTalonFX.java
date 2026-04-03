@@ -77,7 +77,7 @@ public class ModuleIOTalonFX implements ModuleIO {
   private final StatusSignal<AngularVelocity> driveVelocity;
   private final StatusSignal<Voltage> driveAppliedVolts;
   private final StatusSignal<Current> driveStatorCurrent;
-   private final StatusSignal<Current> driveSupplyCurrent;
+  private final StatusSignal<Current> driveSupplyCurrent;
 
   // Inputs from turn motor
   private final StatusSignal<Angle> turnPosition;
@@ -85,7 +85,7 @@ public class ModuleIOTalonFX implements ModuleIO {
   private final StatusSignal<AngularVelocity> turnVelocity;
   private final StatusSignal<Voltage> turnAppliedVolts;
   private final StatusSignal<Current> turnStatorCurrent;
-   private final StatusSignal<Current> turnSupplyCurrent;
+  private final StatusSignal<Current> turnSupplyCurrent;
 
   // Connection debouncers
   private final Debouncer driveConnectedDebounce =
@@ -209,7 +209,7 @@ public class ModuleIOTalonFX implements ModuleIO {
     turnVelocity = turnTalon.getVelocity();
     turnAppliedVolts = turnTalon.getMotorVoltage();
     turnStatorCurrent = turnTalon.getStatorCurrent();
-    turnSupplyCurrent =turnTalon.getSupplyCurrent();
+    turnSupplyCurrent = turnTalon.getSupplyCurrent();
 
     // Configure periodic frames
     BaseStatusSignal.setUpdateFrequencyForAll(
@@ -229,9 +229,11 @@ public class ModuleIOTalonFX implements ModuleIO {
   public void updateInputs(ModuleIOInputs inputs) {
     // Refresh all signals
     var driveStatus =
-        BaseStatusSignal.refreshAll(drivePosition, driveVelocity, driveAppliedVolts, driveStatorCurrent);
+        BaseStatusSignal.refreshAll(
+            drivePosition, driveVelocity, driveAppliedVolts, driveStatorCurrent);
     var turnStatus =
-        BaseStatusSignal.refreshAll(turnPosition, turnVelocity, turnAppliedVolts, turnStatorCurrent);
+        BaseStatusSignal.refreshAll(
+            turnPosition, turnVelocity, turnAppliedVolts, turnStatorCurrent);
 
     // Update drive inputs
     inputs.driveConnected = driveConnectedDebounce.calculate(driveStatus.isOK());
