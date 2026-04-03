@@ -103,8 +103,8 @@ public final class Constants {
     public static final int gyroID = 0;
     public static boolean zeroTurnEncoders = false; // for initial swerve homing only
     public static double driveSupplyCurrentLimit = 45; // don't pop main breaker
-    public static double driveSupplyCurrentLowerLimit = 40;
-    public static double driveSupplyCurrentLowerTime = 1.0;
+    public static double driveSupplyCurrentLowerLimit = 35;
+    public static double driveSupplyCurrentLowerTime = 0.5;
     public static double turnSupplyCurrentLimit = 30;
 
     // Scales max speeds for X, Y, and omega respectively
@@ -300,7 +300,7 @@ public final class Constants {
     public static final int leaderMotorId = 1;
     public static final int followerMotorId = 5;
     public static final double statorCurrentLimit = 100;
-    public static final double supplyCurrentLimit = 40;
+    public static final double supplyCurrentLimit = 30;
     public static final NeutralModeValue neutralMode = NeutralModeValue.Coast;
     public static final InvertedValue leaderMotorInvert = InvertedValue.Clockwise_Positive;
   }
