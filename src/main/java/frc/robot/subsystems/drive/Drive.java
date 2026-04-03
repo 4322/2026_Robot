@@ -211,7 +211,9 @@ public class Drive extends SubsystemBase {
     // Update gyro alert
     gyroDisconnectedAlert.set(!gyroInputs.connected && Constants.currentMode != Mode.SIM);
 
-    RobotContainer.getField().setRobotPose(getRobotPose());
+    if (Constants.debugZoneAreas) {
+      RobotContainer.getField().setRobotPose(getRobotPose());
+    }
   }
 
   /**
