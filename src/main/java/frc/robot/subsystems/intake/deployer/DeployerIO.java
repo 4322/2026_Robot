@@ -7,7 +7,7 @@ public interface DeployerIO {
 
   @AutoLog
   public static class DeployerIOInputs {
-    public boolean connected = false;
+    public boolean motorConnected = false;
     public double statorCurrentAmps = 0.0;
     public double supplyCurrentAmps = 0.0;
     public double motorTempCelcius = 0.0;
@@ -15,7 +15,7 @@ public interface DeployerIO {
     public double appliedVolts = 0.0;
     public double angleDeg = 0.0;
     public double encoderRotations = 0.0;
-    public double motorRotations;
+    public boolean encoderConnected = false;
   }
 
   public default void updateInputs(DeployerIOInputs inputs) {}

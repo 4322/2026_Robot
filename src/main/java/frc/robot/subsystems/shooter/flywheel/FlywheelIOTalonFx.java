@@ -1,21 +1,29 @@
 package frc.robot.subsystems.shooter.flywheel;
 
+import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusCode;
+import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.VelocityVoltage;
+import com.ctre.phoenix6.hardware.ParentDevice;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.reduxrobotics.sensors.canandcolor.Canandcolor;
 import com.reduxrobotics.sensors.canandcolor.CanandcolorSettings;
+import edu.wpi.first.math.filter.Debouncer;
+import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.units.measure.Current;
+import edu.wpi.first.units.measure.Temperature;
+import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.util.Color;
 import frc.robot.constants.Constants;
 
 public class FlywheelIOTalonFx implements FlywheelIO {
 
-  private TalonFX motor;
+  private TalonFX leaderMotor;
   private TalonFX followerMotor;
   private Canandcolor canandcolor;
   private CanandcolorSettings canandcolorConfig = new CanandcolorSettings();
@@ -24,8 +32,25 @@ public class FlywheelIOTalonFx implements FlywheelIO {
   private TalonFXConfiguration config = new TalonFXConfiguration();
   private VelocityVoltage velocityRequest = new VelocityVoltage(0).withSlot(0);
 
+  private final StatusSignal<AngularVelocity> leaderVelocity;
+  private final StatusSignal<Voltage> leaderAppliedVolts;
+  private final StatusSignal<Current> leaderSupplyCurrent;
+  private final StatusSignal<Current> leaderStatorCurrent;
+  private final StatusSignal<Temperature> leaderTemp;
+
+  private final StatusSignal<AngularVelocity> followerVelocity;
+  private final StatusSignal<Voltage> followerAppliedVolts;
+  private final StatusSignal<Current> followerSupplyCurrent;
+  private final StatusSignal<Current> followerStatorCurrent;
+  private final StatusSignal<Temperature> followerTemp;
+
+  private final Debouncer leaderConnectedDebounce =
+      new Debouncer(0.5, Debouncer.DebounceType.kFalling);
+  private final Debouncer followerConnectedDebounce =
+      new Debouncer(0.5, Debouncer.DebounceType.kFalling);
+
   public FlywheelIOTalonFx() {
-    motor = new TalonFX(Constants.Flywheel.motorId);
+    leaderMotor = new TalonFX(Constants.Flywheel.motorId);
     followerMotor = new TalonFX(Constants.Flywheel.followerMotorId);
 
     config.HardwareLimitSwitch.ForwardLimitEnable = false;
@@ -60,10 +85,11 @@ public class FlywheelIOTalonFx implements FlywheelIO {
     config.Slot1.kI = 0;
     config.Slot1.kD = 0;
 
-    StatusCode leaderConfigStatus = motor.getConfigurator().apply(config);
-    StatusCode followerConfigStatus = motor.getConfigurator().apply(config);
+    StatusCode leaderConfigStatus = leaderMotor.getConfigurator().apply(config);
+    StatusCode followerConfigStatus = leaderMotor.getConfigurator().apply(config);
     StatusCode followerMotorSetStatus =
-        followerMotor.setControl(new Follower(motor.getDeviceID(), MotorAlignmentValue.Opposed));
+        followerMotor.setControl(
+            new Follower(leaderMotor.getDeviceID(), MotorAlignmentValue.Opposed));
 
     canandcolorConfig.setColorFramePeriod(10); // Set color frame period to 10ms
 
@@ -84,7 +110,7 @@ public class FlywheelIOTalonFx implements FlywheelIO {
     if (leaderConfigStatus != StatusCode.OK) {
       DriverStation.reportError(
           "Talon "
-              + motor.getDeviceID()
+              + leaderMotor.getDeviceID()
               + " config error (Flywheel Leader): "
               + leaderConfigStatus.getDescription(),
           false);
@@ -105,23 +131,65 @@ public class FlywheelIOTalonFx implements FlywheelIO {
               + followerMotorSetStatus.getDescription(),
           false);
     }
+
+    leaderVelocity = leaderMotor.getVelocity();
+    leaderAppliedVolts = leaderMotor.getMotorVoltage();
+    leaderStatorCurrent = leaderMotor.getStatorCurrent();
+    leaderSupplyCurrent = leaderMotor.getSupplyCurrent();
+    leaderTemp = leaderMotor.getDeviceTemp();
+
+    followerVelocity = followerMotor.getVelocity();
+    followerAppliedVolts = followerMotor.getMotorVoltage();
+    followerStatorCurrent = followerMotor.getStatorCurrent();
+    followerSupplyCurrent = followerMotor.getSupplyCurrent();
+    followerTemp = followerMotor.getDeviceTemp();
+
+    // Configure periodic frames
+    BaseStatusSignal.setUpdateFrequencyForAll(
+        50.0,
+        leaderVelocity,
+        leaderAppliedVolts,
+        leaderStatorCurrent,
+        leaderSupplyCurrent,
+        leaderTemp,
+        followerVelocity,
+        followerAppliedVolts,
+        followerStatorCurrent,
+        followerSupplyCurrent,
+        followerTemp);
+    ParentDevice.optimizeBusUtilizationForAll(leaderMotor, followerMotor);
   }
 
   @Override
   public void updateInputs(FlywheelIOInputs inputs) {
-    inputs.leaderMotorConnected = motor.isConnected();
-    inputs.leaderMechanismRPS = motor.getVelocity().getValueAsDouble();
-    inputs.leaderAppliedVolts = motor.getMotorVoltage().getValueAsDouble();
-    inputs.leaderTempCelsius = motor.getDeviceTemp().getValueAsDouble();
-    inputs.leaderStatorCurrentAmps = motor.getStatorCurrent().getValueAsDouble();
-    inputs.leaderSupplyCurrentAmps = motor.getSupplyCurrent().getValueAsDouble();
+    var leaderMotorStatus =
+        BaseStatusSignal.refreshAll(
+            leaderVelocity,
+            leaderAppliedVolts,
+            leaderStatorCurrent,
+            leaderSupplyCurrent,
+            leaderTemp);
+    var followerMotorStatus =
+        BaseStatusSignal.refreshAll(
+            followerVelocity,
+            followerAppliedVolts,
+            followerStatorCurrent,
+            followerSupplyCurrent,
+            followerTemp);
 
-    inputs.followerMotorConnected = followerMotor.isConnected();
-    inputs.followerMechanismRPS = followerMotor.getVelocity().getValueAsDouble();
-    inputs.followerMotorTempCelsius = followerMotor.getDeviceTemp().getValueAsDouble();
-    inputs.followerSupplyCurrentAmps = followerMotor.getSupplyCurrent().getValueAsDouble();
-    inputs.followerStatorCurrentAmps = followerMotor.getStatorCurrent().getValueAsDouble();
-    inputs.followerAppliedVolts = followerMotor.getMotorVoltage().getValueAsDouble();
+    inputs.leaderMotorConnected = leaderConnectedDebounce.calculate(leaderMotorStatus.isOK());
+    inputs.leaderMechanismRPS = leaderVelocity.getValueAsDouble();
+    inputs.leaderAppliedVolts = leaderAppliedVolts.getValueAsDouble();
+    inputs.leaderTempCelsius = leaderTemp.getValueAsDouble();
+    inputs.leaderStatorCurrentAmps = leaderStatorCurrent.getValueAsDouble();
+    inputs.leaderSupplyCurrentAmps = leaderSupplyCurrent.getValueAsDouble();
+
+    inputs.followerMotorConnected = followerConnectedDebounce.calculate(followerMotorStatus.isOK());
+    inputs.followerMechanismRPS = followerVelocity.getValueAsDouble();
+    inputs.followerAppliedVolts = followerAppliedVolts.getValueAsDouble();
+    inputs.followerTempCelsius = followerTemp.getValueAsDouble();
+    inputs.followerStatorCurrentAmps = followerStatorCurrent.getValueAsDouble();
+    inputs.followerSupplyCurrentAmps = followerSupplyCurrent.getValueAsDouble();
 
     if (Constants.Flywheel.canAndColorEnabled) {
       inputs.color = new Color(canandcolor.getRed(), canandcolor.getGreen(), canandcolor.getBlue());
@@ -138,13 +206,13 @@ public class FlywheelIOTalonFx implements FlywheelIO {
   public void setTargetMechanismRPS(double mechanismRPS) {
     if (mechanismRPS != lastRequestedVelocity) {
       if (mechanismRPS == 0) {
-        motor.stopMotor();
+        leaderMotor.stopMotor();
       } else {
         if (mechanismRPS == Constants.Flywheel.idleRPS) {
-          motor.setControl(
+          leaderMotor.setControl(
               velocityRequest.withVelocity(mechanismRPS).withEnableFOC(true).withSlot(1));
         } else {
-          motor.setControl(
+          leaderMotor.setControl(
               velocityRequest.withVelocity(mechanismRPS).withEnableFOC(true).withSlot(0));
         }
       }
@@ -155,11 +223,11 @@ public class FlywheelIOTalonFx implements FlywheelIO {
 
   @Override
   public void stop() {
-    motor.stopMotor();
+    leaderMotor.stopMotor();
     lastRequestedVelocity = 0;
   }
 
   public TalonFX getTalonFX() {
-    return motor;
+    return leaderMotor;
   }
 }
