@@ -18,6 +18,7 @@ public interface ModuleIO {
     public double driveVelocityRadPerSec = 0.0;
     public double driveAppliedVolts = 0.0;
     public double driveStatorCurrent = 0.0;
+    public double driveSupplyCurrent =0.0;
 
     public boolean turnConnected = false;
     public boolean turnEncoderConnected = false;
@@ -26,6 +27,7 @@ public interface ModuleIO {
     public double turnVelocityRadPerSec = 0.0;
     public double turnAppliedVolts = 0.0;
     public double turnStatorCurrent = 0.0;
+     public double turnSupplyCurrent =0.0;
 
     public double[] odometryTimestamps = new double[] {};
     public double[] odometryDrivePositionsRad = new double[] {};
