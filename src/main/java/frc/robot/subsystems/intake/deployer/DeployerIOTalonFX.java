@@ -1,16 +1,26 @@
 package frc.robot.subsystems.intake.deployer;
 
+import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusCode;
+import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.CANcoder;
+import com.ctre.phoenix6.hardware.ParentDevice;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+
+import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.units.measure.Current;
+import edu.wpi.first.units.measure.Temperature;
+import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.constants.Constants;
 
@@ -20,6 +30,19 @@ public class DeployerIOTalonFX implements DeployerIO {
   private TalonFXConfiguration motorConfigs = new TalonFXConfiguration();
   private CANcoderConfiguration canCoderConfigs = new CANcoderConfiguration();
   public double requestedPosDeg;
+
+  private final StatusSignal<Angle> position;
+  private final StatusSignal<Angle> absolutePosition;
+  private final StatusSignal<AngularVelocity> velocity;
+  private final StatusSignal<Voltage> appliedVolts;
+  private final StatusSignal<Current> supplyCurrent;
+  private final StatusSignal<Current> statorCurrent;
+  private final StatusSignal<Temperature> temp;
+
+  private final Debouncer motorConnectedDebounce =
+      new Debouncer(0.5, Debouncer.DebounceType.kFalling);
+  private final Debouncer encoderConnectedDebounce =
+      new Debouncer(0.5, Debouncer.DebounceType.kFalling);
 
   public DeployerIOTalonFX() {
     deployerMotor = new TalonFX(Constants.Deployer.motorId, Constants.CANivore.CANBus);
@@ -92,21 +115,48 @@ public class DeployerIOTalonFX implements DeployerIO {
     deployerMotor.setPosition(
         canCoder.getAbsolutePosition().getValueAsDouble()
             / Constants.Deployer.sensorToMechanismRatio);
+
+    position = deployerMotor.getPosition();
+    absolutePosition = canCoder.getAbsolutePosition();
+    velocity = deployerMotor.getVelocity();
+    appliedVolts = deployerMotor.getMotorVoltage();
+    statorCurrent = deployerMotor.getStatorCurrent();
+    supplyCurrent = deployerMotor.getSupplyCurrent();
+    temp = deployerMotor.getDeviceTemp();
+
+    // Configure periodic frames
+    BaseStatusSignal.setUpdateFrequencyForAll(
+        50.0,
+        position,
+        absolutePosition,
+        velocity,
+        appliedVolts,
+        statorCurrent,
+        supplyCurrent,
+        temp);
+    ParentDevice.optimizeBusUtilizationForAll(deployerMotor);
   }
 
   @Override
   public void updateInputs(DeployerIOInputs inputs) {
     // Implementation for updating inputs from the TalonFX hardware
-    inputs.connected = deployerMotor.isConnected();
-    inputs.angleDeg = Units.rotationsToDegrees(deployerMotor.getPosition().getValueAsDouble());
+    var motorStatus =
+        BaseStatusSignal.refreshAll(position, velocity, appliedVolts, statorCurrent, supplyCurrent, temp);
+
+    var encoderStatus =
+        BaseStatusSignal.refreshAll(absolutePosition);
+
+    inputs.motorConnected = motorConnectedDebounce.calculate(motorStatus.isOK());
+    inputs.angleDeg = Units.rotationsToDegrees(position.getValueAsDouble());
     inputs.motorDegreesPerSec =
-        Units.rotationsToDegrees(deployerMotor.getVelocity().getValueAsDouble());
-    inputs.supplyCurrentAmps = deployerMotor.getSupplyCurrent().getValueAsDouble();
-    inputs.statorCurrentAmps = deployerMotor.getStatorCurrent().getValueAsDouble();
-    inputs.motorTempCelcius = deployerMotor.getDeviceTemp().getValueAsDouble();
-    inputs.appliedVolts = deployerMotor.getMotorVoltage().getValueAsDouble();
-    inputs.encoderRotations = canCoder.getAbsolutePosition().getValueAsDouble();
-    inputs.motorRotations = deployerMotor.getRotorPosition().getValueAsDouble();
+        Units.rotationsToDegrees(velocity.getValueAsDouble());
+    inputs.supplyCurrentAmps = supplyCurrent.getValueAsDouble();
+    inputs.statorCurrentAmps = statorCurrent.getValueAsDouble();
+    inputs.motorTempCelcius = temp.getValueAsDouble();
+    inputs.appliedVolts = appliedVolts.getValueAsDouble();
+
+    inputs.encoderConnected = encoderConnectedDebounce.calculate(encoderStatus.isOK());
+    inputs.encoderRotations = absolutePosition.getValueAsDouble();
   }
 
   @Override

@@ -6,6 +6,8 @@ public interface TurretIO {
   @AutoLog
   public static class TurretIOInputs {
     public boolean motorConnected = false;
+    public boolean encoderOneConnected = false;
+    public boolean encoderTwoConnected = false;
     public double motorRPS = 0.0;
     public double supplyCurrentAmps = 0.0;
     public double statorCurrentAmps = 0.0;

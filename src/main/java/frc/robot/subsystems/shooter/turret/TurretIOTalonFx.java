@@ -1,15 +1,25 @@
 package frc.robot.subsystems.shooter.turret;
 
+import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusCode;
+import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
+import com.ctre.phoenix6.hardware.ParentDevice;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
+
+import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.units.measure.Current;
+import edu.wpi.first.units.measure.Temperature;
+import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.constants.Constants;
 
@@ -20,6 +30,22 @@ public class TurretIOTalonFx implements TurretIO {
   private TalonFXConfiguration config = new TalonFXConfiguration();
   private CANcoderConfiguration CANconfigOne = new CANcoderConfiguration();
   private CANcoderConfiguration CANconfigTwo = new CANcoderConfiguration();
+
+  private final StatusSignal<Angle> position;
+  private final StatusSignal<Angle> absolutePositionOne;
+  private final StatusSignal<Angle> absolutePositionTwo;
+  private final StatusSignal<AngularVelocity> velocity;
+  private final StatusSignal<Voltage> appliedVolts;
+  private final StatusSignal<Current> supplyCurrent;
+  private final StatusSignal<Current> statorCurrent;
+  private final StatusSignal<Temperature> temp;
+
+  private final Debouncer motorConnectedDebounce =
+      new Debouncer(0.5, Debouncer.DebounceType.kFalling);
+  private final Debouncer encoderOneConnectedDebounce =
+      new Debouncer(0.5, Debouncer.DebounceType.kFalling);
+  private final Debouncer encoderTwoConnectedDebounce =
+      new Debouncer(0.5, Debouncer.DebounceType.kFalling);
 
   public TurretIOTalonFx() {
     turretMotor = new TalonFX(Constants.Turret.motorId, Constants.CANivore.CANBus);
@@ -95,19 +121,49 @@ public class TurretIOTalonFx implements TurretIO {
       Thread.sleep(100);
     } catch (InterruptedException e) {
     }
+
+    position = turretMotor.getPosition();
+    absolutePositionOne = CANcoderOne.getAbsolutePosition();
+    absolutePositionTwo = CANcoderTwo.getAbsolutePosition();
+    velocity = turretMotor.getVelocity();
+    appliedVolts = turretMotor.getMotorVoltage();
+    statorCurrent = turretMotor.getStatorCurrent();
+    supplyCurrent = turretMotor.getSupplyCurrent();
+    temp = turretMotor.getDeviceTemp();
+
+    BaseStatusSignal.setUpdateFrequencyForAll(
+        50.0,
+        position,
+        absolutePositionOne,
+        absolutePositionTwo,
+        velocity,
+        appliedVolts,
+        statorCurrent,
+        supplyCurrent,
+        temp);
+    ParentDevice.optimizeBusUtilizationForAll(turretMotor);
   }
 
   @Override
   public void updateInputs(TurretIOInputs inputs) {
-    inputs.turretDegs = Units.rotationsToDegrees(turretMotor.getPosition().getValueAsDouble());
-    inputs.encoderOneRot = CANcoderOne.getAbsolutePosition().getValueAsDouble();
-    inputs.encoderTwoRot = CANcoderTwo.getAbsolutePosition().getValueAsDouble();
-    inputs.motorConnected = turretMotor.isConnected();
-    inputs.motorRPS = turretMotor.getVelocity().getValueAsDouble();
-    inputs.supplyCurrentAmps = turretMotor.getSupplyCurrent().getValueAsDouble();
-    inputs.statorCurrentAmps = turretMotor.getStatorCurrent().getValueAsDouble();
-    inputs.tempCelsius = turretMotor.getDeviceTemp().getValueAsDouble();
-    inputs.appliedVoltage = turretMotor.getMotorVoltage().getValueAsDouble();
+    var motorStatus =
+        BaseStatusSignal.refreshAll(position, velocity, appliedVolts, statorCurrent, supplyCurrent, temp);
+    var encoderOneStatus =
+        BaseStatusSignal.refreshAll(absolutePositionOne);
+    var encoderTwoStatus =
+        BaseStatusSignal.refreshAll(absolutePositionTwo);
+        
+    inputs.motorConnected = motorConnectedDebounce.calculate(motorStatus.isOK());
+    inputs.encoderOneConnected = encoderOneConnectedDebounce.calculate(encoderOneStatus.isOK());
+    inputs.encoderTwoConnected = encoderTwoConnectedDebounce.calculate(encoderTwoStatus.isOK());
+    inputs.turretDegs = Units.rotationsToDegrees(position.getValueAsDouble());
+    inputs.encoderOneRot = absolutePositionOne.getValueAsDouble();
+    inputs.encoderTwoRot = absolutePositionTwo.getValueAsDouble();
+    inputs.motorRPS = velocity.getValueAsDouble();
+    inputs.supplyCurrentAmps = supplyCurrent.getValueAsDouble();
+    inputs.statorCurrentAmps = statorCurrent.getValueAsDouble();
+    inputs.tempCelsius = temp.getValueAsDouble();
+    inputs.appliedVoltage = appliedVolts.getValueAsDouble();
   }
 
   @Override

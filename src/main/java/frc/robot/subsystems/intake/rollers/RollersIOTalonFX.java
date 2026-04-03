@@ -1,11 +1,21 @@
 package frc.robot.subsystems.intake.rollers;
 
+import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusCode;
+import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.VoltageOut;
+import com.ctre.phoenix6.hardware.ParentDevice;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
+
+import edu.wpi.first.math.filter.Debouncer;
+import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.units.measure.Current;
+import edu.wpi.first.units.measure.Temperature;
+import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.constants.Constants;
 
@@ -16,6 +26,23 @@ public class RollersIOTalonFX implements RollersIO {
   private Double previousRequestedVoltage;
 
   private TalonFXConfiguration motorConfigs = new TalonFXConfiguration();
+
+  private final StatusSignal<AngularVelocity> leaderVelocity;
+  private final StatusSignal<Voltage> leaderAppliedVolts;
+  private final StatusSignal<Current> leaderSupplyCurrent;
+  private final StatusSignal<Current> leaderStatorCurrent;
+  private final StatusSignal<Temperature> leaderTemp;
+
+  private final StatusSignal<AngularVelocity> followerVelocity;
+  private final StatusSignal<Voltage> followerAppliedVolts;
+  private final StatusSignal<Current> followerSupplyCurrent;
+  private final StatusSignal<Current> followerStatorCurrent;
+  private final StatusSignal<Temperature> followerTemp;
+
+  private final Debouncer leaderConnectedDebounce =
+      new Debouncer(0.5, Debouncer.DebounceType.kFalling);
+  private final Debouncer followerConnectedDebounce =
+      new Debouncer(0.5, Debouncer.DebounceType.kFalling);
 
   public RollersIOTalonFX() {
     leaderMotor = new TalonFX(Constants.Rollers.leaderMotorId);
@@ -65,25 +92,56 @@ public class RollersIOTalonFX implements RollersIO {
               + followerMotorSetStatus.getDescription(),
           false);
     }
+
+    leaderVelocity = leaderMotor.getVelocity();
+    leaderAppliedVolts = leaderMotor.getMotorVoltage();
+    leaderStatorCurrent = leaderMotor.getStatorCurrent();
+    leaderSupplyCurrent = leaderMotor.getSupplyCurrent();
+    leaderTemp = leaderMotor.getDeviceTemp();
+
+    followerVelocity = followerMotor.getVelocity();
+    followerAppliedVolts = followerMotor.getMotorVoltage();
+    followerStatorCurrent = followerMotor.getStatorCurrent();
+    followerSupplyCurrent = followerMotor.getSupplyCurrent();
+    followerTemp = followerMotor.getDeviceTemp();
+
+    // Configure periodic frames
+    BaseStatusSignal.setUpdateFrequencyForAll(
+        50.0,
+        leaderVelocity,
+        leaderAppliedVolts,
+        leaderStatorCurrent,
+        leaderSupplyCurrent,
+        leaderTemp,
+        followerVelocity,
+        followerAppliedVolts,
+        followerStatorCurrent,
+        followerSupplyCurrent,
+        followerTemp);
+    ParentDevice.optimizeBusUtilizationForAll(leaderMotor, followerMotor);
   }
 
   @Override
   public void updateInputs(RollersIOInputs inputs) {
-    inputs.leaderConnected = leaderMotor.isConnected();
-    inputs.leaderVolts = leaderMotor.getMotorVoltage().getValueAsDouble();
-    inputs.leaderSupplyCurrentAmps = leaderMotor.getSupplyCurrent().getValueAsDouble();
-    inputs.leaderStatorCurrentAmps = leaderMotor.getStatorCurrent().getValueAsDouble();
-    inputs.leaderMotorTempCelcius = leaderMotor.getDeviceTemp().getValueAsDouble();
-    inputs.leaderControllerTempCelcius = leaderMotor.getProcessorTemp().getValueAsDouble();
-    inputs.leaderRotationsPerSec = leaderMotor.getVelocity().getValueAsDouble();
+    var leaderMotorStatus =
+        BaseStatusSignal.refreshAll(leaderVelocity, leaderAppliedVolts, leaderStatorCurrent, leaderSupplyCurrent, leaderTemp);
 
-    inputs.followerConnected = followerMotor.isConnected();
-    inputs.followerVolts = followerMotor.getMotorVoltage().getValueAsDouble();
-    inputs.followerSupplyCurrentAmps = followerMotor.getSupplyCurrent().getValueAsDouble();
-    inputs.followerStatorCurrentAmps = followerMotor.getStatorCurrent().getValueAsDouble();
-    inputs.followerMotorTempCelcius = followerMotor.getDeviceTemp().getValueAsDouble();
-    inputs.followerControllerTempCelcius = followerMotor.getProcessorTemp().getValueAsDouble();
-    inputs.followerRotationsPerSec = followerMotor.getVelocity().getValueAsDouble();
+    var followerMotorStatus =
+        BaseStatusSignal.refreshAll(followerVelocity, followerAppliedVolts, followerStatorCurrent, followerSupplyCurrent, followerTemp);
+
+    inputs.leaderConnected = leaderConnectedDebounce.calculate(leaderMotorStatus.isOK());
+    inputs.leaderVolts = leaderAppliedVolts.getValueAsDouble();
+    inputs.leaderSupplyCurrentAmps = leaderSupplyCurrent.getValueAsDouble();
+    inputs.leaderStatorCurrentAmps = leaderStatorCurrent.getValueAsDouble();
+    inputs.leaderTempCelcius = leaderTemp.getValueAsDouble();
+    inputs.leaderRotationsPerSec = leaderVelocity.getValueAsDouble();
+
+    inputs.followerConnected = followerConnectedDebounce.calculate(followerMotorStatus.isOK());
+    inputs.followerVolts = followerAppliedVolts.getValueAsDouble();
+    inputs.followerSupplyCurrentAmps = followerSupplyCurrent.getValueAsDouble();
+    inputs.followerStatorCurrentAmps = followerStatorCurrent.getValueAsDouble();
+    inputs.followerTempCelcius = followerTemp.getValueAsDouble();
+    inputs.followerRotationsPerSec = followerVelocity.getValueAsDouble();
   }
 
   @Override

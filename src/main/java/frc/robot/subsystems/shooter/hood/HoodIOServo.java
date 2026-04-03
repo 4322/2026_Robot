@@ -1,5 +1,7 @@
 package frc.robot.subsystems.shooter.hood;
 
+import com.ctre.phoenix6.BaseStatusSignal;
+import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.revrobotics.ResetMode;
 import com.revrobotics.servohub.ServoChannel;
@@ -9,6 +11,10 @@ import com.revrobotics.servohub.ServoHub.Bank;
 import com.revrobotics.servohub.config.ServoChannelConfig;
 import com.revrobotics.servohub.config.ServoChannelConfig.BehaviorWhenDisabled;
 import com.revrobotics.servohub.config.ServoHubConfig;
+
+import edu.wpi.first.math.filter.Debouncer;
+import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.AngularVelocity;
 import frc.robot.constants.Constants;
 import org.littletonrobotics.junction.Logger;
 
@@ -18,6 +24,12 @@ public class HoodIOServo implements HoodIO {
   private CANcoder encoder;
 
   private ServoHubConfig config = new ServoHubConfig();
+
+  private final StatusSignal<Angle> position;
+  private final StatusSignal<AngularVelocity> velocity;
+
+  private final Debouncer encoderConnectedDebounce =
+      new Debouncer(0.5, Debouncer.DebounceType.kFalling);
 
   public HoodIOServo() {
     servoHub = new ServoHub(Constants.Hood.servoChannel);
@@ -37,14 +49,22 @@ public class HoodIOServo implements HoodIO {
 
     servo.setPowered(true);
     servo.setEnabled(true);
+
+    position = encoder.getPosition();
+    velocity = encoder.getVelocity();
+
+    BaseStatusSignal.setUpdateFrequencyForAll(50.0, position, velocity);
   }
 
   @Override
   public void updateInputs(HoodIOInputs inputs) {
-    inputs.encoderConnected = encoder.isConnected();
-    inputs.encoderRotations = encoder.getPosition().getValueAsDouble();
+    var encoderStatus =
+        BaseStatusSignal.refreshAll(position, velocity);
+
+    inputs.encoderConnected = encoderConnectedDebounce.calculate(encoderStatus.isOK());
+    inputs.encoderRotations = position.getValueAsDouble();
     inputs.hoodDegrees = inputs.encoderRotations * 360.0 / Constants.Hood.encoderToHoodGearRatio;
-    inputs.encoderRPS = encoder.getVelocity().getValueAsDouble();
+    inputs.encoderRPS = velocity.getValueAsDouble();
     inputs.servoAmps = servo.getCurrent();
     inputs.servoEnabled =
         servo.isEnabled(); // Assuming a threshold of 0.1A to determine if the servo is powered
