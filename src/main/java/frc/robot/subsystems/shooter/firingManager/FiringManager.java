@@ -201,29 +201,17 @@ public class FiringManager {
           return Constants.FiringTargetTranslations.Blue.hubTranslation;
         case RIGHT_NEUTRAL:
           Logger.recordOutput("FiringManager/targetZone", "Alliance Right");
-          return Constants.FiringTargetTranslations.Blue.allianceRightTranslation;
+          return Constants.FiringTargetTranslations.Red.allianceRightTranslation;
         case LEFT_NEUTRAL:
           Logger.recordOutput("FiringManager/targetZone", "Alliance Left");
-          return Constants.FiringTargetTranslations.Blue.allianceLeftTranslation;
+          return Constants.FiringTargetTranslations.Red.allianceLeftTranslation;
         case RIGHT_OPPOSITION:
-          if (Constants.FiringManager.alwaysTargetAllianceZone) {
-            Logger.recordOutput("FiringManager/targetZone", "Alliance Right");
-            return Constants.FiringTargetTranslations.Blue.allianceRightTranslation;
-          } else {
-            Logger.recordOutput("FiringManager/targetZone", "Neutral Right");
-            return Constants.FiringTargetTranslations.Blue.neutralRightTranslation;
-          }
+          return Constants.FiringTargetTranslations.Red.hubTranslation;
         case LEFT_OPPOSITION:
-          if (Constants.FiringManager.alwaysTargetAllianceZone) {
-            Logger.recordOutput("FiringManager/targetZone", "Alliance Left");
-            return Constants.FiringTargetTranslations.Blue.allianceLeftTranslation;
-          } else {
-            Logger.recordOutput("FiringManager/targetZone", "Neutral Left");
-            return Constants.FiringTargetTranslations.Blue.neutralLeftTranslation;
-          }
+          return Constants.FiringTargetTranslations.Red.hubTranslation;
         default:
           Logger.recordOutput("FiringManager/targetZone", "Invalid (Targeting Hub)");
-          return Constants.FiringTargetTranslations.Blue.hubTranslation;
+          return Constants.FiringTargetTranslations.Red.hubTranslation;
       }
     } else {
       switch (zone) {
@@ -232,29 +220,17 @@ public class FiringManager {
           return Constants.FiringTargetTranslations.Red.hubTranslation;
         case RIGHT_NEUTRAL:
           Logger.recordOutput("FiringManager/targetZone", "Alliance Right");
-          return Constants.FiringTargetTranslations.Red.allianceRightTranslation;
+          return Constants.FiringTargetTranslations.Blue.allianceRightTranslation;
         case LEFT_NEUTRAL:
           Logger.recordOutput("FiringManager/targetZone", "Alliance Left");
-          return Constants.FiringTargetTranslations.Red.allianceLeftTranslation;
+          return Constants.FiringTargetTranslations.Blue.allianceLeftTranslation;
         case RIGHT_OPPOSITION:
-          if (Constants.FiringManager.alwaysTargetAllianceZone) {
-            Logger.recordOutput("FiringManager/targetZone", "Alliance Right");
-            return Constants.FiringTargetTranslations.Red.allianceRightTranslation;
-          } else {
-            Logger.recordOutput("FiringManager/targetZone", "Neutral Right");
-            return Constants.FiringTargetTranslations.Red.neutralRightTranslation;
-          }
+          return Constants.FiringTargetTranslations.Blue.hubTranslation;
         case LEFT_OPPOSITION:
-          if (Constants.FiringManager.alwaysTargetAllianceZone) {
-            Logger.recordOutput("FiringManager/targetZone", "Alliance Left");
-            return Constants.FiringTargetTranslations.Red.allianceLeftTranslation;
-          } else {
-            Logger.recordOutput("FiringManager/targetZone", "Neutral Left");
-            return Constants.FiringTargetTranslations.Red.neutralLeftTranslation;
-          }
+          return Constants.FiringTargetTranslations.Blue.hubTranslation;
         default:
           Logger.recordOutput("FiringManager/targetZone", "Invalid (Targeting Hub)");
-          return Constants.FiringTargetTranslations.Red.hubTranslation;
+          return Constants.FiringTargetTranslations.Blue.hubTranslation;
       }
     }
   }
