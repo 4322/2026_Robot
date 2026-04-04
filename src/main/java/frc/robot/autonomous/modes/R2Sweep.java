@@ -50,6 +50,7 @@ public class R2Sweep extends SequentialCommandGroup {
                         Constants.Autonomous.shootTimeFirstPass)
                     .andThen(new WaitCommand(Constants.Autonomous.shootStopTime))),
             AutoBuilder.followPath(Robot.R_2SWEEP_CG)),
+        IntakeCommands.intake(intake),
         new WaitUntilCommand(() -> shooter.isHoodLowered()),
         AutoBuilder.followPath(Robot.R_2SWEEP_DE),
         new ParallelRaceGroup(
