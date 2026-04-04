@@ -495,7 +495,7 @@ public final class Constants {
     public static final boolean alwaysTargetAllianceZone = false;
   }
 
-  public static final double fixedSolutionBlueDeg = -73;
+  public static final double fixedSolutionBlueDeg = -90;
   // Trench structure - distance 2.90
   public static final FiringSolution fixedSolutionBlue =
       new FiringSolution(53, 10, fixedSolutionBlueDeg, 35, 7);
