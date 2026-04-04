@@ -6,9 +6,8 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Robot;
 import frc.robot.commands.IntakeCommands;
@@ -26,7 +25,6 @@ public class L2Sweep extends SequentialCommandGroup {
     Pose2d startPoseRed = path.flipPath().getStartingHolonomicPose().get();
 
     setName("L_2_SWEEP");
-
     addCommands(
         new InstantCommand(
             () -> {
@@ -38,22 +36,21 @@ public class L2Sweep extends SequentialCommandGroup {
             }),
         IntakeCommands.intake(intake),
         AutoBuilder.followPath(Robot.L_2SWEEP_A),
-        new ParallelRaceGroup(
-            ShooterCommands.idle(shooter, intake, 15.0, 40.0),
-            AutoBuilder.followPath(Robot.L_2SWEEP_B)),
-        new ParallelRaceGroup(
+        new ParallelDeadlineGroup(
+            AutoBuilder.followPath(Robot.L_2SWEEP_B),
+            ShooterCommands.idle(shooter, intake, 15.0, 40.0)),
+        new ParallelDeadlineGroup(
+            AutoBuilder.followPath(Robot.L_2SWEEP_CG),
             new ParallelCommandGroup(
                 ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake),
                 IntakeCommands.autoSmoosh(
-                        intake,
-                        Constants.Autonomous.smooshDelayFirstPass,
-                        Constants.Autonomous.shootTimeFirstPass)
-                    .andThen(new WaitCommand(Constants.Autonomous.shootStopTime))),
-            AutoBuilder.followPath(Robot.L_2SWEEP_CG)),
+                    intake,
+                    Constants.Autonomous.smooshDelayFirstPass,
+                    Constants.Autonomous.shootTimeFirstPass))),
         IntakeCommands.intake(intake),
         new WaitUntilCommand(() -> shooter.isHoodLowered()),
         AutoBuilder.followPath(Robot.L_2SWEEP_DE),
-        new ParallelRaceGroup(
+        new ParallelDeadlineGroup(
             AutoBuilder.followPath(Robot.L_2SWEEP_F),
             ShooterCommands.idle(shooter, intake, 14.0, 40.0)),
         new ParallelCommandGroup(
