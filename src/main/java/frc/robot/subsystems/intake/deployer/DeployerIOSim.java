@@ -39,6 +39,7 @@ public class DeployerIOSim implements DeployerIO {
   @Override
   public void seedPosition(double newAngleDeg) {
     currentAngle = newAngleDeg;
+    this.requestedAngle = newAngleDeg;
   }
 
   private void simVolts() {
