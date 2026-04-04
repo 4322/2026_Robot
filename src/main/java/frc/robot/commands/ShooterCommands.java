@@ -3,6 +3,7 @@ package frc.robot.commands;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.RobotContainer;
 import frc.robot.constants.Constants;
 import frc.robot.subsystems.drive.Drive;
@@ -94,12 +95,14 @@ public class ShooterCommands {
     return new Shoot(shooter, drive).onlyIf(() -> intake.hasExtended());
   }
 
-  public static Command autoUnjam(Shooter shooter, double timeout) {
-    return Commands.run(
-            () -> {
-              shooter.unjamOverride(true);
-            })
-        .finallyDo(() -> shooter.unjamOverride(false))
-        .withTimeout(timeout);
+  public static Command autoUnjam(Shooter shooter, double delay, double timeout) {
+    return new WaitCommand(delay)
+        .andThen(
+            Commands.run(
+                    () -> {
+                      shooter.unjamOverride(true);
+                    })
+                .finallyDo(() -> shooter.unjamOverride(false))
+                .withTimeout(timeout));
   }
 }

@@ -626,6 +626,9 @@ public final class Constants {
     public static final double shootTimeSecondPass = 2.0;
     public static final double shootTimeSinglePass = 3.0;
     public static final double outpostWaitTime = 4.0;
+    public static final double unjamDelay = 1;
+    public static final double firstUnjamDelay = 1;
+    public static final double secondUnjamDelay = 0.25;
   }
 
   public static class LED {

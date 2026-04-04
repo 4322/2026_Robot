@@ -416,6 +416,7 @@ public class Shooter extends SubsystemBase {
   public void unjamOverride(boolean unjamOverride) {
     tunnel.unjamOverride(unjamOverride);
     spindexer.unjamOverride(unjamOverride);
+    Logger.recordOutput("Shooter/currentMethod", "unjamOverride()");
   }
 
   public void trenchOverride(boolean unjamOverride) {
