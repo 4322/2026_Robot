@@ -42,12 +42,11 @@ public class R2Sweep extends SequentialCommandGroup {
             ShooterCommands.idle(shooter, intake, 15.0, 40.0)),
         new ParallelDeadlineGroup(
             AutoBuilder.followPath(Robot.R_2SWEEP_CG),
-            new ParallelCommandGroup(
-                ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake),
-                IntakeCommands.autoSmoosh(
-                    intake,
-                    Constants.Autonomous.smooshDelayFirstPass,
-                    Constants.Autonomous.shootTimeFirstPass))),
+            ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake),
+            IntakeCommands.autoSmoosh(
+                intake,
+                Constants.Autonomous.smooshDelayFirstPass,
+                Constants.Autonomous.shootTimeFirstPass)),
         IntakeCommands.intake(intake),
         new WaitUntilCommand(() -> shooter.isHoodLowered()),
         AutoBuilder.followPath(Robot.R_2SWEEP_DE),
