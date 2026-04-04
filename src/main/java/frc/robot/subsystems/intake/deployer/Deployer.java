@@ -59,6 +59,11 @@ public class Deployer {
         if (deployPosSetTimer.hasElapsed(Constants.Deployer.deployPosSetSec)) {
           // maintain chain tension until position set has taken effect
           deployerIO.setVoltage(0);
+          // Setting state to extend REQUIRED to make initial deploy logic work.
+          // Intake.java always sets to "first extend" state initially and overriding to "extend"
+          // allows isExtended() method to return true based on deployer position.
+          // This allows the intake call to isExtended() to return true which will change
+          // the requested state to extend and deployer will work normally from there.
           deployerState = DeployerState.EXTEND;
         }
       }
