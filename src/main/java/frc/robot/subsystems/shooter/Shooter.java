@@ -442,4 +442,22 @@ public class Shooter extends SubsystemBase {
   public void turretUnjamOverride(boolean override) {
     turret.unjamOverride(override);
   }
+
+  public void setFixedLeft() {
+    if (fixedPositionShooting) {
+      fixedArea = fixedAreaPlacement.LEFT;
+    }
+  }
+
+  public void setFixedRight() {
+    if (fixedPositionShooting) {
+      fixedArea = fixedAreaPlacement.RIGHT;
+    }
+  }
+
+    public void setFixedCenter() {
+    if (fixedPositionShooting) {
+      fixedArea = fixedAreaPlacement.CENTER;
+    }
+  }
 }
