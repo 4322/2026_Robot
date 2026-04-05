@@ -23,8 +23,7 @@ public class RDisruptSweepShoot extends SequentialCommandGroup {
       Drive drive,
       LED led,
       Intake intake,
-      Shooter shooter,
-      Shooter.fixedAreaPlacement fixedAreaPlacement) {
+      Shooter shooter) {
     PathPlannerPath path = Robot.R_StartR_To_NeutralR_Intake_Disrupt;
     Pose2d startPoseBlue = path.getStartingHolonomicPose().get();
     Pose2d startPoseRed = path.flipPath().getStartingHolonomicPose().get();
@@ -46,7 +45,7 @@ public class RDisruptSweepShoot extends SequentialCommandGroup {
                 AutoBuilder.followPath(Robot.R_NeutralR_Intake_Full_Disrupt),
                 AutoBuilder.followPath(Robot.R_NeutralR_Intake_Full_Disrupt_Flip),
                 AutoBuilder.followPath(Robot.R_NeutralRMid_To_ShootR),
-                ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake, fixedAreaPlacement),
+                ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake, shooter.getFixedArea()),
                 new WaitCommand(Constants.Autonomous.smooshDelaySinglePass),
                 IntakeCommands.autoSmoosh(intake))));
   }

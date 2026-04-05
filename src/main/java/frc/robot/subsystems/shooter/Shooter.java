@@ -385,10 +385,9 @@ public class Shooter extends SubsystemBase {
   }
 
   // Needs to be continuously called in order to start shooting balls
-  public void requestShoot(boolean fixedPosition, boolean isScoring, fixedAreaPlacement area) {
+  public void requestShoot(boolean fixedPosition, boolean isScoring) {
     this.isScoring = isScoring;
     this.fixedPositionShooting = fixedPosition;
-    this.fixedArea = area;
     Logger.recordOutput("Shooter/currentMethod", "requestShoot()");
     if (Constants.firingManagerMode == Constants.SubsystemMode.TUNING) {
       return;
@@ -459,5 +458,8 @@ public class Shooter extends SubsystemBase {
     if (fixedPositionShooting) {
       fixedArea = fixedAreaPlacement.CENTER;
     }
+
+    public fixedAreaPlacement getFixedArea() {
+      return fixedArea;
   }
 }

@@ -22,8 +22,7 @@ public class RROutpost extends SequentialCommandGroup {
       Drive drive,
       LED led,
       Intake intake,
-      Shooter shooter,
-      Shooter.fixedAreaPlacement fixedAreaPlacement) {
+      Shooter shooter) {
     PathPlannerPath path = Robot.R_ROutpost_A;
     Pose2d startPoseBlue = path.getStartingHolonomicPose().get();
     Pose2d startPoseRed = path.flipPath().getStartingHolonomicPose().get();

@@ -23,8 +23,7 @@ public class R2Sweep extends SequentialCommandGroup {
       Drive drive,
       LED led,
       Intake intake,
-      Shooter shooter,
-      Shooter.fixedAreaPlacement fixedAreaPlacement) {
+      Shooter shooter) {
     PathPlannerPath path = Robot.R_2SWEEP_A;
     Pose2d startPoseBlue = path.getStartingHolonomicPose().get();
     Pose2d startPoseRed = path.flipPath().getStartingHolonomicPose().get();
@@ -47,7 +46,7 @@ public class R2Sweep extends SequentialCommandGroup {
             ShooterCommands.idle(shooter, intake, 15.0, 40.0)),
         new ParallelDeadlineGroup(
             AutoBuilder.followPath(Robot.R_2SWEEP_CG),
-            ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake, fixedAreaPlacement),
+            ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake, shooter.getFixedArea()),
             IntakeCommands.autoSmoosh(
                 intake,
                 Constants.Autonomous.smooshDelayFirstPass,
@@ -59,7 +58,7 @@ public class R2Sweep extends SequentialCommandGroup {
             AutoBuilder.followPath(Robot.R_2SWEEP_F),
             ShooterCommands.idle(shooter, intake, 14.0, 40.0)),
         new ParallelCommandGroup(
-            ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake, fixedAreaPlacement),
+            ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake, shooter.getFixedArea()),
             IntakeCommands.autoSmoosh(
                 intake,
                 Constants.Autonomous.smooshDelayFirstPass,

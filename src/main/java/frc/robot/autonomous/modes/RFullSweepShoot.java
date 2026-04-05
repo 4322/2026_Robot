@@ -24,8 +24,7 @@ public class RFullSweepShoot extends SequentialCommandGroup {
       Drive drive,
       LED led,
       Intake intake,
-      Shooter shooter,
-      Shooter.fixedAreaPlacement fixedAreaPlacement) {
+      Shooter shooter) {
     PathPlannerPath path = Robot.R_StartR_To_NeutralR_Intake;
     Pose2d startPoseBlue = path.getStartingHolonomicPose().get();
     Pose2d startPoseRed = path.flipPath().getStartingHolonomicPose().get();
@@ -45,11 +44,11 @@ public class RFullSweepShoot extends SequentialCommandGroup {
             AutoBuilder.followPath(Robot.R_StartR_To_NeutralR_Intake),
             new ParallelRaceGroup(
                 AutoBuilder.followPath(Robot.R_NeutralR_Intake_Full),
-                ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake, fixedAreaPlacement)),
+                ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake, shooter.getFixedArea())),
             AutoBuilder.followPath(Robot.R_NeutralR_Intake_Full_Flip),
             AutoBuilder.followPath(Robot.R_Neutral_Mid_To_ShootR),
             new ParallelCommandGroup(
-                ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake, fixedAreaPlacement),
+                ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake, shooter.getFixedArea()),
                 new SequentialCommandGroup(
                     new WaitCommand(Constants.Autonomous.smooshDelaySinglePass),
                     IntakeCommands.autoSmoosh(intake)))));

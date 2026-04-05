@@ -92,7 +92,6 @@ public class RobotContainer {
   private static LED led;
   private static Rollers rollers;
   private static Deployer deployer;
-  private Shooter.fixedAreaPlacement fixedAreaPlacement;
 
   public static Drive drive;
 
@@ -378,14 +377,14 @@ public class RobotContainer {
       controller
           .rightTrigger()
           .whileTrue(
-              ShooterCommands.aimAndShoot(shooter, drive, intake, fixedAreaPlacement.CENTER));
+              ShooterCommands.aimAndShoot(shooter, drive, intake, Shooter.fixedAreaPlacement.CENTER));
     } else {
       controller
           .rightTrigger()
-          .whileTrue(ShooterCommands.autoShoot(shooter, drive, intake, fixedAreaPlacement.CENTER));
+          .whileTrue(ShooterCommands.autoShoot(shooter, drive, intake, Shooter.fixedAreaPlacement.CENTER));
       controller
           .a()
-          .whileTrue(ShooterCommands.fixedShoot(shooter, drive, intake, fixedAreaPlacement));
+          .whileTrue(ShooterCommands.fixedShoot(shooter, drive, intake, shooter.getFixedArea()));
     }
 
     controller.leftBumper().onTrue(IntakeCommands.toggleIntake(intake, controller));

@@ -24,8 +24,7 @@ public class RHalfSweepShoot extends SequentialCommandGroup {
       LED led,
       Intake intake,
       Shooter shooter,
-      Hood hood,
-      Shooter.fixedAreaPlacement fixedAreaPlacement) {
+      Hood hood) {
     PathPlannerPath path = Robot.R_StartR_To_NeutralR_Intake;
     Pose2d startPoseBlue = path.getStartingHolonomicPose().get();
     Pose2d startPoseRed = path.flipPath().getStartingHolonomicPose().get();
@@ -45,7 +44,7 @@ public class RHalfSweepShoot extends SequentialCommandGroup {
         AutoBuilder.followPath(Robot.R_NeutralR_Intake_To_Mid),
         AutoBuilder.followPath(Robot.R_NeutralR_Intake_Mid_Flip),
         AutoBuilder.followPath(Robot.R_NeutralRMid_To_ShootR),
-        ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake, fixedAreaPlacement),
+        ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake, shooter.getFixedArea()),
         new WaitCommand(Constants.Autonomous.smooshDelaySinglePass),
         IntakeCommands.autoSmoosh(intake));
   }

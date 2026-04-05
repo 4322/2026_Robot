@@ -24,8 +24,7 @@ public class LHalfSweepShoot extends SequentialCommandGroup {
       LED led,
       Intake intake,
       Shooter shooter,
-      Hood hood,
-      Shooter.fixedAreaPlacement fixedAreaPlacement) {
+      Hood hood) {
     PathPlannerPath path = Robot.L_StartL_To_NeutralL_Intake;
     Pose2d startPoseBlue = path.getStartingHolonomicPose().get();
     Pose2d startPoseRed = path.flipPath().getStartingHolonomicPose().get();
@@ -46,7 +45,7 @@ public class LHalfSweepShoot extends SequentialCommandGroup {
         AutoBuilder.followPath(Robot.L_NeutralL_Intake_To_Mid),
         AutoBuilder.followPath(Robot.L_NeutralL_Intake_Mid_Flip),
         AutoBuilder.followPath(Robot.L_NeutralLMid_To_ShootL),
-        ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake, fixedAreaPlacement.LEFT),
+        ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake, shooter.getFixedArea()),
         new WaitCommand(Constants.Autonomous.smooshDelaySinglePass),
         IntakeCommands.autoSmoosh(intake));
   }

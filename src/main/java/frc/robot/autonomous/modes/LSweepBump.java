@@ -22,8 +22,7 @@ public class LSweepBump extends SequentialCommandGroup {
       Drive drive,
       LED led,
       Intake intake,
-      Shooter shooter,
-      Shooter.fixedAreaPlacement fixedAreaPlacement) {
+      Shooter shooter) {
     PathPlannerPath path = Robot.L_2SWEEP_A;
     Pose2d startPoseBlue = path.getStartingHolonomicPose().get();
     Pose2d startPoseRed = path.flipPath().getStartingHolonomicPose().get();
@@ -42,7 +41,7 @@ public class LSweepBump extends SequentialCommandGroup {
         AutoBuilder.followPath(Robot.L_2SWEEP_A),
         AutoBuilder.followPath(Robot.L_2SWEEP_B),
         new ParallelCommandGroup(
-            ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake, fixedAreaPlacement),
+            ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake, shooter.getFixedArea()),
             new SequentialCommandGroup(
                 new WaitCommand(Constants.Autonomous.smooshDelaySinglePass),
                 IntakeCommands.autoSmoosh(intake))));
