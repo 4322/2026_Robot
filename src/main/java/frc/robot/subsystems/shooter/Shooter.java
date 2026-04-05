@@ -32,6 +32,14 @@ public class Shooter extends SubsystemBase {
     STOP // Everything but flywheel stopped
   }
 
+  public enum fixedAreaPlacement {
+    CENTER,
+    LEFT,
+    RIGHT
+  }
+
+  fixedAreaPlacement fixedArea = fixedAreaPlacement.CENTER;
+
   private ShooterState state = ShooterState.STARTING_CONFIG;
   private ShooterState requestedState = ShooterState.STARTING_CONFIG;
 
@@ -377,9 +385,10 @@ public class Shooter extends SubsystemBase {
   }
 
   // Needs to be continuously called in order to start shooting balls
-  public void requestShoot(boolean fixedPosition, boolean isScoring) {
+  public void requestShoot(boolean fixedPosition, boolean isScoring, fixedAreaPlacement area) {
     this.isScoring = isScoring;
     this.fixedPositionShooting = fixedPosition;
+    this.fixedArea = area;
     Logger.recordOutput("Shooter/currentMethod", "requestShoot()");
     if (Constants.firingManagerMode == Constants.SubsystemMode.TUNING) {
       return;

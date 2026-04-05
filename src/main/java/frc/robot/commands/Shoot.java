@@ -10,17 +10,20 @@ public class Shoot extends Command {
   private Shooter shooter;
   private Drive drive;
   private boolean ignoreArea;
+  private Shooter.fixedAreaPlacement area;
 
-  public Shoot(Shooter shooter, Drive drive) {
+  public Shoot(Shooter shooter, Drive drive, Shooter.fixedAreaPlacement area) {
     this.shooter = shooter;
     this.drive = drive;
+    this.area = area;
     this.ignoreArea = false;
   }
 
-  public Shoot(Shooter shooter, Drive drive, boolean ignoreArea) {
+  public Shoot(Shooter shooter, Drive drive, boolean ignoreArea, Shooter.fixedAreaPlacement area) {
     this.shooter = shooter;
     this.drive = drive;
     this.ignoreArea = ignoreArea;
+    this.area = area;
   }
 
   @Override
@@ -32,9 +35,9 @@ public class Shoot extends Command {
     } else {
       if (AreaManager.getZoneOfPosition(drive.getTurretTranslation()) == Zone.ALLIANCE_ZONE
           || AreaManager.isTrench(drive.getTurretTranslation())) {
-        shooter.requestShoot(false, true);
+        shooter.requestShoot(false, true, area);
       } else {
-        shooter.requestShoot(false, false);
+        shooter.requestShoot(false, false, area);
       }
     }
   }

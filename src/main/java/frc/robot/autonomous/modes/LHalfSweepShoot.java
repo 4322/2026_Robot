@@ -40,7 +40,7 @@ public class LHalfSweepShoot extends SequentialCommandGroup {
         AutoBuilder.followPath(Robot.L_NeutralL_Intake_To_Mid),
         AutoBuilder.followPath(Robot.L_NeutralL_Intake_Mid_Flip),
         AutoBuilder.followPath(Robot.L_NeutralLMid_To_ShootL),
-        ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake),
+        ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake, Shooter.fixedAreaPlacement.LEFT),
         new WaitCommand(Constants.Autonomous.smooshDelaySinglePass),
         IntakeCommands.autoSmoosh(intake));
   }

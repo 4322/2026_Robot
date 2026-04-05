@@ -91,6 +91,7 @@ public class RobotContainer {
   private static LED led;
   private static Rollers rollers;
   private static Deployer deployer;
+  private Shooter.fixedAreaPlacement fixedAreaPlacement;
 
   public static Drive drive;
 
@@ -373,10 +374,17 @@ public class RobotContainer {
     controller.leftTrigger().whileTrue(ShooterCommands.trenchOverride(shooter));
 
     if (Constants.turretLocked) {
-      controller.rightTrigger().whileTrue(ShooterCommands.aimAndShoot(shooter, drive, intake));
+      controller
+          .rightTrigger()
+          .whileTrue(
+              ShooterCommands.aimAndShoot(shooter, drive, intake, fixedAreaPlacement.CENTER));
     } else {
-      controller.rightTrigger().whileTrue(ShooterCommands.autoShoot(shooter, drive, intake));
-      controller.a().whileTrue(ShooterCommands.fixedShoot(shooter, drive, intake));
+      controller
+          .rightTrigger()
+          .whileTrue(ShooterCommands.autoShoot(shooter, drive, intake, fixedAreaPlacement.CENTER));
+      controller
+          .a()
+          .whileTrue(ShooterCommands.fixedShoot(shooter, drive, intake, fixedAreaPlacement.CENTER));
     }
 
     controller.leftBumper().onTrue(IntakeCommands.toggleIntake(intake, controller));

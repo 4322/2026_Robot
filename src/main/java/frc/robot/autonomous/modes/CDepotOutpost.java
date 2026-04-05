@@ -20,7 +20,7 @@ import frc.robot.subsystems.shooter.Shooter;
 import org.littletonrobotics.junction.Logger;
 
 public class CDepotOutpost extends SequentialCommandGroup {
-  public CDepotOutpost(Drive drive, LED led, Intake intake, Shooter shooter) {
+  public CDepotOutpost(Drive drive, LED led, Intake intake, Shooter shooter, Shooter.fixedAreaPlacement fixedAreaPlacement) {
     PathPlannerPath path = Robot.C_Start_To_Depot;
     Pose2d startPoseBlue = path.getStartingHolonomicPose().get();
     Pose2d startPoseRed = path.flipPath().getStartingHolonomicPose().get();
@@ -40,7 +40,8 @@ public class CDepotOutpost extends SequentialCommandGroup {
             new SequentialCommandGroup(
                 IntakeCommands.intake(intake),
                 new WaitUntilCommand(() -> intake.hasExtended()),
-                ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake)),
+                ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake, fixedAreaPlacement.CENTER)
+                    .withTimeout(Constants.Autonomous.smooshDelaySinglePass)),
             new SequentialCommandGroup(
                 AutoBuilder.followPath(Robot.C_Start_To_Depot),
                 AutoBuilder.followPath(Robot.C_Depot_To_Outpost),
