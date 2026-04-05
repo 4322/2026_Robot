@@ -20,7 +20,12 @@ import frc.robot.subsystems.shooter.Shooter;
 import org.littletonrobotics.junction.Logger;
 
 public class RFullSweepShoot extends SequentialCommandGroup {
-  public RFullSweepShoot(Drive drive, LED led, Intake intake, Shooter shooter, Shooter.fixedAreaPlacement fixedAreaPlacement) {
+  public RFullSweepShoot(
+      Drive drive,
+      LED led,
+      Intake intake,
+      Shooter shooter,
+      Shooter.fixedAreaPlacement fixedAreaPlacement) {
     PathPlannerPath path = Robot.R_StartR_To_NeutralR_Intake;
     Pose2d startPoseBlue = path.getStartingHolonomicPose().get();
     Pose2d startPoseRed = path.flipPath().getStartingHolonomicPose().get();

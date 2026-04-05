@@ -19,7 +19,13 @@ import frc.robot.subsystems.shooter.hood.Hood;
 
 public class LHalfSweepShoot extends SequentialCommandGroup {
 
-  public LHalfSweepShoot(Drive drive, LED led, Intake intake, Shooter shooter, Hood hood, Shooter.fixedAreaPlacement fixedAreaPlacement) {
+  public LHalfSweepShoot(
+      Drive drive,
+      LED led,
+      Intake intake,
+      Shooter shooter,
+      Hood hood,
+      Shooter.fixedAreaPlacement fixedAreaPlacement) {
     PathPlannerPath path = Robot.L_StartL_To_NeutralL_Intake;
     Pose2d startPoseBlue = path.getStartingHolonomicPose().get();
     Pose2d startPoseRed = path.flipPath().getStartingHolonomicPose().get();

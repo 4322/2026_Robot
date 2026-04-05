@@ -19,7 +19,12 @@ import frc.robot.subsystems.led.LED;
 import frc.robot.subsystems.shooter.Shooter;
 
 public class RHalfSuperSweepShoot extends SequentialCommandGroup {
-  public RHalfSuperSweepShoot(Drive drive, LED led, Intake intake, Shooter shooter, Shooter.fixedAreaPlacement fixedAreaPlacement) {
+  public RHalfSuperSweepShoot(
+      Drive drive,
+      LED led,
+      Intake intake,
+      Shooter shooter,
+      Shooter.fixedAreaPlacement fixedAreaPlacement) {
     PathPlannerPath path = Robot.R_StartR_To_NeutralR_Intake;
     Pose2d startPoseBlue = path.getStartingHolonomicPose().get();
     Pose2d startPoseRed = path.flipPath().getStartingHolonomicPose().get();
@@ -40,7 +45,8 @@ public class RHalfSuperSweepShoot extends SequentialCommandGroup {
             new SequentialCommandGroup(
                 AutoBuilder.followPath(Robot.R_StartR_To_NeutralR_Intake_Disrupt),
                 new ParallelRaceGroup(
-                    ShooterCommands.autoShootWithAreaCheck(shooter, drive, intake, fixedAreaPlacement),
+                    ShooterCommands.autoShootWithAreaCheck(
+                        shooter, drive, intake, fixedAreaPlacement),
                     new SequentialCommandGroup(
                         AutoBuilder.followPath(Robot.R_Half_SuperSweep_B),
                         AutoBuilder.followPath(Robot.R_Half_SuperSweep_C))),
