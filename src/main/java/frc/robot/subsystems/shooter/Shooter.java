@@ -44,6 +44,7 @@ public class Shooter extends SubsystemBase {
   private LED led;
   private Double hoodOverrideDeg = null;
   private Double flywheelOverrideRPS = null;
+  private Double turretOverrideDeg = null;
 
   private double targetHoodAngleDeg;
   private double targetFlywheelSpeedRPS;
@@ -197,7 +198,19 @@ public class Shooter extends SubsystemBase {
         }
 
         spindexer.requestIdle();
-        turret.requestAngle(targetTurretAngleDeg, isScoring, 0);
+        if (turretOverrideDeg != null) {
+          turret.requestAngle(turretOverrideDeg, isScoring, 0);
+        } else {
+          turret.requestAngle(targetTurretAngleDeg, isScoring, 0);
+        }
+
+        if (turretOverrideDeg != null) {
+          flywheel.requestGoal(flywheelOverrideRPS, isScoring);
+        } else if (idleTimer.hasElapsed(Constants.Flywheel.idleTimeout)) {
+          flywheel.requestGoal(Constants.Flywheel.idleRPS, isScoring);
+        } else {
+          flywheel.requestGoal(targetFlywheelSpeedRPS, isScoring);
+        }
 
         if (spindexer.isStopped()) {
           tunnel.requestIdle();
@@ -399,9 +412,11 @@ public class Shooter extends SubsystemBase {
     }
   }
 
-  public void requestIdle(Double hoodOverrideDegree, Double flywheelOverideRPS) {
+  public void requestIdle(
+      Double hoodOverrideDegree, Double flywheelOverideRPS, Double turretOverrideDegree) {
     this.hoodOverrideDeg = hoodOverrideDegree;
     this.flywheelOverrideRPS = flywheelOverideRPS;
+    this.turretOverrideDeg = turretOverrideDegree;
     requestedState = ShooterState.IDLE;
     state = ShooterState.IDLE;
     Logger.recordOutput("Shooter/currentMethod", "requestIdle()");
