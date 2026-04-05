@@ -80,32 +80,33 @@ public class AutonomousSelector {
       Shooter shooter,
       VisionObjectDetection visionObjectDetection,
       LED led,
-      Intake intake) {
+      Intake intake,
+      Shooter.fixedAreaPlacement fixedAreaPlacement) {
     autos =
         List.of(
             new Auto(AutoName.DO_NOTHING, new DoNothing(hood)),
-            new Auto(AutoName.C_DEPOT_OUTPOST, new CDepotOutpost(drive, led, intake, shooter)),
-            new Auto(AutoName.R_FULL_SWEEP_SHOOT, new RFullSweepShoot(drive, led, intake, shooter)),
+            new Auto(AutoName.C_DEPOT_OUTPOST, new CDepotOutpost(drive, led, intake, shooter, fixedAreaPlacement)),
+            new Auto(AutoName.R_FULL_SWEEP_SHOOT, new RFullSweepShoot(drive, led, intake, shooter, fixedAreaPlacement)),
             new Auto(
                 AutoName.R_HALF_SWEEP_SHOOT,
-                new RHalfSweepShoot(drive, led, intake, shooter, hood)),
+                new RHalfSweepShoot(drive, led, intake, shooter, hood, fixedAreaPlacement)),
             new Auto(
                 AutoName.R_DISRUPT_SWEEP_SHOOT,
-                new RDisruptSweepShoot(drive, led, intake, shooter)),
-            new Auto(AutoName.R_FULL_SWEEP_SHOOT, new RFullSweepShoot(drive, led, intake, shooter)),
+                new RDisruptSweepShoot(drive, led, intake, shooter, fixedAreaPlacement)),
+            new Auto(AutoName.R_FULL_SWEEP_SHOOT, new RFullSweepShoot(drive, led, intake, shooter, fixedAreaPlacement)),
             new Auto(
                 AutoName.R_HALF_SUPER_SWEEP_SHOOT,
-                new RHalfSuperSweepShoot(drive, led, intake, shooter)),
-            new Auto(AutoName.R_FULL_SWEEP_SHOOT, new RFullSweepShoot(drive, led, intake, shooter)),
+                new RHalfSuperSweepShoot(drive, led, intake, shooter, fixedAreaPlacement)),
+            new Auto(AutoName.R_FULL_SWEEP_SHOOT, new RFullSweepShoot(drive, led, intake, shooter, fixedAreaPlacement)),
             new Auto(
                 AutoName.L_HALF_SWEEP_SHOOT,
-                new LHalfSweepShoot(drive, led, intake, shooter, hood)),
-            new Auto(AutoName.L_SWEEP_BUMP, new LSweepBump(drive, led, intake, shooter)),
-            new Auto(AutoName.R_SWEEP_BUMP, new RSweepBump(drive, led, intake, shooter)),
-            new Auto(AutoName.R_2_SWEEP, new R2Sweep(drive, led, intake, shooter)),
-            new Auto(AutoName.L_2_SWEEP, new L2Sweep(drive, led, intake, shooter)),
+                new LHalfSweepShoot(drive, led, intake, shooter, hood, fixedAreaPlacement)),
+            new Auto(AutoName.L_SWEEP_BUMP, new LSweepBump(drive, led, intake, shooter, fixedAreaPlacement)),
+            new Auto(AutoName.R_SWEEP_BUMP, new RSweepBump(drive, led, intake, shooter, fixedAreaPlacement)),
+            new Auto(AutoName.R_2_SWEEP, new R2Sweep(drive, led, intake, shooter, fixedAreaPlacement)),
+            new Auto(AutoName.L_2_SWEEP, new L2Sweep(drive, led, intake, shooter, fixedAreaPlacement)),
             new Auto(
-                AutoName.C_START_TO_DEPOT, new CenterStartToDepot(drive, led, intake, shooter)),
+                AutoName.C_START_TO_DEPOT, new CenterStartToDepot(drive, led, intake, shooter, fixedAreaPlacement)),
             new Auto(
                 AutoName.DRIVE_WHEEL_RADIUS_CHARACTERIZATION,
                 new SequentialCommandGroup(
