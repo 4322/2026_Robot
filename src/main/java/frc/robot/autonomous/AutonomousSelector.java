@@ -6,9 +6,11 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.autonomous.modes.CDepotOutpost;
 import frc.robot.autonomous.modes.CenterStartToDepot;
 import frc.robot.autonomous.modes.DoNothing;
+import frc.robot.autonomous.modes.L2056;
 import frc.robot.autonomous.modes.L2Sweep;
 import frc.robot.autonomous.modes.LHalfSweepShoot;
 import frc.robot.autonomous.modes.LSweepBump;
+import frc.robot.autonomous.modes.R2056;
 import frc.robot.autonomous.modes.R2Sweep;
 import frc.robot.autonomous.modes.RDisruptSweepShoot;
 import frc.robot.autonomous.modes.RFullSweepShoot;
@@ -49,6 +51,8 @@ public class AutonomousSelector {
     R_SWEEP_BUMP,
     L_SWEEP_BUMP,
     R_ROUTPOST,
+    R_2056,
+    L_2056,
 
     C_START_TO_DEPOT,
 
@@ -104,6 +108,8 @@ public class AutonomousSelector {
             new Auto(AutoName.R_SWEEP_BUMP, new RSweepBump(drive, led, intake, shooter)),
             new Auto(AutoName.R_2_SWEEP, new R2Sweep(drive, led, intake, shooter)),
             new Auto(AutoName.L_2_SWEEP, new L2Sweep(drive, led, intake, shooter)),
+            new Auto(AutoName.R_2056, new R2056(drive, led, intake, shooter)),
+            new Auto(AutoName.L_2056, new L2056(drive, led, intake, shooter)),
             new Auto(
                 AutoName.C_START_TO_DEPOT, new CenterStartToDepot(drive, led, intake, shooter)),
             new Auto(

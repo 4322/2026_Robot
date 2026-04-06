@@ -45,8 +45,8 @@ public class R2Sweep extends SequentialCommandGroup {
             ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake),
             IntakeCommands.autoSmoosh(
                 intake,
-                Constants.Autonomous.smooshDelayFirstPass,
-                Constants.Autonomous.shootTimeFirstPass)),
+                Constants.Autonomous.twoSweepSmooshDelayFirstPass,
+                Constants.Autonomous.twoSweepShootTimeFirstPass)),
         IntakeCommands.intake(intake),
         new WaitUntilCommand(() -> shooter.isHoodLowered()),
         AutoBuilder.followPath(Robot.R_2SWEEP_DE),
@@ -57,7 +57,7 @@ public class R2Sweep extends SequentialCommandGroup {
             ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake),
             IntakeCommands.autoSmoosh(
                 intake,
-                Constants.Autonomous.smooshDelayFirstPass,
-                Constants.Autonomous.shootTimeFirstPass)));
+                Constants.Autonomous.twoSweepSmooshDelayFirstPass,
+                Constants.Autonomous.twoSweepShootTimeFirstPass)));
   }
 }
