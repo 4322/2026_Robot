@@ -38,25 +38,27 @@ public class L2Sweep extends SequentialCommandGroup {
         AutoBuilder.followPath(Robot.L_2SWEEP_A),
         new ParallelDeadlineGroup(
             AutoBuilder.followPath(Robot.L_2SWEEP_B),
-            ShooterCommands.idle(shooter, intake, 15.0, 40.0)),
+            ShooterCommands.idle(shooter, intake, 15.0, 40.0),
+            ShooterCommands.autoUnjam(shooter, Constants.Autonomous.unjamTimeSec)),
         new ParallelDeadlineGroup(
             AutoBuilder.followPath(Robot.L_2SWEEP_CG),
             ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake),
             IntakeCommands.autoSmoosh(
                 intake,
-                Constants.Autonomous.smooshDelayFirstPass,
-                Constants.Autonomous.shootTimeFirstPass)),
+                Constants.Autonomous.twoSweepSmooshDelayFirstPass,
+                Constants.Autonomous.twoSweepShootTimeFirstPass)),
         IntakeCommands.intake(intake),
         new WaitUntilCommand(() -> shooter.isHoodLowered()),
         AutoBuilder.followPath(Robot.L_2SWEEP_DE),
         new ParallelDeadlineGroup(
             AutoBuilder.followPath(Robot.L_2SWEEP_F),
-            ShooterCommands.idle(shooter, intake, 14.0, 40.0)),
+            ShooterCommands.idle(shooter, intake, 14.0, 40.0),
+            ShooterCommands.autoUnjam(shooter, Constants.Autonomous.unjamTimeSec)),
         new ParallelCommandGroup(
             ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake),
             IntakeCommands.autoSmoosh(
                 intake,
-                Constants.Autonomous.smooshDelayFirstPass,
-                Constants.Autonomous.shootTimeFirstPass)));
+                Constants.Autonomous.twoSweepSmooshDelayFirstPass,
+                Constants.Autonomous.twoSweepShootTimeFirstPass)));
   }
 }

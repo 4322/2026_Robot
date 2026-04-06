@@ -6,6 +6,7 @@
     "C_Depot",
     "C_DepotOutpost",
     "LT",
+    "R_2056",
     "New New Folder",
     "R_2Sweep",
     "R_Half_SuperSweep",
@@ -44,5 +45,7 @@
   "brModuleY": -0.302,
   "bumperOffsetX": 0.0,
   "bumperOffsetY": 0.0,
-  "robotFeatures": []
+  "robotFeatures": [
+    "{\"name\":\"Rectangle\",\"type\":\"rounded_rect\",\"data\":{\"center\":{\"x\":0.5,\"y\":0.0},\"size\":{\"width\":0.908,\"length\":0.187},\"borderRadius\":0.05,\"strokeWidth\":0.02,\"filled\":false}}"
+  ]
 }
