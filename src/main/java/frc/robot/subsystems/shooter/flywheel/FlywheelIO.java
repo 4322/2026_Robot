@@ -16,7 +16,7 @@ public interface FlywheelIO {
     public double followerAppliedVolts = 0.0;
     public double leaderTempCelsius = 0.0;
     public double leaderSupplyCurrentAmps = 0.0;
-    public double followerMotorTempCelsius = 0.0;
+    public double followerTempCelsius = 0.0;
     public double followerSupplyCurrentAmps = 0.0;
     public double leaderStatorCurrentAmps = 0.0;
     public double followerStatorCurrentAmps = 0.0;

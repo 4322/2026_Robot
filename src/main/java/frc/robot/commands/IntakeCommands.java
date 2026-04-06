@@ -94,8 +94,8 @@ public class IntakeCommands {
                 () -> {
                   intake.setState(IntakeState.SMOOSH);
                 }),
-            new WaitCommand(timeout),
-            toggleOff(intake))
+            new WaitCommand(timeout))
+        .finallyDo(() -> toggleOff(intake))
         .onlyIf(() -> intake.hasExtended());
   }
 }

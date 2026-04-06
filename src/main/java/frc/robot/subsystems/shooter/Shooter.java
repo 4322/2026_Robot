@@ -3,7 +3,6 @@ package frc.robot.subsystems.shooter;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 import frc.robot.constants.Constants;
@@ -144,7 +143,6 @@ public class Shooter extends SubsystemBase {
 
   public void outputsPeriodic() {
     calculateFiringSolution();
-    SmartDashboard.putNumber("Shooter/TargetFlywheelSpeedRPS", targetFlywheelSpeedRPS);
 
     if (Constants.firingManagerMode == Constants.SubsystemMode.TUNING) {
 

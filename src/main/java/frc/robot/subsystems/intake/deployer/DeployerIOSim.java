@@ -17,14 +17,12 @@ public class DeployerIOSim implements DeployerIO {
 
   @Override
   public void updateInputs(DeployerIOInputs inputs) {
-    inputs.connected = true;
+    inputs.motorConnected = true;
 
     double prevPos = currentAngle;
     simPos();
     simVolts();
     double velocity = Units.degreesToRotations(currentAngle - prevPos) * 50;
-    inputs.motorRotations =
-        Units.degreesToRotations(currentAngle - Constants.Deployer.maxGravityDegrees);
     inputs.angleDeg = currentAngle;
     inputs.appliedVolts = voltage;
     inputs.motorDegreesPerSec = velocity;
@@ -41,6 +39,7 @@ public class DeployerIOSim implements DeployerIO {
   @Override
   public void seedPosition(double newAngleDeg) {
     currentAngle = newAngleDeg;
+    this.requestedAngle = newAngleDeg;
   }
 
   private void simVolts() {
