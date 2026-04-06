@@ -200,7 +200,7 @@ public class Shooter extends SubsystemBase {
 
         spindexer.requestIdle();
         if (turretOverrideDeg != null) {
-          turret.requestAngle(turretOverrideDeg, isScoring, 0);
+          turret.requestTurretOverride(turretOverrideDeg);
         } else {
           turret.requestAngle(targetTurretAngleDeg, isScoring, 0);
         }
