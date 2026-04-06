@@ -37,7 +37,7 @@ public class L2056 extends SequentialCommandGroup {
         AutoBuilder.followPath(Robot.L_2056_A),
         new ParallelDeadlineGroup(
             AutoBuilder.followPath(Robot.L_2056_B),
-            ShooterCommands.idle(shooter, intake, 15.0, 40.0),
+            ShooterCommands.idle(shooter, intake, 15.0, 40.0, 172.0),
             ShooterCommands.autoUnjam(shooter, Constants.Autonomous.unjamTimeSec)),
         new ParallelDeadlineGroup(
             AutoBuilder.followPath(Robot.L_2056_C),
@@ -51,7 +51,7 @@ public class L2056 extends SequentialCommandGroup {
         AutoBuilder.followPath(Robot.L_2056_D),
         new ParallelDeadlineGroup(
             AutoBuilder.followPath(Robot.L_2056_B),
-            ShooterCommands.idle(shooter, intake, 15.0, 40.0),
+            ShooterCommands.idle(shooter, intake, 15.0, 40.0, 172.0),
             ShooterCommands.autoUnjam(shooter, Constants.Autonomous.unjamTimeSec)),
         new ParallelDeadlineGroup(
             AutoBuilder.followPath(Robot.L_2056_C),
