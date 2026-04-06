@@ -247,6 +247,13 @@ public class Turret {
     }
   }
 
+  public void requestTurretOverride(Double targetAngle) {
+    desiredDeg =
+        MathUtil.clamp(
+            targetAngle, Constants.Turret.minUnwindLimitDeg, Constants.Turret.maxUnwindLimitDeg);
+    this.ffRadPerrSec = 0;
+  }
+
   private static double crtToTurretRotations(double crtRotations) {
     /*
     Turret range is -180 degrees to +540 degrees
