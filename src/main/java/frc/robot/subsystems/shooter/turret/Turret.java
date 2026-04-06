@@ -251,6 +251,7 @@ public class Turret {
     desiredDeg =
         MathUtil.clamp(
             targetAngle, Constants.Turret.minUnwindLimitDeg, Constants.Turret.maxUnwindLimitDeg);
+    this.ffRadPerrSec = 0;
   }
 
   private static double crtToTurretRotations(double crtRotations) {
