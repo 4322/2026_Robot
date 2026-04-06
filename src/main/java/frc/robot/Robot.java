@@ -102,6 +102,18 @@ public class Robot extends LoggedRobot {
   public static PathPlannerPath R_ROutpost_A;
   public static PathPlannerPath R_ROutpost_B;
 
+  public static PathPlannerPath R_2056_A;
+  public static PathPlannerPath R_2056_B;
+  public static PathPlannerPath R_2056_C;
+  public static PathPlannerPath R_2056_D;
+  public static PathPlannerPath R_2056_G;
+
+  public static PathPlannerPath L_2056_A;
+  public static PathPlannerPath L_2056_B;
+  public static PathPlannerPath L_2056_C;
+  public static PathPlannerPath L_2056_D;
+  public static PathPlannerPath L_2056_G;
+
   public Robot() {
     Logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME); // Set a metadata value
     Logger.recordMetadata("BuildDate", BuildConstants.BUILD_DATE);
@@ -270,6 +282,12 @@ public class Robot extends LoggedRobot {
       R_ROutpost_A = PathPlannerPath.fromPathFile("R_ROutpost_A");
       R_ROutpost_B = PathPlannerPath.fromPathFile("R_ROutpost_B");
 
+      R_2056_A = PathPlannerPath.fromPathFile("R_2056_A");
+      R_2056_B = PathPlannerPath.fromPathFile("R_2056_B");
+      R_2056_C = PathPlannerPath.fromPathFile("R_2056_C");
+      R_2056_D = PathPlannerPath.fromPathFile("R_2056_D");
+      R_2056_G = PathPlannerPath.fromPathFile("R_2056_G");
+
       C_To_Depot = PathPlannerPath.fromPathFile("Start_To_Depot");
 
       L_NeutralL_Intake_Mid_Flip = R_NeutralR_Intake_Mid_Flip.mirrorPath();
@@ -295,6 +313,12 @@ public class Robot extends LoggedRobot {
       L_2SWEEP_DE = R_2SWEEP_DE.mirrorPath();
       L_2SWEEP_F = R_2SWEEP_F.mirrorPath();
       L_2SWEEP_H = R_2SWEEP_H.mirrorPath();
+
+      L_2056_A = R_2056_A.mirrorPath();
+      L_2056_B = R_2056_B.mirrorPath();
+      L_2056_C = R_2056_C.mirrorPath();
+      L_2056_D = R_2056_D.mirrorPath();
+      L_2056_G = R_2056_G.mirrorPath();
 
     } catch (Exception e) {
       DriverStation.reportError("Failed to load PathPlanner path - " + e.getMessage(), true);
