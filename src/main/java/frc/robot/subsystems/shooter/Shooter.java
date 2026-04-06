@@ -170,6 +170,7 @@ public class Shooter extends SubsystemBase {
       doUnwind = false;
       hoodOverrideDeg = null;
       flywheelOverrideRPS = null;
+      turretOverrideDeg = null;
       state = ShooterState.DISABLED;
     }
 
