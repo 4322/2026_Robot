@@ -248,9 +248,9 @@ public class Turret {
   }
 
   public void requestTurretOverride(Double targetAngle) {
-    desiredDeg = MathUtil.clamp(
-        targetAngle, Constants.Turret.minUnwindLimitDeg, Constants.Turret.maxUnwindLimitDeg);
-
+    desiredDeg =
+        MathUtil.clamp(
+            targetAngle, Constants.Turret.minUnwindLimitDeg, Constants.Turret.maxUnwindLimitDeg);
   }
 
   private static double crtToTurretRotations(double crtRotations) {
