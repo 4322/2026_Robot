@@ -20,7 +20,7 @@ import frc.robot.subsystems.shooter.Shooter;
 
 public class L2Sweep extends SequentialCommandGroup {
   public L2Sweep(Drive drive, LED led, Intake intake, Shooter shooter) {
-    PathPlannerPath path = Robot.L_2SWEEP_AB;
+    PathPlannerPath path = Robot.L_2SWEEP_A;
     Pose2d startPoseBlue = path.getStartingHolonomicPose().get();
     Pose2d startPoseRed = path.flipPath().getStartingHolonomicPose().get();
 

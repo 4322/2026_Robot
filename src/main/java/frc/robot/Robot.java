@@ -85,13 +85,15 @@ public class Robot extends LoggedRobot {
   public static PathPlannerPath R_Half_SuperSweep_E;
   public static PathPlannerPath R_Half_SuperSweep_F;
 
-  public static PathPlannerPath R_2SWEEP_AB;
+  public static PathPlannerPath R_2SWEEP_A;
+  public static PathPlannerPath R_2SWEEP_B;
   public static PathPlannerPath R_2SWEEP_CG;
   public static PathPlannerPath R_2SWEEP_DE;
   public static PathPlannerPath R_2SWEEP_F;
   public static PathPlannerPath R_2SWEEP_H;
 
-  public static PathPlannerPath L_2SWEEP_AB;
+  public static PathPlannerPath L_2SWEEP_A;
+  public static PathPlannerPath L_2SWEEP_B;
   public static PathPlannerPath L_2SWEEP_CG;
   public static PathPlannerPath L_2SWEEP_DE;
   public static PathPlannerPath L_2SWEEP_F;
@@ -258,7 +260,8 @@ public class Robot extends LoggedRobot {
       R_Half_SuperSweep_E = PathPlannerPath.fromPathFile("R_Half_SuperSweep_E");
       R_Half_SuperSweep_F = PathPlannerPath.fromPathFile("R_Half_SuperSweep_F");
 
-      R_2SWEEP_AB = PathPlannerPath.fromPathFile("R_2Sweep_AB");
+      R_2SWEEP_A = PathPlannerPath.fromPathFile("R_2Sweep_A");
+      R_2SWEEP_B = PathPlannerPath.fromPathFile("R_2Sweep_B");
       R_2SWEEP_CG = PathPlannerPath.fromPathFile("R_2Sweep_CG");
       R_2SWEEP_DE = PathPlannerPath.fromPathFile("R_2Sweep_DE");
       R_2SWEEP_F = PathPlannerPath.fromPathFile("R_2Sweep_F");
@@ -286,7 +289,8 @@ public class Robot extends LoggedRobot {
       L_NeutralLMid_To_ShootL_LT = R_NeutralRMid_To_ShootR_LT.mirrorPath();
       L_Neutral_Mid_To_ShootL_LT = R_Neutral_Mid_To_ShootR_LT.mirrorPath();
 
-      L_2SWEEP_AB = R_2SWEEP_AB.mirrorPath();
+      L_2SWEEP_A = R_2SWEEP_A.mirrorPath();
+      L_2SWEEP_B = R_2SWEEP_B.mirrorPath();
       L_2SWEEP_CG = R_2SWEEP_CG.mirrorPath();
       L_2SWEEP_DE = R_2SWEEP_DE.mirrorPath();
       L_2SWEEP_F = R_2SWEEP_F.mirrorPath();

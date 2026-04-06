@@ -19,7 +19,7 @@ import frc.robot.subsystems.shooter.Shooter;
 
 public class LSweepBump extends SequentialCommandGroup {
   public LSweepBump(Drive drive, LED led, Intake intake, Shooter shooter) {
-    PathPlannerPath path = Robot.L_2SWEEP_AB;
+    PathPlannerPath path = Robot.L_2SWEEP_A;
     Pose2d startPoseBlue = path.getStartingHolonomicPose().get();
     Pose2d startPoseRed = path.flipPath().getStartingHolonomicPose().get();
 
@@ -34,7 +34,8 @@ public class LSweepBump extends SequentialCommandGroup {
               }
             }),
         IntakeCommands.intake(intake),
-        AutoBuilder.followPath(Robot.L_2SWEEP_AB),
+        AutoBuilder.followPath(Robot.L_2SWEEP_A),
+        AutoBuilder.followPath(Robot.L_2SWEEP_B),
         new ParallelCommandGroup(
             ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake),
             new SequentialCommandGroup(
