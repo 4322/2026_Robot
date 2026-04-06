@@ -60,6 +60,7 @@ public class L2056 extends SequentialCommandGroup {
                 intake,
                 Constants.Autonomous.smooshDelaySecond2056,
                 Constants.Autonomous.twoSweepShootTimeFirstPass)),
+        IntakeCommands.intake(intake),
         AutoBuilder.followPath(Robot.L_2056_G));
   }
 }
