@@ -204,14 +204,6 @@ public class Shooter extends SubsystemBase {
           turret.requestAngle(targetTurretAngleDeg, isScoring, 0);
         }
 
-        if (turretOverrideDeg != null) {
-          flywheel.requestGoal(flywheelOverrideRPS, isScoring);
-        } else if (idleTimer.hasElapsed(Constants.Flywheel.idleTimeout)) {
-          flywheel.requestGoal(Constants.Flywheel.idleRPS, isScoring);
-        } else {
-          flywheel.requestGoal(targetFlywheelSpeedRPS, isScoring);
-        }
-
         if (spindexer.isStopped()) {
           tunnel.requestIdle();
         }
