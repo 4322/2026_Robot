@@ -199,14 +199,14 @@ public class Shooter extends SubsystemBase {
         }
 
         spindexer.requestIdle();
+        if (spindexer.isStopped()) {
+          tunnel.requestIdle();
+        }
+
         if (turretOverrideDeg != null) {
           turret.requestTurretOverride(turretOverrideDeg);
         } else {
           turret.requestAngle(targetTurretAngleDeg, isScoring, 0);
-        }
-
-        if (spindexer.isStopped()) {
-          tunnel.requestIdle();
         }
 
         if (flywheelOverrideRPS != null) {
