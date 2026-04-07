@@ -225,8 +225,8 @@ public final class Constants {
     // 4. Set CANCoderTwoOffsetRot = 0.8157 - (PhoenixTuner AbsolutePosition)
     //    CANCoderOne = Encoder 9
     //    CANCoderTwo = Encoder 4.73
-    public static final double CANCoderOneOffsetRot = 0.25 - 0.5305;
-    public static final double CANCoderTwoOffsetRot = 0.8157 - 0.4746;
+    public static final double CANCoderOneOffsetRot = 0.25 - 0.0767;
+    public static final double CANCoderTwoOffsetRot = 0.8157 - 0.0809;
 
     // Derivation of above values:
     // 290 degrees * 90/10 = encoder 1 should have rotated 7.25 rotations ->
