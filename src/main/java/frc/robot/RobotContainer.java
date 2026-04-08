@@ -386,11 +386,11 @@ public class RobotContainer {
     // controller.rightBumper().onTrue(ShooterCommands.turretUnjamOverride(shooter, true));
     // controller.rightBumper().onFalse(ShooterCommands.turretUnjamOverride(shooter, false));
     // Pov will be binded to back buttons on bottom of controller
-    controller.rightBumper().onTrue(Commands.runOnce(() -> shooter.setFixedLeft()));
-    controller.x().onTrue(Commands.runOnce(() -> shooter.setFixedRight()));
+    controller.rightBumper().onTrue(Commands.run(() -> shooter.setFixedLeft()));
+    controller.x().onTrue(Commands.run(() -> shooter.setFixedRight()));
 
-    controller.rightBumper().onFalse(Commands.runOnce(() -> shooter.setFixedCenter()));
-    controller.x().onFalse(Commands.runOnce(() -> shooter.setFixedCenter()));
+    controller.rightBumper().onFalse(Commands.run(() -> shooter.setFixedCenter()));
+    controller.x().onFalse(Commands.run(() -> shooter.setFixedCenter()));
   }
 
   /**

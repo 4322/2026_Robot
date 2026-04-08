@@ -235,7 +235,7 @@ public class Simulator extends SubsystemBase {
   private List<RegressionTest> regressionTestCases() {
     return switch (regressTest) {
       case AUTO -> List.of(new RegressionTest("AUTO", AutoName.L_2_SWEEP, Alliance.Blue));
-      case SHOOT -> List.of(new RegressionTest("Shoot", TeleopScenario.SHOOT_2, Alliance.Blue));
+      case SHOOT -> List.of(new RegressionTest("Shoot", TeleopScenario.SHOOT_2, Alliance.Red));
       case DO_NOTHING -> List.of(
           new RegressionTest("Do nothing", AutoName.DO_NOTHING, Alliance.Blue));
       case CONTROLLER_TEST -> List.of(
@@ -667,10 +667,11 @@ public class Simulator extends SubsystemBase {
               new FieldPose2d(3, 0.5, Rotation2d.kZero)),
           new SimEvent(t += 0.1, "Start shooting", EventType.HOLD_LEFT_BUMPER),
           new SimEvent(t += 1, "Start shooting", EventType.RELEASE_LEFT_BUMPER),
-          new SimEvent(t += 0.1, "Start shooting", EventType.HOLD_RIGHT_TRIGGER),
-          new SimEvent(t += 5, "Stop shooting", EventType.RELEASE_RIGHT_TRIGGER),
-          new SimEvent(t += 5, "Start shooting", EventType.HOLD_RIGHT_TRIGGER),
-          new SimEvent(t += 5, "Stop shooting", EventType.RELEASE_RIGHT_TRIGGER),
+          new SimEvent(t += 1, "Start shooting Center", EventType.HOLD_A),
+          new SimEvent(t += 5, "Start shooting Left", EventType.HOLD_RIGHT_BUMPER),
+          new SimEvent(t += 5, "Stop shooting Left", EventType.RELEASE_RIGHT_BUMPER),
+          new SimEvent(t += 5, "Start shooting Right", EventType.HOLD_X),
+          new SimEvent(t += 5, "Stop shooting Right", EventType.RELEASE_X),
           new SimEvent(t += 0.1, "End", EventType.END_OF_SCENARIO));
       default -> List.of();
     };

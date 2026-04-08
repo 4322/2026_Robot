@@ -2,8 +2,8 @@ package frc.robot.subsystems.shooter;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 import frc.robot.constants.Constants;
@@ -37,14 +37,14 @@ public class Shooter extends SubsystemBase {
     CENTER(Constants.fixedSolutionBlueCenterDeg),
     LEFT(Constants.fixedSolutionBlueLeftDeg),
     RIGHT(Constants.fixedSolutionBlueRightDeg);
-      
-    public final double fixedTurretAngleDeg;
+
+    public double fixedTurretAngleDeg;
 
     private fixedAreaPlacement(double value) {
-      if(Robot.alliance == Alliance.Blue){
-      this.fixedTurretAngleDeg = value;
-      } else{
-      this.fixedTurretAngleDeg = (value + 180);
+      if (Robot.alliance == Alliance.Blue) {
+        this.fixedTurretAngleDeg = value;
+      } else if (Robot.alliance == Alliance.Red) {
+        this.fixedTurretAngleDeg = (value + 180);
       }
     }
   }
@@ -325,7 +325,7 @@ public class Shooter extends SubsystemBase {
       targetTunnelSpeedRPS = Constants.fixedSolutionBlue.tunnelSpeedRPS;
       targetSpindexerSpeedRPS = Constants.fixedSolutionBlue.indexerSpeedRPS;
       targetFFRadPerSec = 0;
-     targetTurretAngleDeg = fixedArea.fixedTurretAngleDeg;
+      targetTurretAngleDeg = fixedArea.fixedTurretAngleDeg;
     } else {
       Translation2d shootTarget = FiringManager.getShootingTarget(drive.getTurretTranslation());
       Translation2d shootForward;
@@ -458,16 +458,15 @@ public class Shooter extends SubsystemBase {
   }
 
   public void setFixedLeft() {
-      fixedArea = fixedAreaPlacement.LEFT;
+    fixedArea = fixedAreaPlacement.LEFT;
   }
 
   public void setFixedRight() {
-      fixedArea = fixedAreaPlacement.RIGHT;
-    }
-  
+    fixedArea = fixedAreaPlacement.RIGHT;
+  }
 
   public void setFixedCenter() {
-      fixedArea = fixedAreaPlacement.CENTER;
+    fixedArea = fixedAreaPlacement.CENTER;
   }
 
   public fixedAreaPlacement getFixedArea() {
