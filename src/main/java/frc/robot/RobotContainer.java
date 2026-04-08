@@ -9,9 +9,11 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.autonomous.AutonomousSelector;
 import frc.robot.commands.DriveCommands;
@@ -369,21 +371,21 @@ public class RobotContainer {
     Smoosh - A while held (Driver)
     */
 
-    controller.b().whileTrue(ShooterCommands.unjam(shooter));
-    controller.leftTrigger().whileTrue(ShooterCommands.trenchOverride(shooter));
+    controller.b().whileTrue(Commands.run(() -> controller.setRumble(GenericHID.RumbleType.kLeftRumble, 10)));
+    controller.leftTrigger().whileTrue(Commands.run(() -> controller.setRumble(GenericHID.RumbleType.kLeftRumble, 10)));
 
     if (Constants.turretLocked) {
-      controller.rightTrigger().whileTrue(ShooterCommands.aimAndShoot(shooter, drive, intake));
+      controller.rightTrigger().whileTrue(Commands.run(() -> controller.setRumble(GenericHID.RumbleType.kLeftRumble, 10)));
     } else {
-      controller.rightTrigger().whileTrue(ShooterCommands.autoShoot(shooter, drive, intake));
-      controller.a().whileTrue(ShooterCommands.fixedShoot(shooter, drive, intake));
+      controller.rightTrigger().whileTrue(Commands.run(() -> controller.setRumble(GenericHID.RumbleType.kLeftRumble, 10)));
+      controller.a().whileTrue(Commands.run(() -> controller.setRumble(GenericHID.RumbleType.kLeftRumble, 10)));
     }
 
-    controller.leftBumper().onTrue(IntakeCommands.toggleIntake(intake, controller));
-    controller.x().onTrue(IntakeCommands.eject(intake)).onFalse(IntakeCommands.toggleOff(intake));
-    controller.y().onTrue(IntakeCommands.smoosh(intake)).onFalse(IntakeCommands.toggleOff(intake));
-    controller.rightBumper().onTrue(ShooterCommands.turretUnjamOverride(shooter, true));
-    controller.rightBumper().onFalse(ShooterCommands.turretUnjamOverride(shooter, false));
+    controller.leftBumper().onTrue(Commands.run(() -> controller.setRumble(GenericHID.RumbleType.kLeftRumble, 10)));
+    controller.x().onTrue(Commands.run(() -> controller.setRumble(GenericHID.RumbleType.kLeftRumble, 10)));
+    controller.y().onTrue(Commands.run(() -> controller.setRumble(GenericHID.RumbleType.kLeftRumble, 10)));
+    controller.rightBumper().onTrue(Commands.run(() -> controller.setRumble(GenericHID.RumbleType.kLeftRumble, 10)));
+    controller.rightBumper().onFalse(Commands.run(() -> controller.setRumble(GenericHID.RumbleType.kLeftRumble, 10)));
   }
 
   /**
