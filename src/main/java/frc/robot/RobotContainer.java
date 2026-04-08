@@ -381,16 +381,16 @@ public class RobotContainer {
     }
 
     controller.leftBumper().onTrue(IntakeCommands.toggleIntake(intake, controller));
-    // controller.x().onTrue(IntakeCommands.eject(intake)).onFalse(IntakeCommands.toggleOff(intake));
+    controller.x().onTrue(IntakeCommands.eject(intake)).onFalse(IntakeCommands.toggleOff(intake));
     controller.y().onTrue(IntakeCommands.smoosh(intake)).onFalse(IntakeCommands.toggleOff(intake));
-    // controller.rightBumper().onTrue(ShooterCommands.turretUnjamOverride(shooter, true));
-    // controller.rightBumper().onFalse(ShooterCommands.turretUnjamOverride(shooter, false));
+    controller.rightBumper().onTrue(ShooterCommands.turretUnjamOverride(shooter, true));
+    controller.rightBumper().onFalse(ShooterCommands.turretUnjamOverride(shooter, false));
     // Pov will be binded to back buttons on bottom of controller
-    controller.rightBumper().onTrue(Commands.run(() -> shooter.setFixedLeft()));
-    controller.x().onTrue(Commands.run(() -> shooter.setFixedRight()));
+    controller.povLeft().onTrue(Commands.run(() -> shooter.setFixedLeft()));
+    controller.povRight().onTrue(Commands.run(() -> shooter.setFixedRight()));
 
-    controller.rightBumper().onFalse(Commands.run(() -> shooter.setFixedCenter()));
-    controller.x().onFalse(Commands.run(() -> shooter.setFixedCenter()));
+    controller.povLeft().onFalse(Commands.run(() -> shooter.setFixedCenter()));
+    controller.povRight().onFalse(Commands.run(() -> shooter.setFixedCenter()));
   }
 
   /**

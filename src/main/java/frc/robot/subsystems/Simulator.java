@@ -668,10 +668,10 @@ public class Simulator extends SubsystemBase {
           new SimEvent(t += 0.1, "Start shooting", EventType.HOLD_LEFT_BUMPER),
           new SimEvent(t += 1, "Start shooting", EventType.RELEASE_LEFT_BUMPER),
           new SimEvent(t += 1, "Start shooting Center", EventType.HOLD_A),
-          new SimEvent(t += 5, "Start shooting Left", EventType.HOLD_RIGHT_BUMPER),
-          new SimEvent(t += 5, "Stop shooting Left", EventType.RELEASE_RIGHT_BUMPER),
-          new SimEvent(t += 5, "Start shooting Right", EventType.HOLD_X),
-          new SimEvent(t += 5, "Stop shooting Right", EventType.RELEASE_X),
+          new SimEvent(t += 5, "Start shooting Left", EventType.HOLD_LEFT_POV),
+          new SimEvent(t += 5, "Stop shooting Left", EventType.RELEASE_POV),
+          new SimEvent(t += 5, "Start shooting Right", EventType.HOLD_RIGHT_POV),
+          new SimEvent(t += 5, "Stop shooting Right", EventType.RELEASE_POV),
           new SimEvent(t += 0.1, "End", EventType.END_OF_SCENARIO));
       default -> List.of();
     };
