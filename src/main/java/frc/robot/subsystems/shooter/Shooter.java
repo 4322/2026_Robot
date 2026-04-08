@@ -2,6 +2,7 @@ package frc.robot.subsystems.shooter;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
@@ -31,6 +32,29 @@ public class Shooter extends SubsystemBase {
     SHOOT, // Spindexer and tunnel get up to speed
     STOP // Everything but flywheel stopped
   }
+
+  private enum fixedAreaPlacement {
+    CENTER(
+        Robot.alliance == Alliance.Blue
+            ? Constants.fixedSolutionBlueCenterDeg
+            : (Constants.fixedSolutionBlueCenterDeg + 180)),
+    LEFT(
+        Robot.alliance == Alliance.Blue
+            ? Constants.fixedSolutionBlueLeftDeg
+            : (Constants.fixedSolutionBlueCenterDeg + 180)),
+    RIGHT(
+        Robot.alliance == Alliance.Blue
+            ? Constants.fixedSolutionBlueRightDeg
+            : (Constants.fixedSolutionBlueCenterDeg + 180));
+
+    public double value;
+
+    private fixedAreaPlacement(double value) {
+      this.value = value;
+    }
+  }
+
+  fixedAreaPlacement fixedArea = fixedAreaPlacement.CENTER;
 
   private ShooterState state = ShooterState.STARTING_CONFIG;
   private ShooterState requestedState = ShooterState.STARTING_CONFIG;
@@ -306,11 +330,7 @@ public class Shooter extends SubsystemBase {
       targetTunnelSpeedRPS = Constants.fixedSolutionBlue.tunnelSpeedRPS;
       targetSpindexerSpeedRPS = Constants.fixedSolutionBlue.indexerSpeedRPS;
       targetFFRadPerSec = 0;
-      if (Robot.alliance == DriverStation.Alliance.Blue) {
-        targetTurretAngleDeg = Constants.fixedSolutionBlue.turretAngleDeg;
-      } else {
-        targetTurretAngleDeg = Constants.fixedSolutionRed.turretAngleDeg;
-      }
+      targetTurretAngleDeg = fixedArea.value;
     } else {
       Translation2d shootTarget = FiringManager.getShootingTarget(drive.getTurretTranslation());
       Translation2d shootForward;
@@ -440,5 +460,21 @@ public class Shooter extends SubsystemBase {
 
   public void turretUnjamOverride(boolean override) {
     turret.unjamOverride(override);
+  }
+
+  public void setFixedLeft() {
+    fixedArea = fixedAreaPlacement.LEFT;
+  }
+
+  public void setFixedRight() {
+    fixedArea = fixedAreaPlacement.RIGHT;
+  }
+
+  public void setFixedCenter() {
+    fixedArea = fixedAreaPlacement.CENTER;
+  }
+
+  public fixedAreaPlacement getFixedArea() {
+    return fixedArea;
   }
 }
