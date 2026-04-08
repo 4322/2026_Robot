@@ -883,6 +883,7 @@ public class Simulator extends SubsystemBase {
     DriverStationSim.setJoystickIsXbox(hidPort, true);
     DriverStationSim.setJoystickAxisCount(hidPort, 6);
     DriverStationSim.setJoystickButtonCount(hidPort, 10);
+    DriverStationSim.setJoystickPOVCount(hidPort, 1);
   }
 
   private void resetScenario() {
