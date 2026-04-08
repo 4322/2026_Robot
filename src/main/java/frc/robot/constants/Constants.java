@@ -46,7 +46,7 @@ public final class Constants {
 
   public static SubsystemMode driveMode = SubsystemMode.NORMAL;
   public static final SubsystemMode flywheelMode = SubsystemMode.NORMAL;
-  public static final SubsystemMode hoodMode = SubsystemMode.NORMAL;
+  public static final SubsystemMode hoodMode = SubsystemMode.TUNING;
   public static final SubsystemMode spindexerMode = SubsystemMode.NORMAL;
   public static final SubsystemMode tunnelMode = SubsystemMode.NORMAL;
   public static SubsystemMode turretMode = SubsystemMode.NORMAL;
@@ -287,8 +287,8 @@ public final class Constants {
     // 33. Deploy code with hood in normal mode
 
     public static final int homePulseWidth = 610; // min 500
-    public static final double servoLowPositionScaleFactor = 1.0432; // variations in potentiometer
-    public static final double servoHighPositionScaleFactor = 1.0432; // variations in potentiometer
+    public static final double servoLowPositionScaleFactor = 1.1447; // variations in potentiometer
+    public static final double servoHighPositionScaleFactor = 1.0243; // variations in potentiometer
     public static final double lowCalibrationDeg = 5;
     public static final double highCalibrationDeg = 38;
   }
