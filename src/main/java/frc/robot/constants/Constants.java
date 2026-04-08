@@ -495,12 +495,14 @@ public final class Constants {
     public static final boolean alwaysTargetAllianceZone = false;
   }
 
-  public static double fixedSolutionBlueDeg = 90;
+  public static double fixedSolutionBlueLeftDeg = -90;
+  public static double fixedSolutionBlueRightDeg = 90;
+  public static double fixedSolutionBlueCenterDeg = 90;
   // Trench structure - distance 2.90
   public static final FiringSolution fixedSolutionBlue =
-      new FiringSolution(53, 10, fixedSolutionBlueDeg, 35, 7);
+      new FiringSolution(53, 10, fixedSolutionBlueLeftDeg, 35, 7);
   public static final FiringSolution fixedSolutionRed =
-      new FiringSolution(50, 15, fixedSolutionBlueDeg + 180, 35, 7);
+      new FiringSolution(50, 15, fixedSolutionBlueLeftDeg + 180, 35, 7);
 
   public static class FiringTargetTranslations {
     // Right/left are determined as view from blue alliance driver station

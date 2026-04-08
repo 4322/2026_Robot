@@ -34,9 +34,9 @@ public class Shooter extends SubsystemBase {
   }
 
   private enum fixedAreaPlacement {
-    CENTER(0.0),
-    LEFT(-90),
-    RIGHT(90);
+    CENTER(Constants.fixedSolutionBlueCenterDeg),
+    LEFT(Constants.fixedSolutionBlueLeftDeg),
+    RIGHT(Constants.fixedSolutionBlueRightDeg);
       
     public final double fixedTurretAngleDeg;
 
