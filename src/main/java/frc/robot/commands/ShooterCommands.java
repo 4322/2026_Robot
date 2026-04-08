@@ -11,8 +11,7 @@ import frc.robot.subsystems.shooter.Shooter;
 
 public class ShooterCommands {
 
-  public static Command autoShoot(
-      Shooter shooter, Drive drive, Intake intake, Shooter.fixedAreaPlacement fixedAreaPlacement) {
+  public static Command autoShoot(Shooter shooter, Drive drive, Intake intake) {
     return Commands.parallel(
             DriveCommands.joystickDriveWhileShooting(
                 drive,
@@ -20,18 +19,16 @@ public class ShooterCommands {
                 () -> -RobotContainer.controller.getLeftX(),
                 () -> -RobotContainer.controller.getRightX(),
                 () -> shooter.isScoring()),
-            new Shoot(shooter, drive, fixedAreaPlacement))
+            new Shoot(shooter, drive))
         .onlyIf(() -> intake.hasExtended());
   }
 
-  public static Command fixedShoot(
-      Shooter shooter, Drive drive, Intake intake, Shooter.fixedAreaPlacement fixedAreaPlacement) {
-    return new ShootFixed(shooter, fixedAreaPlacement).onlyIf(() -> intake.hasExtended());
+  public static Command fixedShoot(Shooter shooter, Drive drive, Intake intake) {
+    return new ShootFixed(shooter).onlyIf(() -> intake.hasExtended());
   }
 
   // Command is only used when shooter is fixed so no need for intake extended check
-  public static Command aimAndShoot(
-      Shooter shooter, Drive drive, Intake intake, Shooter.fixedAreaPlacement fixedAreaPlacement) {
+  public static Command aimAndShoot(Shooter shooter, Drive drive, Intake intake) {
     return Commands.parallel(
         DriveCommands.joystickDriveAtAngle(
             drive,
@@ -39,13 +36,14 @@ public class ShooterCommands {
             () -> -RobotContainer.controller.getLeftX(),
             () -> Rotation2d.fromDegrees(shooter.getTargetTurretAngleDeg()),
             Constants.Turret.originToTurret),
-        new Shoot(shooter, drive, fixedAreaPlacement));
+        new Shoot(shooter, drive, false));
   }
 
-  public static Command idle(Shooter shooter, Intake intake, Double hoodAngle, Double flywheelRPS) {
+  public static Command idle(
+      Shooter shooter, Intake intake, Double hoodAngle, Double flywheelRPS, Double turretAngle) {
     return Commands.run(
             () -> {
-              shooter.requestIdle(hoodAngle, flywheelRPS);
+              shooter.requestIdle(hoodAngle, flywheelRPS, turretAngle);
             },
             shooter)
         .onlyIf(() -> intake.hasExtended());
@@ -89,14 +87,12 @@ public class ShooterCommands {
   }
 
   // Below commands used in auto ONLY
-  public static Command autoShootNoAreaCheck(
-      Shooter shooter, Drive drive, Intake intake, Shooter.fixedAreaPlacement fixedAreaPlacement) {
-    return new Shoot(shooter, drive, true, fixedAreaPlacement).onlyIf(() -> intake.hasExtended());
+  public static Command autoShootNoAreaCheck(Shooter shooter, Drive drive, Intake intake) {
+    return new Shoot(shooter, drive, true).onlyIf(() -> intake.hasExtended());
   }
 
-  public static Command autoShootWithAreaCheck(
-      Shooter shooter, Drive drive, Intake intake, Shooter.fixedAreaPlacement fixedAreaPlacement) {
-    return new Shoot(shooter, drive, false, fixedAreaPlacement).onlyIf(() -> intake.hasExtended());
+  public static Command autoShootWithAreaCheck(Shooter shooter, Drive drive, Intake intake) {
+    return new Shoot(shooter, drive, false).onlyIf(() -> intake.hasExtended());
   }
 
   public static Command autoUnjam(Shooter shooter, double timeout) {

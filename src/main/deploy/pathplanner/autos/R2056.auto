@@ -7,31 +7,43 @@
         {
           "type": "path",
           "data": {
-            "pathName": "R_2Sweep_A"
+            "pathName": "R_2056_A"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "R_2Sweep_B"
+            "pathName": "R_2056_B"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "R_2Sweep_CG"
+            "pathName": "R_2056_C"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "R_2Sweep_DE"
+            "pathName": "R_2056_D"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "R_2Sweep_F"
+            "pathName": "R_2056_B"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "R_2056_C"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "R_2056_G"
           }
         }
       ]

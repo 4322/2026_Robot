@@ -37,9 +37,6 @@ public class TunerConstants {
   private static final double turnkP = 150;
   private static final double turnkD = 0.2;
 
-  private static final double simTurnInertia = 0.00001;
-  private static final double simDriveInertia = 0.001;
-
   // drive slew rate not working
   private static final Slot0Configs steerGains =
       new Slot0Configs()
@@ -107,21 +104,25 @@ public class TunerConstants {
 
   // Theoretical free speed (m/s) at 12 V applied output;
   // This needs to be tuned to your individual robot
-  public static final LinearVelocity kSpeedAt12Volts = MetersPerSecond.of(5.7);
+  public static final LinearVelocity kSpeedAt12Volts = MetersPerSecond.of(4.775);
 
   // Every 1 rotation of the azimuth results in kCoupleRatio drive motor turns;
   // This may need to be tuned to your individual robot
   private static final double kCoupleRatio = 3.8181818181818183;
 
-  @SuppressWarnings("unused")
-  private static final double R1 = 54 / 12 * 25 / 32.0 * 30 / 15.0;
+  private enum DriveGearRatio {
+    R1(54 / 12 * 25 / 32.0 * 30 / 15.0),
+    R2(54 / 14.0 * 25 / 32.0 * 30 / 15.0),
+    R3(54 / 16.0 * 25 / 32.0 * 30 / 15.0);
 
-  @SuppressWarnings("unused")
-  private static final double R2 = 54 / 14.0 * 25 / 32.0 * 30 / 15.0;
+    private final double value;
 
-  private static final double R3 = 54 / 16.0 * 25 / 32.0 * 30 / 15.0;
+    private DriveGearRatio(double value) {
+      this.value = value;
+    }
+  }
 
-  private static final double kDriveGearRatio = R3;
+  private static final double kDriveGearRatio = DriveGearRatio.R1.value;
   private static final double kSteerGearRatio = 287 / 11.0;
   private static final Distance kWheelRadius = Inches.of(2);
 

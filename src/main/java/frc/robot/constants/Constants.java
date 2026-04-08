@@ -61,7 +61,7 @@ public final class Constants {
   public static final boolean frontRightCameraEnable = true;
   public static final boolean frontLeftCameraEnable = true;
   public static final boolean backRightCameraEnable = true;
-  public static final boolean backLeftCameraEnable = true;
+  public static final boolean backLeftCameraEnable = false;
   public static final boolean tuningWithLoggableNumbers =
       (driveMode == SubsystemMode.TUNING
           || firingManagerMode == SubsystemMode.TUNING
@@ -108,11 +108,11 @@ public final class Constants {
     public static double turnSupplyCurrentLimit = 30;
 
     // Scales max speeds for X, Y, and omega respectively
-    public static double maxLinearSpeedPercentShooting = 0.15;
-    public static double maxAngularSpeedPercentShooting = 0.15;
+    public static double maxLinearSpeedPercentShooting = 0.179;
+    public static double maxAngularSpeedPercentShooting = 0.179;
 
-    public static double maxLinearSpeedPercentPassing = 0.22;
-    public static double maxAngularSpeedPercentPassing = 0.18;
+    public static double maxLinearSpeedPercentPassing = 0.2626;
+    public static double maxAngularSpeedPercentPassing = 0.2149;
   }
 
   public static class Spindexer {
@@ -225,8 +225,8 @@ public final class Constants {
     // 4. Set CANCoderTwoOffsetRot = 0.8157 - (PhoenixTuner AbsolutePosition)
     //    CANCoderOne = Encoder 9
     //    CANCoderTwo = Encoder 4.73
-    public static final double CANCoderOneOffsetRot = 0.25 - 0.5305;
-    public static final double CANCoderTwoOffsetRot = 0.8157 - 0.4746;
+    public static final double CANCoderOneOffsetRot = 0.25 - 0.0767;
+    public static final double CANCoderTwoOffsetRot = 0.8157 - 0.0809;
 
     // Derivation of above values:
     // 290 degrees * 90/10 = encoder 1 should have rotated 7.25 rotations ->
@@ -618,14 +618,16 @@ public final class Constants {
     public static final double pathPlannerDrivekP = 5; // TODO probably increase
     public static final double pathPlannerRotationkP = 4;
     public static final double unjamTimeSec = 0.5;
-    public static final double smooshDelayFirstPass = 1.5;
+    public static final double twoSweepSmooshDelayFirstPass = 1.5;
     public static final double smooshDelaySecondPass = 2.5;
     public static final double smooshDelaySinglePass = 1.5;
 
-    public static final double shootTimeFirstPass = 3.0;
+    public static final double twoSweepShootTimeFirstPass = 3.0;
     public static final double shootTimeSecondPass = 2.0;
     public static final double shootTimeSinglePass = 3.0;
     public static final double outpostWaitTime = 4.0;
+    public static final double smooshDelayFirst2056 = 1.0;
+    public static final double smooshDelaySecond2056 = 1.0;
   }
 
   public static class LED {

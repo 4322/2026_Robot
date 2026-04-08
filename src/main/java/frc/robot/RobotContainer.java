@@ -374,17 +374,10 @@ public class RobotContainer {
     controller.leftTrigger().whileTrue(ShooterCommands.trenchOverride(shooter));
 
     if (Constants.turretLocked) {
-      controller
-          .rightTrigger()
-          .whileTrue(
-              ShooterCommands.aimAndShoot(shooter, drive, intake, Shooter.fixedAreaPlacement.CENTER));
+      controller.rightTrigger().whileTrue(ShooterCommands.aimAndShoot(shooter, drive, intake));
     } else {
-      controller
-          .rightTrigger()
-          .whileTrue(ShooterCommands.autoShoot(shooter, drive, intake, Shooter.fixedAreaPlacement.CENTER));
-      controller
-          .a()
-          .whileTrue(ShooterCommands.fixedShoot(shooter, drive, intake, shooter.getFixedArea()));
+      controller.rightTrigger().whileTrue(ShooterCommands.autoShoot(shooter, drive, intake));
+      controller.a().whileTrue(ShooterCommands.fixedShoot(shooter, drive, intake));
     }
 
     controller.leftBumper().onTrue(IntakeCommands.toggleIntake(intake, controller));
@@ -392,10 +385,10 @@ public class RobotContainer {
     controller.y().onTrue(IntakeCommands.smoosh(intake)).onFalse(IntakeCommands.toggleOff(intake));
     controller.rightBumper().onTrue(ShooterCommands.turretUnjamOverride(shooter, true));
     controller.rightBumper().onFalse(ShooterCommands.turretUnjamOverride(shooter, false));
-    // Pov will be binded to back buttons on bottom of controller 
+    // Pov will be binded to back buttons on bottom of controller
     controller.povLeft().onTrue(Commands.runOnce(() -> shooter.setFixedLeft()));
     controller.povRight().onTrue(Commands.runOnce(() -> shooter.setFixedRight()));
-    
+
     controller.povRight().onFalse(Commands.runOnce(() -> shooter.setFixedCenter()));
     controller.povLeft().onFalse(Commands.runOnce(() -> shooter.setFixedCenter()));
   }
@@ -411,8 +404,7 @@ public class RobotContainer {
 
   public void configureAutonomousSelector() {
     autonomousSelector =
-        new AutonomousSelector(
-            drive, hood, turret, shooter, visionObjectDetection, led, intake, fixedAreaPlacement);
+        new AutonomousSelector(drive, hood, turret, shooter, visionObjectDetection, led, intake);
   }
 
   public void setBrakeMode(boolean brake) {
