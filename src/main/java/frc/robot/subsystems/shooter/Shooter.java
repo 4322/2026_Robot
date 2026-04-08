@@ -3,6 +3,7 @@ package frc.robot.subsystems.shooter;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 import frc.robot.constants.Constants;
@@ -32,10 +33,20 @@ public class Shooter extends SubsystemBase {
     STOP // Everything but flywheel stopped
   }
 
-  public enum fixedAreaPlacement {
-    CENTER,
-    LEFT,
-    RIGHT
+  private enum fixedAreaPlacement {
+    CENTER(0.0),
+    LEFT(-90),
+    RIGHT(90);
+      
+    public final double fixedTurretAngleDeg;
+
+    private fixedAreaPlacement(double value) {
+      if(Robot.alliance == Alliance.Blue){
+      this.fixedTurretAngleDeg = value;
+      } else{
+      this.fixedTurretAngleDeg = (value + 180);
+      }
+    }
   }
 
   fixedAreaPlacement fixedArea = fixedAreaPlacement.CENTER;
@@ -314,11 +325,7 @@ public class Shooter extends SubsystemBase {
       targetTunnelSpeedRPS = Constants.fixedSolutionBlue.tunnelSpeedRPS;
       targetSpindexerSpeedRPS = Constants.fixedSolutionBlue.indexerSpeedRPS;
       targetFFRadPerSec = 0;
-      if (Robot.alliance == DriverStation.Alliance.Blue) {
-        targetTurretAngleDeg = Constants.fixedSolutionBlue.turretAngleDeg;
-      } else {
-        targetTurretAngleDeg = Constants.fixedSolutionRed.turretAngleDeg;
-      }
+     targetTurretAngleDeg = fixedArea.fixedTurretAngleDeg;
     } else {
       Translation2d shootTarget = FiringManager.getShootingTarget(drive.getTurretTranslation());
       Translation2d shootForward;
@@ -451,21 +458,16 @@ public class Shooter extends SubsystemBase {
   }
 
   public void setFixedLeft() {
-    if (fixedPositionShooting) {
       fixedArea = fixedAreaPlacement.LEFT;
-    }
   }
 
   public void setFixedRight() {
-    if (fixedPositionShooting) {
       fixedArea = fixedAreaPlacement.RIGHT;
     }
-  }
+  
 
   public void setFixedCenter() {
-    if (fixedPositionShooting) {
       fixedArea = fixedAreaPlacement.CENTER;
-    }
   }
 
   public fixedAreaPlacement getFixedArea() {
