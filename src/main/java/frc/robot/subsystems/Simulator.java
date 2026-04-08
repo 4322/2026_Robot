@@ -23,7 +23,7 @@ import java.util.Map;
 import org.littletonrobotics.junction.Logger;
 
 public class Simulator extends SubsystemBase {
-  private static final RegressTests regressTest = RegressTests.AUTO;
+  private static final RegressTests regressTest = RegressTests.SHOOT;
   public static AutoName autoScenario;
   private TeleopScenario teleopScenario;
   private List<TeleAnomaly> teleAnomalies;
@@ -59,7 +59,7 @@ public class Simulator extends SubsystemBase {
 
   private enum TeleopScenario {
     NONE,
-    SHOOT,
+    SHOOT_2,
     CONTROLLER_TEST1,
     CONTROLLER_TEST2,
     SUBSYSTEM_TEST,
@@ -234,8 +234,8 @@ public class Simulator extends SubsystemBase {
 
   private List<RegressionTest> regressionTestCases() {
     return switch (regressTest) {
-      case AUTO -> List.of(new RegressionTest("AUTO", AutoName.R_2056, Alliance.Blue));
-      case SHOOT -> List.of(new RegressionTest("Shoot", TeleopScenario.SHOOT, Alliance.Blue));
+      case AUTO -> List.of(new RegressionTest("AUTO", AutoName.L_2_SWEEP, Alliance.Blue));
+      case SHOOT -> List.of(new RegressionTest("Shoot", TeleopScenario.SHOOT_2, Alliance.Blue));
       case DO_NOTHING -> List.of(
           new RegressionTest("Do nothing", AutoName.DO_NOTHING, Alliance.Blue));
       case CONTROLLER_TEST -> List.of(
@@ -659,7 +659,19 @@ public class Simulator extends SubsystemBase {
               t += 10, "Stop", EventType.MOVE_JOYSTICK_TURN, new Pose2d(0, 0, Rotation2d.kZero)),
           new SimEvent(t += 0.1, "Stop shooting", EventType.RELEASE_RIGHT_TRIGGER),
           new SimEvent(t += 0.1, "End", EventType.END_OF_SCENARIO));
-
+      case SHOOT_2 -> List.of(
+          new SimEvent(
+              t += 0.1,
+              "Start pose",
+              EventType.SET_POSE,
+              new FieldPose2d(3, 0.5, Rotation2d.kZero)),
+          new SimEvent(t += 0.1, "Start shooting", EventType.HOLD_LEFT_BUMPER),
+          new SimEvent(t += 1, "Start shooting", EventType.RELEASE_LEFT_BUMPER),
+          new SimEvent(t += 0.1, "Start shooting", EventType.HOLD_RIGHT_TRIGGER),
+          new SimEvent(t += 5, "Stop shooting", EventType.RELEASE_RIGHT_TRIGGER),
+          new SimEvent(t += 5, "Start shooting", EventType.HOLD_RIGHT_TRIGGER),
+          new SimEvent(t += 5, "Stop shooting", EventType.RELEASE_RIGHT_TRIGGER),
+          new SimEvent(t += 0.1, "End", EventType.END_OF_SCENARIO));
       default -> List.of();
     };
   }
