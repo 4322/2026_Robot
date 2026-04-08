@@ -36,7 +36,7 @@ public class ShooterCommands {
             () -> -RobotContainer.controller.getLeftX(),
             () -> Rotation2d.fromDegrees(shooter.getTargetTurretAngleDeg()),
             Constants.Turret.originToTurret),
-        new Shoot(shooter, drive, false));
+        new Shoot(shooter, drive));
   }
 
   public static Command idle(
@@ -92,7 +92,7 @@ public class ShooterCommands {
   }
 
   public static Command autoShootWithAreaCheck(Shooter shooter, Drive drive, Intake intake) {
-    return new Shoot(shooter, drive, false).onlyIf(() -> intake.hasExtended());
+    return new Shoot(shooter, drive).onlyIf(() -> intake.hasExtended());
   }
 
   public static Command autoUnjam(Shooter shooter, double timeout) {

@@ -12,7 +12,6 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.autonomous.AutonomousSelector;
 import frc.robot.commands.DriveCommands;
@@ -385,12 +384,6 @@ public class RobotContainer {
     controller.y().onTrue(IntakeCommands.smoosh(intake)).onFalse(IntakeCommands.toggleOff(intake));
     controller.rightBumper().onTrue(ShooterCommands.turretUnjamOverride(shooter, true));
     controller.rightBumper().onFalse(ShooterCommands.turretUnjamOverride(shooter, false));
-    // Pov will be binded to back buttons on bottom of controller
-    controller.povLeft().onTrue(Commands.run(() -> shooter.setFixedLeft()));
-    controller.povRight().onTrue(Commands.run(() -> shooter.setFixedRight()));
-
-    controller.povLeft().onFalse(Commands.run(() -> shooter.setFixedCenter()));
-    controller.povRight().onFalse(Commands.run(() -> shooter.setFixedCenter()));
   }
 
   /**
