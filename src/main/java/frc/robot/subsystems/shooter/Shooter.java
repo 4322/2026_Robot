@@ -34,18 +34,23 @@ public class Shooter extends SubsystemBase {
   }
 
   private enum fixedAreaPlacement {
-    CENTER(Constants.fixedSolutionBlueCenterDeg),
-    LEFT(Constants.fixedSolutionBlueLeftDeg),
-    RIGHT(Constants.fixedSolutionBlueRightDeg);
+    CENTER(
+        Robot.alliance == Alliance.Blue
+            ? Constants.fixedSolutionBlueCenterDeg
+            : (Constants.fixedSolutionBlueCenterDeg + 180)),
+    LEFT(
+        Robot.alliance == Alliance.Blue
+            ? Constants.fixedSolutionBlueLeftDeg
+            : (Constants.fixedSolutionBlueCenterDeg + 180)),
+    RIGHT(
+        Robot.alliance == Alliance.Blue
+            ? Constants.fixedSolutionBlueRightDeg
+            : (Constants.fixedSolutionBlueCenterDeg + 180));
 
-    public double fixedTurretAngleDeg;
+    public double value;
 
     private fixedAreaPlacement(double value) {
-      if (Robot.alliance == Alliance.Blue) {
-        this.fixedTurretAngleDeg = value;
-      } else if (Robot.alliance == Alliance.Red) {
-        this.fixedTurretAngleDeg = (value + 180);
-      }
+      this.value = value;
     }
   }
 
@@ -325,7 +330,7 @@ public class Shooter extends SubsystemBase {
       targetTunnelSpeedRPS = Constants.fixedSolutionBlue.tunnelSpeedRPS;
       targetSpindexerSpeedRPS = Constants.fixedSolutionBlue.indexerSpeedRPS;
       targetFFRadPerSec = 0;
-      targetTurretAngleDeg = fixedArea.fixedTurretAngleDeg;
+      targetTurretAngleDeg = fixedArea.value;
     } else {
       Translation2d shootTarget = FiringManager.getShootingTarget(drive.getTurretTranslation());
       Translation2d shootForward;
