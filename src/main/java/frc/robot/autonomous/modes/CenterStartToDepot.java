@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Robot;
 import frc.robot.commands.IntakeCommands;
@@ -44,10 +45,11 @@ public class CenterStartToDepot extends SequentialCommandGroup {
             IntakeCommands.autoSmoosh(
                 intake,
                 Constants.Autonomous.twoSweepSmooshDelayFirstPass,
-                Constants.Autonomous.twoSweepShootTimeFirstPass)).withTimeout(10)),
+                Constants.Autonomous.twoSweepShootTimeFirstPass)).withTimeout(10),
+            new ParallelCommandGroup(
             AutoBuilder.followPath(Robot.C_To_Depot),
-           new ParallelCommandGroup(
-            ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake),
+            ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake)),
+            new WaitCommand(1),
             IntakeCommands.autoSmoosh(
                 intake,
                 Constants.Autonomous.twoSweepSmooshDelayFirstPass,
