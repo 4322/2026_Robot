@@ -38,7 +38,7 @@ public class CenterStartToDepot extends SequentialCommandGroup {
         new ParallelCommandGroup(
             new SequentialCommandGroup(
                 IntakeCommands.intake(intake),
-                new WaitUntilCommand(() -> intake.hasExtended())),
+                new WaitUntilCommand(() -> intake.hasExtended()),
             new ParallelCommandGroup(
             ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake),
             IntakeCommands.autoSmoosh(
@@ -51,6 +51,6 @@ public class CenterStartToDepot extends SequentialCommandGroup {
             IntakeCommands.autoSmoosh(
                 intake,
                 Constants.Autonomous.twoSweepSmooshDelayFirstPass,
-                Constants.Autonomous.twoSweepShootTimeFirstPass)));
+                Constants.Autonomous.twoSweepShootTimeFirstPass))));
   }
 }
