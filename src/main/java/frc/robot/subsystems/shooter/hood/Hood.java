@@ -133,6 +133,12 @@ public class Hood {
   }
 
   private void moveServoToPosition(double hoodDegrees) {
+    double servoScaleFactor =
+        Constants.Hood.servoLowPositionScaleFactor
+            + ((hoodDegrees - Constants.Hood.lowCalibrationDeg)
+                    / (Constants.Hood.highCalibrationDeg - Constants.Hood.lowCalibrationDeg))
+                * (Constants.Hood.servoHighPositionScaleFactor
+                    - Constants.Hood.servoLowPositionScaleFactor);
     double servoDegrees =
         hoodDegrees
             * Constants.Hood.encoderToHoodGearRatio
@@ -141,10 +147,7 @@ public class Hood {
     int pulseWdith =
         MathUtil.clamp(
             Constants.Hood.homePulseWidth
-                + (int)
-                    (servoDegrees
-                        / pulseWidthToDegreeRatio
-                        * Constants.Hood.servoPositionScaleFactor),
+                + (int) (servoDegrees / pulseWidthToDegreeRatio * servoScaleFactor),
             500,
             2500);
     io.setPulseWidth(pulseWdith);

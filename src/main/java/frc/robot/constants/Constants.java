@@ -275,14 +275,22 @@ public final class Constants {
     // 22. Set servoPositionScaleFactor below to 1.0
     // 23. Redeploy
     // 24. Enable the robot
-    // 25. Set goal degree to 25
+    // 25. Set tuningGoalDegree to 5
     // 26. Observe reported HoodDegrees on AdvantageScope
-    // 27. Set servoPositionScaleFactor = 25 / HoodDegrees
-    // 28. Deploy code with hood in normal mode
-    // 29. Move hood to different positions and observe correct angle in AdvantageScope
+    // 27. Set servoLowPositionScaleFactor = 5 / HoodDegrees
+    // 28. Set tuningGoalDegree to 38
+    // 29. Observe reported HoodDegrees on AdvantageScope
+    // 30. Set servoLowPositionScaleFactor = 38 / HoodDegrees
+    // 31. Redeploy
+    // 32. Move hood to different positions using tuningGoalDegree and observe correct angle in
+    // AdvantageScope
+    // 33. Deploy code with hood in normal mode
 
     public static final int homePulseWidth = 610; // min 500
-    public static final double servoPositionScaleFactor = 1.0432; // variations in potentiometer
+    public static final double servoLowPositionScaleFactor = 1.0432; // variations in potentiometer
+    public static final double servoHighPositionScaleFactor = 1.0432; // variations in potentiometer
+    public static final double lowCalibrationDeg = 5;
+    public static final double highCalibrationDeg = 38;
   }
 
   public static class Control {
