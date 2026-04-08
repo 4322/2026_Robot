@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Robot;
 import frc.robot.commands.IntakeCommands;
 import frc.robot.commands.ShooterCommands;
+import frc.robot.constants.Constants;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.led.LED;
@@ -38,8 +39,18 @@ public class CenterStartToDepot extends SequentialCommandGroup {
             new SequentialCommandGroup(
                 IntakeCommands.intake(intake),
                 new WaitUntilCommand(() -> intake.hasExtended()),
-                ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake)),
+            new ParallelCommandGroup(
+            ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake),
+            IntakeCommands.autoSmoosh(
+                intake,
+                Constants.Autonomous.twoSweepSmooshDelayFirstPass,
+                Constants.Autonomous.twoSweepShootTimeFirstPass)).withTimeout(3)),
             AutoBuilder.followPath(Robot.C_To_Depot),
-            ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake)));
+           new ParallelCommandGroup(
+            ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake),
+            IntakeCommands.autoSmoosh(
+                intake,
+                Constants.Autonomous.twoSweepSmooshDelayFirstPass,
+                Constants.Autonomous.twoSweepShootTimeFirstPass))));
   }
 }
