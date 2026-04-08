@@ -46,7 +46,7 @@ public final class Constants {
 
   public static SubsystemMode driveMode = SubsystemMode.NORMAL;
   public static final SubsystemMode flywheelMode = SubsystemMode.NORMAL;
-  public static final SubsystemMode hoodMode = SubsystemMode.TUNING;
+  public static final SubsystemMode hoodMode = SubsystemMode.NORMAL;
   public static final SubsystemMode spindexerMode = SubsystemMode.NORMAL;
   public static final SubsystemMode tunnelMode = SubsystemMode.NORMAL;
   public static SubsystemMode turretMode = SubsystemMode.NORMAL;
@@ -275,9 +275,9 @@ public final class Constants {
     // 22. Set servoPositionScaleFactor below to 1.0
     // 23. Redeploy
     // 24. Enable the robot
-    // 25. Set tuningGoalDegree to 5
+    // 25. Set tuningGoalDegree to 10
     // 26. Observe reported HoodDegrees on AdvantageScope
-    // 27. Set servoLowPositionScaleFactor = 5 / HoodDegrees
+    // 27. Set servoLowPositionScaleFactor = 10 / HoodDegrees
     // 28. Set tuningGoalDegree to 38
     // 29. Observe reported HoodDegrees on AdvantageScope
     // 30. Set servoLowPositionScaleFactor = 38 / HoodDegrees
@@ -287,9 +287,9 @@ public final class Constants {
     // 33. Deploy code with hood in normal mode
 
     public static final int homePulseWidth = 610; // min 500
-    public static final double servoLowPositionScaleFactor = 1.1447; // variations in potentiometer
+    public static final double servoLowPositionScaleFactor = 1.0526; // variations in potentiometer
     public static final double servoHighPositionScaleFactor = 1.0243; // variations in potentiometer
-    public static final double lowCalibrationDeg = 5;
+    public static final double lowCalibrationDeg = 10;
     public static final double highCalibrationDeg = 38;
   }
 
