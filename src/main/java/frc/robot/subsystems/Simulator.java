@@ -23,7 +23,7 @@ import java.util.Map;
 import org.littletonrobotics.junction.Logger;
 
 public class Simulator extends SubsystemBase {
-  private static final RegressTests regressTest = RegressTests.AUTO;
+  private static final RegressTests regressTest = RegressTests.CONTROLLER_TEST;
   public static AutoName autoScenario;
   private TeleopScenario teleopScenario;
   private List<TeleAnomaly> teleAnomalies;
@@ -870,6 +870,7 @@ public class Simulator extends SubsystemBase {
     DriverStationSim.setJoystickIsXbox(hidPort, true);
     DriverStationSim.setJoystickAxisCount(hidPort, 6);
     DriverStationSim.setJoystickButtonCount(hidPort, 10);
+    DriverStationSim.setJoystickPOVCount(hidPort, 1);
   }
 
   private void resetScenario() {
