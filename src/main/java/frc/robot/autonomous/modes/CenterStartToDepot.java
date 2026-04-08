@@ -40,19 +40,21 @@ public class CenterStartToDepot extends SequentialCommandGroup {
             new SequentialCommandGroup(
                 IntakeCommands.intake(intake),
                 new WaitUntilCommand(() -> intake.hasExtended()),
-            new ParallelCommandGroup(
-            ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake),
-            IntakeCommands.autoSmoosh(
-                intake,
-                Constants.Autonomous.twoSweepSmooshDelayFirstPass,
-                Constants.Autonomous.twoSweepShootTimeFirstPass)).withTimeout(10),
-            new ParallelCommandGroup(
-            AutoBuilder.followPath(Robot.C_To_Depot),
-            ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake)),
-            new WaitCommand(1),
-            IntakeCommands.autoSmoosh(
-                intake,
-                Constants.Autonomous.twoSweepSmooshDelayFirstPass,
-                Constants.Autonomous.twoSweepShootTimeFirstPass))));
+                new ParallelCommandGroup(
+                        ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake),
+                        IntakeCommands.autoSmoosh(
+                            intake,
+                            Constants.Autonomous.twoSweepSmooshDelayFirstPass,
+                            Constants.Autonomous.twoSweepShootTimeFirstPass))
+                    .withTimeout(5),
+                new WaitCommand(3),
+                new ParallelCommandGroup(
+                    AutoBuilder.followPath(Robot.C_To_Depot),
+                    ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake)),
+                new WaitCommand(3),
+                IntakeCommands.autoSmoosh(
+                    intake,
+                    Constants.Autonomous.twoSweepSmooshDelayFirstPass,
+                    Constants.Autonomous.twoSweepShootTimeFirstPass))));
   }
 }
