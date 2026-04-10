@@ -49,7 +49,7 @@ public final class Constants {
   public static final SubsystemMode hoodMode = SubsystemMode.NORMAL;
   public static final SubsystemMode spindexerMode = SubsystemMode.NORMAL;
   public static final SubsystemMode tunnelMode = SubsystemMode.NORMAL;
-  public static SubsystemMode turretMode = SubsystemMode.TUNING;
+  public static SubsystemMode turretMode = SubsystemMode.NORMAL;
   public static final SubsystemMode deployerMode = SubsystemMode.NORMAL;
   public static final SubsystemMode rollerMode = SubsystemMode.NORMAL;
   public static final SubsystemMode ledMode = SubsystemMode.DISABLED;
@@ -225,8 +225,8 @@ public final class Constants {
     // 4. Set CANCoderTwoOffsetRot = 0.8157 - (PhoenixTuner AbsolutePosition)
     //    CANCoderOne = Encoder 9
     //    CANCoderTwo = Encoder 4.73
-    public static final double CANCoderOneOffsetRot = 0.25 - 0.0767;
-    public static final double CANCoderTwoOffsetRot = 0.8157 - 0.0809;
+    public static final double CANCoderOneOffsetRot = 0.25 - 0.0737;
+    public static final double CANCoderTwoOffsetRot = 0.8157 - 0.3513;
 
     // Derivation of above values:
     // 290 degrees * 90/10 = encoder 1 should have rotated 7.25 rotations ->
