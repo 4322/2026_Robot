@@ -593,7 +593,7 @@ public final class Constants {
     // Basic filtering thresholds
     public static double maxAmbiguity = 0.15;
     public static double maxZError = 0.75;
-    public static double maxAvgTagDistance = 30; // Basically allow tags from any distance
+    public static double maxAvgTagDistance = 15; // Basically allow tags from any distance
     public static double stdDevBaseline = 0.2;
     public static double singleTagStdDevAdjuster = 3;
   }
