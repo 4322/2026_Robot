@@ -674,7 +674,7 @@ public class Simulator extends SubsystemBase {
               EventType.MOVE_JOYSTICK_DRIVE,
               new Pose2d(1, 0, Rotation2d.kZero)),
           new SimEvent(
-              t += 10,
+              t += 5,
               "Go back through right blue trench",
               EventType.MOVE_JOYSTICK_DRIVE,
               new Pose2d(-1, 0, Rotation2d.kZero)),
