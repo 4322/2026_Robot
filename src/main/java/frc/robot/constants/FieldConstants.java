@@ -34,7 +34,8 @@ public class FieldConstants {
       fieldLength
           - Units.inchesToMeters(
               158.6); // The edge towards the driver station of the hub but red side
-  public static double hubOffset = Units.inchesToMeters(24.0);
+  public static double hubOffset =
+      Units.inchesToMeters(24.0); // Distance between the blue/red line and the respective hub
   public static final double fieldEdgeTolerance = Units.inchesToMeters(48);
 
   // All left/right designations are relative to blue alliance station
@@ -88,10 +89,8 @@ public class FieldConstants {
                 blueLineX + Units.inchesToMeters(22.20),
                 Units.inchesToMeters(fieldWidth - (50.35 + 12.00))));
 
-    // Alliance ones are the zones that only cover the neutral zone side;
-    // so we can shoot from the trench on our own side
-    // Opposing ones are the zones that cover both sides of the trench
-
+    // Covers left blue trench (only neutral zone side)
+    // For use when we are blue alliance and want to be able to shoot in the trench
     public static FieldRectangle2d stopShootLeftAlliance =
         new FieldRectangle2d(
             new Translation2d(
@@ -101,6 +100,8 @@ public class FieldConstants {
                 blueLineX + hubOffset + trenchScaleFactor * Units.inchesToMeters(22.20 + 6),
                 fieldWidth + fieldEdgeTolerance));
 
+    // Covers right blue trench (only neutral zone side)
+    // For use when we are blue alliance and want to be able to shoot in the trench
     public static FieldRectangle2d stopShootRightAlliance =
         new FieldRectangle2d(
             new Translation2d(blueLineX + hubOffset - stopShootingZoneBuffer, -fieldEdgeTolerance),
@@ -108,6 +109,8 @@ public class FieldConstants {
                 blueLineX + hubOffset + trenchScaleFactor * Units.inchesToMeters(22.20 + 6),
                 Units.inchesToMeters(50.59)));
 
+    // Covers the left blue trench (both neutral and alliance zone sides)
+    // For use when we are red alliance and want to stop shooting anywhere near the trench
     public static FieldRectangle2d stopShootLeftOpposing =
         new FieldRectangle2d(
             new Translation2d(
@@ -117,6 +120,8 @@ public class FieldConstants {
                 blueLineX + trenchScaleFactor * Units.inchesToMeters(22.20 + 6),
                 fieldWidth + fieldEdgeTolerance));
 
+    // Covers the right blue trench (both neutral and alliance zone sides)
+    // For use when we are red alliance and want to stop shooting anywhere near the trench
     public static FieldRectangle2d stopShootRightOpposing =
         new FieldRectangle2d(
             new Translation2d(
@@ -196,6 +201,8 @@ public class FieldConstants {
                 redLineX + Units.inchesToMeters(22.20),
                 Units.inchesToMeters(fieldWidth - (50.35 + 12.00))));
 
+    // Covers left red trench (only neutral zone side)
+    // For use when we are red alliance and want to be able to shoot in the trench
     public static FieldRectangle2d stopShootLeftAlliance =
         new FieldRectangle2d(
             new Translation2d(
@@ -203,6 +210,9 @@ public class FieldConstants {
                 centerLineY + Units.inchesToMeters(133.47 - (24.97 + 12.00))),
             new Translation2d(
                 redLineX - hubOffset + stopShootingZoneBuffer, fieldWidth + fieldEdgeTolerance));
+
+    // Covers right red trench (only neutral zone side)
+    // For use when we are red alliance and want to be able to shoot in the trench
     public static FieldRectangle2d stopShootRightAlliance =
         new FieldRectangle2d(
             new Translation2d(
@@ -211,6 +221,8 @@ public class FieldConstants {
             new Translation2d(
                 redLineX - hubOffset + stopShootingZoneBuffer, Units.inchesToMeters(50.59)));
 
+    // Covers the left red trench (both neutral and alliance zone sides)
+    // For use when we are blue alliance and want to stop shooting anywhere near the trench
     public static FieldRectangle2d stopShootLeftOpposing =
         new FieldRectangle2d(
             new Translation2d(
@@ -220,6 +232,8 @@ public class FieldConstants {
                 redLineX - hubOffset + trenchScaleFactor * Units.inchesToMeters(22.20 + 6),
                 fieldWidth + fieldEdgeTolerance));
 
+    // Covers the right red trench (both neutral and alliance zone sides)
+    // For use when we are blue alliance and want to stop shooting anywhere near the trench
     public static FieldRectangle2d stopShootRightOpposing =
         new FieldRectangle2d(
             new Translation2d(
