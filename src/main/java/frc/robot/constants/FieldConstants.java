@@ -276,14 +276,7 @@ public class FieldConstants {
         .setPoses(Blue.trenchRight.getCornerPoses());
     RobotContainer.getField().getObject("Blue.bumpRight").setPoses(Blue.bumpRight.getCornerPoses());
     RobotContainer.getField().getObject("Blue.bumpLeft").setPoses(Blue.bumpLeft.getCornerPoses());
-    /*
-    RobotContainer.getField()
-        .getObject("Blue.stopShootLeft")
-        .setPoses(Blue.stopShootLeft.getCornerPoses());
-    RobotContainer.getField()
-        .getObject("Blue.stopShootRight")
-        .setPoses(Blue.stopShootRight.getCornerPoses());
-        */
+
     RobotContainer.getField()
         .getObject("Blue.frontOfHub")
         .setPoses(Blue.frontOfHub.getCornerPoses());
@@ -303,13 +296,7 @@ public class FieldConstants {
         .setPoses(Red.trenchRight.getCornerPoses());
     RobotContainer.getField().getObject("Red.bumpRight").setPoses(Red.bumpRight.getCornerPoses());
     RobotContainer.getField().getObject("Red.bumpLeft").setPoses(Red.bumpLeft.getCornerPoses());
-    /*
-    RobotContainer.getField()
-        .getObject("Red.stopShootLeft")
-        .setPoses(Red.stopShootLeft.getCornerPoses());
-    RobotContainer.getField()
-        .getObject("Red.stopShootRight")
-        .setPoses(Red.stopShootRight.getCornerPoses());*/
+    // TODO eventually add logging for stop shoot zones
     RobotContainer.getField().getObject("Red.frontOfHub").setPoses(Red.frontOfHub.getCornerPoses());
 
     RobotContainer.getField()

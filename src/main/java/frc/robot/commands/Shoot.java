@@ -5,6 +5,7 @@ import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.shooter.areaManager.AreaManager;
 import frc.robot.subsystems.shooter.areaManager.AreaManager.Zone;
+import org.littletonrobotics.junction.Logger;
 
 public class Shoot extends Command {
   private Shooter shooter;
@@ -25,9 +26,12 @@ public class Shoot extends Command {
 
   @Override
   public void execute() {
-    if ((!AreaManager.isShootingArea(drive.getTurretTranslation())
-            || AreaManager.isTrench(drive.getTurretTranslation()))
-        && !ignoreArea) {
+    Logger.recordOutput(
+        "Shooter/ShootCommand/isShootingArea",
+        AreaManager.isShootingArea(drive.getTurretTranslation()));
+    Logger.recordOutput(
+        "Shooter/ShootCommand/isTrench", AreaManager.isTrench(drive.getTurretTranslation()));
+    if ((!AreaManager.isShootingArea(drive.getTurretTranslation())) && !ignoreArea) {
       shooter.requestIdle(null, null, null);
     } else {
       if (AreaManager.getZoneOfPosition(drive.getTurretTranslation()) == Zone.ALLIANCE_ZONE

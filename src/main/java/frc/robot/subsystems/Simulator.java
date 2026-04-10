@@ -23,7 +23,7 @@ import java.util.Map;
 import org.littletonrobotics.junction.Logger;
 
 public class Simulator extends SubsystemBase {
-  private static final RegressTests regressTest = RegressTests.CONTROLLER_TEST;
+  private static final RegressTests regressTest = RegressTests.TRENCHES;
   public static AutoName autoScenario;
   private TeleopScenario teleopScenario;
   private List<TeleAnomaly> teleAnomalies;
@@ -46,7 +46,8 @@ public class Simulator extends SubsystemBase {
     ALL_AUTOS,
     ZONES,
     INTAKE_TEST,
-    DRIVE_WHILE_SHOOTING
+    DRIVE_WHILE_SHOOTING,
+    TRENCHES
   }
 
   private enum TeleAnomaly {
@@ -68,7 +69,8 @@ public class Simulator extends SubsystemBase {
     TURRET,
     Slowly_Up_down,
     ZONES,
-    INTAKE_TEST
+    INTAKE_TEST,
+    TRENCHES
   }
 
   private enum EventType {
@@ -275,7 +277,9 @@ public class Simulator extends SubsystemBase {
       case DRIVE_WHILE_SHOOTING -> List.of(
           new RegressionTest(
               "Drive While Shooting", TeleopScenario.DRIVE_WHILE_SHOOTING, Alliance.Blue));
-
+      case TRENCHES -> List.of(
+          new RegressionTest("Trenches", TeleopScenario.TRENCHES, Alliance.Blue),
+          new RegressionTest("Trenches", TeleopScenario.TRENCHES, Alliance.Red));
       default -> List.of();
     };
   }
@@ -659,7 +663,67 @@ public class Simulator extends SubsystemBase {
               t += 10, "Stop", EventType.MOVE_JOYSTICK_TURN, new Pose2d(0, 0, Rotation2d.kZero)),
           new SimEvent(t += 0.1, "Stop shooting", EventType.RELEASE_RIGHT_TRIGGER),
           new SimEvent(t += 0.1, "End", EventType.END_OF_SCENARIO));
-
+      case TRENCHES -> List.of(
+          new SimEvent(
+              t += 0.1, "Start pose", EventType.SET_POSE, new FieldPose2d(3, 1, Rotation2d.kZero)),
+          new SimEvent(t += 0.1, "Deploy intake", EventType.HOLD_LEFT_BUMPER),
+          new SimEvent(t += 3, "Shoot", EventType.HOLD_RIGHT_TRIGGER),
+          new SimEvent(
+              t += 0.1,
+              "Go through right blue trench",
+              EventType.MOVE_JOYSTICK_DRIVE,
+              new Pose2d(1, 0, Rotation2d.kZero)),
+          new SimEvent(
+              t += 5,
+              "Go back through right blue trench",
+              EventType.MOVE_JOYSTICK_DRIVE,
+              new Pose2d(-1, 0, Rotation2d.kZero)),
+          new SimEvent(
+              t += 5,
+              "Left blue trench pose",
+              EventType.SET_POSE,
+              new FieldPose2d(3, 8, Rotation2d.kZero)),
+          new SimEvent(
+              t += 0.1,
+              "Go through left blue trench",
+              EventType.MOVE_JOYSTICK_DRIVE,
+              new Pose2d(1, 0, Rotation2d.kZero)),
+          new SimEvent(
+              t += 5,
+              "Go back through left blue trench",
+              EventType.MOVE_JOYSTICK_DRIVE,
+              new Pose2d(-1, 0, Rotation2d.kZero)),
+          new SimEvent(
+              t += 5,
+              "Right red trench pose",
+              EventType.SET_POSE,
+              new FieldPose2d(13, 1, Rotation2d.kZero)),
+          new SimEvent(
+              t += 0.1,
+              "Go through right red trench",
+              EventType.MOVE_JOYSTICK_DRIVE,
+              new Pose2d(-1, 0, Rotation2d.kZero)),
+          new SimEvent(
+              t += 5,
+              "Go back through right red trench",
+              EventType.MOVE_JOYSTICK_DRIVE,
+              new Pose2d(1, 0, Rotation2d.kZero)),
+          new SimEvent(
+              t += 5,
+              "Left red trench pose",
+              EventType.SET_POSE,
+              new FieldPose2d(13, 8, Rotation2d.kZero)),
+          new SimEvent(
+              t += 0.1,
+              "Go through left red trench",
+              EventType.MOVE_JOYSTICK_DRIVE,
+              new Pose2d(-1, 0, Rotation2d.kZero)),
+          new SimEvent(
+              t += 5,
+              "Go back through left red trench",
+              EventType.MOVE_JOYSTICK_DRIVE,
+              new Pose2d(1, 0, Rotation2d.kZero)),
+          new SimEvent(t += 5, "End", EventType.END_OF_SCENARIO));
       default -> List.of();
     };
   }
