@@ -29,18 +29,18 @@ public class AreaManager {
   public static boolean isShootingArea(Translation2d position) {
     if (Robot.alliance == Alliance.Blue) {
       return !(FieldConstants.Red.frontOfHub.contains(position)
-          || FieldConstants.Blue.stopShootLeft.contains(position)
-          || FieldConstants.Blue.stopShootRight.contains(position)
-          || FieldConstants.Red.stopShootLeft.contains(position)
-          || FieldConstants.Red.stopShootRight.contains(position)
+          || FieldConstants.Blue.stopShootLeftAlliance.contains(position)
+          || FieldConstants.Blue.stopShootRightAlliance.contains(position)
+          || FieldConstants.Red.stopShootLeftOpposing.contains(position)
+          || FieldConstants.Red.stopShootRightOpposing.contains(position)
           || FieldConstants.Red.towerZone.contains(position)
           || FieldConstants.Blue.towerZone.contains(position));
     } else {
       return !(FieldConstants.Blue.frontOfHub.contains(position)
-          || FieldConstants.Blue.stopShootLeft.contains(position)
-          || FieldConstants.Blue.stopShootRight.contains(position)
-          || FieldConstants.Red.stopShootLeft.contains(position)
-          || FieldConstants.Red.stopShootRight.contains(position)
+          || FieldConstants.Blue.stopShootLeftAlliance.contains(position)
+          || FieldConstants.Blue.stopShootRightAlliance.contains(position)
+          || FieldConstants.Red.stopShootLeftOpposing.contains(position)
+          || FieldConstants.Red.stopShootRightOpposing.contains(position)
           || FieldConstants.Red.towerZone.contains(position)
           || FieldConstants.Blue.towerZone.contains(position));
     }
@@ -54,10 +54,17 @@ public class AreaManager {
   }
 
   public static boolean isHoodDangerZone(Translation2d position) {
-    return FieldConstants.Blue.stopShootLeft.contains(position)
-        || FieldConstants.Blue.stopShootRight.contains(position)
-        || FieldConstants.Red.stopShootLeft.contains(position)
-        || FieldConstants.Red.stopShootRight.contains(position);
+    if (Robot.alliance == Alliance.Blue) {
+      return FieldConstants.Blue.stopShootLeftAlliance.contains(position)
+          || FieldConstants.Blue.stopShootRightAlliance.contains(position)
+          || FieldConstants.Red.stopShootLeftOpposing.contains(position)
+          || FieldConstants.Red.stopShootRightOpposing.contains(position);
+    } else {
+      return FieldConstants.Red.stopShootLeftAlliance.contains(position)
+          || FieldConstants.Red.stopShootRightAlliance.contains(position)
+          || FieldConstants.Blue.stopShootLeftOpposing.contains(position)
+          || FieldConstants.Blue.stopShootRightOpposing.contains(position);
+    }
   }
 
   public static boolean isTowerZone(Translation2d position) {
@@ -79,13 +86,13 @@ public class AreaManager {
         return Zone.ALLIANCE_TOWER;
       } else if (FieldConstants.Red.towerZone.contains(position)) {
         return Zone.OPPOSITION_TOWER;
-      } else if (FieldConstants.Blue.stopShootLeft.contains(position)) {
+      } else if (FieldConstants.Blue.stopShootLeftAlliance.contains(position)) {
         return Zone.LEFT_STOP_SHOOT;
-      } else if (FieldConstants.Blue.stopShootRight.contains(position)) {
+      } else if (FieldConstants.Blue.stopShootRightAlliance.contains(position)) {
         return Zone.RIGHT_STOP_SHOOT;
-      } else if (FieldConstants.Red.stopShootLeft.contains(position)) {
+      } else if (FieldConstants.Red.stopShootLeftOpposing.contains(position)) {
         return Zone.LEFT_OPPOSITION_STOP_SHOOT;
-      } else if (FieldConstants.Red.stopShootRight.contains(position)) {
+      } else if (FieldConstants.Red.stopShootRightOpposing.contains(position)) {
         return Zone.RIGHT_OPPOSITION_STOP_SHOOT;
       } else if (FieldConstants.Blue.allianceZone.contains(position)) {
         return Zone.ALLIANCE_ZONE;
@@ -107,13 +114,13 @@ public class AreaManager {
         return Zone.LEFT_OPPOSITION_TRENCH;
       } else if (FieldConstants.Blue.trenchRight.contains(position)) {
         return Zone.RIGHT_OPPOSITION_TRENCH;
-      } else if (FieldConstants.Red.stopShootLeft.contains(position)) {
+      } else if (FieldConstants.Red.stopShootLeftAlliance.contains(position)) {
         return Zone.LEFT_STOP_SHOOT;
-      } else if (FieldConstants.Red.stopShootRight.contains(position)) {
+      } else if (FieldConstants.Red.stopShootRightAlliance.contains(position)) {
         return Zone.RIGHT_STOP_SHOOT;
-      } else if (FieldConstants.Blue.stopShootLeft.contains(position)) {
+      } else if (FieldConstants.Blue.stopShootLeftOpposing.contains(position)) {
         return Zone.LEFT_OPPOSITION_STOP_SHOOT;
-      } else if (FieldConstants.Blue.stopShootRight.contains(position)) {
+      } else if (FieldConstants.Blue.stopShootRightOpposing.contains(position)) {
         return Zone.RIGHT_OPPOSITION_STOP_SHOOT;
       } else if (FieldConstants.Red.towerZone.contains(position)) {
         return Zone.ALLIANCE_TOWER;
