@@ -222,6 +222,7 @@ public class Robot extends LoggedRobot {
       case SIM:
         // Running a physics simulator, log to NT
         Logger.addDataReceiver(new RLOGServer());
+        Logger.addDataReceiver(new WPILOGWriter("..")); // keep logs out of the repository
         break;
       case REPLAY:
         setUseTiming(false); // Run as fast as possible
