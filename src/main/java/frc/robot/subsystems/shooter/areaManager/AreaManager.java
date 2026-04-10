@@ -29,16 +29,20 @@ public class AreaManager {
   public static boolean isShootingArea(Translation2d position) {
     if (Robot.alliance == Alliance.Blue) {
       return !(FieldConstants.Red.frontOfHub.contains(position)
+          // Not in neutral side of blue trench
           || FieldConstants.Blue.stopShootLeftAlliance.contains(position)
           || FieldConstants.Blue.stopShootRightAlliance.contains(position)
+          // Not anywhere near red trench (neutral/red alliance side)
           || FieldConstants.Red.stopShootLeftOpposing.contains(position)
           || FieldConstants.Red.stopShootRightOpposing.contains(position)
           || FieldConstants.Red.towerZone.contains(position)
           || FieldConstants.Blue.towerZone.contains(position));
     } else {
       return !(FieldConstants.Blue.frontOfHub.contains(position)
+          // Not in neutral side of red trench
           || FieldConstants.Blue.stopShootLeftAlliance.contains(position)
           || FieldConstants.Blue.stopShootRightAlliance.contains(position)
+          // Not anywhere near blue trench (neutral/blue alliance side)
           || FieldConstants.Red.stopShootLeftOpposing.contains(position)
           || FieldConstants.Red.stopShootRightOpposing.contains(position)
           || FieldConstants.Red.towerZone.contains(position)
