@@ -72,30 +72,13 @@ public class FieldConstants {
                     + trenchScaleFactor * Units.inchesToMeters(trenchZoneArea + edgeOfHubNeutral),
                 Units.inchesToMeters(50.59)));
 
-    public static FieldRectangle2d bumpRight =
-        new FieldRectangle2d(
-            new Translation2d(
-                blueLineX - Units.inchesToMeters(22.20), Units.inchesToMeters(50.59 + 12.00)),
-            new Translation2d(
-                blueLineX + Units.inchesToMeters(22.20),
-                Units.inchesToMeters(50.59 + 12.00 + 73.00)));
-
-    public static FieldRectangle2d bumpLeft =
-        new FieldRectangle2d(
-            new Translation2d(
-                blueLineX - Units.inchesToMeters(22.20),
-                Units.inchesToMeters(fieldWidth - (50.35 + 12.00 + 73.00))),
-            new Translation2d(
-                blueLineX + Units.inchesToMeters(22.20),
-                Units.inchesToMeters(fieldWidth - (50.35 + 12.00))));
-
     // Covers left blue trench (only neutral zone side)
     // For use when we are blue alliance and want to be able to shoot in the trench
     public static FieldRectangle2d stopShootLeftNeutral =
         new FieldRectangle2d(
             new Translation2d(
                 blueLineX + hubOffset - stopShootingZoneBuffer,
-                centerLineY + Units.inchesToMeters(133.47 - (24.97 + 12.00))),
+                centerLineY + Units.inchesToMeters(133.47 - 24.97)),
             new Translation2d(
                 blueLineX + hubOffset + trenchScaleFactor * Units.inchesToMeters(22.20 + 6),
                 fieldWidth + fieldEdgeTolerance));
@@ -115,7 +98,7 @@ public class FieldConstants {
         new FieldRectangle2d(
             new Translation2d(
                 blueLineX + hubOffset - trenchScaleFactor * Units.inchesToMeters(22.20 + 6),
-                centerLineY + Units.inchesToMeters(133.47 - (24.97 + 12.00))),
+                centerLineY + Units.inchesToMeters(133.47 - 24.97)),
             new Translation2d(
                 blueLineX + hubOffset + trenchScaleFactor * Units.inchesToMeters(22.20 + 6),
                 fieldWidth + fieldEdgeTolerance));
@@ -184,22 +167,6 @@ public class FieldConstants {
                 redLineX
                     + trenchScaleFactor * Units.inchesToMeters(trenchZoneArea + edgeOfHubNeutral),
                 Units.inchesToMeters(50.59)));
-    public static FieldRectangle2d bumpRight =
-        new FieldRectangle2d(
-            new Translation2d(
-                redLineX - Units.inchesToMeters(22.20), Units.inchesToMeters(50.59 + 12.00)),
-            new Translation2d(
-                redLineX + Units.inchesToMeters(22.20),
-                Units.inchesToMeters(50.59 + 12.00 + 73.00)));
-
-    public static FieldRectangle2d bumpLeft =
-        new FieldRectangle2d(
-            new Translation2d(
-                redLineX - Units.inchesToMeters(22.20),
-                Units.inchesToMeters(fieldWidth - (50.35 + 12.00 + 73.00))),
-            new Translation2d(
-                redLineX + Units.inchesToMeters(22.20),
-                Units.inchesToMeters(fieldWidth - (50.35 + 12.00))));
 
     // Covers left red trench (only neutral zone side)
     // For use when we are red alliance and want to be able to shoot in the trench
@@ -207,7 +174,7 @@ public class FieldConstants {
         new FieldRectangle2d(
             new Translation2d(
                 redLineX - hubOffset - trenchScaleFactor * Units.inchesToMeters(22.20 + 6),
-                centerLineY + Units.inchesToMeters(133.47 - (24.97 + 12.00))),
+                centerLineY + Units.inchesToMeters(133.47 - 24.97)),
             new Translation2d(
                 redLineX - hubOffset + stopShootingZoneBuffer, fieldWidth + fieldEdgeTolerance));
 
@@ -227,7 +194,7 @@ public class FieldConstants {
         new FieldRectangle2d(
             new Translation2d(
                 redLineX - hubOffset - trenchScaleFactor * Units.inchesToMeters(22.20 + 6),
-                centerLineY + Units.inchesToMeters(133.47 - (24.97 + 12.00))),
+                centerLineY + Units.inchesToMeters(133.47 - 24.97)),
             new Translation2d(
                 redLineX - hubOffset + trenchScaleFactor * Units.inchesToMeters(22.20 + 6),
                 fieldWidth + fieldEdgeTolerance));
@@ -276,20 +243,6 @@ public class FieldConstants {
     RobotContainer.getField()
         .getObject("Blue.allianceZone")
         .setPoses(Blue.allianceZone.getCornerPoses());
-    RobotContainer.getField()
-        .getObject("Blue.rightAllianceZone")
-        .setPoses(Blue.rightAllianceZone.getCornerPoses());
-    RobotContainer.getField()
-        .getObject("Blue.leftAllianceZone")
-        .setPoses(Blue.leftAllianceZone.getCornerPoses());
-    RobotContainer.getField()
-        .getObject("Blue.trenchLeft")
-        .setPoses(Blue.trenchLeft.getCornerPoses());
-    RobotContainer.getField()
-        .getObject("Blue.trenchRight")
-        .setPoses(Blue.trenchRight.getCornerPoses());
-    RobotContainer.getField().getObject("Blue.bumpRight").setPoses(Blue.bumpRight.getCornerPoses());
-    RobotContainer.getField().getObject("Blue.bumpLeft").setPoses(Blue.bumpLeft.getCornerPoses());
 
     RobotContainer.getField()
         .getObject("Blue.frontOfHub")
@@ -298,19 +251,6 @@ public class FieldConstants {
     RobotContainer.getField()
         .getObject("Red.allianceZone")
         .setPoses(Red.allianceZone.getCornerPoses());
-    RobotContainer.getField()
-        .getObject("Red.rightAllianceZone")
-        .setPoses(Red.rightAllianceZone.getCornerPoses());
-    RobotContainer.getField()
-        .getObject("Red.leftAllianceZone")
-        .setPoses(Red.leftAllianceZone.getCornerPoses());
-    RobotContainer.getField().getObject("Red.trenchLeft").setPoses(Red.trenchLeft.getCornerPoses());
-    RobotContainer.getField()
-        .getObject("Red.trenchRight")
-        .setPoses(Red.trenchRight.getCornerPoses());
-    RobotContainer.getField().getObject("Red.bumpRight").setPoses(Red.bumpRight.getCornerPoses());
-    RobotContainer.getField().getObject("Red.bumpLeft").setPoses(Red.bumpLeft.getCornerPoses());
-    // TODO eventually add logging for stop shoot zones
     RobotContainer.getField().getObject("Red.frontOfHub").setPoses(Red.frontOfHub.getCornerPoses());
 
     RobotContainer.getField()
@@ -329,6 +269,31 @@ public class FieldConstants {
 
     RobotContainer.getField().getObject("Red.towerZone").setPoses(Red.towerZone.getCornerPoses());
     RobotContainer.getField().getObject("Blue.towerZone").setPoses(Blue.towerZone.getCornerPoses());
+
+    RobotContainer.getField()
+        .getObject("Red.stopShootLeftNeutral")
+        .setPoses(Red.stopShootLeftNeutral.getCornerPoses());
+    RobotContainer.getField()
+        .getObject("Red.stopShootRightNeutral")
+        .setPoses(Red.stopShootRightNeutral.getCornerPoses());
+    RobotContainer.getField()
+        .getObject("Red.stopShootLeftFull")
+        .setPoses(Red.stopShootLeftFull.getCornerPoses());
+    RobotContainer.getField()
+        .getObject("Red.stopShootRightFull")
+        .setPoses(Red.stopShootRightFull.getCornerPoses());
+    RobotContainer.getField()
+        .getObject("Blue.stopShootLeftNeutral")
+        .setPoses(Blue.stopShootLeftNeutral.getCornerPoses());
+    RobotContainer.getField()
+        .getObject("Blue.stopShootRightNeutral")
+        .setPoses(Blue.stopShootRightNeutral.getCornerPoses());
+    RobotContainer.getField()
+        .getObject("Blue.stopShootLeftFull")
+        .setPoses(Blue.stopShootLeftFull.getCornerPoses());
+    RobotContainer.getField()
+        .getObject("Blue.stopShootRightFull")
+        .setPoses(Blue.stopShootRightFull.getCornerPoses());
   }
 
   public static final double aprilTagWidth = Units.inchesToMeters(6.50);
