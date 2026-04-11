@@ -34,9 +34,7 @@ public class AreaManager {
           || FieldConstants.Blue.stopShootRightAlliance.contains(position)
           // Not anywhere near red trench (neutral/red alliance side)
           || FieldConstants.Red.stopShootLeftOpposing.contains(position)
-          || FieldConstants.Red.stopShootRightOpposing.contains(position)
-          || FieldConstants.Red.towerZone.contains(position)
-          || FieldConstants.Blue.towerZone.contains(position));
+          || FieldConstants.Red.stopShootRightOpposing.contains(position));
     } else {
       return !(FieldConstants.Blue.frontOfHub.contains(position)
           // Not in neutral side of red trench
@@ -44,9 +42,7 @@ public class AreaManager {
           || FieldConstants.Blue.stopShootRightAlliance.contains(position)
           // Not anywhere near blue trench (neutral/blue alliance side)
           || FieldConstants.Red.stopShootLeftOpposing.contains(position)
-          || FieldConstants.Red.stopShootRightOpposing.contains(position)
-          || FieldConstants.Red.towerZone.contains(position)
-          || FieldConstants.Blue.towerZone.contains(position));
+          || FieldConstants.Red.stopShootRightOpposing.contains(position));
     }
   }
 
