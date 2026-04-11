@@ -94,6 +94,8 @@ public class RobotContainer {
 
   public static Drive drive;
 
+  public static Simulator simulator;
+
   public static AutonomousSelector autonomousSelector;
 
   private static Field2d field;
@@ -298,7 +300,7 @@ public class RobotContainer {
                 : new Rollers(new RollersIOSim());
         intake = new Intake(deployer, rollers);
 
-        new Simulator(drive, shooter);
+        simulator = new Simulator(drive);
       }
 
       default -> {

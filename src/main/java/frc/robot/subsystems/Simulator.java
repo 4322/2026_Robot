@@ -11,18 +11,16 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.simulation.DriverStationSim;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
 import frc.robot.autonomous.AutonomousSelector.AutoName;
 import frc.robot.subsystems.drive.Drive;
-import frc.robot.subsystems.shooter.Shooter;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import org.littletonrobotics.junction.Logger;
 
-public class Simulator extends SubsystemBase {
+public class Simulator {
   private static final RegressTests regressTest = RegressTests.TRENCHES;
   public static AutoName autoScenario;
   private TeleopScenario teleopScenario;
@@ -762,16 +760,13 @@ public class Simulator extends SubsystemBase {
   boolean momentaryPOV;
 
   private final Drive drive;
-  private final Shooter shooter;
 
-  public Simulator(Drive drive, Shooter shooter) {
+  public Simulator(Drive drive) {
     this.drive = drive;
-    this.shooter = shooter;
 
     warmupTimer.start();
   }
 
-  @Override
   public void periodic() {
     // wait for PathPanner and other libraries to initialize
     if (warmupTimer.isRunning()) {
