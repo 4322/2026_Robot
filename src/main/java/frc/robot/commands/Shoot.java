@@ -1,12 +1,11 @@
 package frc.robot.commands;
 
-import org.littletonrobotics.junction.Logger;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.shooter.areaManager.AreaManager;
 import frc.robot.subsystems.shooter.areaManager.AreaManager.Zone;
+import org.littletonrobotics.junction.Logger;
 
 public class Shoot extends Command {
   private Shooter shooter;
@@ -27,7 +26,9 @@ public class Shoot extends Command {
 
   @Override
   public void execute() {
-    Logger.recordOutput("Shooter/shooterCommand/currentZone", AreaManager.getZoneOfPosition(drive.getTurretTranslation()).toString());
+    Logger.recordOutput(
+        "Shooter/currentZone",
+        AreaManager.getZoneOfPosition(drive.getTurretTranslation()).toString());
     if ((!AreaManager.isShootingArea(drive.getTurretTranslation())) && !ignoreArea) {
       shooter.requestIdle(null, null, null);
     } else {
