@@ -74,15 +74,7 @@ public class AreaManager {
 
   public static Zone getZoneOfPosition(Translation2d position) {
     if (Robot.alliance == Alliance.Blue) {
-      if (FieldConstants.Blue.trenchLeft.contains(position)) {
-        return Zone.LEFT_TRENCH;
-      } else if (FieldConstants.Blue.trenchRight.contains(position)) {
-        return Zone.RIGHT_TRENCH;
-      } else if (FieldConstants.Red.trenchLeft.contains(position)) {
-        return Zone.LEFT_OPPOSITION_TRENCH;
-      } else if (FieldConstants.Red.trenchRight.contains(position)) {
-        return Zone.RIGHT_OPPOSITION_TRENCH;
-      } else if (FieldConstants.Blue.stopShootLeftAlliance.contains(position)) {
+      if (FieldConstants.Blue.stopShootLeftAlliance.contains(position)) {
         return Zone.LEFT_STOP_SHOOT;
       } else if (FieldConstants.Blue.stopShootRightAlliance.contains(position)) {
         return Zone.RIGHT_STOP_SHOOT;
@@ -102,15 +94,7 @@ public class AreaManager {
         return Zone.LEFT_NEUTRAL;
       }
     } else {
-      if (FieldConstants.Red.trenchLeft.contains(position)) {
-        return Zone.LEFT_TRENCH;
-      } else if (FieldConstants.Red.trenchRight.contains(position)) {
-        return Zone.RIGHT_TRENCH;
-      } else if (FieldConstants.Blue.trenchLeft.contains(position)) {
-        return Zone.LEFT_OPPOSITION_TRENCH;
-      } else if (FieldConstants.Blue.trenchRight.contains(position)) {
-        return Zone.RIGHT_OPPOSITION_TRENCH;
-      } else if (FieldConstants.Red.stopShootLeftAlliance.contains(position)) {
+      if (FieldConstants.Red.stopShootLeftAlliance.contains(position)) {
         return Zone.LEFT_STOP_SHOOT;
       } else if (FieldConstants.Red.stopShootRightAlliance.contains(position)) {
         return Zone.RIGHT_STOP_SHOOT;
