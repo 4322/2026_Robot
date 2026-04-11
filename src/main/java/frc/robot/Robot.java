@@ -390,6 +390,11 @@ public class Robot extends LoggedRobot {
       Threads.setCurrentThreadPriority(true, 99);
     }
 
+    // insure that the sim runs before everything else
+    if (RobotContainer.simulator != null) {
+      RobotContainer.simulator.periodic();
+    }
+
     // Runs the Scheduler. This is responsible for polling buttons, adding
     // newly-scheduled commands, running already-scheduled commands, removing
     // finished or interrupted commands, and running subsystem periodic() methods.

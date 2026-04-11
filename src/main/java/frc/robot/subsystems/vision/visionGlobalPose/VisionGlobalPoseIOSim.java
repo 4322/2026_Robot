@@ -43,4 +43,9 @@ public class VisionGlobalPoseIOSim extends VisionGlobalPoseIOPhoton {
     visionSim.update(poseSupplier.get());
     super.updateInputs(inputs);
   }
+
+  @Override
+  public void setRobotPose(Pose2d robotPose) {
+    visionSim.resetRobotPose(robotPose);
+  }
 }
