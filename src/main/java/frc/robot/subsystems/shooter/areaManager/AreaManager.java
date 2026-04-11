@@ -82,10 +82,6 @@ public class AreaManager {
         return Zone.LEFT_OPPOSITION_TRENCH;
       } else if (FieldConstants.Red.trenchRight.contains(position)) {
         return Zone.RIGHT_OPPOSITION_TRENCH;
-      } else if (FieldConstants.Blue.towerZone.contains(position)) {
-        return Zone.ALLIANCE_TOWER;
-      } else if (FieldConstants.Red.towerZone.contains(position)) {
-        return Zone.OPPOSITION_TOWER;
       } else if (FieldConstants.Blue.stopShootLeftAlliance.contains(position)) {
         return Zone.LEFT_STOP_SHOOT;
       } else if (FieldConstants.Blue.stopShootRightAlliance.contains(position)) {
@@ -122,10 +118,6 @@ public class AreaManager {
         return Zone.LEFT_OPPOSITION_STOP_SHOOT;
       } else if (FieldConstants.Blue.stopShootRightOpposing.contains(position)) {
         return Zone.RIGHT_OPPOSITION_STOP_SHOOT;
-      } else if (FieldConstants.Red.towerZone.contains(position)) {
-        return Zone.ALLIANCE_TOWER;
-      } else if (FieldConstants.Blue.towerZone.contains(position)) {
-        return Zone.OPPOSITION_TOWER;
       } else if (FieldConstants.Red.allianceZone.contains(position)) {
         return Zone.ALLIANCE_ZONE;
       } else if (FieldConstants.Blue.rightAllianceZone.contains(position)) {
