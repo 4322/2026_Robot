@@ -221,4 +221,11 @@ public class VisionGlobalPose extends SubsystemBase {
         double timestampSeconds,
         Matrix<N3, N1> visionMeasurementStdDevs);
   }
+
+  public void setRobotPose(Pose2d robotPose) {
+    // Loop over cameras
+    for (int cameraIndex = 0; cameraIndex < io.length; cameraIndex++) {
+      io[cameraIndex].setRobotPose(robotPose);
+    }
+  }
 }

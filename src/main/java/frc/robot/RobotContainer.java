@@ -78,7 +78,7 @@ import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetectionIO
 public class RobotContainer {
   // Subsystems
 
-  private static VisionGlobalPose visionGlobalPose;
+  public static VisionGlobalPose visionGlobalPose;
   private static VisionObjectDetection visionObjectDetection;
   public static Shooter shooter;
   private static Flywheel flywheel;
@@ -300,7 +300,7 @@ public class RobotContainer {
                 : new Rollers(new RollersIOSim());
         intake = new Intake(deployer, rollers);
 
-        simulator = new Simulator(drive);
+        simulator = new Simulator();
       }
 
       default -> {

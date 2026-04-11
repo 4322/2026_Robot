@@ -13,7 +13,6 @@ import edu.wpi.first.wpilibj.simulation.DriverStationSim;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.RobotContainer;
 import frc.robot.autonomous.AutonomousSelector.AutoName;
-import frc.robot.subsystems.drive.Drive;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -73,9 +72,6 @@ public class Simulator {
 
   private enum EventType {
     SET_POSE,
-    FLYWHEEL_DETECT_FUEL,
-    FUEL_VISIBLE,
-    FUEL_NOT_VISIBLE,
     PRESS_A,
     HOLD_A,
     RELEASE_A,
@@ -759,11 +755,7 @@ public class Simulator {
   int activePOV;
   boolean momentaryPOV;
 
-  private final Drive drive;
-
-  public Simulator(Drive drive) {
-    this.drive = drive;
-
+  public Simulator() {
     warmupTimer.start();
   }
 
@@ -819,10 +811,7 @@ public class Simulator {
         Logger.recordOutput("Sim/EventName", currentEvent.eventName);
         Logger.recordOutput("Sim/EventType", currentEvent.eventType);
         switch (currentEvent.eventType) {
-          case SET_POSE -> drive.setPose(currentEvent.pose);
-            // case FUEL_VISIBLE -> visionObjectDetectionIOSim.FuelDetected(
-            // currentEvent.pose.getTranslation(), WPIUtilJNI.now() * 1.0e-6);
-            // case FUEL_NOT_VISIBLE -> visionObjectDetectionIOSim.noCoral();
+          case SET_POSE -> setPose(currentEvent.pose);
           case PRESS_A -> pressButton(XboxController.Button.kA);
           case HOLD_A -> holdButton(XboxController.Button.kA);
           case RELEASE_A -> releaseButton(XboxController.Button.kA);
@@ -984,8 +973,13 @@ public class Simulator {
     } else {
       events = teleopEvents;
     }
-    drive.setPose(new Pose2d(0, 0, Rotation2d.kZero));
+    setPose(new Pose2d(0, 0, Rotation2d.kZero));
     resetScenario();
+  }
+
+  private void setPose(Pose2d robotPose) {
+    RobotContainer.drive.setPose(robotPose);
+    RobotContainer.visionGlobalPose.setRobotPose(robotPose);
   }
 
   private void holdButton(XboxController.Button button) {
