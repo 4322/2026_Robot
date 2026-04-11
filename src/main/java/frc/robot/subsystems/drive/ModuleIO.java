@@ -49,4 +49,7 @@ public interface ModuleIO {
 
   /** Run the turn motor to the specified rotation. */
   public default void setTurnPosition(Rotation2d rotation) {}
+
+  // For sim use to jump the pose
+  public default void resetState() {}
 }
