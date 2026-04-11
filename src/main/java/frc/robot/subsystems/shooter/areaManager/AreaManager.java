@@ -38,11 +38,11 @@ public class AreaManager {
     } else {
       return !(FieldConstants.Blue.frontOfHub.contains(position)
           // Not in neutral side of red trench
-          || FieldConstants.Blue.stopShootLeftAlliance.contains(position)
-          || FieldConstants.Blue.stopShootRightAlliance.contains(position)
+          || FieldConstants.Red.stopShootLeftAlliance.contains(position)
+          || FieldConstants.Red.stopShootRightAlliance.contains(position)
           // Not anywhere near blue trench (neutral/blue alliance side)
-          || FieldConstants.Red.stopShootLeftOpposing.contains(position)
-          || FieldConstants.Red.stopShootRightOpposing.contains(position));
+          || FieldConstants.Blue.stopShootLeftOpposing.contains(position)
+          || FieldConstants.Blue.stopShootRightOpposing.contains(position));
     }
   }
 
