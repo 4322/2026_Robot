@@ -114,10 +114,10 @@ public class FieldConstants {
     public static FieldRectangle2d stopShootLeftOpposing =
         new FieldRectangle2d(
             new Translation2d(
-                blueLineX - trenchScaleFactor * Units.inchesToMeters(22.20 + 6),
+                blueLineX + hubOffset - trenchScaleFactor * Units.inchesToMeters(22.20 + 6),
                 centerLineY + Units.inchesToMeters(133.47 - (24.97 + 12.00))),
             new Translation2d(
-                blueLineX + trenchScaleFactor * Units.inchesToMeters(22.20 + 6),
+                blueLineX + hubOffset + trenchScaleFactor * Units.inchesToMeters(22.20 + 6),
                 fieldWidth + fieldEdgeTolerance));
 
     // Covers the right blue trench (both neutral and alliance zone sides)
@@ -125,10 +125,10 @@ public class FieldConstants {
     public static FieldRectangle2d stopShootRightOpposing =
         new FieldRectangle2d(
             new Translation2d(
-                blueLineX - trenchScaleFactor * Units.inchesToMeters(22.20 + 6),
+                blueLineX + hubOffset - trenchScaleFactor * Units.inchesToMeters(22.20 + 6),
                 -fieldEdgeTolerance),
             new Translation2d(
-                blueLineX + trenchScaleFactor * Units.inchesToMeters(22.20 + 6),
+                blueLineX + hubOffset + trenchScaleFactor * Units.inchesToMeters(22.20 + 6),
                 Units.inchesToMeters(50.59)));
 
     public static FieldRectangle2d frontOfHub =
