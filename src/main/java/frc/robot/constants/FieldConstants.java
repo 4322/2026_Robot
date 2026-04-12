@@ -17,7 +17,7 @@ public class FieldConstants {
   // Point A should be bottom right
   // Point B should be top left
   // All are relative to the blue alliance station
-  //Using Wpilib coordinates
+  // Using Wpilib coordinates
   public static double trenchScaleFactor = 1.3;
 
   public static double fieldLength = Units.inchesToMeters(651.22);
@@ -38,12 +38,15 @@ public class FieldConstants {
               158.6); // The edge towards the driver station of the hub but red side
   public static double hubOffset =
       Units.inchesToMeters(24.0); // Distance between the blue/red line and the respective hub
-  public static final double fieldEdgeTolerance = Units.inchesToMeters(48); //Entire length of side of hub to towards the driverstation to the neutral zone
+  public static final double fieldEdgeTolerance =
+      Units.inchesToMeters(
+          48); // Entire length of side of hub to towards the driverstation to the neutral zone
+//Added to still detect robot with minor odom or vision discrepancy
 
   // All left/right designations are relative to blue alliance station
   public static class Blue {
     public static Translation2d hubTranslation =
-        new Translation2d(blueLineX + hubOffset, centerLineY);
+        new Translation2d(blueLineX + hubOffset, centerLineY); //Middle of the hub
     public static FieldRectangle2d allianceZone =
         new FieldRectangle2d(
             new Translation2d(-fieldEdgeTolerance, -fieldEdgeTolerance),

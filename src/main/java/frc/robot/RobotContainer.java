@@ -367,8 +367,11 @@ public class RobotContainer {
     Intake - Left Bumper Toggle (Driver)
     Trench Override Hood - Left Trigger while held (Driver)
     Unjam Shooter - B while held (Driver)
-    Shoot - Left Trigger while held (Operator)
-    Smoosh - A while held (Driver)
+    Shoot - Right Trigger while held (Driver)
+    Fixed Shooting - 'a' while held (Driver)
+    Smoosh - 'y' on true (Driver)
+    Turret Unjam - right bumper while held (Driver)
+    Intake Eject - 'x' on true (Driver)
     */
 
     controller.b().whileTrue(ShooterCommands.unjam(shooter));
