@@ -41,12 +41,12 @@ public class FieldConstants {
   public static final double fieldEdgeTolerance =
       Units.inchesToMeters(
           48); // Entire length of side of hub to towards the driverstation to the neutral zone
-//Added to still detect robot with minor odom or vision discrepancy
+  // Added to still detect robot with minor odom or vision discrepancy
 
   // All left/right designations are relative to blue alliance station
   public static class Blue {
     public static Translation2d hubTranslation =
-        new Translation2d(blueLineX + hubOffset, centerLineY); //Middle of the hub
+        new Translation2d(blueLineX + hubOffset, centerLineY); // Middle of the hub
     public static FieldRectangle2d allianceZone =
         new FieldRectangle2d(
             new Translation2d(-fieldEdgeTolerance, -fieldEdgeTolerance),
