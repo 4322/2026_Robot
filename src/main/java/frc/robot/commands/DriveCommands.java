@@ -380,4 +380,9 @@ public class DriveCommands {
     Rotation2d lastAngle = Rotation2d.kZero;
     double gyroDelta = 0.0;
   }
+
+  // public static Command getIfDriveIsNotSame(Drive drive) {
+  //  if (drive.getChassisSpeeds().vxMetersPerSecond == 0 && drive.getChassisSpeeds().vyMetersPerSecond == 0 && drive.getChassisSpeeds().omegaRadiansPerSecond == 0) {
+   
+  // }
 }
