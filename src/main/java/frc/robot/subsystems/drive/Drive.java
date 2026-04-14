@@ -19,6 +19,7 @@ import com.pathplanner.lib.util.PathPlannerLogging;
 import edu.wpi.first.hal.FRCNetComm.tInstances;
 import edu.wpi.first.hal.FRCNetComm.tResourceType;
 import edu.wpi.first.hal.HAL;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -37,7 +38,9 @@ import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.RobotContainer;
@@ -54,6 +57,7 @@ import org.littletonrobotics.junction.Logger;
 public class Drive extends SubsystemBase {
   // TunerConstants doesn't include these constants, so they are declared locally
   static final double ODOMETRY_FREQUENCY = Constants.CANivore.CANBus.isNetworkFD() ? 250.0 : 100.0;
+  private double speed;
   public static final double DRIVE_BASE_RADIUS =
       Math.max(
           Math.max(
@@ -235,11 +239,13 @@ public class Drive extends SubsystemBase {
       // Send setpoints to modules
       for (int i = 0; i < 4; i++) {
         modules[i].runSetpoint(setpointStates[i]);
+        this.speed = setpointStates[i].speedMetersPerSecond;
       }
     }
 
     // Log optimized setpoints (runSetpoint mutates each state)
     Logger.recordOutput("Drive/SwerveStates/SetpointsOptimized", setpointStates);
+
   }
 
   /** Runs the drive in a straight line with the specified drive output. */
@@ -361,6 +367,43 @@ public class Drive extends SubsystemBase {
     for (int i = 0; i < 4; i++) {
       modules[i].resetState();
     }
+  }
+
+  public Double getFrontLeftVelocity() {
+     return modules[0].getVelocityMetersPerSec();
+  }
+
+  public Double getFrontRightVelocity() {
+     return modules[1].getVelocityMetersPerSec();
+  }
+
+  public Double getBackLeftVelocity() {
+     return modules[2].getVelocityMetersPerSec();
+  }
+
+  public Double getBackRightVelocity() {
+     return modules[3].getVelocityMetersPerSec();
+  }
+  
+  public void isDriveSame(Drive drive) {
+    if (MathUtil.isNear(this.speed, drive.getFrontRightVelocity(), 0.01) &&
+        MathUtil.isNear(this.speed, drive.getBackLeftVelocity(), 0.01) &&
+        MathUtil.isNear(this.speed, drive.getBackRightVelocity(), 0.01) &&
+        MathUtil.isNear(this.speed, drive.getFrontLeftVelocity(), 0.01)) {
+       SmartDashboard.putString("Tester/Drive/IsSameSpeed", Constants.NetworkTables.green.kLime.toHexString());
+    } else {
+      if (!MathUtil.isNear(this.speed, drive.getFrontLeftVelocity(), 0.01)){
+        SmartDashboard.putString("Tester/Drive/IsSameSpeed", Constants.NetworkTables.red.kDarkRed.toHexString());
+      }
+      else if (!MathUtil.isNear(this.speed, drive.getFrontRightVelocity(), 0.01)){
+      SmartDashboard.putString("Tester/Drive/IsSameSpeed", Constants.NetworkTables.red.kOrange.toHexString());
+      } else if (!MathUtil.isNear(this.speed, drive.getBackLeftVelocity(), 0.01)){
+        SmartDashboard.putString("Tester/Drive/IsSameSpeed", Constants.NetworkTables.yellow.kWheat.toHexString());
+      } else if (!MathUtil.isNear(this.speed, drive.getBackRightVelocity(), 0.01)){
+        SmartDashboard.putString("Tester/Drive/IsSameSpeed", Constants.NetworkTables.yellow.kSteelBlue.toHexString());
+      }
+    }
+
   }
 
   /** Adds a new timestamped vision measurement. */

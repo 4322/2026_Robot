@@ -19,6 +19,7 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -381,8 +382,5 @@ public class DriveCommands {
     double gyroDelta = 0.0;
   }
 
-  // public static Command getIfDriveIsNotSame(Drive drive) {
-  //  if (drive.getChassisSpeeds().vxMetersPerSecond == 0 && drive.getChassisSpeeds().vyMetersPerSecond == 0 && drive.getChassisSpeeds().omegaRadiansPerSecond == 0) {
-   
-  // }
-}
+
+  }
