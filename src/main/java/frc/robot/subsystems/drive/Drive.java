@@ -40,7 +40,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.RobotContainer;
@@ -245,7 +244,6 @@ public class Drive extends SubsystemBase {
 
     // Log optimized setpoints (runSetpoint mutates each state)
     Logger.recordOutput("Drive/SwerveStates/SetpointsOptimized", setpointStates);
-
   }
 
   /** Runs the drive in a straight line with the specified drive output. */
@@ -370,40 +368,48 @@ public class Drive extends SubsystemBase {
   }
 
   public Double getFrontLeftVelocity() {
-     return modules[0].getVelocityMetersPerSec();
+    return modules[0].getVelocityMetersPerSec();
   }
 
   public Double getFrontRightVelocity() {
-     return modules[1].getVelocityMetersPerSec();
+    return modules[1].getVelocityMetersPerSec();
   }
 
   public Double getBackLeftVelocity() {
-     return modules[2].getVelocityMetersPerSec();
+    return modules[2].getVelocityMetersPerSec();
   }
 
   public Double getBackRightVelocity() {
-     return modules[3].getVelocityMetersPerSec();
+    return modules[3].getVelocityMetersPerSec();
   }
-  
+
+  //If Not working = color
+  // Front Left = Red
+  // Front Right = Orange
+  // Back Left = Steel Blue
+  // Back Right = Violet
   public void isDriveSame(Drive drive) {
-    if (MathUtil.isNear(this.speed, drive.getFrontRightVelocity(), 0.01) &&
-        MathUtil.isNear(this.speed, drive.getBackLeftVelocity(), 0.01) &&
-        MathUtil.isNear(this.speed, drive.getBackRightVelocity(), 0.01) &&
-        MathUtil.isNear(this.speed, drive.getFrontLeftVelocity(), 0.01)) {
-       SmartDashboard.putString("Tester/Drive/IsSameSpeed", Constants.NetworkTables.green.kLime.toHexString());
+    if (MathUtil.isNear(this.speed, drive.getFrontRightVelocity(), 0.01)
+        && MathUtil.isNear(this.speed, drive.getBackLeftVelocity(), 0.01)
+        && MathUtil.isNear(this.speed, drive.getBackRightVelocity(), 0.01)
+        && MathUtil.isNear(this.speed, drive.getFrontLeftVelocity(), 0.01)) {
+      SmartDashboard.putString(
+          "Tester/Drive/IsSameSpeed", Constants.NetworkTables.green.kLime.toHexString());
     } else {
-      if (!MathUtil.isNear(this.speed, drive.getFrontLeftVelocity(), 0.01)){
-        SmartDashboard.putString("Tester/Drive/IsSameSpeed", Constants.NetworkTables.red.kDarkRed.toHexString());
-      }
-      else if (!MathUtil.isNear(this.speed, drive.getFrontRightVelocity(), 0.01)){
-      SmartDashboard.putString("Tester/Drive/IsSameSpeed", Constants.NetworkTables.red.kOrange.toHexString());
-      } else if (!MathUtil.isNear(this.speed, drive.getBackLeftVelocity(), 0.01)){
-        SmartDashboard.putString("Tester/Drive/IsSameSpeed", Constants.NetworkTables.yellow.kWheat.toHexString());
-      } else if (!MathUtil.isNear(this.speed, drive.getBackRightVelocity(), 0.01)){
-        SmartDashboard.putString("Tester/Drive/IsSameSpeed", Constants.NetworkTables.yellow.kSteelBlue.toHexString());
+      if (!MathUtil.isNear(this.speed, drive.getFrontLeftVelocity(), 0.01)) {
+        SmartDashboard.putString(
+            "Tester/Drive/IsSameSpeed", Constants.NetworkTables.red.kDarkRed.toHexString());
+      } else if (!MathUtil.isNear(this.speed, drive.getFrontRightVelocity(), 0.01)) {
+        SmartDashboard.putString(
+            "Tester/Drive/IsSameSpeed", Constants.NetworkTables.red.kOrange.toHexString());
+      } else if (!MathUtil.isNear(this.speed, drive.getBackLeftVelocity(), 0.01)) {
+        SmartDashboard.putString(
+            "Tester/Drive/IsSameSpeed", Constants.NetworkTables.yellow.kSteelBlue.toHexString());
+      } else if (!MathUtil.isNear(this.speed, drive.getBackRightVelocity(), 0.01)) {
+        SmartDashboard.putString(
+            "Tester/Drive/IsSameSpeed", Constants.NetworkTables.yellow.kViolet.toHexString());
       }
     }
-
   }
 
   /** Adds a new timestamped vision measurement. */

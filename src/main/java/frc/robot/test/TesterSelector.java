@@ -41,9 +41,7 @@ public class TesterSelector {
       VisionObjectDetection visionObjectDetection,
       LED led,
       Intake intake) {
-    test = List.of(
-      new Test(defaultAuto, null)
-    );
+    test = List.of(new Test(defaultAuto, null));
 
     for (Test nextAuto : test) {
       if (nextAuto.name == defaultAuto) {
