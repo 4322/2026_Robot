@@ -142,4 +142,8 @@ public class Module {
   public void resetState() {
     io.resetState();
   }
+
+  public boolean isDriveConnected() {
+    return inputs.driveConnected;
+  }
 }

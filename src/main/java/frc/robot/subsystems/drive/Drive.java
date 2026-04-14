@@ -48,6 +48,9 @@ import frc.robot.constants.Constants.Mode;
 import frc.robot.constants.Constants.SubsystemMode;
 import frc.robot.generated.TunerConstants;
 import frc.robot.util.LocalADStarAK;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import org.littletonrobotics.junction.AutoLogOutput;
@@ -57,6 +60,7 @@ public class Drive extends SubsystemBase {
   // TunerConstants doesn't include these constants, so they are declared locally
   static final double ODOMETRY_FREQUENCY = Constants.CANivore.CANBus.isNetworkFD() ? 250.0 : 100.0;
   private double speed;
+  private ArrayList<Double> currentPriority = new ArrayList<>();
   public static final double DRIVE_BASE_RADIUS =
       Math.max(
           Math.max(
@@ -154,7 +158,7 @@ public class Drive extends SubsystemBase {
                 (state) -> Logger.recordOutput("Drive/SysIdState", state.toString())),
             new SysIdRoutine.Mechanism(
                 (voltage) -> runCharacterization(voltage.in(Volts)), null, this));
-  }
+              }
 
   @Override
   public void periodic() {
@@ -171,6 +175,7 @@ public class Drive extends SubsystemBase {
       for (var module : modules) {
         module.stop();
       }
+      currentPriority.clear();
     }
 
     // Log empty setpoint states when disabled
@@ -384,30 +389,70 @@ public class Drive extends SubsystemBase {
   }
 
   //If Not working = color
-  // Front Left = Red
-  // Front Right = Orange
-  // Back Left = Steel Blue
-  // Back Right = Violet
+  // If working = green
+  // If not connected = purple
+  //If too slow = orange
+  // If pulling too much current = blue;
+  // still running Tests = 
+
+  public boolean isDriveConnected() {
+   return modules[0].isDriveConnected()
+        && modules[1].isDriveConnected()
+        && modules[2].isDriveConnected()
+        && modules[3].isDriveConnected();
+  } 
+
+  public void driveConnectionStatus() {
+    if (isDriveConnected()) {
+      SmartDashboard.putString(
+          "Tester/Drive/ConnectionStatus", Constants.NetworkTables.green.toHexString());
+    } else {
+      if (!modules[0].isDriveConnected()) {
+        SmartDashboard.putString(
+            "Tester/Drive/FrontLeftStatus", Constants.NetworkTables.red.kMediumPurple.toHexString());
+      } 
+      if (!modules[1].isDriveConnected()) {
+        SmartDashboard.putString(
+            "Tester/Drive/FrontRightStatus", Constants.NetworkTables.red.kMediumPurple.toHexString());
+      } 
+      
+      if (!modules[2].isDriveConnected()) {
+        SmartDashboard.putString(
+            "Tester/Drive/BackLeftStatus", Constants.NetworkTables.red.kMediumPurple.toHexString());
+      } 
+      
+      if (!modules[3].isDriveConnected()) {
+        SmartDashboard.putString(
+            "Tester/Drive/BackRightStatus", Constants.NetworkTables.red.kMediumPurple.toHexString());
+      }
+    }
+  }
+
   public void isDriveSame(Drive drive) {
     if (MathUtil.isNear(this.speed, drive.getFrontRightVelocity(), 0.01)
         && MathUtil.isNear(this.speed, drive.getBackLeftVelocity(), 0.01)
         && MathUtil.isNear(this.speed, drive.getBackRightVelocity(), 0.01)
         && MathUtil.isNear(this.speed, drive.getFrontLeftVelocity(), 0.01)) {
       SmartDashboard.putString(
-          "Tester/Drive/IsSameSpeed", Constants.NetworkTables.green.kLime.toHexString());
+          "Tester/Drive/IsSameSpeed", Constants.NetworkTables.green.toHexString());
     } else {
       if (!MathUtil.isNear(this.speed, drive.getFrontLeftVelocity(), 0.01)) {
         SmartDashboard.putString(
-            "Tester/Drive/IsSameSpeed", Constants.NetworkTables.red.kDarkRed.toHexString());
-      } else if (!MathUtil.isNear(this.speed, drive.getFrontRightVelocity(), 0.01)) {
+            "Tester/Drive/FrontLeftColorStatus", Constants.NetworkTables.red.kOrange.toHexString());
+      } 
+      if (!MathUtil.isNear(this.speed, drive.getFrontRightVelocity(), 0.01)) {
         SmartDashboard.putString(
-            "Tester/Drive/IsSameSpeed", Constants.NetworkTables.red.kOrange.toHexString());
-      } else if (!MathUtil.isNear(this.speed, drive.getBackLeftVelocity(), 0.01)) {
+            "Tester/Drive/FrontRightColorStatus", Constants.NetworkTables.red.kOrange.toHexString());
+      } 
+      
+      if (!MathUtil.isNear(this.speed, drive.getBackLeftVelocity(), 0.01)) {
         SmartDashboard.putString(
-            "Tester/Drive/IsSameSpeed", Constants.NetworkTables.yellow.kSteelBlue.toHexString());
-      } else if (!MathUtil.isNear(this.speed, drive.getBackRightVelocity(), 0.01)) {
+            "Tester/Drive/BackLeftColorStatus", Constants.NetworkTables.yellow.kOrange.toHexString());
+      } 
+      
+      if (!MathUtil.isNear(this.speed, drive.getBackRightVelocity(), 0.01)) {
         SmartDashboard.putString(
-            "Tester/Drive/IsSameSpeed", Constants.NetworkTables.yellow.kViolet.toHexString());
+            "Tester/Drive/BackRightColorStatus", Constants.NetworkTables.yellow.kOrange.toHexString());
       }
     }
   }

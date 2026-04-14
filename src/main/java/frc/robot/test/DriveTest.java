@@ -5,6 +5,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.subsystems.drive.Drive;
 import org.littletonrobotics.junction.Logger;
 
@@ -21,7 +22,7 @@ public class DriveTest extends SequentialCommandGroup {
                 drive.runVelocity(
                     ChassisSpeeds.fromFieldRelativeSpeeds(
                         drive.getMaxLinearSpeedMetersPerSec(), 0, 0, Rotation2d.fromDegrees(0)))),
-        new WaitCommand(3),
+        new WaitUntilCommand(() -> drive.isDriveConnected()),
         new InstantCommand(
             () ->
                 drive.runVelocity(
