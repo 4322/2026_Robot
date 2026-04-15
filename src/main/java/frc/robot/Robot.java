@@ -393,6 +393,23 @@ public class Robot extends LoggedRobot {
       Threads.setCurrentThreadPriority(true, 99);
     }
 
+    // insure that the sim runs before everything else
+    if (RobotContainer.simulator != null) {
+      RobotContainer.simulator.periodic();
+    }
+
+    // Runs the Scheduler. This is responsible for polling buttons, adding
+    // newly-scheduled commands, running already-scheduled commands, removing
+    // finished or interrupted commands, and running subsystem periodic() methods.
+    // This must be called from the robot's periodic block in order for anything in
+    // the Command-based framework to work.
+    // CommandScheduler.getInstance().run();
+    RobotContainer.visionGlobalPose.periodic();
+
+    // RobotContainer.shooter.outputsPeriodic();
+
+    // RobotContainer.intake.periodicOutputs();
+
     // Return to non-RT thread priority (do not modify the first argument)
     if (Constants.realTimeCommandScheduler) {
       Threads.setCurrentThreadPriority(false, 10);
@@ -406,9 +423,10 @@ public class Robot extends LoggedRobot {
       allianceUpdateTimer.restart();
     }
 
-    RobotContainer.visionGlobalPose.periodic();
+    double cycles = workload.get();
 
-    for (int i = 0; i <= workload.get() * 1000000; i++) {
+    Logger.recordOutput("Workload", cycles);
+    for (int i = 0; i <= cycles * 1000000; i++) {
       // do nothing, just burn CPU cycles
     }
   }
