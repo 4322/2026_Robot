@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.constants.Constants;
+import frc.robot.util.LoggedTunableNumber;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -346,6 +347,8 @@ public class Robot extends LoggedRobot {
     CommandScheduler.getInstance().schedule(FollowPathCommand.warmupCommand());
   }
 
+  private static final LoggedTunableNumber workload = new LoggedTunableNumber("Workload", 0);
+
   /** This function is called periodically during all modes. */
   @Override
   public void robotPeriodic() {
@@ -390,22 +393,6 @@ public class Robot extends LoggedRobot {
       Threads.setCurrentThreadPriority(true, 99);
     }
 
-    // insure that the sim runs before everything else
-    if (RobotContainer.simulator != null) {
-      RobotContainer.simulator.periodic();
-    }
-
-    // Runs the Scheduler. This is responsible for polling buttons, adding
-    // newly-scheduled commands, running already-scheduled commands, removing
-    // finished or interrupted commands, and running subsystem periodic() methods.
-    // This must be called from the robot's periodic block in order for anything in
-    // the Command-based framework to work.
-    CommandScheduler.getInstance().run();
-
-    RobotContainer.shooter.outputsPeriodic();
-
-    RobotContainer.intake.periodicOutputs();
-
     // Return to non-RT thread priority (do not modify the first argument)
     if (Constants.realTimeCommandScheduler) {
       Threads.setCurrentThreadPriority(false, 10);
@@ -417,6 +404,12 @@ public class Robot extends LoggedRobot {
         alliance = allianceOptional.get();
       }
       allianceUpdateTimer.restart();
+    }
+
+    RobotContainer.visionGlobalPose.periodic();
+
+    for (int i = 0; i <= workload.get() * 1000000; i++) {
+      // do nothing, just burn CPU cycles
     }
   }
 

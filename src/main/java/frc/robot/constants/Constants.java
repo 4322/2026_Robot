@@ -62,11 +62,7 @@ public final class Constants {
   public static final boolean frontLeftCameraEnable = true;
   public static final boolean backRightCameraEnable = true;
   public static final boolean backLeftCameraEnable = true;
-  public static final boolean tuningWithLoggableNumbers =
-      (driveMode == SubsystemMode.TUNING
-          || firingManagerMode == SubsystemMode.TUNING
-          || hoodMode == SubsystemMode.TUNING
-          || visionGlobalPose == SubsystemMode.TUNING);
+  public static final boolean tuningWithLoggableNumbers = true;
 
   public static final double scoringDoubleToleranceTime = 0.5;
   public static final double passingDoubleToleranceTime = 0.25;
