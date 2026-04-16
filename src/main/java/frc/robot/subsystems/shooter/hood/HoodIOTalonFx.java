@@ -128,6 +128,8 @@ public class HoodIOTalonFx implements HoodIO {
   @Override
   public void setEncoderHomed() {
     encoder.setPosition(0);
+        hoodMotor.setControl(
+        new MotionMagicVoltage(0).withEnableFOC(true).withSlot(0));
   }
 
   @Override
