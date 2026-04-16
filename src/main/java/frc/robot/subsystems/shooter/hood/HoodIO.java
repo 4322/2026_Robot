@@ -12,7 +12,8 @@ public interface HoodIO {
     public double statorCurrentAmps = 0.0;
     public double appliedVoltage = 0.0;
     public double tempCelsius = 0.0;
-    public double encoderRot = 0.0;
+    public double encoderDegrees = 0.0;
+    public double encoderVelocity = 0.0;
     public double hoodDegrees = 0.0;
   }
 
@@ -20,7 +21,9 @@ public interface HoodIO {
 
   public default void setEncoderHomed() {}
 
-  public default void setPulseWidth(int pulseWidth) {}
+  public default void setAngle(double angle) {}
 
-  public default void simEstimatedPosition() {}
+  public default void setBrakeMode(boolean mode) {}
+
+  public default void setPosition(double rot) {}
 }

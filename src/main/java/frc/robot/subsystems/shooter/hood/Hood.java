@@ -1,6 +1,5 @@
 package frc.robot.subsystems.shooter.hood;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -33,7 +32,7 @@ public class Hood {
 
   public Hood(HoodIO io) {
     this.io = io;
-    moveServoToPosition(0); // avoid initial pop-up of servo when powered on
+    moveMotorToPosition(0); // avoid initial pop-up of servo when powered on
   }
 
   public void inputsPeriodic() {
@@ -52,23 +51,22 @@ public class Hood {
           homeHood();
         } else if (tuningPulseWidth.get() == 0) {
           setGoal(tuningGoalDeg.get());
-          moveServoToPosition(requestedAngleDeg);
+          moveMotorToPosition(requestedAngleDeg);
         } else if (++burstIntervalCount > tuningBurstInterval.getAsDouble()) {
           burstIntervalCount = 0;
-          io.setPulseWidth((int) tuningPulseWidth.get());
+          io.setAngle(requestedAngleDeg);
         } else {
-          io.setPulseWidth(1500); // pause output
+          io.setBrakeMode(true);
         }
       }
       case NORMAL -> {
         if (Constants.currentMode == Constants.Mode.SIM && !homed) {
-          io.simEstimatedPosition();
           homed = true;
         }
         if (!homed) {
           homeHood();
         } else {
-          moveServoToPosition(requestedAngleDeg);
+          moveMotorToPosition(requestedAngleDeg);
           updateAtGoalTimer();
         }
         updateNetworkTableValues();
@@ -85,10 +83,10 @@ public class Hood {
       homingTimer.stop();
       homingTimer.reset();
     } else {
-      moveServoToPosition(0);
+      moveMotorToPosition(0);
       homingTimer.start();
       if (homingTimer.hasElapsed(Constants.Hood.minHomingSec)
-          && Math.abs(inputs.encoderRPS) <= Constants.Hood.homingVelocityThresholdRPS) {
+          && Math.abs(inputs.encoderVelocity) <= Constants.Hood.homingVelocityThresholdRPS) {
         io.setEncoderHomed();
         setGoal(0);
         homed = true;
@@ -132,25 +130,8 @@ public class Hood {
     updateAtGoalTimer();
   }
 
-  private void moveServoToPosition(double hoodDegrees) {
-    double servoScaleFactor =
-        Constants.Hood.servoLowPositionScaleFactor
-            + ((hoodDegrees - Constants.Hood.lowCalibrationDeg)
-                    / (Constants.Hood.highCalibrationDeg - Constants.Hood.lowCalibrationDeg))
-                * (Constants.Hood.servoHighPositionScaleFactor
-                    - Constants.Hood.servoLowPositionScaleFactor);
-    double servoDegrees =
-        hoodDegrees
-            * Constants.Hood.encoderToHoodGearRatio
-            * Constants.Hood.servoToEncoderGearRatio;
-    double pulseWidthToDegreeRatio = 0.9;
-    int pulseWdith =
-        MathUtil.clamp(
-            Constants.Hood.homePulseWidth
-                + (int) (servoDegrees / pulseWidthToDegreeRatio * servoScaleFactor),
-            500,
-            2500);
-    io.setPulseWidth(pulseWdith);
+  private void moveMotorToPosition(double hoodDegrees) {
+    io.setAngle(hoodDegrees);
   }
 
   public void trenchOverride(boolean override) {

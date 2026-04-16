@@ -5,18 +5,12 @@ import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
-import com.revrobotics.ResetMode;
-import com.revrobotics.servohub.ServoChannel;
-import com.revrobotics.servohub.ServoChannel.ChannelId;
-import com.revrobotics.servohub.ServoHub;
-import com.revrobotics.servohub.ServoHub.Bank;
-import com.revrobotics.servohub.config.ServoChannelConfig;
-import com.revrobotics.servohub.config.ServoChannelConfig.BehaviorWhenDisabled;
-import com.revrobotics.servohub.config.ServoHubConfig;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Angle;
@@ -26,7 +20,6 @@ import edu.wpi.first.units.measure.Temperature;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.constants.Constants;
-import org.littletonrobotics.junction.Logger;
 
 public class HoodIOTalonFx implements HoodIO {
   private TalonFX hoodMotor;
@@ -34,7 +27,7 @@ public class HoodIOTalonFx implements HoodIO {
   private CANcoder encoder;
   private CANcoderConfiguration encoderConfig = new CANcoderConfiguration();
 
-private CANcoderConfiguration CANconfigTwo = new CANcoderConfiguration();
+  private CANcoderConfiguration CANconfigTwo = new CANcoderConfiguration();
 
   private final StatusSignal<Angle> position;
   private final StatusSignal<AngularVelocity> velocity;
@@ -45,7 +38,7 @@ private CANcoderConfiguration CANconfigTwo = new CANcoderConfiguration();
   private final StatusSignal<Current> statorCurrent;
   private final StatusSignal<Temperature> temp;
 
-    private final Debouncer motorConnectedDebounce =
+  private final Debouncer motorConnectedDebounce =
       new Debouncer(0.5, Debouncer.DebounceType.kFalling);
   private final Debouncer encoderConnectedDebounce =
       new Debouncer(0.5, Debouncer.DebounceType.kFalling);
@@ -83,18 +76,12 @@ private CANcoderConfiguration CANconfigTwo = new CANcoderConfiguration();
     StatusCode encoderStatus = encoder.getConfigurator().apply(encoderConfig);
     if (configStatus != StatusCode.OK) {
       DriverStation.reportError(
-          "Talon "
-              + hoodMotor.getDeviceID()
-              + " error (Hood): "
-              + configStatus.getDescription(),
+          "Talon " + hoodMotor.getDeviceID() + " error (Hood): " + configStatus.getDescription(),
           false);
     }
     if (encoderStatus != StatusCode.OK) {
       DriverStation.reportError(
-          "encoder "
-              + encoder.getDeviceID()
-              + " error (Hood): "
-              + encoderStatus.getDescription(),
+          "encoder " + encoder.getDeviceID() + " error (Hood): " + encoderStatus.getDescription(),
           false);
     }
     absolutePosition = encoder.getPosition();
@@ -129,7 +116,8 @@ private CANcoderConfiguration CANconfigTwo = new CANcoderConfiguration();
     inputs.motorConnected = motorConnectedDebounce.calculate(motorStatus.isOK());
     inputs.encoderConnected = encoderConnectedDebounce.calculate(encoderStatus.isOK());
     inputs.hoodDegrees = Units.rotationsToDegrees(position.getValueAsDouble());
-    inputs.encoderRot = absolutePosition.getValueAsDouble();
+    inputs.encoderDegrees = absolutePosition.getValueAsDouble();
+    inputs.encoderVelocity = encoderVelocity.getValueAsDouble();
     inputs.motorRPS = velocity.getValueAsDouble();
     inputs.supplyCurrentAmps = supplyCurrent.getValueAsDouble();
     inputs.statorCurrentAmps = statorCurrent.getValueAsDouble();
@@ -143,8 +131,18 @@ private CANcoderConfiguration CANconfigTwo = new CANcoderConfiguration();
   }
 
   @Override
-  public void setPulseWidth(int pulseWidth) {
-    servo.setPulseWidth(pulseWidth);
-    Logger.recordOutput("Shooter/Hood/pulseWidth", pulseWidth);
+  public void setBrakeMode(boolean mode) {
+    hoodMotor.setNeutralMode(mode ? NeutralModeValue.Brake : NeutralModeValue.Coast);
+  }
+
+  @Override
+  public void setAngle(double degs) {
+    hoodMotor.setControl(
+        new MotionMagicVoltage(Units.degreesToRotations(degs)).withEnableFOC(true).withSlot(0));
+  }
+
+  @Override
+  public void setPosition(double rot) {
+    hoodMotor.setPosition(rot);
   }
 }
