@@ -7,49 +7,67 @@
 
 package frc.robot;
 
-import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.autonomous.AutonomousSelector;
 import frc.robot.commands.DriveCommands;
-import frc.robot.commands.Shooter.ShooterCommand;
+import frc.robot.commands.IntakeCommands;
+import frc.robot.commands.ShooterCommands;
 import frc.robot.constants.Constants;
+import frc.robot.constants.FieldConstants;
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.Simulator;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOBoron;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
+import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.intake.deployer.Deployer;
+import frc.robot.subsystems.intake.deployer.DeployerIO;
+import frc.robot.subsystems.intake.deployer.DeployerIOSim;
+import frc.robot.subsystems.intake.deployer.DeployerIOTalonFX;
+import frc.robot.subsystems.intake.rollers.Rollers;
+import frc.robot.subsystems.intake.rollers.RollersIO;
+import frc.robot.subsystems.intake.rollers.RollersIOSim;
+import frc.robot.subsystems.intake.rollers.RollersIOTalonFX;
 import frc.robot.subsystems.led.LED;
+import frc.robot.subsystems.led.LEDIO;
+import frc.robot.subsystems.led.LEDIOCANdle;
+import frc.robot.subsystems.led.LEDIOSim;
 import frc.robot.subsystems.shooter.Shooter;
-import frc.robot.subsystems.shooter.Shooter.ShooterState;
-import frc.robot.subsystems.shooter.areaManager.AreaManager;
 import frc.robot.subsystems.shooter.flywheel.Flywheel;
 import frc.robot.subsystems.shooter.flywheel.FlywheelIO;
+import frc.robot.subsystems.shooter.flywheel.FlywheelIOSim;
 import frc.robot.subsystems.shooter.flywheel.FlywheelIOTalonFx;
 import frc.robot.subsystems.shooter.hood.Hood;
 import frc.robot.subsystems.shooter.hood.HoodIO;
+import frc.robot.subsystems.shooter.hood.HoodIOServo;
+import frc.robot.subsystems.shooter.hood.HoodIOSim;
 import frc.robot.subsystems.shooter.spindexer.Spindexer;
 import frc.robot.subsystems.shooter.spindexer.SpindexerIO;
+import frc.robot.subsystems.shooter.spindexer.SpindexerIOSim;
 import frc.robot.subsystems.shooter.spindexer.SpindexerIOTalonFx;
 import frc.robot.subsystems.shooter.tunnel.Tunnel;
 import frc.robot.subsystems.shooter.tunnel.TunnelIO;
+import frc.robot.subsystems.shooter.tunnel.TunnelIOSim;
 import frc.robot.subsystems.shooter.tunnel.TunnelIOTalonFx;
 import frc.robot.subsystems.shooter.turret.Turret;
 import frc.robot.subsystems.shooter.turret.TurretIO;
+import frc.robot.subsystems.shooter.turret.TurretIOSim;
 import frc.robot.subsystems.shooter.turret.TurretIOTalonFx;
 import frc.robot.subsystems.vision.visionGlobalPose.VisionGlobalPose;
+import frc.robot.subsystems.vision.visionGlobalPose.VisionGlobalPoseIO;
+import frc.robot.subsystems.vision.visionGlobalPose.VisionGlobalPoseIOPhoton;
+import frc.robot.subsystems.vision.visionGlobalPose.VisionGlobalPoseIOSim;
 import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetection;
 import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetectionIO;
 import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetectionIOPhoton;
-import java.util.function.BooleanSupplier;
-import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -60,41 +78,30 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 public class RobotContainer {
   // Subsystems
 
-  private static VisionGlobalPose visionGlobalPose;
+  public static VisionGlobalPose visionGlobalPose;
   private static VisionObjectDetection visionObjectDetection;
-  private static Shooter shooter;
+  public static Shooter shooter;
   private static Flywheel flywheel;
   private static Hood hood;
   private static Spindexer spindexer;
   private static Tunnel tunnel;
   private static Turret turret;
 
-  // TODO private static Intake intake;
+  public static Intake intake;
   private static LED led;
+  private static Rollers rollers;
+  private static Deployer deployer;
 
-  private static Drive drive;
+  public static Drive drive;
+
+  public static Simulator simulator;
+
+  public static AutonomousSelector autonomousSelector;
+
+  private static Field2d field;
 
   // Controller
-  private final CommandXboxController controller = new CommandXboxController(0);
-  public static ScoringManager operatorBoard = new ScoringManager(1, 2);
-
-  private enum ShootingCommands {
-    AUTO_SHOOT,
-    INHIBIT_AUTO_SHOOT,
-    AREA_INHIBIT_AUTO_SHOOT
-  }
-
-  private ShootingCommands lastShootingCommand = ShootingCommands.AUTO_SHOOT;
-  private ShootingCommands currentShootingCommand = ShootingCommands.AUTO_SHOOT;
-
-  private final Trigger inNonShootingArea;
-
-  // Dashboard inputs
-  private final LoggedDashboardChooser<Command> autoChooser;
-
-  // Boolean suppliers
-  private final BooleanSupplier toggle1 =
-      () -> operatorBoard.getLeftController().getRawButton(Constants.Control.toggle1ButtonNumber);
+  public static final CommandXboxController controller = new CommandXboxController(0);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -120,14 +127,45 @@ public class RobotContainer {
 
         visionGlobalPose =
             Constants.visionGlobalPose == Constants.SubsystemMode.DISABLED
-                ? new VisionGlobalPose() // TODO add IO for this
-                : new VisionGlobalPose(); // TODO add IO for this
+                ? new VisionGlobalPose(
+                    drive,
+                    new VisionGlobalPoseIO() {},
+                    new VisionGlobalPoseIO() {},
+                    new VisionGlobalPoseIO() {},
+                    new VisionGlobalPoseIO() {})
+                : new VisionGlobalPose(
+                    drive,
+                    Constants.frontRightCameraEnable
+                        ? new VisionGlobalPoseIOPhoton(
+                            Constants.VisionGlobalPose.frontRightName,
+                            Constants.VisionGlobalPose.frontRightTransform)
+                        : new VisionGlobalPoseIO() {},
+                    Constants.frontLeftCameraEnable
+                        ? new VisionGlobalPoseIOPhoton(
+                            Constants.VisionGlobalPose.frontLeftName,
+                            Constants.VisionGlobalPose.frontLeftTransform)
+                        : new VisionGlobalPoseIO() {},
+                    Constants.backRightCameraEnable
+                        ? new VisionGlobalPoseIOPhoton(
+                            Constants.VisionGlobalPose.backRightName,
+                            Constants.VisionGlobalPose.backRightTransform)
+                        : new VisionGlobalPoseIO() {},
+                    Constants.backLeftCameraEnable
+                        ? new VisionGlobalPoseIOPhoton(
+                            Constants.VisionGlobalPose.backLeftName,
+                            Constants.VisionGlobalPose.backLeftTransform)
+                        : new VisionGlobalPoseIO() {});
 
         visionObjectDetection =
             Constants.visionObjectDetection == Constants.SubsystemMode.DISABLED
                 ? new VisionObjectDetection(drive, new VisionObjectDetectionIO() {})
                 : new VisionObjectDetection(drive, new VisionObjectDetectionIOPhoton());
-
+        led =
+            new LED(
+                Constants.ledMode == Constants.SubsystemMode.DISABLED
+                    ? new LEDIO() {}
+                    : new LEDIOCANdle(),
+                drive);
         flywheel =
             Constants.flywheelMode == Constants.SubsystemMode.DISABLED
                 ? new Flywheel(new FlywheelIO() {})
@@ -136,7 +174,7 @@ public class RobotContainer {
         hood =
             Constants.hoodMode == Constants.SubsystemMode.DISABLED
                 ? new Hood(new HoodIO() {})
-                : new Hood(new HoodIO() {}); // TODO this will have real io
+                : new Hood(new HoodIOServo());
 
         spindexer =
             Constants.spindexerMode == Constants.SubsystemMode.DISABLED
@@ -153,16 +191,20 @@ public class RobotContainer {
                 ? new Turret(new TurretIO() {})
                 : new Turret(new TurretIOTalonFx());
 
-        shooter = new Shooter(flywheel, hood, spindexer, tunnel, turret);
+        shooter =
+            new Shooter(flywheel, hood, spindexer, tunnel, turret, visionGlobalPose, drive, led);
 
-        /*
-        intake = Constants.intakeMode == Constants.SubsystemMode.DISABLED ?
-            new Intake() do intake
-        :
-            new Intake(); do intake
-        */
+        rollers =
+            Constants.rollerMode == Constants.SubsystemMode.DISABLED
+                ? new Rollers(new RollersIO() {})
+                : new Rollers(new RollersIOTalonFX());
 
-        led = new LED();
+        deployer =
+            Constants.deployerMode == Constants.SubsystemMode.DISABLED
+                ? new Deployer(new DeployerIO() {})
+                : new Deployer(new DeployerIOTalonFX());
+
+        intake = new Intake(deployer, rollers);
       }
 
       case SIM -> {
@@ -184,24 +226,81 @@ public class RobotContainer {
 
         visionGlobalPose =
             Constants.visionGlobalPose == Constants.SubsystemMode.DISABLED
-                ? new VisionGlobalPose() // TODO add IO for this
-                : new VisionGlobalPose(); // TODO add IO for this
+                ? new VisionGlobalPose(
+                    drive,
+                    new VisionGlobalPoseIO() {},
+                    new VisionGlobalPoseIO() {},
+                    new VisionGlobalPoseIO() {},
+                    new VisionGlobalPoseIO() {})
+                : new VisionGlobalPose(
+                    drive,
+                    new VisionGlobalPoseIOSim(
+                        Constants.VisionGlobalPose.frontRightName,
+                        drive::getRobotPose,
+                        Constants.VisionGlobalPose.frontRightTransform),
+                    new VisionGlobalPoseIOSim(
+                        Constants.VisionGlobalPose.frontLeftName,
+                        drive::getRobotPose,
+                        Constants.VisionGlobalPose.frontLeftTransform),
+                    new VisionGlobalPoseIOSim(
+                        Constants.VisionGlobalPose.backRightName,
+                        drive::getRobotPose,
+                        Constants.VisionGlobalPose.backRightTransform),
+                    new VisionGlobalPoseIOSim(
+                        Constants.VisionGlobalPose.backLeftName,
+                        drive::getRobotPose,
+                        Constants.VisionGlobalPose.backLeftTransform));
 
         visionObjectDetection =
             Constants.visionObjectDetection == Constants.SubsystemMode.DISABLED
                 ? new VisionObjectDetection(drive, new VisionObjectDetectionIO() {})
                 : new VisionObjectDetection(
-                    drive, new VisionObjectDetectionIOPhoton()); // TODO add sim io
+                    drive, new VisionObjectDetectionIO() {}); // TODO make sim for this
+        led =
+            new LED(
+                Constants.ledMode == Constants.SubsystemMode.DISABLED
+                    ? new LEDIO() {}
+                    : new LEDIOSim(),
+                drive);
+        flywheel =
+            Constants.flywheelMode == Constants.SubsystemMode.DISABLED
+                ? new Flywheel(new FlywheelIO() {})
+                : new Flywheel(new FlywheelIOSim());
 
-        shooter = new Shooter(flywheel, hood, spindexer, tunnel, turret);
+        hood =
+            Constants.hoodMode == Constants.SubsystemMode.DISABLED
+                ? new Hood(new HoodIO() {})
+                : new Hood(new HoodIOSim());
 
-        /*
-        intake = Constants.intakeMode == Constants.SubsystemMode.DISABLED ?
-            new Intake() //TODO add actual io
-        :
-            new Intake(); //TODO add actual io
-        */
+        spindexer =
+            Constants.spindexerMode == Constants.SubsystemMode.DISABLED
+                ? new Spindexer(new SpindexerIO() {})
+                : new Spindexer(new SpindexerIOSim());
 
+        tunnel =
+            Constants.tunnelMode == Constants.SubsystemMode.DISABLED
+                ? new Tunnel(new TunnelIO() {})
+                : new Tunnel(new TunnelIOSim());
+
+        turret =
+            Constants.turretMode == Constants.SubsystemMode.DISABLED
+                ? new Turret(new TurretIO() {})
+                : new Turret(new TurretIOSim());
+
+        shooter =
+            new Shooter(flywheel, hood, spindexer, tunnel, turret, visionGlobalPose, drive, led);
+
+        deployer =
+            Constants.deployerMode == Constants.SubsystemMode.DISABLED
+                ? new Deployer(new DeployerIO() {})
+                : new Deployer(new DeployerIOSim());
+        rollers =
+            Constants.rollerMode == Constants.SubsystemMode.DISABLED
+                ? new Rollers(new RollersIO() {})
+                : new Rollers(new RollersIOSim());
+        intake = new Intake(deployer, rollers);
+
+        simulator = new Simulator();
       }
 
       default -> {
@@ -213,46 +312,40 @@ public class RobotContainer {
                 new ModuleIO() {},
                 new ModuleIO() {},
                 new ModuleIO() {});
-        visionGlobalPose = new VisionGlobalPose(); // TODO add IO for this
-        visionObjectDetection =
-            new VisionObjectDetection(
-                drive, new VisionObjectDetectionIOPhoton()); // TODO add emppty io
+        visionGlobalPose =
+            new VisionGlobalPose(
+                drive,
+                new VisionGlobalPoseIO() {},
+                new VisionGlobalPoseIO() {},
+                new VisionGlobalPoseIO() {},
+                new VisionGlobalPoseIO() {});
+        led = new LED(new LEDIO() {}, drive);
+        visionObjectDetection = new VisionObjectDetection(drive, new VisionObjectDetectionIO() {});
         flywheel = new Flywheel(new FlywheelIO() {});
         hood = new Hood(new HoodIO() {});
         spindexer = new Spindexer(new SpindexerIO() {});
         tunnel = new Tunnel(new TunnelIO() {});
         turret = new Turret(new TurretIO() {});
-        shooter = new Shooter(flywheel, hood, spindexer, tunnel, turret);
-        // TODO intake = new Intake();
-        led = new LED();
+        shooter =
+            new Shooter(flywheel, hood, spindexer, tunnel, turret, visionGlobalPose, drive, led);
+        rollers = new Rollers(new RollersIO() {});
+        deployer = new Deployer(new DeployerIO() {});
+        intake = new Intake(deployer, rollers);
       }
     }
 
-    // Set up auto routines
-    autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
-
-    // Set up SysId routines
-    autoChooser.addOption(
-        "Drive Wheel Radius Characterization", DriveCommands.wheelRadiusCharacterization(drive));
-    autoChooser.addOption(
-        "Drive Simple FF Characterization", DriveCommands.feedforwardCharacterization(drive));
-    autoChooser.addOption(
-        "Drive SysId (Quasistatic Forward)",
-        drive.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
-    autoChooser.addOption(
-        "Drive SysId (Quasistatic Reverse)",
-        drive.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
-    autoChooser.addOption(
-        "Drive SysId (Dynamic Forward)", drive.sysIdDynamic(SysIdRoutine.Direction.kForward));
-    autoChooser.addOption(
-        "Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
-
-    // Triggers
-    inNonShootingArea =
-        new Trigger(() -> !AreaManager.isShootingArea(drive.getPose().getTranslation()));
-
     // Configure the button bindings
     configureButtonBindings();
+
+    if (Constants.debugZoneAreas) {
+      field = new Field2d();
+      SmartDashboard.putData("Field", field);
+      FieldConstants.plotZones();
+    }
+  }
+
+  public static Field2d getField() {
+    return Constants.debugZoneAreas ? field : new Field2d();
   }
 
   /**
@@ -270,29 +363,32 @@ public class RobotContainer {
             () -> -controller.getLeftX(),
             () -> -controller.getRightX()));
 
-    // Shooter command bindings
-    // shooter.setDefaultCommand(ShooterCommand.autoShoot(shooter, drive));
-    new JoystickButton(operatorBoard.getLeftController(), Constants.Control.toggle1ButtonNumber)
-        .whileTrue(ShooterCommand.inhibitAutoShoot(shooter, toggle1))
-        .onTrue(
-            new InstantCommand(() -> currentShootingCommand = ShootingCommands.INHIBIT_AUTO_SHOOT))
-        .onFalse(
-            new InstantCommand(() -> lastShootingCommand = ShootingCommands.INHIBIT_AUTO_SHOOT));
+    /*
+    Intake - Left Bumper Toggle (Driver)
+    Trench Override Hood - Left Trigger while held (Driver)
+    Unjam Shooter - B while held (Driver)
+    Shoot - Right Trigger while held (Driver)
+    Fixed Shooting - 'a' while held (Driver)
+    Smoosh - 'y' on true (Driver)
+    Turret Unjam - right bumper while held (Driver)
+    Intake Eject - 'x' on true (Driver)
+    */
 
-    inNonShootingArea
-        .whileTrue(
-            ShooterCommand.areaInhibitAutoShoot(shooter, drive)
-                .onlyIf(
-                    () ->
-                        currentShootingCommand != ShootingCommands.INHIBIT_AUTO_SHOOT
-                            && shooter.getState() != ShooterState.UNWIND
-                            && !toggle1.getAsBoolean()))
-        .onTrue(
-            new InstantCommand(
-                () -> currentShootingCommand = ShootingCommands.AREA_INHIBIT_AUTO_SHOOT))
-        .onFalse(
-            new InstantCommand(
-                () -> lastShootingCommand = ShootingCommands.AREA_INHIBIT_AUTO_SHOOT));
+    controller.b().whileTrue(ShooterCommands.unjam(shooter));
+    controller.leftTrigger().whileTrue(ShooterCommands.trenchOverride(shooter));
+
+    if (Constants.turretLocked) {
+      controller.rightTrigger().whileTrue(ShooterCommands.aimAndShoot(shooter, drive, intake));
+    } else {
+      controller.rightTrigger().whileTrue(ShooterCommands.autoShoot(shooter, drive, intake));
+      controller.a().whileTrue(ShooterCommands.fixedShoot(shooter, drive, intake));
+    }
+
+    controller.leftBumper().onTrue(IntakeCommands.toggleIntake(intake, controller));
+    controller.x().onTrue(IntakeCommands.eject(intake)).onFalse(IntakeCommands.toggleOff(intake));
+    controller.y().onTrue(IntakeCommands.smoosh(intake)).onFalse(IntakeCommands.toggleOff(intake));
+    controller.rightBumper().onTrue(ShooterCommands.turretUnjamOverride(shooter, true));
+    controller.rightBumper().onFalse(ShooterCommands.turretUnjamOverride(shooter, false));
   }
 
   /**
@@ -301,6 +397,17 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return autoChooser.get();
+    return autonomousSelector.get();
+  }
+
+  public void configureAutonomousSelector() {
+    autonomousSelector =
+        new AutonomousSelector(drive, hood, turret, shooter, visionObjectDetection, led, intake);
+  }
+
+  public void setBrakeMode(boolean brake) {
+    spindexer.enableBrakeMode(brake);
+    turret.setBrakeMode(brake);
+    deployer.setBrakeMode(brake);
   }
 }

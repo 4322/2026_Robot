@@ -1,7 +1,9 @@
 package frc.robot;
 
+import com.ctre.phoenix6.SignalLogger;
 import com.pathplanner.lib.commands.FollowPathCommand;
 import com.pathplanner.lib.path.PathPlannerPath;
+import com.revrobotics.util.StatusLogger;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -19,7 +21,7 @@ import java.util.Optional;
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
-import org.littletonrobotics.junction.networktables.NT4Publisher;
+import org.littletonrobotics.junction.rlog.RLOGServer;
 import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
@@ -38,26 +40,79 @@ public class Robot extends LoggedRobot {
 
   public static Alliance alliance = DriverStation.Alliance.Blue;
 
-  // Mirrored paths
-  public static PathPlannerPath ThreeCoralStartToJuliet;
-  public static PathPlannerPath JulietToFeed1;
-  public static PathPlannerPath JulietToFeed2;
-  public static PathPlannerPath KilotoFeed;
-  public static PathPlannerPath DeltatoFeed;
+  public static PathPlannerPath R_NeutralR_Intake_Mid_Flip;
+  public static PathPlannerPath R_NeutralRMid_To_ShootR;
+  public static PathPlannerPath R_NeutralR_Intake_To_Mid;
+  public static PathPlannerPath R_Neutral_Mid_To_ShootR;
+  public static PathPlannerPath R_NeutralR_Intake_Full_Flip;
+  public static PathPlannerPath R_NeutralR_Intake_Full;
+  public static PathPlannerPath R_StartR_To_NeutralR_Intake;
+  public static PathPlannerPath R_NeutralR_Intake_Full_Midline;
+  public static PathPlannerPath R_NeutralR_Intake_Full_Midline_Flip;
+  public static PathPlannerPath R_StartR_To_NeutralR_Intake_Midline;
+  public static PathPlannerPath R_StartR_To_NeutralR_Intake_Disrupt;
+  public static PathPlannerPath R_NeutralR_Intake_Full_Disrupt;
+  public static PathPlannerPath R_NeutralR_Intake_Full_Disrupt_Flip;
 
-  // Mirrors of the above
-  public static PathPlannerPath ThreeCoralStartToEcho;
-  public static PathPlannerPath EchoToFeed1;
-  public static PathPlannerPath EchoToFeed2;
+  public static PathPlannerPath L_NeutralL_Intake_Mid_Flip;
+  public static PathPlannerPath L_NeutralLMid_To_ShootL;
+  public static PathPlannerPath L_NeutralL_Intake_To_Mid;
+  public static PathPlannerPath L_Neutral_Mid_To_ShootL;
+  public static PathPlannerPath L_NeutralL_Intake_Full_Flip;
+  public static PathPlannerPath L_NeutralL_Intake_Full;
+  public static PathPlannerPath L_StartL_To_NeutralL_Intake;
+  public static PathPlannerPath L_NeutralL_Intake_Full_Midline;
+  public static PathPlannerPath L_NeutralL_Intake_Full_Midline_Flip;
+  public static PathPlannerPath L_StartL_To_NeutralL_Intake_Midline;
+  public static PathPlannerPath L_StartL_To_NeutralL_Intake_Disrupt;
+  public static PathPlannerPath L_NeutralL_Intake_Full_Disrupt;
+  public static PathPlannerPath L_NeutralL_Intake_Full_Disrupt_Flip;
 
-  // Non-mirrored paths
-  public static PathPlannerPath Leave;
-  public static PathPlannerPath TestLeave;
-  public static PathPlannerPath CenterStartToGulf;
-  public static PathPlannerPath CenterAlgaeScoreToLeave;
-  public static PathPlannerPath RightAlgaeScoreToIJ;
-  public static PathPlannerPath GH_ToRightAlgaeScore;
-  public static PathPlannerPath IJ_ToCenterAlgaeScore;
+  public static PathPlannerPath L_NeutralLMid_To_ShootL_LT;
+  public static PathPlannerPath L_Neutral_Mid_To_ShootL_LT;
+
+  public static PathPlannerPath R_NeutralRMid_To_ShootR_LT;
+  public static PathPlannerPath R_Neutral_Mid_To_ShootR_LT;
+
+  public static PathPlannerPath C_Depot_To_Outpost;
+  public static PathPlannerPath C_Start_To_Depot;
+
+  public static PathPlannerPath C_To_Depot;
+
+  public static PathPlannerPath R_Half_SuperSweep_B;
+  public static PathPlannerPath R_Half_SuperSweep_C;
+  public static PathPlannerPath R_Half_SuperSweep_D;
+  public static PathPlannerPath R_Half_SuperSweep_E;
+  public static PathPlannerPath R_Half_SuperSweep_F;
+
+  public static PathPlannerPath R_2SWEEP_A;
+  public static PathPlannerPath R_2SWEEP_B;
+  public static PathPlannerPath R_2SWEEP_CG;
+  public static PathPlannerPath R_2SWEEP_DE;
+  public static PathPlannerPath R_2SWEEP_F;
+  public static PathPlannerPath R_2SWEEP_H;
+
+  public static PathPlannerPath L_2SWEEP_A;
+  public static PathPlannerPath L_2SWEEP_B;
+  public static PathPlannerPath L_2SWEEP_CG;
+  public static PathPlannerPath L_2SWEEP_DE;
+  public static PathPlannerPath L_2SWEEP_F;
+  public static PathPlannerPath L_2SWEEP_H;
+
+  public static PathPlannerPath R_ROutpost_A;
+  public static PathPlannerPath R_ROutpost_B;
+
+  public static PathPlannerPath R_2056_A;
+  public static PathPlannerPath R_2056_B;
+  public static PathPlannerPath R_2056_C;
+  public static PathPlannerPath R_2056_D;
+  public static PathPlannerPath R_2056_G;
+
+  public static PathPlannerPath L_2056_A;
+  public static PathPlannerPath L_2056_B;
+  public static PathPlannerPath L_2056_C;
+  public static PathPlannerPath L_2056_D;
+  public static PathPlannerPath L_2056_G;
 
   public Robot() {
     Logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME); // Set a metadata value
@@ -159,14 +214,15 @@ public class Robot extends LoggedRobot {
 
         Logger.addDataReceiver(
             new WPILOGWriter(Constants.logPath)); // Log to a USB stick is ("/U/logs")
-        Logger.addDataReceiver(new NT4Publisher()); // Publish data to NetworkTables
+        Logger.addDataReceiver(new RLOGServer());
 
         RobotController.setBrownoutVoltage(Constants.brownoutVoltage);
 
         break;
       case SIM:
         // Running a physics simulator, log to NT
-        Logger.addDataReceiver(new NT4Publisher());
+        Logger.addDataReceiver(new RLOGServer());
+        Logger.addDataReceiver(new WPILOGWriter("..")); // keep logs out of the repository
         break;
       case REPLAY:
         setUseTiming(false); // Run as fast as possible
@@ -184,6 +240,86 @@ public class Robot extends LoggedRobot {
     Logger.disableConsoleCapture();
 
     try {
+      C_Depot_To_Outpost = PathPlannerPath.fromPathFile("C_Depot_To_Outpost");
+      C_Start_To_Depot = PathPlannerPath.fromPathFile("C_Start_To_Depot");
+
+      R_NeutralR_Intake_Mid_Flip = PathPlannerPath.fromPathFile("R_NeutralR_Intake_Mid_Flip");
+      R_NeutralRMid_To_ShootR = PathPlannerPath.fromPathFile("R_NeutralRMid_To_ShootR");
+      R_NeutralR_Intake_To_Mid = PathPlannerPath.fromPathFile("R_NeutralR_Intake_To_Mid");
+      R_Neutral_Mid_To_ShootR = PathPlannerPath.fromPathFile("R_Neutral_Mid_To_ShootR");
+      R_NeutralR_Intake_Full_Flip = PathPlannerPath.fromPathFile("R_NeutralR_Intake_Full_Flip");
+      R_NeutralR_Intake_Full = PathPlannerPath.fromPathFile("R_NeutralR_Intake_Full");
+      R_StartR_To_NeutralR_Intake = PathPlannerPath.fromPathFile("R_StartR_To_NeutralR_Intake");
+
+      R_NeutralR_Intake_Full_Midline =
+          PathPlannerPath.fromPathFile("R_NeutralR_Intake_Full_Midline");
+      R_NeutralR_Intake_Full_Midline_Flip =
+          PathPlannerPath.fromPathFile("R_NeutralR_Intake_Full_Midline_Flip");
+      R_StartR_To_NeutralR_Intake_Midline =
+          PathPlannerPath.fromPathFile("R_StartR_To_NeutralR_Intake_Midline");
+      R_StartR_To_NeutralR_Intake_Disrupt =
+          PathPlannerPath.fromPathFile("R_StartR_To_NeutralR_Intake_Disrupt");
+      R_NeutralR_Intake_Full_Disrupt =
+          PathPlannerPath.fromPathFile("R_NeutralR_Intake_Full_Disrupt");
+      R_NeutralR_Intake_Full_Disrupt_Flip =
+          PathPlannerPath.fromPathFile("R_NeutralR_Intake_Full_Disrupt_Flip");
+
+      R_NeutralRMid_To_ShootR_LT = PathPlannerPath.fromPathFile("R_NeutralRMid_To_ShootR_LT");
+      R_Neutral_Mid_To_ShootR_LT = PathPlannerPath.fromPathFile("R_Neutral_Mid_To_ShootR_LT");
+
+      R_Half_SuperSweep_B = PathPlannerPath.fromPathFile("R_Half_SuperSweep_B");
+      R_Half_SuperSweep_C = PathPlannerPath.fromPathFile("R_Half_SuperSweep_C");
+      R_Half_SuperSweep_D = PathPlannerPath.fromPathFile("R_Half_SuperSweep_D");
+      R_Half_SuperSweep_E = PathPlannerPath.fromPathFile("R_Half_SuperSweep_E");
+      R_Half_SuperSweep_F = PathPlannerPath.fromPathFile("R_Half_SuperSweep_F");
+
+      R_2SWEEP_A = PathPlannerPath.fromPathFile("R_2Sweep_A");
+      R_2SWEEP_B = PathPlannerPath.fromPathFile("R_2Sweep_B");
+      R_2SWEEP_CG = PathPlannerPath.fromPathFile("R_2Sweep_CG");
+      R_2SWEEP_DE = PathPlannerPath.fromPathFile("R_2Sweep_DE");
+      R_2SWEEP_F = PathPlannerPath.fromPathFile("R_2Sweep_F");
+      R_2SWEEP_H = PathPlannerPath.fromPathFile("R_2Sweep_H");
+
+      R_ROutpost_A = PathPlannerPath.fromPathFile("R_ROutpost_A");
+      R_ROutpost_B = PathPlannerPath.fromPathFile("R_ROutpost_B");
+
+      R_2056_A = PathPlannerPath.fromPathFile("R_2056_A");
+      R_2056_B = PathPlannerPath.fromPathFile("R_2056_B");
+      R_2056_C = PathPlannerPath.fromPathFile("R_2056_C");
+      R_2056_D = PathPlannerPath.fromPathFile("R_2056_D");
+      R_2056_G = PathPlannerPath.fromPathFile("R_2056_G");
+
+      C_To_Depot = PathPlannerPath.fromPathFile("Start_To_Depot");
+
+      L_NeutralL_Intake_Mid_Flip = R_NeutralR_Intake_Mid_Flip.mirrorPath();
+      L_NeutralLMid_To_ShootL = R_NeutralRMid_To_ShootR.mirrorPath();
+      L_NeutralL_Intake_To_Mid = R_NeutralR_Intake_To_Mid.mirrorPath();
+      L_Neutral_Mid_To_ShootL = R_Neutral_Mid_To_ShootR.mirrorPath();
+      L_NeutralL_Intake_Full_Flip = R_NeutralR_Intake_Full_Flip.mirrorPath();
+      L_NeutralL_Intake_Full = R_NeutralR_Intake_Full.mirrorPath();
+      L_StartL_To_NeutralL_Intake = R_StartR_To_NeutralR_Intake.mirrorPath();
+      L_NeutralL_Intake_Full_Midline = R_NeutralR_Intake_Full_Midline.mirrorPath();
+      L_NeutralL_Intake_Full_Midline_Flip = R_NeutralR_Intake_Full_Midline_Flip.mirrorPath();
+      L_StartL_To_NeutralL_Intake_Midline = R_StartR_To_NeutralR_Intake_Midline.mirrorPath();
+      L_StartL_To_NeutralL_Intake_Disrupt = R_StartR_To_NeutralR_Intake_Disrupt.mirrorPath();
+      L_NeutralL_Intake_Full_Disrupt = R_NeutralR_Intake_Full_Disrupt.mirrorPath();
+      L_NeutralL_Intake_Full_Disrupt_Flip = R_NeutralR_Intake_Full_Disrupt_Flip.mirrorPath();
+
+      L_NeutralLMid_To_ShootL_LT = R_NeutralRMid_To_ShootR_LT.mirrorPath();
+      L_Neutral_Mid_To_ShootL_LT = R_Neutral_Mid_To_ShootR_LT.mirrorPath();
+
+      L_2SWEEP_A = R_2SWEEP_A.mirrorPath();
+      L_2SWEEP_B = R_2SWEEP_B.mirrorPath();
+      L_2SWEEP_CG = R_2SWEEP_CG.mirrorPath();
+      L_2SWEEP_DE = R_2SWEEP_DE.mirrorPath();
+      L_2SWEEP_F = R_2SWEEP_F.mirrorPath();
+      L_2SWEEP_H = R_2SWEEP_H.mirrorPath();
+
+      L_2056_A = R_2056_A.mirrorPath();
+      L_2056_B = R_2056_B.mirrorPath();
+      L_2056_C = R_2056_C.mirrorPath();
+      L_2056_D = R_2056_D.mirrorPath();
+      L_2056_G = R_2056_G.mirrorPath();
 
     } catch (Exception e) {
       DriverStation.reportError("Failed to load PathPlanner path - " + e.getMessage(), true);
@@ -193,8 +329,7 @@ public class Robot extends LoggedRobot {
     // Instantiate our RobotContainer. This will perform all our button bindings,
     // and put our autonomous chooser on the dashboard.
     robotContainer = new RobotContainer();
-
-    CommandScheduler.getInstance().schedule(FollowPathCommand.warmupCommand());
+    robotContainer.configureAutonomousSelector();
 
     allianceUpdateTimer.start();
 
@@ -204,36 +339,61 @@ public class Robot extends LoggedRobot {
     }
   }
 
+  @Override
+  public void robotInit() {
+    StatusLogger.disableAutoLogging(); // disable REV logging
+    SignalLogger.stop(); // disable CTRE logging
+    CommandScheduler.getInstance().schedule(FollowPathCommand.warmupCommand());
+  }
+
   /** This function is called periodically during all modes. */
   @Override
   public void robotPeriodic() {
 
-    /* roboRIO settings to optimize Java memory use:
+    /* roboRIO settings to control Java memory usage.
+
+      If running out of memory, especially on a roboRIO 1, use:
       echo "vm.overcommit_memory=1" >> /etc/sysctl.conf
       echo "vm.vfs_cache_pressure=1000" >> /etc/sysctl.conf
       echo "vm.swappiness=100" >> /etc/sysctl.conf
       sync
       power cycle the RIO
 
-      To restiore default settings, edit /etc/sysctl.conf to set the
+      If CPU usage is a bigger concern than memory, use these values:
+      echo "vm.overcommit_memory=2" >> /etc/sysctl.conf
+      echo "vm.vfs_cache_pressure=50" >> /etc/sysctl.conf
+      echo "vm.swappiness=30" >> /etc/sysctl.conf
+      sync
+      power cycle the RIO
+
+      To restiore the default settings, edit /etc/sysctl.conf to set the
       following values:
         vm.overcommit_memory=2
         vm.vfs_cache_pressure=100
         vm.swappiness=60
+        sync
         power cycle the RIO
 
       To stop the web server to save memory:
       /etc/init.d/systemWebServer stop; update-rc.d -f systemWebServer remove; sync
       chmod a-x /usr/local/natinst/etc/init.d/systemWebServer; sync
 
-      To restart the web server in order to image the RIO:
+      To restart the web server in order to image a roboRIO 1:
       chmod a+x /usr/local/natinst/etc/init.d/systemWebServer; sync
       power cycle the RIO
     */
 
     // Optionally switch the thread to high priority to improve loop
-    // timing (see the template project documentation for details)
-    Threads.setCurrentThreadPriority(true, 99);
+    // timing (see the template project documentation for details).
+    // Don't do this when there are issues causing the CPU to be maxed out for any reason.
+    if (Constants.realTimeCommandScheduler) {
+      Threads.setCurrentThreadPriority(true, 99);
+    }
+
+    // insure that the sim runs before everything else
+    if (RobotContainer.simulator != null) {
+      RobotContainer.simulator.periodic();
+    }
 
     // Runs the Scheduler. This is responsible for polling buttons, adding
     // newly-scheduled commands, running already-scheduled commands, removing
@@ -242,8 +402,14 @@ public class Robot extends LoggedRobot {
     // the Command-based framework to work.
     CommandScheduler.getInstance().run();
 
+    RobotContainer.shooter.outputsPeriodic();
+
+    RobotContainer.intake.periodicOutputs();
+
     // Return to non-RT thread priority (do not modify the first argument)
-    // Threads.setCurrentThreadPriority(false, 10);
+    if (Constants.realTimeCommandScheduler) {
+      Threads.setCurrentThreadPriority(false, 10);
+    }
 
     if (allianceUpdateTimer.hasElapsed(1)) {
       Optional<Alliance> allianceOptional = DriverStation.getAlliance();
@@ -261,37 +427,33 @@ public class Robot extends LoggedRobot {
   /** This function is called periodically when disabled. */
   @Override
   public void disabledPeriodic() {
-
-    if (Constants.currentMode != Constants.Mode.SIM) {}
-
-    if (!coastButton.get() && Constants.currentMode != Constants.Mode.SIM) {
-      // RobotContainer.getSuperstructure().CoastMotors();
-      DriverStation.reportWarning("Coast Mode Trying To Activate", false);
-      coastButtonTimer.start();
-      // button is pressed in
-    }
-
-    if (coastButtonTimer.hasElapsed(0.1)) {
-      // TODO: RobotContainer.getSuperstructure().CoastMotors();
-    }
-
-    if (coastButtonTimer.hasElapsed(10)) {
-      // TODO: DriverStation.reportWarning("Break Mode Trying To Activate", false);
-      // RobotContainer.getSuperstructure().BreakMotors();
-      // coastButtonTimer.stop();
-      // coastButtonTimer.reset();
+    if (Constants.currentMode != Constants.Mode.SIM) {
+      if (!coastButton.get()) {
+        // button is pressed in
+        DriverStation.reportWarning("Activating Coast Mode", false);
+        coastButtonTimer.start();
+      }
+      if (coastButtonTimer.hasElapsed(0.1)) {
+        robotContainer.setBrakeMode(false);
+      }
+      if (coastButtonTimer.hasElapsed(10)) {
+        DriverStation.reportWarning("Activating Brake Mode", false);
+        robotContainer.setBrakeMode(true);
+        coastButtonTimer.stop();
+        coastButtonTimer.reset();
+      }
     }
   }
 
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    // autonomousCommand = robotContainer.getAutonomousCommand();
+    autonomousCommand = robotContainer.getAutonomousCommand();
 
-    // // schedule the autonomous command (example)
-    // if (autonomousCommand != null) {
-    //   Logger.recordOutput("AutoName", autonomousCommand.getName());
-    // }
+    if (autonomousCommand != null) {
+      CommandScheduler.getInstance().schedule(autonomousCommand);
+      Logger.recordOutput("AutoName", autonomousCommand.getName());
+    }
   }
 
   /** This function is called periodically during autonomous. */

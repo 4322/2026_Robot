@@ -1,0 +1,448 @@
+{
+  "NetworkTables": {
+    "Persistent Values": {
+      "open": false
+    },
+    "transitory": {
+      "SmartDashboard": {
+        "Field": {
+          "open": true
+        },
+        "open": true
+      }
+    },
+    "types": {
+      "/AdvantageKit/RealOutputs/Alerts": "Alerts",
+      "/AdvantageKit/RealOutputs/PathPlanner": "Alerts",
+      "/AdvantageKit/RealOutputs/PhotonAlerts": "Alerts",
+      "/FMSInfo": "FMSInfo",
+      "/SmartDashboard/Alerts": "Alerts",
+      "/SmartDashboard/Auto Choices": "String Chooser",
+      "/SmartDashboard/Autonomous": "String Chooser",
+      "/SmartDashboard/Field": "Field2d",
+      "/SmartDashboard/PathPlanner": "Alerts",
+      "/SmartDashboard/PhotonAlerts": "Alerts",
+      "/SmartDashboard/TestCommands": "String Chooser",
+      "/SmartDashboard/VisionSystemSim-main/Sim Field": "Field2d"
+    },
+    "windows": {
+      "/SmartDashboard/Field": {
+        "AllianceZones": {
+          "arrows": false,
+          "color": [
+            1.0,
+            0.0,
+            0.0,
+            255.0
+          ]
+        },
+        "Blue.allianceZone": {
+          "arrows": false,
+          "color": [
+            0.0,
+            0.0,
+            1.0,
+            255.0
+          ],
+          "style": "Hidden"
+        },
+        "Blue.bumpLeft": {
+          "arrows": false,
+          "color": [
+            0.15189886093139648,
+            1.0,
+            0.0,
+            255.0
+          ],
+          "style": "Hidden"
+        },
+        "Blue.bumpRight": {
+          "arrows": false,
+          "color": [
+            0.15294118225574493,
+            1.0,
+            0.0,
+            255.0
+          ],
+          "style": "Hidden"
+        },
+        "Blue.frontOfHub": {
+          "arrows": false,
+          "color": [
+            1.0,
+            1.0,
+            0.0,
+            255.0
+          ],
+          "style": "Hidden"
+        },
+        "Blue.hubTranslation": {
+          "color": [
+            0.0,
+            1.0,
+            0.9607843160629272,
+            255.0
+          ]
+        },
+        "Blue.leftAllianceZone": {
+          "arrows": false,
+          "color": [
+            0.6313725709915161,
+            0.0,
+            1.0,
+            255.0
+          ],
+          "style": "Hidden"
+        },
+        "Blue.rightAllianceZone": {
+          "arrows": false,
+          "color": [
+            0.6313725709915161,
+            0.0,
+            1.0,
+            255.0
+          ],
+          "style": "Hidden"
+        },
+        "Blue.stopShootLeft": {
+          "arrows": false,
+          "color": [
+            1.0,
+            1.0,
+            0.0,
+            255.0
+          ],
+          "style": "Line (Closed)"
+        },
+        "Blue.stopShootLeftFull": {
+          "arrows": false,
+          "color": [
+            1.0,
+            0.6371307969093323,
+            0.6903517246246338,
+            255.0
+          ],
+          "style": "Line (Closed)"
+        },
+        "Blue.stopShootLeftNeutral": {
+          "color": [
+            0.0,
+            1.0,
+            1.0,
+            255.0
+          ],
+          "style": "Hidden"
+        },
+        "Blue.stopShootRight": {
+          "arrows": false,
+          "color": [
+            1.0,
+            1.0,
+            0.0,
+            255.0
+          ],
+          "style": "Line (Closed)"
+        },
+        "Blue.stopShootRightFull": {
+          "color": [
+            1.0,
+            0.6329113841056824,
+            0.6886717081069946,
+            255.0
+          ],
+          "style": "Line (Closed)"
+        },
+        "Blue.stopShootRightNeutral": {
+          "color": [
+            0.0,
+            1.0,
+            1.0,
+            255.0
+          ],
+          "style": "Hidden"
+        },
+        "Blue.towerZone": {
+          "color": [
+            0.0,
+            255.0,
+            219.49366760253906,
+            255.0
+          ],
+          "style": "Hidden"
+        },
+        "Blue.trenchLeft": {
+          "arrows": false,
+          "style": "Hidden"
+        },
+        "Blue.trenchRight": {
+          "arrows": false,
+          "style": "Hidden"
+        },
+        "BlueHoodDangerZones": {
+          "color": [
+            1.0,
+            0.3544303774833679,
+            0.0,
+            255.0
+          ]
+        },
+        "BlueOppositionZones": {
+          "arrows": false,
+          "color": [
+            1.0,
+            0.8354430198669434,
+            0.0,
+            255.0
+          ]
+        },
+        "BumpZones": {
+          "color": [
+            0.12658238410949707,
+            1.0,
+            0.0,
+            255.0
+          ]
+        },
+        "HoodDangerZones": {
+          "color": [
+            0.0,
+            0.07594943046569824,
+            1.0,
+            255.0
+          ]
+        },
+        "HubZones": {
+          "color": [
+            0.6582274436950684,
+            0.0,
+            1.0,
+            255.0
+          ]
+        },
+        "Neutral.leftNeutral": {
+          "arrows": false,
+          "color": [
+            1.0,
+            1.0,
+            1.0,
+            255.0
+          ],
+          "style": "Hidden"
+        },
+        "Neutral.rightNeutral": {
+          "arrows": false,
+          "color": [
+            1.0,
+            1.0,
+            1.0,
+            255.0
+          ],
+          "style": "Hidden"
+        },
+        "NeutralZones": {
+          "arrows": false,
+          "color": [
+            1.0,
+            0.49367088079452515,
+            0.9423169493675232,
+            255.0
+          ]
+        },
+        "Red.allianceZone": {
+          "arrows": false,
+          "style": "Hidden"
+        },
+        "Red.bumpLeft": {
+          "arrows": false,
+          "color": [
+            0.15294118225574493,
+            1.0,
+            0.0,
+            255.0
+          ],
+          "style": "Hidden"
+        },
+        "Red.bumpRight": {
+          "arrows": false,
+          "color": [
+            0.15294118225574493,
+            1.0,
+            0.0,
+            255.0
+          ],
+          "style": "Hidden"
+        },
+        "Red.frontOfHub": {
+          "arrows": false,
+          "color": [
+            1.0,
+            1.0,
+            0.0,
+            255.0
+          ],
+          "style": "Hidden"
+        },
+        "Red.hubTranslation": {
+          "color": [
+            0.0,
+            1.0,
+            0.9620251655578613,
+            255.0
+          ],
+          "style": "Hidden"
+        },
+        "Red.leftAllianceZone": {
+          "arrows": false,
+          "color": [
+            0.632911205291748,
+            0.0,
+            1.0,
+            255.0
+          ],
+          "style": "Hidden"
+        },
+        "Red.rightAllianceZone": {
+          "arrows": false,
+          "color": [
+            0.6313725709915161,
+            0.0,
+            1.0,
+            255.0
+          ],
+          "style": "Hidden"
+        },
+        "Red.stopShootLeft": {
+          "arrows": false,
+          "color": [
+            1.0,
+            1.0,
+            0.0,
+            255.0
+          ],
+          "style": "Line (Closed)"
+        },
+        "Red.stopShootLeftFull": {
+          "color": [
+            1.0,
+            0.7058823704719543,
+            0.7490196228027344,
+            255.0
+          ],
+          "style": "Line (Closed)"
+        },
+        "Red.stopShootLeftNeutral": {
+          "color": [
+            0.0,
+            255.0,
+            64.55689239501953,
+            255.0
+          ],
+          "style": "Hidden"
+        },
+        "Red.stopShootRight": {
+          "arrows": false,
+          "color": [
+            255.0,
+            245.3164520263672,
+            0.0,
+            255.0
+          ],
+          "style": "Line (Closed)"
+        },
+        "Red.stopShootRightFull": {
+          "color": [
+            1.0,
+            0.7058823704719543,
+            0.7490196228027344,
+            255.0
+          ],
+          "style": "Line (Closed)"
+        },
+        "Red.stopShootRightNeutral": {
+          "color": [
+            0.0,
+            1.0,
+            1.0,
+            255.0
+          ],
+          "style": "Hidden"
+        },
+        "Red.towerZone": {
+          "color": [
+            0.0,
+            77.46842193603516,
+            255.0,
+            255.0
+          ],
+          "style": "Hidden"
+        },
+        "Red.trenchLeft": {
+          "arrows": false,
+          "style": "Hidden"
+        },
+        "Red.trenchRight": {
+          "arrows": false,
+          "style": "Hidden"
+        },
+        "RedHoodDangerZones": {
+          "color": [
+            0.7805907130241394,
+            0.41499757766723633,
+            0.0,
+            255.0
+          ]
+        },
+        "RedOppositionZones": {
+          "arrows": false,
+          "color": [
+            0.31277042627334595,
+            0.5147679448127747,
+            0.0,
+            255.0
+          ]
+        },
+        "TrenchExclusionZones": {
+          "color": [
+            0.0,
+            0.0486033670604229,
+            0.38396626710891724,
+            255.0
+          ]
+        },
+        "bottom": 1914,
+        "builtin": "",
+        "height": 8.069275856018066,
+        "image": "C:\\Users\\ryanh\\Downloads\\2026-field.png",
+        "left": 245,
+        "right": 3942,
+        "top": 118,
+        "width": 16.54119300842285,
+        "window": {
+          "visible": true
+        }
+      }
+    }
+  },
+  "NetworkTables Info": {
+    "Clients": {
+      "open": true
+    },
+    "Connections": {
+      "open": true
+    },
+    "Server": {
+      "open": true
+    },
+    "glass@2": {
+      "Publishers": {
+        "open": true
+      },
+      "open": true
+    },
+    "visible": true
+  },
+  "NetworkTables Settings": {
+    "mode": "Client (NT4)",
+    "serverTeam": "localhost"
+  }
+}

@@ -8,7 +8,7 @@ public interface SpindexerIO {
   public static class SpindexerIOInputs {
     public boolean motorConnected = false;
     public double voltage = 0.0;
-    public double mechanismRotationsPerSec = 0.0;
+    public double mechanismRPS = 0.0;
     public double supplyCurrentAmps = 0.0;
     public double statorCurrentAmps = 0.0;
     public double motorTempC = 0.0;

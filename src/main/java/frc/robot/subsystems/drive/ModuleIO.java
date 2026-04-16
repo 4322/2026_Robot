@@ -17,7 +17,9 @@ public interface ModuleIO {
     public double drivePositionRad = 0.0;
     public double driveVelocityRadPerSec = 0.0;
     public double driveAppliedVolts = 0.0;
-    public double driveCurrentAmps = 0.0;
+    public double driveStatorCurrent = 0.0;
+    public double driveSupplyCurrentAbs = 0.0;
+    public double driveTempCelcius = 0.0;
 
     public boolean turnConnected = false;
     public boolean turnEncoderConnected = false;
@@ -25,7 +27,8 @@ public interface ModuleIO {
     public Rotation2d turnPosition = Rotation2d.kZero;
     public double turnVelocityRadPerSec = 0.0;
     public double turnAppliedVolts = 0.0;
-    public double turnCurrentAmps = 0.0;
+    public double turnStatorCurrent = 0.0;
+    public double turnSupplyCurrentAbs = 0.0;
 
     public double[] odometryTimestamps = new double[] {};
     public double[] odometryDrivePositionsRad = new double[] {};
@@ -46,4 +49,7 @@ public interface ModuleIO {
 
   /** Run the turn motor to the specified rotation. */
   public default void setTurnPosition(Rotation2d rotation) {}
+
+  // For sim use to jump the pose
+  public default void resetState() {}
 }

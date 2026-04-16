@@ -22,24 +22,32 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.constants.Constants;
 import frc.robot.subsystems.drive.Drive;
+import frc.robot.util.LoggedTunableNumber;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
 public class DriveCommands {
-  private static final double DEADBAND = 0.1;
-  private static final double ANGLE_KP = 5.0;
-  private static final double ANGLE_KD = 0.4;
-  private static final double ANGLE_MAX_VELOCITY = 8.0;
-  private static final double ANGLE_MAX_ACCELERATION = 20.0;
+  private static final double DEADBAND = 0.0;
   private static final double FF_START_DELAY = 2.0; // Secs
   private static final double FF_RAMP_RATE = 0.1; // Volts/Sec
   private static final double WHEEL_RADIUS_MAX_VELOCITY = 0.25; // Rad/Sec
   private static final double WHEEL_RADIUS_RAMP_RATE = 0.05; // Rad/Sec^2
+
+  private static final LoggedTunableNumber rotateKp =
+      new LoggedTunableNumber("DriveCommands/rotateKp", 3.0);
+  private static final LoggedTunableNumber rotateKd =
+      new LoggedTunableNumber("DriveCommands/rotateKd", 0.0);
+  private static final LoggedTunableNumber rotateMaxVelocity =
+      new LoggedTunableNumber("DriveCommands/rotateMaxVelocity", 8.0);
+  private static final LoggedTunableNumber rotateMaxAcceleration =
+      new LoggedTunableNumber("DriveCommands/rotateMaxAcceleration", 20.0);
 
   private DriveCommands() {}
 
@@ -74,7 +82,7 @@ public class DriveCommands {
           // Apply rotation deadband
           double omega = MathUtil.applyDeadband(omegaSupplier.getAsDouble(), DEADBAND);
 
-          // Square rotation value for more precise control
+          // Cube rotation value for more precise control
           omega = Math.copySign(omega * omega, omega);
 
           // Convert to field relative speeds & send command
@@ -83,6 +91,54 @@ public class DriveCommands {
                   linearVelocity.getX() * drive.getMaxLinearSpeedMetersPerSec(),
                   linearVelocity.getY() * drive.getMaxLinearSpeedMetersPerSec(),
                   omega * drive.getMaxAngularSpeedRadPerSec());
+          boolean isFlipped =
+              DriverStation.getAlliance().isPresent()
+                  && DriverStation.getAlliance().get() == Alliance.Red;
+          drive.runVelocity(
+              ChassisSpeeds.fromFieldRelativeSpeeds(
+                  speeds,
+                  isFlipped
+                      ? drive.getRotation().plus(new Rotation2d(Math.PI))
+                      : drive.getRotation()));
+        },
+        drive);
+  }
+
+  public static Command joystickDriveWhileShooting(
+      Drive drive,
+      DoubleSupplier xSupplier,
+      DoubleSupplier ySupplier,
+      DoubleSupplier omegaSupplier,
+      BooleanSupplier isScoring) {
+    return Commands.run(
+        () -> {
+          // Get linear velocity
+          Translation2d linearVelocity =
+              getLinearVelocityFromJoysticks(xSupplier.getAsDouble(), ySupplier.getAsDouble());
+
+          // Apply rotation deadband
+          double omega = MathUtil.applyDeadband(omegaSupplier.getAsDouble(), DEADBAND);
+
+          // Cube rotation value for more precise control
+          omega = Math.copySign(omega * omega, omega);
+
+          // Convert to field relative speeds & send command
+          double linearVelocityScaling = drive.getMaxLinearSpeedMetersPerSec();
+          double angularVelocityScaling = drive.getMaxAngularSpeedRadPerSec();
+
+          if (isScoring.getAsBoolean()) {
+            linearVelocityScaling *= Constants.Drive.maxLinearSpeedPercentShooting;
+            angularVelocityScaling *= Constants.Drive.maxAngularSpeedPercentShooting;
+          } else {
+            linearVelocityScaling *= Constants.Drive.maxLinearSpeedPercentPassing;
+            angularVelocityScaling *= Constants.Drive.maxAngularSpeedPercentPassing;
+          }
+
+          ChassisSpeeds speeds =
+              new ChassisSpeeds(
+                  linearVelocity.getX() * linearVelocityScaling,
+                  linearVelocity.getY() * linearVelocityScaling,
+                  omega * angularVelocityScaling);
           boolean isFlipped =
               DriverStation.getAlliance().isPresent()
                   && DriverStation.getAlliance().get() == Alliance.Red;
@@ -106,14 +162,19 @@ public class DriveCommands {
       DoubleSupplier xSupplier,
       DoubleSupplier ySupplier,
       Supplier<Rotation2d> rotationSupplier) {
+    return joystickDriveAtAngle(drive, xSupplier, ySupplier, rotationSupplier, Translation2d.kZero);
+  }
+
+  public static Command joystickDriveAtAngle(
+      Drive drive,
+      DoubleSupplier xSupplier,
+      DoubleSupplier ySupplier,
+      Supplier<Rotation2d> rotationSupplier,
+      Translation2d centerOfRotation) {
 
     // Create PID controller
     ProfiledPIDController angleController =
-        new ProfiledPIDController(
-            ANGLE_KP,
-            0.0,
-            ANGLE_KD,
-            new TrapezoidProfile.Constraints(ANGLE_MAX_VELOCITY, ANGLE_MAX_ACCELERATION));
+        new ProfiledPIDController(0, 0, 0, new TrapezoidProfile.Constraints(0, 0));
     angleController.enableContinuousInput(-Math.PI, Math.PI);
 
     // Construct command
@@ -137,17 +198,49 @@ public class DriveCommands {
               boolean isFlipped =
                   DriverStation.getAlliance().isPresent()
                       && DriverStation.getAlliance().get() == Alliance.Red;
-              drive.runVelocity(
+              ChassisSpeeds robotRelative =
                   ChassisSpeeds.fromFieldRelativeSpeeds(
                       speeds,
                       isFlipped
                           ? drive.getRotation().plus(new Rotation2d(Math.PI))
-                          : drive.getRotation()));
+                          : drive.getRotation());
+              ChassisSpeeds corrected = rotateAboutShooter(robotRelative, centerOfRotation);
+              drive.runVelocity(corrected);
             },
             drive)
 
         // Reset PID controller when command starts
-        .beforeStarting(() -> angleController.reset(drive.getRotation().getRadians()));
+        .beforeStarting(
+            () -> {
+              angleController.reset(drive.getRotation().getRadians());
+              angleController.setPID(rotateKp.get(), 0.0, rotateKd.get());
+              angleController.setConstraints(
+                  new TrapezoidProfile.Constraints(
+                      rotateMaxVelocity.get(), rotateMaxAcceleration.get()));
+            });
+  }
+
+  /**
+   * Rotates robot about shooter location instead of center. This works by adding a translational
+   * velocity that cancels the shooter movement due to rotation.
+   */
+  public static ChassisSpeeds rotateAboutShooter(
+      ChassisSpeeds robotRelativeSpeeds, Translation2d shooterOffset) {
+
+    // If we're rotating with omega, the shooter moves tangentially
+    // We need to add translation to keep shooter stationary
+    double omega = robotRelativeSpeeds.omegaRadiansPerSecond;
+
+    // Velocity of shooter due to rotation about center: v = omega x r
+    // In 2D: vx = -omega * y, vy = omega * x
+    double shooterVxFromRotation = -omega * shooterOffset.getY();
+    double shooterVyFromRotation = omega * shooterOffset.getX();
+
+    // Subtract this from robot velocity to make shooter the rotation center
+    return new ChassisSpeeds(
+        robotRelativeSpeeds.vxMetersPerSecond - shooterVxFromRotation,
+        robotRelativeSpeeds.vyMetersPerSecond - shooterVyFromRotation,
+        omega);
   }
 
   /**

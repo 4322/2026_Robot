@@ -30,7 +30,7 @@ public class ModuleIOSim implements ModuleIO {
   private static final double DRIVE_KD = 0.0;
   private static final double DRIVE_KS = 0.0;
   private static final double DRIVE_KV_ROT =
-      0.91035; // Same units as TunerConstants: (volt * secs) / rotation
+      0.65; // Same units as TunerConstants: (volt * secs) / rotation
   private static final double DRIVE_KV = 1.0 / Units.rotationsToRadians(1.0 / DRIVE_KV_ROT);
   private static final double TURN_KP = 8.0;
   private static final double TURN_KD = 0.0;
@@ -93,7 +93,7 @@ public class ModuleIOSim implements ModuleIO {
     inputs.drivePositionRad = driveSim.getAngularPositionRad();
     inputs.driveVelocityRadPerSec = driveSim.getAngularVelocityRadPerSec();
     inputs.driveAppliedVolts = driveAppliedVolts;
-    inputs.driveCurrentAmps = Math.abs(driveSim.getCurrentDrawAmps());
+    inputs.driveStatorCurrent = Math.abs(driveSim.getCurrentDrawAmps());
 
     // Update turn inputs
     inputs.turnConnected = true;
@@ -102,7 +102,7 @@ public class ModuleIOSim implements ModuleIO {
     inputs.turnPosition = new Rotation2d(turnSim.getAngularPositionRad());
     inputs.turnVelocityRadPerSec = turnSim.getAngularVelocityRadPerSec();
     inputs.turnAppliedVolts = turnAppliedVolts;
-    inputs.turnCurrentAmps = Math.abs(turnSim.getCurrentDrawAmps());
+    inputs.turnStatorCurrent = Math.abs(turnSim.getCurrentDrawAmps());
 
     // Update odometry inputs (50Hz because high-frequency odometry in sim doesn't
     // matter)
@@ -134,5 +134,11 @@ public class ModuleIOSim implements ModuleIO {
   public void setTurnPosition(Rotation2d rotation) {
     turnClosedLoop = true;
     turnController.setSetpoint(rotation.getRadians());
+  }
+
+  @Override
+  public void resetState() {
+    driveSim.setState(0.0, 0.0);
+    turnSim.setState(0.0, 0.0);
   }
 }

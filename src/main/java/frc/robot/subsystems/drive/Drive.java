@@ -23,6 +23,7 @@ import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -39,8 +40,10 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.RobotContainer;
 import frc.robot.constants.Constants;
 import frc.robot.constants.Constants.Mode;
+import frc.robot.constants.Constants.SubsystemMode;
 import frc.robot.generated.TunerConstants;
 import frc.robot.util.LocalADStarAK;
 import java.util.concurrent.locks.Lock;
@@ -50,7 +53,7 @@ import org.littletonrobotics.junction.Logger;
 
 public class Drive extends SubsystemBase {
   // TunerConstants doesn't include these constants, so they are declared locally
-  static final double ODOMETRY_FREQUENCY = TunerConstants.kCANBus.isNetworkFD() ? 250.0 : 100.0;
+  static final double ODOMETRY_FREQUENCY = Constants.CANivore.CANBus.isNetworkFD() ? 250.0 : 100.0;
   public static final double DRIVE_BASE_RADIUS =
       Math.max(
           Math.max(
@@ -118,23 +121,24 @@ public class Drive extends SubsystemBase {
 
     // Configure AutoBuilder for PathPlanner
     AutoBuilder.configure(
-        this::getPose,
+        this::getRobotPose,
         this::setPose,
         this::getChassisSpeeds,
         this::runVelocity,
         new PPHolonomicDriveController(
-            new PIDConstants(5.0, 0.0, 0.0), new PIDConstants(5.0, 0.0, 0.0)),
+            new PIDConstants(Constants.Autonomous.pathPlannerDrivekP, 0.0, 0.0),
+            new PIDConstants(Constants.Autonomous.pathPlannerRotationkP, 0.0, 0.0)),
         PP_CONFIG,
         () -> DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red,
         this);
     Pathfinding.setPathfinder(new LocalADStarAK());
     PathPlannerLogging.setLogActivePathCallback(
         (activePath) -> {
-          Logger.recordOutput("Odometry/Trajectory", activePath.toArray(new Pose2d[0]));
+          Logger.recordOutput("Drive/Odometry/Trajectory", activePath.toArray(new Pose2d[0]));
         });
     PathPlannerLogging.setLogTargetPoseCallback(
         (targetPose) -> {
-          Logger.recordOutput("Odometry/TrajectorySetpoint", targetPose);
+          Logger.recordOutput("Drive/Odometry/TrajectorySetpoint", targetPose);
         });
 
     // Configure SysId
@@ -168,8 +172,8 @@ public class Drive extends SubsystemBase {
 
     // Log empty setpoint states when disabled
     if (DriverStation.isDisabled()) {
-      Logger.recordOutput("SwerveStates/Setpoints", new SwerveModuleState[] {});
-      Logger.recordOutput("SwerveStates/SetpointsOptimized", new SwerveModuleState[] {});
+      Logger.recordOutput("Drive/SwerveStates/Setpoints", new SwerveModuleState[] {});
+      Logger.recordOutput("Drive/SwerveStates/SetpointsOptimized", new SwerveModuleState[] {});
     }
 
     // Update odometry
@@ -206,6 +210,10 @@ public class Drive extends SubsystemBase {
 
     // Update gyro alert
     gyroDisconnectedAlert.set(!gyroInputs.connected && Constants.currentMode != Mode.SIM);
+
+    if (Constants.debugZoneAreas) {
+      RobotContainer.getField().setRobotPose(getRobotPose());
+    }
   }
 
   /**
@@ -220,16 +228,18 @@ public class Drive extends SubsystemBase {
     SwerveDriveKinematics.desaturateWheelSpeeds(setpointStates, TunerConstants.kSpeedAt12Volts);
 
     // Log unoptimized setpoints and setpoint speeds
-    Logger.recordOutput("SwerveStates/Setpoints", setpointStates);
-    Logger.recordOutput("SwerveChassisSpeeds/Setpoints", discreteSpeeds);
+    Logger.recordOutput("Drive/SwerveStates/Setpoints", setpointStates);
+    Logger.recordOutput("Drive/SwerveChassisSpeeds/Setpoints", discreteSpeeds);
 
-    // Send setpoints to modules
-    for (int i = 0; i < 4; i++) {
-      modules[i].runSetpoint(setpointStates[i]);
+    if (Constants.driveMode == SubsystemMode.NORMAL) {
+      // Send setpoints to modules
+      for (int i = 0; i < 4; i++) {
+        modules[i].runSetpoint(setpointStates[i]);
+      }
     }
 
     // Log optimized setpoints (runSetpoint mutates each state)
-    Logger.recordOutput("SwerveStates/SetpointsOptimized", setpointStates);
+    Logger.recordOutput("Drive/SwerveStates/SetpointsOptimized", setpointStates);
   }
 
   /** Runs the drive in a straight line with the specified drive output. */
@@ -270,7 +280,7 @@ public class Drive extends SubsystemBase {
   }
 
   /** Returns the module states (turn angles and drive velocities) for all of the modules. */
-  @AutoLogOutput(key = "SwerveStates/Measured")
+  @AutoLogOutput(key = "Drive/SwerveStates/Measured")
   private SwerveModuleState[] getModuleStates() {
     SwerveModuleState[] states = new SwerveModuleState[4];
     for (int i = 0; i < 4; i++) {
@@ -289,7 +299,7 @@ public class Drive extends SubsystemBase {
   }
 
   /** Returns the measured chassis speeds of the robot. */
-  @AutoLogOutput(key = "SwerveChassisSpeeds/Measured")
+  @AutoLogOutput(key = "Drive/SwerveChassisSpeeds/Measured")
   private ChassisSpeeds getChassisSpeeds() {
     return kinematics.toChassisSpeeds(getModuleStates());
   }
@@ -313,19 +323,44 @@ public class Drive extends SubsystemBase {
   }
 
   /** Returns the current odometry pose. */
-  @AutoLogOutput(key = "Odometry/Robot")
-  public Pose2d getPose() {
+  @AutoLogOutput(key = "Drive/Odometry/Robot")
+  public Pose2d getRobotPose() {
     return poseEstimator.getEstimatedPosition();
+  }
+
+  public Translation2d getTurretTranslation() {
+    return getTurretPose().getTranslation();
+  }
+
+  /** Returns the current turret pose. */
+  @AutoLogOutput(key = "Drive/Odometry/Turret")
+  public Pose2d getTurretPose() {
+    return poseEstimator
+        .getEstimatedPosition()
+        .transformBy(new Transform2d(Constants.Turret.originToTurret, Rotation2d.kZero));
+  }
+
+  /** Returns the current turret pose with a rotation */
+  public Pose2d getTurretPose(double rotationDeg) {
+    return new Pose2d(
+        poseEstimator
+            .getEstimatedPosition()
+            .transformBy(new Transform2d(Constants.Turret.originToTurret, Rotation2d.kZero))
+            .getTranslation(),
+        Rotation2d.fromDegrees(rotationDeg));
   }
 
   /** Returns the current odometry rotation. */
   public Rotation2d getRotation() {
-    return getPose().getRotation();
+    return getRobotPose().getRotation();
   }
 
   /** Resets the current odometry pose. */
   public void setPose(Pose2d pose) {
     poseEstimator.resetPosition(rawGyroRotation, getModulePositions(), pose);
+    for (int i = 0; i < 4; i++) {
+      modules[i].resetState();
+    }
   }
 
   /** Adds a new timestamped vision measurement. */
@@ -355,5 +390,22 @@ public class Drive extends SubsystemBase {
       new Translation2d(TunerConstants.BackLeft.LocationX, TunerConstants.BackLeft.LocationY),
       new Translation2d(TunerConstants.BackRight.LocationX, TunerConstants.BackRight.LocationY)
     };
+  }
+
+  public Translation2d getVelocity() {
+    return new Translation2d(
+        getChassisSpeeds().vxMetersPerSecond, getChassisSpeeds().vyMetersPerSecond);
+  }
+
+  public ChassisSpeeds getFieldRelativeVelocity() {
+    return ChassisSpeeds.fromRobotRelativeSpeeds(getRobotRelativeVelocity(), getRotation());
+  }
+
+  public ChassisSpeeds getRobotRelativeVelocity() {
+    return getChassisSpeeds();
+  }
+
+  public Pose2d getPoseAtTimestamp(double timestampSeconds) {
+    return poseEstimator.sampleAt(timestampSeconds).orElse(null);
   }
 }

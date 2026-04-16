@@ -1,79 +1,82 @@
 package frc.robot.subsystems.shooter.flywheel;
 
-import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.constants.Constants;
 import org.littletonrobotics.junction.Logger;
 
 public class Flywheel {
   private FlywheelIO io;
   private FlywheelIOInputsAutoLogged inputs = new FlywheelIOInputsAutoLogged();
-  private double requestedMechanismRPS = 0.0;
-  private double ballsShot = 0;
-  private boolean fuelDetected = false;
-
-  public enum FlywheelStates {
-    DISABLED,
-    IDLE,
-    SHOOTING
-  }
-
-  private FlywheelStates state = FlywheelStates.DISABLED;
+  private double requestedSetpoint = 0;
+  private Timer atGoalTimer = new Timer();
+  private boolean isScoring = false;
 
   public Flywheel(FlywheelIO io) {
     this.io = io;
   }
 
-  public void periodic() {
+  public void inputsPeriodic() {
     io.updateInputs(inputs);
-    Logger.processInputs("Flywheel", inputs);
+    Logger.processInputs("Shooter/Flywheel", inputs);
+  }
 
-    if (inputs.fuelDetected && !fuelDetected) {
-      ballsShot++;
-      fuelDetected = true;
-    } else if (!inputs.fuelDetected) {
-      fuelDetected = false;
+  public void outputsPeriodic() {
+    switch (Constants.flywheelMode) {
+      case TUNING -> {}
+      case NORMAL -> {
+        updateAtGoalTimer();
+        updateNetworkTableValues();
+        Logger.recordOutput("Shooter/Flywheel/atGoal", isAtGoal());
+      }
+      case DISABLED -> {}
     }
+  }
 
-    switch (state) {
-      case DISABLED -> {
-        if (DriverStation.isEnabled()) {
-          state = FlywheelStates.IDLE;
-        }
+  public void requestGoal(double velocity, boolean isScoring) {
+    switch (Constants.flywheelMode) {
+      case TUNING -> {}
+      case NORMAL -> {
+        io.setTargetMechanismRPS(velocity);
+        requestedSetpoint = velocity;
       }
-      case IDLE -> {
-        io.setTargetMechanismRotations(Constants.Flywheel.idleMechanismRPS);
-      }
-      case SHOOTING -> {
-        io.setTargetMechanismRotations(requestedMechanismRPS);
-      }
+      case DISABLED -> {}
     }
-
-    Logger.recordOutput("Flywheel/State", state.toString());
+    this.isScoring = isScoring;
+    Logger.recordOutput("Shooter/Flywheel/RequestedSetpoint", requestedSetpoint);
   }
 
-  public void requestIdle() {
-    state = FlywheelStates.IDLE;
+  public boolean isAtGoal() {
+    return Math.abs(inputs.leaderMechanismRPS - requestedSetpoint)
+            < Constants.Flywheel.smallToleranceRPS
+        || (isScoring
+            ? atGoalTimer.hasElapsed(Constants.scoringDoubleToleranceTime)
+            : atGoalTimer.hasElapsed(Constants.passingDoubleToleranceTime));
   }
 
-  public void requestShoot(double velocity) {
-    state = FlywheelStates.SHOOTING;
-    requestedMechanismRPS = velocity;
+  private void updateAtGoalTimer() {
+    if (Math.abs(inputs.leaderMechanismRPS - requestedSetpoint)
+        < Constants.Flywheel.largeToleranceRPS) {
+      atGoalTimer.start();
+    } else {
+      atGoalTimer.stop();
+      atGoalTimer.reset();
+    }
   }
 
-  public void enableBrakeMode(boolean enable) {
-    io.enableBrakeMode(enable);
-  }
-
-  public boolean isFuelDetected() {
-    return inputs.fuelDetected;
-  }
-
-  public boolean atTargetVelocity() {
-    return Math.abs(inputs.actualMechanismRotations - inputs.requestedMechanismRotations)
-        < Constants.Flywheel.allowedVelocityErrorMechanismRPS;
-  }
-
-  public double getVelocity() {
-    return inputs.actualMechanismRotations;
+  private void updateNetworkTableValues() {
+    if (isAtGoal()) {
+      if (Math.abs(inputs.leaderMechanismRPS - requestedSetpoint)
+          < Constants.Flywheel.smallToleranceRPS) {
+        SmartDashboard.putString(
+            "Flywheel/FlywheelAtGoal", Constants.NetworkTables.green.toHexString());
+      } else {
+        SmartDashboard.putString(
+            "Flywheel/FlywheelAtGoal", Constants.NetworkTables.yellow.toHexString());
+      }
+    } else {
+      SmartDashboard.putString(
+          "Flywheel/FlywheelAtGoal", Constants.NetworkTables.red.toHexString());
+    }
   }
 }

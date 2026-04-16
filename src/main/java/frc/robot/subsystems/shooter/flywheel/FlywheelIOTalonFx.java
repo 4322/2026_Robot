@@ -1,38 +1,76 @@
 package frc.robot.subsystems.shooter.flywheel;
 
+import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusCode;
+import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.VelocityVoltage;
+import com.ctre.phoenix6.hardware.ParentDevice;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
-import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.reduxrobotics.sensors.canandcolor.Canandcolor;
 import com.reduxrobotics.sensors.canandcolor.CanandcolorSettings;
+import edu.wpi.first.math.filter.Debouncer;
+import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.units.measure.Current;
+import edu.wpi.first.units.measure.Temperature;
+import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.util.Color;
 import frc.robot.constants.Constants;
 
 public class FlywheelIOTalonFx implements FlywheelIO {
 
-  private TalonFX motor;
+  private TalonFX leaderMotor;
   private TalonFX followerMotor;
-  private Canandcolor canandcolor = new Canandcolor(Constants.Flywheel.canandcolorId);
+  private Canandcolor canandcolor;
   private CanandcolorSettings canandcolorConfig = new CanandcolorSettings();
   private double lastRequestedVelocity = -1;
 
   private TalonFXConfiguration config = new TalonFXConfiguration();
   private VelocityVoltage velocityRequest = new VelocityVoltage(0).withSlot(0);
 
+  private final StatusSignal<AngularVelocity> leaderVelocity;
+  private final StatusSignal<Voltage> leaderAppliedVolts;
+  private final StatusSignal<Current> leaderSupplyCurrent;
+  private final StatusSignal<Current> leaderStatorCurrent;
+  private final StatusSignal<Temperature> leaderTemp;
+
+  private final StatusSignal<AngularVelocity> followerVelocity;
+  private final StatusSignal<Voltage> followerAppliedVolts;
+  private final StatusSignal<Current> followerSupplyCurrent;
+  private final StatusSignal<Current> followerStatorCurrent;
+  private final StatusSignal<Temperature> followerTemp;
+
+  private final Debouncer leaderConnectedDebounce =
+      new Debouncer(0.5, Debouncer.DebounceType.kFalling);
+  private final Debouncer followerConnectedDebounce =
+      new Debouncer(0.5, Debouncer.DebounceType.kFalling);
+
   public FlywheelIOTalonFx() {
-    motor = new TalonFX(Constants.Flywheel.motorId);
+    leaderMotor = new TalonFX(Constants.Flywheel.motorId);
     followerMotor = new TalonFX(Constants.Flywheel.followerMotorId);
 
+    config.HardwareLimitSwitch.ForwardLimitEnable = false;
+    config.HardwareLimitSwitch.ReverseLimitEnable = false;
+    config.SoftwareLimitSwitch.ReverseSoftLimitEnable = false;
+    config.SoftwareLimitSwitch.ForwardSoftLimitEnable = false;
     config.CurrentLimits.StatorCurrentLimit = Constants.Flywheel.statorCurrentLimit;
+    config.CurrentLimits.StatorCurrentLimitEnable = true;
     config.CurrentLimits.SupplyCurrentLimit = Constants.Flywheel.supplyCurrentLimit;
+    config.CurrentLimits.SupplyCurrentLimitEnable = true;
+    config.CurrentLimits.SupplyCurrentLowerTime = 0;
+
+    config.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
+    config.Feedback.SensorToMechanismRatio = Constants.Flywheel.motorToMechanismRatio;
 
     config.MotorOutput.Inverted = Constants.Flywheel.motorInvert;
     config.MotorOutput.NeutralMode = Constants.Flywheel.neutralMode;
+
+    config.HardwareLimitSwitch.ReverseLimitEnable = false;
+    config.HardwareLimitSwitch.ForwardLimitEnable = false;
 
     config.Slot0.kS = Constants.Flywheel.kS;
     config.Slot0.kV = Constants.Flywheel.kV;
@@ -40,102 +78,156 @@ public class FlywheelIOTalonFx implements FlywheelIO {
     config.Slot0.kI = Constants.Flywheel.kI;
     config.Slot0.kD = Constants.Flywheel.kD;
 
-    StatusCode configStatus = motor.getConfigurator().apply(config);
-    config.MotorOutput.Inverted =
-        Constants.Flywheel.motorInvert; // Invert follower motor opposite of main motor
-    StatusCode followerConfigStatus = followerMotor.getConfigurator().apply(config);
-    // Use a valid control to initialize the follower motor (set to zero velocity for now).
-    // Replace with a proper follower call if/when the correct Fo, nullllower constructor or API is
-    // available.
+    // Used for idle RPS to avoid wild PID oscillations when requesting slow RPS
+    config.Slot1.kS = Constants.Flywheel.kS;
+    config.Slot1.kV = Constants.Flywheel.kV;
+    config.Slot1.kP = 0;
+    config.Slot1.kI = 0;
+    config.Slot1.kD = 0;
+
+    StatusCode leaderConfigStatus = leaderMotor.getConfigurator().apply(config);
+    StatusCode followerConfigStatus = leaderMotor.getConfigurator().apply(config);
     StatusCode followerMotorSetStatus =
-        followerMotor.setControl(new Follower(motor.getDeviceID(), MotorAlignmentValue.Opposed));
+        followerMotor.setControl(
+            new Follower(leaderMotor.getDeviceID(), MotorAlignmentValue.Opposed));
 
     canandcolorConfig.setColorFramePeriod(10); // Set color frame period to 10ms
 
-    CanandcolorSettings canandcolorConfigStatus =
-        canandcolor.setSettings(canandcolorConfig, 1.0, 5);
-
-    if (!canandcolorConfigStatus.isEmpty()) {
-      DriverStation.reportError(
-          "Canandcolor "
-              + canandcolor.getAddress()
-              + " error (Flywheel Sensor): "
-              + canandcolorConfigStatus,
-          false);
+    if (Constants.Flywheel.canAndColorEnabled) {
+      canandcolor = new Canandcolor(Constants.Flywheel.canandcolorId);
+      CanandcolorSettings canandcolorConfigStatus =
+          canandcolor.setSettings(canandcolorConfig, 1.0, 5);
+      if (!canandcolorConfigStatus.isEmpty()) {
+        DriverStation.reportError(
+            "Canandcolor "
+                + canandcolor.getAddress()
+                + " error (Flywheel Sensor): "
+                + canandcolorConfigStatus,
+            false);
+      }
     }
 
-    if (configStatus != StatusCode.OK) {
+    if (leaderConfigStatus != StatusCode.OK) {
       DriverStation.reportError(
-          "Talon " + motor.getDeviceID() + " error (Flywheel): " + configStatus.getDescription(),
+          "Talon "
+              + leaderMotor.getDeviceID()
+              + " config error (Flywheel Leader): "
+              + leaderConfigStatus.getDescription(),
           false);
     }
-
     if (followerConfigStatus != StatusCode.OK) {
       DriverStation.reportError(
           "Talon "
               + followerMotor.getDeviceID()
-              + " error (Flywheel Follower): "
+              + " config error (Flywheel Follower): "
               + followerConfigStatus.getDescription(),
           false);
     }
-
     if (followerMotorSetStatus != StatusCode.OK) {
       DriverStation.reportError(
           "Talon "
               + followerMotor.getDeviceID()
-              + " set error (Flywheel Follower): "
+              + " set follower error (Flywheel Follower): "
               + followerMotorSetStatus.getDescription(),
           false);
     }
+
+    leaderVelocity = leaderMotor.getVelocity();
+    leaderAppliedVolts = leaderMotor.getMotorVoltage();
+    leaderStatorCurrent = leaderMotor.getStatorCurrent();
+    leaderSupplyCurrent = leaderMotor.getSupplyCurrent();
+    leaderTemp = leaderMotor.getDeviceTemp();
+
+    followerVelocity = followerMotor.getVelocity();
+    followerAppliedVolts = followerMotor.getMotorVoltage();
+    followerStatorCurrent = followerMotor.getStatorCurrent();
+    followerSupplyCurrent = followerMotor.getSupplyCurrent();
+    followerTemp = followerMotor.getDeviceTemp();
+
+    // Configure periodic frames
+    BaseStatusSignal.setUpdateFrequencyForAll(
+        50.0,
+        leaderVelocity,
+        leaderAppliedVolts,
+        leaderStatorCurrent,
+        leaderSupplyCurrent,
+        leaderTemp,
+        followerVelocity,
+        followerAppliedVolts,
+        followerStatorCurrent,
+        followerSupplyCurrent,
+        followerTemp);
+    ParentDevice.optimizeBusUtilizationForAll(leaderMotor, followerMotor);
   }
 
   @Override
   public void updateInputs(FlywheelIOInputs inputs) {
-    inputs.motorConnected = motor.isConnected();
-    inputs.followerMotorConnected = followerMotor.isConnected();
+    var leaderMotorStatus =
+        BaseStatusSignal.refreshAll(
+            leaderVelocity,
+            leaderAppliedVolts,
+            leaderStatorCurrent,
+            leaderSupplyCurrent,
+            leaderTemp);
+    var followerMotorStatus =
+        BaseStatusSignal.refreshAll(
+            followerVelocity,
+            followerAppliedVolts,
+            followerStatorCurrent,
+            followerSupplyCurrent,
+            followerTemp);
 
-    inputs.requestedMechanismRotations = lastRequestedVelocity;
-    inputs.actualMechanismRotations =
-        motor.getVelocity().getValueAsDouble() / Constants.Flywheel.motorToMechanismRatio;
-    inputs.actualMechanismRotations =
-        followerMotor.getVelocity().getValueAsDouble() / Constants.Flywheel.motorToMechanismRatio;
-    inputs.speedMotorRotations = motor.getVelocity().getValueAsDouble();
-    inputs.appliedVolts = motor.getMotorVoltage().getValueAsDouble();
-    inputs.motorTempCelsius = motor.getDeviceTemp().getValueAsDouble();
-    inputs.color = new Color(canandcolor.getRed(), canandcolor.getGreen(), canandcolor.getBlue());
-    inputs.proximity = canandcolor.getProximity();
+    inputs.leaderMotorConnected = leaderConnectedDebounce.calculate(leaderMotorStatus.isOK());
+    inputs.leaderMechanismRPS = leaderVelocity.getValueAsDouble();
+    inputs.leaderAppliedVolts = leaderAppliedVolts.getValueAsDouble();
+    inputs.leaderTempCelsius = leaderTemp.getValueAsDouble();
+    inputs.leaderStatorCurrentAmps = leaderStatorCurrent.getValueAsDouble();
+    inputs.leaderSupplyCurrentAmps = leaderSupplyCurrent.getValueAsDouble();
 
-    inputs.proximity = canandcolor.getProximity();
-    inputs.sensorConnected = canandcolor.isConnected();
+    inputs.followerMotorConnected = followerConnectedDebounce.calculate(followerMotorStatus.isOK());
+    inputs.followerMechanismRPS = followerVelocity.getValueAsDouble();
+    inputs.followerAppliedVolts = followerAppliedVolts.getValueAsDouble();
+    inputs.followerTempCelsius = followerTemp.getValueAsDouble();
+    inputs.followerStatorCurrentAmps = followerStatorCurrent.getValueAsDouble();
+    inputs.followerSupplyCurrentAmps = followerSupplyCurrent.getValueAsDouble();
 
-    inputs.fuelDetected = inputs.proximity < Constants.Flywheel.minFuelDetectionProximity;
-    inputs.busCurrentAmps = motor.getSupplyCurrent().getValueAsDouble();
+    if (Constants.Flywheel.canAndColorEnabled) {
+      inputs.color = new Color(canandcolor.getRed(), canandcolor.getGreen(), canandcolor.getBlue());
+      inputs.proximity = canandcolor.getProximity();
+
+      inputs.proximity = canandcolor.getProximity();
+      inputs.sensorConnected = canandcolor.isConnected();
+
+      inputs.fuelDetected = inputs.proximity < Constants.Flywheel.minFuelDetectionProximity;
+    }
   }
 
   @Override
-  public void setTargetMechanismRotations(double speedMechanismRotations) {
-    if (speedMechanismRotations != lastRequestedVelocity) {
-      motor.setControl(
-          velocityRequest
-              .withVelocity(speedMechanismRotations * Constants.Flywheel.motorToMechanismRatio)
-              .withEnableFOC(true));
+  public void setTargetMechanismRPS(double mechanismRPS) {
+    if (mechanismRPS != lastRequestedVelocity) {
+      if (mechanismRPS == 0) {
+        leaderMotor.stopMotor();
+      } else {
+        if (mechanismRPS == Constants.Flywheel.idleRPS) {
+          leaderMotor.setControl(
+              velocityRequest.withVelocity(mechanismRPS).withEnableFOC(true).withSlot(1));
+        } else {
+          leaderMotor.setControl(
+              velocityRequest.withVelocity(mechanismRPS).withEnableFOC(true).withSlot(0));
+        }
+      }
     }
 
-    lastRequestedVelocity = speedMechanismRotations;
+    lastRequestedVelocity = mechanismRPS;
   }
 
   @Override
   public void stop() {
+    leaderMotor.stopMotor();
     lastRequestedVelocity = 0;
-    motor.setControl(velocityRequest.withVelocity(0).withEnableFOC(true));
-  }
-
-  @Override
-  public void enableBrakeMode(boolean enable) {
-    motor.setNeutralMode(enable ? NeutralModeValue.Brake : NeutralModeValue.Coast);
   }
 
   public TalonFX getTalonFX() {
-    return motor;
+    return leaderMotor;
   }
 }

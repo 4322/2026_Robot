@@ -9,11 +9,13 @@ public class Spindexer {
   private SpindexerIOInputsAutoLogged inputs = new SpindexerIOInputsAutoLogged();
 
   private double requestedSpeed = -1;
+  private boolean unjamOverride;
 
   public enum SpindexerStates {
     DISABLED,
     IDLE,
-    INDEXING
+    INDEXING,
+    UNJAM
   }
 
   private SpindexerStates state = SpindexerStates.DISABLED;
@@ -22,36 +24,70 @@ public class Spindexer {
     this.io = io;
   }
 
-  public void periodic() {
+  public void inputsPeriodic() {
     io.updateInputs(inputs);
-    Logger.processInputs("Spindexer", inputs);
+    Logger.processInputs("Shooter/Spindexer", inputs);
+  }
 
-    switch (state) {
-      case DISABLED -> {
-        if (DriverStation.isEnabled()) {
-          state = SpindexerStates.IDLE;
+  public void outputsPeriodic() {
+    switch (Constants.spindexerMode) {
+      case TUNING -> {}
+      case NORMAL -> {
+        if (DriverStation.isDisabled()) {
+          state = SpindexerStates.DISABLED;
+        }
+
+        switch (state) {
+          case DISABLED -> {
+            // Reset variables
+            unjamOverride = false;
+            if (DriverStation.isEnabled()) {
+              state = SpindexerStates.IDLE;
+            }
+          }
+          case IDLE -> {
+            io.stop();
+          }
+          case INDEXING -> {
+            io.setTargetMechanismRotations(requestedSpeed);
+          }
+          case UNJAM -> {
+            io.setTargetMechanismRotations(Constants.Spindexer.unjamRPS);
+          }
         }
       }
-      case IDLE -> {
-        io.stop();
-      }
-      case INDEXING -> {
-        io.setTargetMechanismRotations(requestedSpeed);
-      }
+      case DISABLED -> {}
     }
 
-    Logger.recordOutput("Spindexer/State", state.toString());
-    Logger.recordOutput("Spindexer/RequestedSpeed", requestedSpeed);
+    Logger.recordOutput("Shooter/Spindexer/State", state.toString());
+    Logger.recordOutput("Shooter/Spindexer/RequestedSpeed", requestedSpeed);
+    Logger.recordOutput("Shooter/Spindexer/Stopped", isStopped());
   }
 
   public void requestIdle() {
-    state = SpindexerStates.IDLE;
-    requestedSpeed = 0;
+    if (!unjamOverride) {
+      state = SpindexerStates.IDLE;
+      requestedSpeed = 0;
+    }
   }
 
-  public void requestIndex(double speed) {
-    state = SpindexerStates.INDEXING;
-    requestedSpeed = speed;
+  public void requestGoal(double speed) {
+    if (!unjamOverride) {
+      state = SpindexerStates.INDEXING;
+      requestedSpeed = speed;
+    }
+  }
+
+  public void unjamOverride(boolean unjamOverride) {
+    this.unjamOverride = unjamOverride;
+    if (unjamOverride) {
+      state = SpindexerStates.UNJAM;
+      requestedSpeed = Constants.Spindexer.unjamRPS;
+    } else {
+      // Default to idle when unjam isn't desired
+      state = SpindexerStates.IDLE;
+      requestedSpeed = 0;
+    }
   }
 
   public void enableBrakeMode(boolean enable) {
@@ -59,10 +95,10 @@ public class Spindexer {
   }
 
   public boolean isStopped() {
-    return inputs.mechanismRotationsPerSec < Constants.Spindexer.stoppedMechanismRotationsPerSec;
+    return inputs.mechanismRPS < Constants.Spindexer.stoppedMechanismRotationsPerSec;
   }
 
   public double getVelocity() {
-    return inputs.mechanismRotationsPerSec;
+    return inputs.mechanismRPS;
   }
 }

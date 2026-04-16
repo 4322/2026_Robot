@@ -1,116 +1,151 @@
 package frc.robot.subsystems.shooter.areaManager;
 
-import edu.wpi.first.math.geometry.Rectangle2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.Robot;
+import frc.robot.constants.FieldConstants;
 
 public class AreaManager {
-  // TODO: Put IN field dimensions
-
-  // Red Alliance Zones
-  private static Rectangle2d redAllianceZone =
-      new Rectangle2d(new Translation2d(0, 0), new Translation2d(0, 0));
-  private static Rectangle2d leftBlueOppositionZone =
-      new Rectangle2d(new Translation2d(0, 0), new Translation2d(0, 0));
-  private static Rectangle2d rightBlueOppositionZone =
-      new Rectangle2d(new Translation2d(0, 0), new Translation2d(0, 0));
-  // Neutral Zones
-  private static Rectangle2d leftNeutralZone =
-      new Rectangle2d(
-          new Translation2d(0, 0),
-          new Translation2d(0, 8.2296)); // When looking from Red Alliance side
-  private static Rectangle2d rightNeutralZone =
-      new Rectangle2d(
-          new Translation2d(0, 8.2296),
-          new Translation2d(0, 16.4592)); // When looking from Red Alliance side
-  // Blue Alliance Zones
-  private static Rectangle2d blueAllianceZone =
-      new Rectangle2d(new Translation2d(16.4592, 0), new Translation2d(24.6888, 16.4592));
-  private static Rectangle2d leftRedOppositionZone =
-      new Rectangle2d(new Translation2d(8.2296, 0), new Translation2d(16.4592, 8.2296));
-  private static Rectangle2d rightRedOppositionZone =
-      new Rectangle2d(new Translation2d(8.2296, 8.2296), new Translation2d(16.4592, 16.4592));
-  // Non-Shooting Areas
-  private static Rectangle2d trenchLeftRed =
-      new Rectangle2d(new Translation2d(0, 4.1148), new Translation2d(8.2296, 8.2296));
-  private static Rectangle2d trenchRightRed =
-      new Rectangle2d(new Translation2d(0, 8.2296), new Translation2d(8.2296, 12.3444));
-  private static Rectangle2d bumpLeftRed =
-      new Rectangle2d(new Translation2d(0, 6.1722), new Translation2d(2.0574, 10.287));
-  private static Rectangle2d bumpRightRed =
-      new Rectangle2d(new Translation2d(0, 10.287), new Translation2d(2.0574, 14.4018));
-  private static Rectangle2d backOfHubRed =
-      new Rectangle2d(new Translation2d(0, 12.3444), new Translation2d(8.2296, 16.4592));
-  private static Rectangle2d frontOfHubRed =
-      new Rectangle2d(new Translation2d(16.4592, 0), new Translation2d(24.6888, 4.1148));
-
-  // Blue Alliance Non-Shooting Areas
-  private static Rectangle2d trenchLeftBlue =
-      new Rectangle2d(new Translation2d(0, 4.1148), new Translation2d(8.2296, 8.2296));
-  private static Rectangle2d trenchRightBlue =
-      new Rectangle2d(new Translation2d(0, 8.2296), new Translation2d(8.2296, 12.3444));
-  private static Rectangle2d bumpLeftBlue =
-      new Rectangle2d(new Translation2d(0, 6.1722), new Translation2d(2.0574, 10.287));
-  private static Rectangle2d bumpRightBlue =
-      new Rectangle2d(new Translation2d(0, 10.287), new Translation2d(2.0574, 14.4018));
-  private static Rectangle2d backOfHubBlue =
-      new Rectangle2d(new Translation2d(0, 12.3444), new Translation2d(8.2296, 16.4592));
-  private static Rectangle2d frontOfHubBlue =
-      new Rectangle2d(new Translation2d(16.4592, 0), new Translation2d(24.6888, 4.1148));
 
   public enum Zone {
     ALLIANCE_ZONE,
     LEFT_OPPOSITION,
     RIGHT_OPPOSITION,
     LEFT_NEUTRAL,
-    RIGHT_NEUTRAL
+    RIGHT_NEUTRAL,
+    LEFT_TRENCH,
+    RIGHT_TRENCH,
+    LEFT_OPPOSITION_TRENCH,
+    RIGHT_OPPOSITION_TRENCH,
+    LEFT_STOP_SHOOT,
+    RIGHT_STOP_SHOOT,
+    LEFT_OPPOSITION_STOP_SHOOT,
+    RIGHT_OPPOSITION_STOP_SHOOT,
+    ALLIANCE_TOWER,
+    OPPOSITION_TOWER,
+    UNKNOWN
   }
 
-  private static Zone zone = Zone.ALLIANCE_ZONE;
-
   public static boolean isShootingArea(Translation2d position) {
-    return !((trenchLeftRed.contains(position)
-            || trenchRightRed.contains(position)
-            || bumpLeftRed.contains(position)
-            || bumpRightRed.contains(position)
-            || trenchLeftBlue.contains(position)
-            || trenchRightBlue.contains(position)
-            || bumpLeftBlue.contains(position)
-            || bumpRightBlue.contains(position)
-            || backOfHubRed.contains(position)
-            || backOfHubBlue.contains(position))
-        || (Robot.alliance == Alliance.Red
-            ? (frontOfHubRed.contains(position))
-            : (frontOfHubBlue.contains(position))));
+    if (Robot.alliance == Alliance.Blue) {
+      return !(FieldConstants.Red.frontOfHub.contains(position)
+          // Not in neutral side of blue trench
+          || FieldConstants.Blue.stopShootLeftNeutral.contains(position)
+          || FieldConstants.Blue.stopShootRightNeutral.contains(position)
+          // Not anywhere near red trench (neutral/red alliance side)
+          || FieldConstants.Red.stopShootLeftFull.contains(position)
+          || FieldConstants.Red.stopShootRightFull.contains(position));
+    } else {
+      return !(FieldConstants.Blue.frontOfHub.contains(position)
+          // Not in neutral side of red trench
+          || FieldConstants.Red.stopShootLeftNeutral.contains(position)
+          || FieldConstants.Red.stopShootRightNeutral.contains(position)
+          // Not anywhere near blue trench (neutral/blue alliance side)
+          || FieldConstants.Blue.stopShootLeftFull.contains(position)
+          || FieldConstants.Blue.stopShootRightFull.contains(position));
+    }
+  }
+
+  public static boolean isTrench(Translation2d position) {
+    return ((FieldConstants.Blue.trenchLeft.contains(position)
+        || FieldConstants.Blue.trenchRight.contains(position)
+        || FieldConstants.Red.trenchLeft.contains(position)
+        || FieldConstants.Red.trenchRight.contains(position)));
+  }
+
+  public static boolean isHoodDangerZone(Translation2d position) {
+    if (Robot.alliance == Alliance.Blue) {
+      return FieldConstants.Blue.stopShootLeftNeutral.contains(position)
+          || FieldConstants.Blue.stopShootRightNeutral.contains(position)
+          || FieldConstants.Red.stopShootLeftFull.contains(position)
+          || FieldConstants.Red.stopShootRightFull.contains(position);
+    } else {
+      return FieldConstants.Red.stopShootLeftNeutral.contains(position)
+          || FieldConstants.Red.stopShootRightNeutral.contains(position)
+          || FieldConstants.Blue.stopShootLeftFull.contains(position)
+          || FieldConstants.Blue.stopShootRightFull.contains(position);
+    }
+  }
+
+  public static boolean isTowerZone(Translation2d position) {
+    return FieldConstants.Blue.towerZone.contains(position)
+        || FieldConstants.Red.towerZone.contains(position);
   }
 
   public static Zone getZoneOfPosition(Translation2d position) {
-    if (Robot.alliance == Alliance.Red) {
-      if (redAllianceZone.contains(position)) {
-        zone = Zone.ALLIANCE_ZONE;
-      } else if (leftBlueOppositionZone.contains(position)) {
-        zone = Zone.LEFT_OPPOSITION;
-      } else if (rightBlueOppositionZone.contains(position)) {
-        zone = Zone.RIGHT_OPPOSITION;
-      } else if (leftNeutralZone.contains(position)) {
-        zone = Zone.LEFT_NEUTRAL;
-      } else if (rightNeutralZone.contains(position)) {
-        zone = Zone.RIGHT_NEUTRAL;
+    if (Robot.alliance == Alliance.Blue) {
+      if (FieldConstants.Blue.stopShootLeftNeutral.contains(position)) {
+        return Zone.LEFT_STOP_SHOOT;
+      } else if (FieldConstants.Blue.stopShootRightNeutral.contains(position)) {
+        return Zone.RIGHT_STOP_SHOOT;
+      } else if (FieldConstants.Red.stopShootLeftFull.contains(position)) {
+        return Zone.LEFT_OPPOSITION_STOP_SHOOT;
+      } else if (FieldConstants.Red.stopShootRightFull.contains(position)) {
+        return Zone.RIGHT_OPPOSITION_STOP_SHOOT;
+      } else if (FieldConstants.Blue.allianceZone.contains(position)) {
+        return Zone.ALLIANCE_ZONE;
+      } else if (FieldConstants.Red.rightAllianceZone.contains(position)) {
+        return Zone.RIGHT_OPPOSITION;
+      } else if (FieldConstants.Red.leftAllianceZone.contains(position)) {
+        return Zone.LEFT_OPPOSITION;
+      } else if (FieldConstants.Neutral.rightNeutral.contains(position)) {
+        return Zone.RIGHT_NEUTRAL;
+      } else if (FieldConstants.Neutral.leftNeutral.contains(position)) {
+        return Zone.LEFT_NEUTRAL;
       }
     } else {
-      if (blueAllianceZone.contains(position)) {
-        zone = Zone.ALLIANCE_ZONE;
-      } else if (leftRedOppositionZone.contains(position)) {
-        zone = Zone.LEFT_OPPOSITION;
-      } else if (rightRedOppositionZone.contains(position)) {
-        zone = Zone.RIGHT_OPPOSITION;
-      } else if (leftNeutralZone.contains(position)) {
-        zone = Zone.RIGHT_NEUTRAL;
-      } else if (rightNeutralZone.contains(position)) {
-        zone = Zone.LEFT_NEUTRAL;
+      if (FieldConstants.Red.stopShootLeftNeutral.contains(position)) {
+        return Zone.LEFT_STOP_SHOOT;
+      } else if (FieldConstants.Red.stopShootRightNeutral.contains(position)) {
+        return Zone.RIGHT_STOP_SHOOT;
+      } else if (FieldConstants.Blue.stopShootLeftFull.contains(position)) {
+        return Zone.LEFT_OPPOSITION_STOP_SHOOT;
+      } else if (FieldConstants.Blue.stopShootRightFull.contains(position)) {
+        return Zone.RIGHT_OPPOSITION_STOP_SHOOT;
+      } else if (FieldConstants.Red.allianceZone.contains(position)) {
+        return Zone.ALLIANCE_ZONE;
+      } else if (FieldConstants.Blue.rightAllianceZone.contains(position)) {
+        return Zone.RIGHT_OPPOSITION;
+      } else if (FieldConstants.Blue.leftAllianceZone.contains(position)) {
+        return Zone.LEFT_OPPOSITION;
+      } else if (FieldConstants.Neutral.rightNeutral.contains(position)) {
+        return Zone.RIGHT_NEUTRAL;
+      } else if (FieldConstants.Neutral.leftNeutral.contains(position)) {
+        return Zone.LEFT_NEUTRAL;
       }
     }
-    return zone;
+    return Zone.UNKNOWN;
+  }
+
+  // Returns true if positions are same larger zone, ignoring right/left designations (ex. right
+  // neutral and left neutral -> true)
+  public static boolean isSameCompleteZone(Translation2d position1, Translation2d position2) {
+    Zone zone1 = getZoneOfPosition(position1);
+    Zone zone2 = getZoneOfPosition(position2);
+
+    if (zone1 == Zone.ALLIANCE_ZONE && zone2 == Zone.ALLIANCE_ZONE) {
+      return true;
+    } else if ((zone1 == Zone.LEFT_OPPOSITION || zone1 == Zone.RIGHT_OPPOSITION)
+        && (zone2 == Zone.LEFT_OPPOSITION || zone2 == Zone.RIGHT_OPPOSITION)) {
+      return true;
+    } else if ((zone1 == Zone.LEFT_NEUTRAL || zone1 == Zone.RIGHT_NEUTRAL)
+        && (zone2 == Zone.LEFT_NEUTRAL || zone2 == Zone.RIGHT_NEUTRAL)) {
+      return true;
+    } else if ((zone1 == Zone.LEFT_TRENCH || zone1 == Zone.RIGHT_TRENCH)
+        && (zone2 == Zone.LEFT_TRENCH || zone2 == Zone.RIGHT_TRENCH)) {
+      return true;
+    } else if ((zone1 == Zone.LEFT_OPPOSITION_TRENCH || zone1 == Zone.RIGHT_OPPOSITION_TRENCH)
+        && (zone2 == Zone.LEFT_OPPOSITION_TRENCH || zone2 == Zone.RIGHT_OPPOSITION_TRENCH)) {
+      return true;
+    } else if ((zone1 == Zone.LEFT_STOP_SHOOT || zone1 == Zone.RIGHT_STOP_SHOOT)
+        && (zone2 == Zone.LEFT_STOP_SHOOT || zone2 == Zone.RIGHT_STOP_SHOOT)) {
+      return true;
+    } else if ((zone1 == Zone.LEFT_OPPOSITION_STOP_SHOOT
+            || zone1 == Zone.RIGHT_OPPOSITION_STOP_SHOOT)
+        && (zone2 == Zone.LEFT_OPPOSITION_STOP_SHOOT
+            || zone2 == Zone.RIGHT_OPPOSITION_STOP_SHOOT)) {
+      return true;
+    }
+    return false;
   }
 }
