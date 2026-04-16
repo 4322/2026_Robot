@@ -24,6 +24,4 @@ public interface HoodIO {
   public default void setAngle(double angle) {}
 
   public default void setBrakeMode(boolean mode) {}
-
-  public default void setPosition(double rot) {}
 }
