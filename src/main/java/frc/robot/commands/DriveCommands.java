@@ -20,6 +20,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.constants.Constants;
@@ -379,5 +380,119 @@ public class DriveCommands {
     double[] positions = new double[4];
     Rotation2d lastAngle = Rotation2d.kZero;
     double gyroDelta = 0.0;
+  }
+
+  private String currentFLStatus = "Front Left:";
+  private String currentFRStatus = "Front Right:";
+  private String currentBLStatus = "Back Left:";
+  private String currentBRStatus = "Back Right:";
+
+  // If Not working = color
+  // If working = green
+  // If not connected = black
+  // If too slow = orange
+  // If pulling too much current = blue;
+  // still running Tests = purple
+  public Command TesterDrive(Drive drive) {
+    return Commands.run(
+        () -> {
+          SmartDashboard.putString(
+              "Tester/Drive/Front Left Color Status",
+              Constants.NetworkTables.red.kMediumPurple.toHexString());
+          SmartDashboard.putString(
+              "Tester/Drive/Front Right Color Status",
+              Constants.NetworkTables.red.kMediumPurple.toHexString());
+          SmartDashboard.putString(
+              "Tester/Drive/Back Left Color Status",
+              Constants.NetworkTables.red.kMediumPurple.toHexString());
+          SmartDashboard.putString(
+              "Tester/Drive/Back Right Color Status",
+              Constants.NetworkTables.red.kMediumPurple.toHexString());
+
+          if (!drive.isDriveConnected(0)) {
+            SmartDashboard.putString(
+                "Tester/Drive/Front Left Color Status",
+                Constants.NetworkTables.red.kBlack.toHexString());
+            this.currentFLStatus = this.currentFLStatus + " Not Connected";
+          } else if (!drive.isDriveCorrectSpeed(0)) {
+            SmartDashboard.putString(
+                "Tester/Drive/Front Left Color Status",
+                Constants.NetworkTables.red.kOrange.toHexString());
+            this.currentFLStatus =
+                this.currentFLStatus
+                    + " Too Slow by "
+                    + (100 - ((drive.getModuleVelocity(0) / drive.speed) * 100))
+                    + "%";
+          } else {
+            SmartDashboard.putString(
+                "Tester/Drive/Front Left Color Status",
+                Constants.NetworkTables.green.toHexString());
+          }
+
+          if (!drive.isDriveConnected(1)) {
+            SmartDashboard.putString(
+                "Tester/Drive/Front Right Color Status",
+                Constants.NetworkTables.red.kBlack.toHexString());
+            this.currentFRStatus = this.currentFRStatus + " Not Connected";
+          } else if (!drive.isDriveCorrectSpeed(1)) {
+            SmartDashboard.putString(
+                "Tester/Drive/Front Right Color Status",
+                Constants.NetworkTables.red.kOrange.toHexString());
+            this.currentFRStatus =
+                this.currentFRStatus
+                    + " Too Slow by "
+                    + (100 - ((drive.getModuleVelocity(1) / drive.speed) * 100))
+                    + "%";
+          } else {
+            SmartDashboard.putString(
+                "Tester/Drive/Front Right Color Status",
+                Constants.NetworkTables.green.toHexString());
+          }
+          if (!drive.isDriveConnected(2)) {
+            SmartDashboard.putString(
+                "Tester/Drive/Back Left Color Status",
+                Constants.NetworkTables.red.kBlack.toHexString());
+            this.currentBLStatus = this.currentBLStatus + " Not Connected";
+          } else if (!drive.isDriveCorrectSpeed(2)) {
+            SmartDashboard.putString(
+                "Tester/Drive/Back Left Color Status",
+                Constants.NetworkTables.red.kOrange.toHexString());
+            this.currentBLStatus =
+                this.currentBLStatus
+                    + " Too Slow by "
+                    + (100 - ((drive.getModuleVelocity(2) / drive.speed) * 100))
+                    + "%";
+          } else {
+            SmartDashboard.putString(
+                "Tester/Drive/Back Left Color Status", Constants.NetworkTables.green.toHexString());
+          }
+
+          if (!drive.isDriveConnected(3)) {
+            SmartDashboard.putString(
+                "Tester/Drive/Back Right Color Status",
+                Constants.NetworkTables.red.kBlack.toHexString());
+            this.currentBRStatus = this.currentBRStatus + " Not Connected";
+          } else if (!drive.isDriveCorrectSpeed(3)) {
+            SmartDashboard.putString(
+                "Tester/Drive/Back Right Color Status",
+                Constants.NetworkTables.red.kOrange.toHexString());
+            this.currentBRStatus =
+                this.currentBRStatus
+                    + " Too Slow by "
+                    + (100 - ((drive.getModuleVelocity(3) / drive.speed) * 100))
+                    + "%";
+
+          } else {
+            SmartDashboard.putString(
+                "Tester/Drive/Back Right Color Status",
+                Constants.NetworkTables.green.toHexString());
+          }
+
+          SmartDashboard.putString("Tester/Drive/Front Left Status", this.currentFLStatus);
+          SmartDashboard.putString("Tester/Drive/Front Right Status", this.currentFRStatus);
+          SmartDashboard.putString("Tester/Drive/Back Left Status", this.currentBLStatus);
+          SmartDashboard.putString("Tester/Drive/Back Right Status", this.currentBRStatus);
+        },
+        drive);
   }
 }
