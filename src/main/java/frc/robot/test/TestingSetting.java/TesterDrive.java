@@ -17,6 +17,7 @@ public class TesterDrive extends Command{
   private String  frontRightKey = "Tester/Drive/Drive/FR Drive Color Status";
  private String  backLeftKey = "Tester/Drive/Drive/BL Drive Color Status";
  private String  backRightKey = "Tester/Drive/Drive/BR Drive Color Status";
+ private String  driveConnectionMessage = " Drive Not Connected";
 
   // If Not working = color
   // If working = green
@@ -62,7 +63,7 @@ public class TesterDrive extends Command{
             SmartDashboard.putString(
                 frontLeftKey,
                 Constants.NetworkTables.red.toHexString());
-            this.currentFLStatus = this.currentFLStatus + " Drive Not Connected";
+            this.currentFLStatus = this.currentFLStatus + driveConnectionMessage;
           } else if (!drive.isDriveCorrectSpeed(0)) {
               SmartDashboard.putString(
                   frontLeftKey,
@@ -82,12 +83,12 @@ public class TesterDrive extends Command{
             SmartDashboard.putString(
                 frontRightKey,
                 Constants.NetworkTables.red.toHexString());
-            this.currentFRStatus = this.currentFRStatus + " Drive Not Connected";
+            this.currentFRStatus = this.currentFRStatus + driveConnectionMessage;
           } else if (!drive.isDriveCorrectSpeed(1)) {
               SmartDashboard.putString(
                   frontRightKey,
                   Constants.NetworkTables.red.kOrange.toHexString());
-                            this.currentFRStatus =
+                this.currentFRStatus =
                 this.currentFRStatus
                     + " Too Slow by "
                     + (100 - ((drive.getModuleVelocity(1) / drive.requestedSpeed) * 100))
@@ -102,7 +103,7 @@ public class TesterDrive extends Command{
             SmartDashboard.putString(
                 backLeftKey,
                 Constants.NetworkTables.red.kBlack.toHexString());
-            this.currentBLStatus = this.currentBLStatus + "Drive Not Connected";
+            this.currentBLStatus = this.currentBLStatus + driveConnectionMessage;
             }  else if(!drive.isDriveCorrectSpeed(2)) {
               SmartDashboard.putString(
                   backLeftKey,
@@ -123,7 +124,7 @@ public class TesterDrive extends Command{
             SmartDashboard.putString(
                 backRightKey,
                 Constants.NetworkTables.red.kBlack.toHexString());
-            this.currentBRStatus = this.currentBRStatus + " Drive Not Connected";
+            this.currentBRStatus = this.currentBRStatus + driveConnectionMessage;
           } else if (!drive.isDriveCorrectSpeed(3)) {
               SmartDashboard.putString(
                   backRightKey,

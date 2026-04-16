@@ -17,6 +17,7 @@ public class TesterTurn extends Command{
   private String  frontRightKey = "Tester/Drive/Turn/FR Turn Color Status";
  private String  backLeftKey = "Tester/Drive/Turn/BL Turn Color Status";
  private String  backRightKey = "Tester/Drive/Turn/BR Turn Color Status";
+  private String  turnConnectionMessage = " Turn Not Connected";
 
   // If Not working = color
   // If working = green
@@ -62,7 +63,7 @@ public class TesterTurn extends Command{
             SmartDashboard.putString(
                 frontLeftKey,
                 Constants.NetworkTables.red.toHexString());
-            this.currentFLStatus = this.currentFLStatus + " Turn Not Connected";
+            this.currentFLStatus = this.currentFLStatus + turnConnectionMessage;
           } else if (!drive.isCorrectAngleSpeed(0)) {
               SmartDashboard.putString(
                   frontLeftKey,
@@ -79,7 +80,7 @@ public class TesterTurn extends Command{
             SmartDashboard.putString(
                 frontRightKey,
                 Constants.NetworkTables.red.toHexString());
-            this.currentFRStatus = this.currentFRStatus + " Turn Not Connected";
+            this.currentFRStatus = this.currentFRStatus + turnConnectionMessage;
           } else if (!drive.isCorrectAngleSpeed(1)) {
               SmartDashboard.putString(
                   frontRightKey,
@@ -95,7 +96,7 @@ public class TesterTurn extends Command{
             SmartDashboard.putString(
                 backLeftKey,
                 Constants.NetworkTables.red.kBlack.toHexString());
-            this.currentBLStatus = this.currentBLStatus + " Turn Not Connected";
+            this.currentBLStatus = this.currentBLStatus + turnConnectionMessage;
             }  else if(!drive.isCorrectAngleSpeed(2)) {
               SmartDashboard.putString(
                   backLeftKey,
@@ -112,7 +113,7 @@ public class TesterTurn extends Command{
             SmartDashboard.putString(
                 backRightKey,
                 Constants.NetworkTables.red.kBlack.toHexString());
-            this.currentBRStatus = this.currentBRStatus + " Turn Not Connected";
+            this.currentBRStatus = this.currentBRStatus + turnConnectionMessage;
           } else if (!drive.isCorrectAngleSpeed(3)) {
               SmartDashboard.putString(
                   backRightKey,
