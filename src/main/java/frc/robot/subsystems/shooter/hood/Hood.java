@@ -13,12 +13,7 @@ public class Hood {
       new LoggedTunableNumber("Hood/largeToleranceDeg", Constants.Hood.largeToleranceDeg);
   private static final LoggedTunableNumber smallToleranceDeg =
       new LoggedTunableNumber("Hood/smallToleranceDeg", Constants.Hood.smallToleranceDeg);
-  private static final LoggedTunableNumber tuningGoalDeg =
-      new LoggedTunableNumber("Hood/tuningGoalDeg", 0);
-  private static final LoggedTunableNumber tuningPulseWidth =
-      new LoggedTunableNumber("Hood/tuningpulseWidth", 0);
-  private static final LoggedTunableNumber tuningBurstInterval =
-      new LoggedTunableNumber("Hood/tuningBurstInterval", 0);
+
 
   private HoodIO io;
   private HoodIOInputsAutoLogged inputs = new HoodIOInputsAutoLogged();
@@ -49,15 +44,7 @@ public class Hood {
       case TUNING -> {
         if (!homed) {
           homeHood();
-        } else if (tuningPulseWidth.get() == 0) {
-          setGoal(tuningGoalDeg.get());
-          moveMotorToPosition(requestedAngleDeg);
-        } else if (++burstIntervalCount > tuningBurstInterval.getAsDouble()) {
-          burstIntervalCount = 0;
-          io.setAngle(requestedAngleDeg);
-        } else {
-          io.setBrakeMode(true);
-        }
+        } 
       }
       case NORMAL -> {
         if (Constants.currentMode == Constants.Mode.SIM && !homed) {
