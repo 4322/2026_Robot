@@ -48,8 +48,6 @@ import frc.robot.constants.Constants.Mode;
 import frc.robot.constants.Constants.SubsystemMode;
 import frc.robot.generated.TunerConstants;
 import frc.robot.util.LocalADStarAK;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -162,7 +160,7 @@ public class Drive extends SubsystemBase {
                 (state) -> Logger.recordOutput("Drive/SysIdState", state.toString())),
             new SysIdRoutine.Mechanism(
                 (voltage) -> runCharacterization(voltage.in(Volts)), null, this));
-              }
+  }
 
   @Override
   public void periodic() {
@@ -392,19 +390,19 @@ public class Drive extends SubsystemBase {
     return modules[3].getVelocityMetersPerSec();
   }
 
-  //If Not working = color
+  // If Not working = color
   // If working = green
   // If not connected = purple
-  //If too slow = orange
+  // If too slow = orange
   // If pulling too much current = blue;
-  // still running Tests = 
+  // still running Tests =
 
   public boolean isDriveConnected() {
-   return modules[0].isDriveConnected()
+    return modules[0].isDriveConnected()
         && modules[1].isDriveConnected()
         && modules[2].isDriveConnected()
         && modules[3].isDriveConnected();
-  } 
+  }
 
   public void driveConnectionStatus() {
     if (isDriveConnected()) {
@@ -413,24 +411,27 @@ public class Drive extends SubsystemBase {
     } else {
       if (!modules[0].isDriveConnected()) {
         SmartDashboard.putString(
-            "Tester/Drive/FrontLeftStatus", Constants.NetworkTables.red.kMediumPurple.toHexString());
+            "Tester/Drive/FrontLeftStatus",
+            Constants.NetworkTables.red.kMediumPurple.toHexString());
         this.currentFLStatus = this.currentFLStatus + " Not Connected";
-      } 
+      }
       if (!modules[1].isDriveConnected()) {
         SmartDashboard.putString(
-            "Tester/Drive/FrontRightStatus", Constants.NetworkTables.red.kMediumPurple.toHexString());
+            "Tester/Drive/FrontRightStatus",
+            Constants.NetworkTables.red.kMediumPurple.toHexString());
         this.currentFRStatus = this.currentFRStatus + " Not Connected";
-      } 
-      
+      }
+
       if (!modules[2].isDriveConnected()) {
         SmartDashboard.putString(
             "Tester/Drive/BackLeftStatus", Constants.NetworkTables.red.kMediumPurple.toHexString());
         this.currentBLStatus = this.currentBLStatus + " Not Connected";
-      } 
-      
+      }
+
       if (!modules[3].isDriveConnected()) {
         SmartDashboard.putString(
-            "Tester/Drive/BackRightStatus", Constants.NetworkTables.red.kMediumPurple.toHexString());
+            "Tester/Drive/BackRightStatus",
+            Constants.NetworkTables.red.kMediumPurple.toHexString());
         this.currentBRStatus = this.currentBRStatus + "Not Connected";
       }
     }
@@ -447,24 +448,43 @@ public class Drive extends SubsystemBase {
       if (!MathUtil.isNear(this.speed, drive.getFrontLeftVelocity(), 0.01)) {
         SmartDashboard.putString(
             "Tester/Drive/FrontLeftColorStatus", Constants.NetworkTables.red.kOrange.toHexString());
-        this.currentFLStatus = this.currentFLStatus + " Too Slow by" + (100 - (drive.getFrontLeftVelocity()/this.speed)*100) + "%";
-      } 
+        this.currentFLStatus =
+            this.currentFLStatus
+                + " Too Slow by"
+                + (100 - (drive.getFrontLeftVelocity() / this.speed) * 100)
+                + "%";
+      }
       if (!MathUtil.isNear(this.speed, drive.getFrontRightVelocity(), 0.01)) {
         SmartDashboard.putString(
-            "Tester/Drive/FrontRightColorStatus", Constants.NetworkTables.red.kOrange.toHexString());
-        this.currentFRStatus = this.currentFRStatus + " Too Slow by" + (100 - (drive.getFrontRightVelocity()/this.speed)*100) + "%";
-      } 
-      
+            "Tester/Drive/FrontRightColorStatus",
+            Constants.NetworkTables.red.kOrange.toHexString());
+        this.currentFRStatus =
+            this.currentFRStatus
+                + " Too Slow by"
+                + (100 - (drive.getFrontRightVelocity() / this.speed) * 100)
+                + "%";
+      }
+
       if (!MathUtil.isNear(this.speed, drive.getBackLeftVelocity(), 0.01)) {
         SmartDashboard.putString(
-            "Tester/Drive/BackLeftColorStatus", Constants.NetworkTables.yellow.kOrange.toHexString());
-          this.currentBLStatus = this.currentBLStatus + " Too Slow by" + (100 - (drive.getBackLeftVelocity()/this.speed)*100) + "%";
-      } 
-      
+            "Tester/Drive/BackLeftColorStatus",
+            Constants.NetworkTables.yellow.kOrange.toHexString());
+        this.currentBLStatus =
+            this.currentBLStatus
+                + " Too Slow by"
+                + (100 - (drive.getBackLeftVelocity() / this.speed) * 100)
+                + "%";
+      }
+
       if (!MathUtil.isNear(this.speed, drive.getBackRightVelocity(), 0.01)) {
         SmartDashboard.putString(
-            "Tester/Drive/BackRightColorStatus", Constants.NetworkTables.yellow.kOrange.toHexString());
-        this.currentBRStatus = this.currentBRStatus + " Too Slow by" + (100 - (drive.getBackRightVelocity()/this.speed)*100) + "%";
+            "Tester/Drive/BackRightColorStatus",
+            Constants.NetworkTables.yellow.kOrange.toHexString());
+        this.currentBRStatus =
+            this.currentBRStatus
+                + " Too Slow by"
+                + (100 - (drive.getBackRightVelocity() / this.speed) * 100)
+                + "%";
       }
     }
   }
