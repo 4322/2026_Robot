@@ -421,7 +421,7 @@ public class DriveCommands {
             this.currentFLStatus =
                 this.currentFLStatus
                     + " Too Slow by "
-                    + (100 - ((drive.getModuleVelocity(0) / drive.speed) * 100))
+                    + (100 - ((drive.getModuleVelocity(0) / drive.requestedSpeed) * 100))
                     + "%";
           } else {
             SmartDashboard.putString(
@@ -441,7 +441,7 @@ public class DriveCommands {
             this.currentFRStatus =
                 this.currentFRStatus
                     + " Too Slow by "
-                    + (100 - ((drive.getModuleVelocity(1) / drive.speed) * 100))
+                    + (100 - ((drive.getModuleVelocity(1) / drive.requestedSpeed) * 100))
                     + "%";
           } else {
             SmartDashboard.putString(
@@ -460,7 +460,7 @@ public class DriveCommands {
             this.currentBLStatus =
                 this.currentBLStatus
                     + " Too Slow by "
-                    + (100 - ((drive.getModuleVelocity(2) / drive.speed) * 100))
+                    + (100 - ((drive.getModuleVelocity(2) / drive.requestedSpeed) * 100))
                     + "%";
           } else {
             SmartDashboard.putString(
@@ -479,7 +479,7 @@ public class DriveCommands {
             this.currentBRStatus =
                 this.currentBRStatus
                     + " Too Slow by "
-                    + (100 - ((drive.getModuleVelocity(3) / drive.speed) * 100))
+                    + (100 - ((drive.getModuleVelocity(3) / drive.requestedSpeed) * 100))
                     + "%";
 
           } else {

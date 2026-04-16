@@ -56,8 +56,8 @@ import org.littletonrobotics.junction.Logger;
 public class Drive extends SubsystemBase {
   // TunerConstants doesn't include these constants, so they are declared locally
   static final double ODOMETRY_FREQUENCY = Constants.CANivore.CANBus.isNetworkFD() ? 250.0 : 100.0;
-  public double speed;
-  public double angle;
+  public double requestedSpeed;
+  public double anglePerSecondRequested;
   private ArrayList<Double> currentPriority = new ArrayList<>();
 
   public static final double DRIVE_BASE_RADIUS =
@@ -233,6 +233,7 @@ public class Drive extends SubsystemBase {
     ChassisSpeeds discreteSpeeds = ChassisSpeeds.discretize(speeds, 0.02);
     SwerveModuleState[] setpointStates = kinematics.toSwerveModuleStates(discreteSpeeds);
     SwerveDriveKinematics.desaturateWheelSpeeds(setpointStates, TunerConstants.kSpeedAt12Volts);
+    this.anglePerSecondRequested = discreteSpeeds.omegaRadiansPerSecond;
 
     // Log unoptimized setpoints and setpoint speeds
     Logger.recordOutput("Drive/SwerveStates/Setpoints", setpointStates);
@@ -242,8 +243,8 @@ public class Drive extends SubsystemBase {
       // Send setpoints to modules
       for (int i = 0; i < 4; i++) {
         modules[i].runSetpoint(setpointStates[i]);
-        this.speed = setpointStates[i].speedMetersPerSecond;
-        this.angle = setpointStates[i];
+        this.requestedSpeed = setpointStates[i].speedMetersPerSecond;
+      
       }
     }
 
@@ -390,11 +391,11 @@ public class Drive extends SubsystemBase {
 
   
   public boolean isDriveCorrectSpeed(int module) {
-    return MathUtil.isNear(this.speed, getModuleVelocity(module), 0.01);
+    return MathUtil.isNear(this.requestedSpeed, getModuleVelocity(module), 0.01);
   }
 
   public boolean isCorrectAngle(int module) {
-    return MathUtil.isNear(this.angle, getModuleAngle(module), 1.0);
+    return MathUtil.isNear(this.anglePerSecondRequested, getModuleAngle(module), 1.0);
   }
 
   /** Adds a new timestamped vision measurement. */
