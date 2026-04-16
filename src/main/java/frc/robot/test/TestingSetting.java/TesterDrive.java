@@ -50,9 +50,9 @@ public class TesterDrive extends Command{
     @Override
     public void execute() {
           this.currentFLStatus = this.currentFLStatus + " #" + (numberTest +  1);
-          this.currentFRStatus = this.currentFRStatus + " Running Test" + (numberTest +  1);
-          this.currentBLStatus = this.currentBLStatus + " Running Test" + (numberTest +  1);
-          this.currentBRStatus = this.currentBRStatus + " Running Test" + (numberTest +  1);
+          this.currentFRStatus = this.currentFRStatus + " #" + (numberTest +  1);
+          this.currentBLStatus = this.currentBLStatus + " #" + (numberTest +  1);
+          this.currentBRStatus = this.currentBRStatus + " #" + (numberTest +  1);
 
             if (!drive.isDriveConnected(0) || !drive.isTurnConnected(0)) {
             if (!drive.isDriveConnected(0)) {
