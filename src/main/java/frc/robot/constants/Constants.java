@@ -650,6 +650,8 @@ public final class Constants {
     public static final Color red = new Color(255, 0, 0);
     public static final Color green = new Color(0, 255, 0);
     public static final Color yellow = new Color(255, 255, 0);
+    public static final Color purple = new Color(128, 0, 128);
+    public static final Color orange = new Color(255, 165, 0);
   }
 
   public static class ShotCalculator {

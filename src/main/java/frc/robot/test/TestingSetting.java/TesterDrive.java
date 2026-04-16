@@ -30,7 +30,10 @@ public class TesterDrive extends Command {
 
   @Override
   public void initialize() {
-
+    SmartDashboard.putString(frontLeftKey, Constants.NetworkTables.purple.toHexString());
+    SmartDashboard.putString(frontRightKey, Constants.NetworkTables.purple.toHexString());
+    SmartDashboard.putString(backLeftKey, Constants.NetworkTables.purple.toHexString());
+    SmartDashboard.putString(backRightKey, Constants.NetworkTables.purple.toHexString());
     this.currentFLStatus = this.currentFLStatus + " Running Test " + test;
     this.currentFRStatus = this.currentFRStatus + " Running Test " + test;
     this.currentBLStatus = this.currentBLStatus + " Running Test " + test;
@@ -40,11 +43,6 @@ public class TesterDrive extends Command {
 
   @Override
   public void execute() {
-    SmartDashboard.putString(frontLeftKey, Constants.NetworkTables.red.kMediumPurple.toHexString());
-    SmartDashboard.putString(
-        frontRightKey, Constants.NetworkTables.red.kMediumPurple.toHexString());
-    SmartDashboard.putString(backLeftKey, Constants.NetworkTables.red.kMediumPurple.toHexString());
-    SmartDashboard.putString(backRightKey, Constants.NetworkTables.red.kMediumPurple.toHexString());
     this.currentFLStatus = this.currentFLStatus + " #" + (numberTest + 1);
     this.currentFRStatus = this.currentFRStatus + " #" + (numberTest + 1);
     this.currentBLStatus = this.currentBLStatus + " #" + (numberTest + 1);
@@ -54,7 +52,7 @@ public class TesterDrive extends Command {
       SmartDashboard.putString(frontLeftKey, Constants.NetworkTables.red.toHexString());
       this.currentFLStatus = this.currentFLStatus + driveConnectionMessage;
     } else if (!drive.isDriveCorrectSpeed(0)) {
-      SmartDashboard.putString(frontLeftKey, Constants.NetworkTables.red.kOrange.toHexString());
+      SmartDashboard.putString(frontLeftKey, Constants.NetworkTables.orange.toHexString());
       this.currentFLStatus =
           this.currentFLStatus
               + " Too Slow by "
@@ -68,7 +66,7 @@ public class TesterDrive extends Command {
       SmartDashboard.putString(frontRightKey, Constants.NetworkTables.red.toHexString());
       this.currentFRStatus = this.currentFRStatus + driveConnectionMessage;
     } else if (!drive.isDriveCorrectSpeed(1)) {
-      SmartDashboard.putString(frontRightKey, Constants.NetworkTables.red.kOrange.toHexString());
+      SmartDashboard.putString(frontRightKey, Constants.NetworkTables.orange.toHexString());
       this.currentFRStatus =
           this.currentFRStatus
               + " Too Slow by "
@@ -79,10 +77,10 @@ public class TesterDrive extends Command {
     }
 
     if (!drive.isDriveConnected(2)) {
-      SmartDashboard.putString(backLeftKey, Constants.NetworkTables.red.kBlack.toHexString());
+      SmartDashboard.putString(backLeftKey, Constants.NetworkTables.red.toHexString());
       this.currentBLStatus = this.currentBLStatus + driveConnectionMessage;
     } else if (!drive.isDriveCorrectSpeed(2)) {
-      SmartDashboard.putString(backLeftKey, Constants.NetworkTables.red.kOrange.toHexString());
+      SmartDashboard.putString(backLeftKey, Constants.NetworkTables.orange.toHexString());
       this.currentBLStatus =
           this.currentBLStatus
               + " Too Slow by "
@@ -94,10 +92,10 @@ public class TesterDrive extends Command {
     }
 
     if (!drive.isDriveConnected(3)) {
-      SmartDashboard.putString(backRightKey, Constants.NetworkTables.red.kBlack.toHexString());
+      SmartDashboard.putString(backRightKey, Constants.NetworkTables.red.toHexString());
       this.currentBRStatus = this.currentBRStatus + driveConnectionMessage;
     } else if (!drive.isDriveCorrectSpeed(3)) {
-      SmartDashboard.putString(backRightKey, Constants.NetworkTables.red.kOrange.toHexString());
+      SmartDashboard.putString(backRightKey, Constants.NetworkTables.orange.toHexString());
       this.currentBRStatus =
           this.currentBRStatus
               + " Too Slow by "

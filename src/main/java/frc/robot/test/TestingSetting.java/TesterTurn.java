@@ -30,11 +30,10 @@ public class TesterTurn extends Command {
 
   @Override
   public void initialize() {
-    SmartDashboard.putString(frontLeftKey, Constants.NetworkTables.red.kMediumPurple.toHexString());
-    SmartDashboard.putString(
-        frontRightKey, Constants.NetworkTables.red.kMediumPurple.toHexString());
-    SmartDashboard.putString(backLeftKey, Constants.NetworkTables.red.kMediumPurple.toHexString());
-    SmartDashboard.putString(backRightKey, Constants.NetworkTables.red.kMediumPurple.toHexString());
+    SmartDashboard.putString(frontLeftKey, Constants.NetworkTables.purple.toHexString());
+    SmartDashboard.putString(frontRightKey, Constants.NetworkTables.purple.toHexString());
+    SmartDashboard.putString(backLeftKey, Constants.NetworkTables.purple.toHexString());
+    SmartDashboard.putString(backRightKey, Constants.NetworkTables.purple.toHexString());
 
     this.currentFLStatus = this.currentFLStatus + " Running Test " + test;
     this.currentFRStatus = this.currentFRStatus + " Running Test " + test;
@@ -54,7 +53,7 @@ public class TesterTurn extends Command {
       SmartDashboard.putString(frontLeftKey, Constants.NetworkTables.red.toHexString());
       this.currentFLStatus = this.currentFLStatus + turnConnectionMessage;
     } else if (!drive.isCorrectAngleSpeed(0)) {
-      SmartDashboard.putString(frontLeftKey, Constants.NetworkTables.red.kOrange.toHexString());
+      SmartDashboard.putString(frontLeftKey, Constants.NetworkTables.orange.toHexString());
       this.currentFLStatus =
           this.currentFLStatus
               + " Incorrect Angle Speed by "
@@ -68,7 +67,7 @@ public class TesterTurn extends Command {
       SmartDashboard.putString(frontRightKey, Constants.NetworkTables.red.toHexString());
       this.currentFRStatus = this.currentFRStatus + turnConnectionMessage;
     } else if (!drive.isCorrectAngleSpeed(1)) {
-      SmartDashboard.putString(frontRightKey, Constants.NetworkTables.red.kOrange.toHexString());
+      SmartDashboard.putString(frontRightKey, Constants.NetworkTables.orange.toHexString());
       this.currentFRStatus =
           this.currentFRStatus
               + " Incorrect Angle Speed by "
@@ -79,10 +78,10 @@ public class TesterTurn extends Command {
     }
 
     if (!drive.isTurnConnected(2)) {
-      SmartDashboard.putString(backLeftKey, Constants.NetworkTables.red.kBlack.toHexString());
+      SmartDashboard.putString(backLeftKey, Constants.NetworkTables.red.toHexString());
       this.currentBLStatus = this.currentBLStatus + turnConnectionMessage;
     } else if (!drive.isCorrectAngleSpeed(2)) {
-      SmartDashboard.putString(backLeftKey, Constants.NetworkTables.red.kOrange.toHexString());
+      SmartDashboard.putString(backLeftKey, Constants.NetworkTables.orange.toHexString());
       this.currentBLStatus =
           this.currentBLStatus
               + " Incorrect Angle Speed by "
@@ -94,10 +93,10 @@ public class TesterTurn extends Command {
     }
 
     if (!drive.isTurnConnected(3)) {
-      SmartDashboard.putString(backRightKey, Constants.NetworkTables.red.kBlack.toHexString());
+      SmartDashboard.putString(backRightKey, Constants.NetworkTables.red.toHexString());
       this.currentBRStatus = this.currentBRStatus + turnConnectionMessage;
     } else if (!drive.isCorrectAngleSpeed(3)) {
-      SmartDashboard.putString(backRightKey, Constants.NetworkTables.red.kOrange.toHexString());
+      SmartDashboard.putString(backRightKey, Constants.NetworkTables.orange.toHexString());
       this.currentBRStatus =
           this.currentBRStatus
               + " Incorrect Angle Speed by "
