@@ -236,8 +236,12 @@ public final class Constants {
   }
 
   public static class Hood {
-    public static final int servoChannel = 3;
+    public static final int motorId = 3;
     public static final int encoderId = 3;
+    public static final int statorCurrentLimit = 0;
+    public static final int supplyCurrentLimit = 30;
+    public static final InvertedValue motorInvert = InvertedValue.CounterClockwise_Positive;
+    public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
     public static final double encoderToHoodGearRatio = 164 / 11.0;
     public static final double servoToEncoderGearRatio = 45 / 32.0;
     public static final double safeAngleDeg = 0;
@@ -246,6 +250,14 @@ public final class Constants {
     public static final double smallToleranceDeg = 0.4;
     public static final double largeToleranceDeg = 2.0;
     public static final int idleTimeout = 0;
+
+    public static final double kV = 0;
+    public static final double kP = 0;
+    public static final double kD = 0;
+    public static final double kI = 0;
+    public static final double kS = 0;
+    public static final double motionMagicCruiseVelocity = 0;
+    public static final double motionMagicAcceleration = 0;
 
     // Calibrate hood after replacing servo, shaft gears or sector gear
     // 1. Remove encoder shaft gear
