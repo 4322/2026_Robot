@@ -111,7 +111,7 @@ public class HoodIOTalonFx implements HoodIO {
     var motorStatus =
         BaseStatusSignal.refreshAll(
             position, velocity, appliedVolts, statorCurrent, supplyCurrent, temp);
-    var encoderStatus = BaseStatusSignal.refreshAll(absolutePosition);
+    var encoderStatus = BaseStatusSignal.refreshAll(absolutePosition, encoderVelocity);
 
     inputs.motorConnected = motorConnectedDebounce.calculate(motorStatus.isOK());
     inputs.encoderConnected = encoderConnectedDebounce.calculate(encoderStatus.isOK());
