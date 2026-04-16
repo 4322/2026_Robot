@@ -244,7 +244,6 @@ public class Drive extends SubsystemBase {
       for (int i = 0; i < 4; i++) {
         modules[i].runSetpoint(setpointStates[i]);
         this.requestedSpeed = setpointStates[i].speedMetersPerSecond;
-      
       }
     }
 
@@ -389,11 +388,10 @@ public class Drive extends SubsystemBase {
     return modules[module].isDriveConnected();
   }
 
-    public boolean isTurnConnected(int module) {
+  public boolean isTurnConnected(int module) {
     return modules[module].isTurnConnected();
   }
 
-  
   public boolean isDriveCorrectSpeed(int module) {
     return MathUtil.isNear(this.requestedSpeed, modules[module].getVelocityMetersPerSec(), 0.01);
   }

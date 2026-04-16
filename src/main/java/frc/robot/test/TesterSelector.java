@@ -13,8 +13,8 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 public class TesterSelector {
 
-  private LoggedDashboardChooser<SequentialCommandGroup> autonomousSelector =
-      new LoggedDashboardChooser<SequentialCommandGroup>("Autonomous");
+  private LoggedDashboardChooser<SequentialCommandGroup> testerSelector =
+      new LoggedDashboardChooser<SequentialCommandGroup>("Tester");
 
   public enum TestName {
     DO_NOTHING,
@@ -45,9 +45,9 @@ public class TesterSelector {
 
     for (Test nextAuto : test) {
       if (nextAuto.name == defaultAuto) {
-        autonomousSelector.addDefaultOption(nextAuto.name.toString(), nextAuto.command);
+        testerSelector.addDefaultOption(nextAuto.name.toString(), nextAuto.command);
       } else {
-        autonomousSelector.addOption(nextAuto.name.toString(), nextAuto.command);
+        testerSelector.addOption(nextAuto.name.toString(), nextAuto.command);
       }
     }
   }
