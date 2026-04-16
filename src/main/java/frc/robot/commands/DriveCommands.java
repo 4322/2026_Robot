@@ -389,11 +389,11 @@ public class DriveCommands {
 
   // If Not working = color
   // If working = green
-  // If not connected = black
+  // If not connected = red
   // If too slow = orange
   // If pulling too much current = blue;
   // still running Tests = purple
-  public Command TesterDrive(Drive drive) {
+  public Command TesterDrive(Drive drive, String test) {
     return Commands.run(
         () -> {
           SmartDashboard.putString(
@@ -408,33 +408,65 @@ public class DriveCommands {
           SmartDashboard.putString(
               "Tester/Drive/Back Right Color Status",
               Constants.NetworkTables.red.kMediumPurple.toHexString());
+          
+          this.currentFLStatus = this.currentFLStatus + " Running Test" + test;
+          this.currentFRStatus = this.currentFRStatus + " Running Test" + test;
+          this.currentBLStatus = this.currentBLStatus + " Running Test" + test;
+          this.currentBRStatus = this.currentBRStatus + " Running Test" + test;
 
-          if (!drive.isDriveConnected(0)) {
+
+          if (!drive.isDriveConnected(0) || !drive.isTurnConnected(0)) {
+            if (!drive.isDriveConnected(0)) {
+              SmartDashboard.putString(
+                  "Tester/Drive/Front Left Color Status",
+                  Constants.NetworkTables.red.toHexString());
+              this.currentFLStatus = this.currentFLStatus + " Drive Not Connected";
+            }
+            if (!drive.isTurnConnected(0)) {
             SmartDashboard.putString(
                 "Tester/Drive/Front Left Color Status",
-                Constants.NetworkTables.red.kBlack.toHexString());
-            this.currentFLStatus = this.currentFLStatus + " Not Connected";
-          } else if (!drive.isDriveCorrectSpeed(0) || !drive.isCorrectAngle(0)) {
+                Constants.NetworkTables.red.toHexString());
+            this.currentFLStatus = this.currentFLStatus + " Turn Not Connected";
+            }
+          } else if (!drive.isDriveCorrectSpeed(0) || !drive.isCorrectAngleSpeed(1)) {
+            if (!drive.isDriveCorrectSpeed(0)) {
             SmartDashboard.putString(
-                "Tester/Drive/Front Left Color Status",
+                "Tester/Drive/Back Right Color Status",
                 Constants.NetworkTables.red.kOrange.toHexString());
             this.currentFLStatus =
                 this.currentFLStatus
                     + " Too Slow by "
-                    + (100 - ((drive.getModuleVelocity(0) / drive.requestedSpeed) * 100))
+                    + (100 - ((drive.getModuleVelocity(3) / drive.requestedSpeed) * 100))
                     + "%";
+            } 
+            if (!drive.isCorrectAngleSpeed(3)) {
+              SmartDashboard.putString(
+                  "Tester/Drive/Back Right Color Status",
+                  Constants.NetworkTables.red.kOrange.toHexString());
+              this.currentBRStatus = this.currentBRStatus + " Incorrect Angle Speed by " + (100 - ((drive.getModuleAngle(3) / drive.anglePerSecondRequested) * 100)) + "%";
+            }
           } else {
             SmartDashboard.putString(
                 "Tester/Drive/Front Left Color Status",
                 Constants.NetworkTables.green.toHexString());
           }
 
-          if (!drive.isDriveConnected(1)) {
+
+          if (!drive.isDriveConnected(1) || !drive.isTurnConnected(1)) {
+            if (!drive.isDriveConnected(1)) {
+              SmartDashboard.putString(
+                  "Tester/Drive/Front Right Color Status",
+                  Constants.NetworkTables.red.toHexString());
+              this.currentFRStatus = this.currentFRStatus + " Drive Not Connected";
+            }
+            if (!drive.isTurnConnected(1)) {
             SmartDashboard.putString(
                 "Tester/Drive/Front Right Color Status",
-                Constants.NetworkTables.red.kBlack.toHexString());
-            this.currentFRStatus = this.currentFRStatus + " Not Connected";
-          } else if (!drive.isDriveCorrectSpeed(1)) {
+                Constants.NetworkTables.red.toHexString());
+            this.currentFRStatus = this.currentFRStatus + " Turn Not Connected";
+            }
+          } else if (!drive.isDriveCorrectSpeed(1) || !drive.isCorrectAngleSpeed(1)) {
+            if (!drive.isDriveCorrectSpeed(1)) {
             SmartDashboard.putString(
                 "Tester/Drive/Front Right Color Status",
                 Constants.NetworkTables.red.kOrange.toHexString());
@@ -443,17 +475,34 @@ public class DriveCommands {
                     + " Too Slow by "
                     + (100 - ((drive.getModuleVelocity(1) / drive.requestedSpeed) * 100))
                     + "%";
+            } 
+            if (!drive.isCorrectAngleSpeed(1)) {
+              SmartDashboard.putString(
+                  "Tester/Drive/Front Right Color Status",
+                  Constants.NetworkTables.red.kOrange.toHexString());
+              this.currentFRStatus = this.currentFRStatus + " Incorrect Angle Speed by " + (100 - ((drive.getModuleAngle(3) / drive.anglePerSecondRequested) * 100)) + "%";
+            }
           } else {
             SmartDashboard.putString(
                 "Tester/Drive/Front Right Color Status",
                 Constants.NetworkTables.green.toHexString());
           }
-          if (!drive.isDriveConnected(2)) {
+
+          if (!drive.isDriveConnected(2) || !drive.isTurnConnected(2)) {
+            if (!drive.isDriveConnected(2)) {
+              SmartDashboard.putString(
+                  "Tester/Drive/Back Left Color Status",
+                  Constants.NetworkTables.red.kBlack.toHexString());
+              this.currentBLStatus = this.currentBLStatus + " Drive Not Connected";
+            }
+            if (!drive.isTurnConnected(2)) {
             SmartDashboard.putString(
                 "Tester/Drive/Back Left Color Status",
                 Constants.NetworkTables.red.kBlack.toHexString());
-            this.currentBLStatus = this.currentBLStatus + " Not Connected";
-          } else if (!drive.isDriveCorrectSpeed(2)) {
+            this.currentBLStatus = this.currentBLStatus + " Turn Not Connected";
+            }
+          } else if (!drive.isDriveCorrectSpeed(2) || !drive.isCorrectAngleSpeed(2)) {
+            if (!drive.isDriveCorrectSpeed(2)) {
             SmartDashboard.putString(
                 "Tester/Drive/Back Left Color Status",
                 Constants.NetworkTables.red.kOrange.toHexString());
@@ -462,32 +511,54 @@ public class DriveCommands {
                     + " Too Slow by "
                     + (100 - ((drive.getModuleVelocity(2) / drive.requestedSpeed) * 100))
                     + "%";
+            } 
+            if (!drive.isCorrectAngleSpeed(3)) {
+              SmartDashboard.putString(
+                  "Tester/Drive/Back Left Color Status",
+                  Constants.NetworkTables.red.kOrange.toHexString());
+              this.currentBLStatus = this.currentBLStatus + " Incorrect Angle Speed by " + (100 - ((drive.getModuleAngle(3) / drive.anglePerSecondRequested) * 100)) + "%";
+            }
           } else {
             SmartDashboard.putString(
-                "Tester/Drive/Back Left Color Status", Constants.NetworkTables.green.toHexString());
+                "Tester/Drive/Back Left Color Status",
+                Constants.NetworkTables.green.toHexString());
           }
-
-          if (!drive.isDriveConnected(3)) {
+          
+          if (!drive.isDriveConnected(3) || !drive.isTurnConnected(3)) {
+            if (!drive.isDriveConnected(3)) {
+              SmartDashboard.putString(
+                  "Tester/Drive/Back Right Color Status",
+                  Constants.NetworkTables.red.kBlack.toHexString());
+              this.currentBRStatus = this.currentBRStatus + " Drive Not Connected";
+            }
+            if (!drive.isTurnConnected(3)) {
             SmartDashboard.putString(
                 "Tester/Drive/Back Right Color Status",
                 Constants.NetworkTables.red.kBlack.toHexString());
-            this.currentBRStatus = this.currentBRStatus + " Not Connected";
-          } else if (!drive.isDriveCorrectSpeed(3)) {
+            this.currentBRStatus = this.currentBRStatus + " Turn Not Connected";
+            }
+          } else if (!drive.isDriveCorrectSpeed(3) || !drive.isCorrectAngleSpeed(3)) {
+            if (!drive.isDriveCorrectSpeed(3)) {
             SmartDashboard.putString(
                 "Tester/Drive/Back Right Color Status",
                 Constants.NetworkTables.red.kOrange.toHexString());
             this.currentBRStatus =
                 this.currentBRStatus
                     + " Too Slow by "
-                    + (100 - ((drive.getModuleVelocity(3) / drive.requestedSpeed) * 100))
+                    + (100 - ((drive.getModuleVelocity(2) / drive.requestedSpeed) * 100))
                     + "%";
-
+            } 
+            if (!drive.isCorrectAngleSpeed(3)) {
+              SmartDashboard.putString(
+                  "Tester/Drive/Back Right Color Status",
+                  Constants.NetworkTables.red.kOrange.toHexString());
+              this.currentBRStatus = this.currentBRStatus + " Incorrect Angle Speed by " + (100 - ((drive.getModuleAngle(3) / drive.anglePerSecondRequested) * 100)) + "%";
+            }
           } else {
-            SmartDashboard.putString(
+                        SmartDashboard.putString(
                 "Tester/Drive/Back Right Color Status",
                 Constants.NetworkTables.green.toHexString());
           }
-
           SmartDashboard.putString("Tester/Drive/Front Left Status", this.currentFLStatus);
           SmartDashboard.putString("Tester/Drive/Front Right Status", this.currentFRStatus);
           SmartDashboard.putString("Tester/Drive/Back Left Status", this.currentBLStatus);
