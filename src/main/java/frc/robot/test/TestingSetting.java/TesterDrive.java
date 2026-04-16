@@ -202,6 +202,10 @@ public class TesterDrive extends Command{
           SmartDashboard.putString("Tester/Drive/Front Right Status", this.currentFRStatus);
           SmartDashboard.putString("Tester/Drive/Back Left Status", this.currentBLStatus);
           SmartDashboard.putString("Tester/Drive/Back Right Status", this.currentBRStatus);
+          this.currentFLStatus = "Front Left:";
+          this.currentFRStatus = "Front Right:";
+          this.currentBLStatus = "Back Left:";
+          this.currentBRStatus = "Back Right:";
     }
     
     @Override
