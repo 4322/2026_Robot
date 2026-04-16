@@ -57,6 +57,7 @@ public class Drive extends SubsystemBase {
   // TunerConstants doesn't include these constants, so they are declared locally
   static final double ODOMETRY_FREQUENCY = Constants.CANivore.CANBus.isNetworkFD() ? 250.0 : 100.0;
   public double speed;
+  public double angle;
   private ArrayList<Double> currentPriority = new ArrayList<>();
 
   public static final double DRIVE_BASE_RADIUS =
@@ -242,6 +243,7 @@ public class Drive extends SubsystemBase {
       for (int i = 0; i < 4; i++) {
         modules[i].runSetpoint(setpointStates[i]);
         this.speed = setpointStates[i].speedMetersPerSecond;
+        this.angle = setpointStates[i];
       }
     }
 
@@ -374,96 +376,25 @@ public class Drive extends SubsystemBase {
     return modules[module].getVelocityMetersPerSec();
   }
 
+  public Double getModuleAngle(int module) {
+    return modules[module].getAngle().getDegrees();
+  }
+
+  public Double getModuleTurnVelocity(int module) {
+    return modules[module].getTurnVelocity();
+  }
+
   public boolean isDriveConnected(int module) {
     return modules[module].isDriveConnected();
   }
 
-  public void driveConnectionStatus() {
-    // if (isDriveConnected()) {
-    //   SmartDashboard.putString(
-    //       "Tester/Drive/ConnectionStatus", Constants.NetworkTables.green.toHexString());
-    // } else {
-    //   if (!modules[0].isDriveConnected()) {
-    //     SmartDashboard.putString(
-    //         "Tester/Drive/FrontLeftStatus",
-    //         Constants.NetworkTables.red.kMediumPurple.toHexString());
-    //     this.currentFLStatus = this.currentFLStatus + " Not Connected";
-    //   }
-    //   if (!modules[1].isDriveConnected()) {
-    //     SmartDashboard.putString(
-    //         "Tester/Drive/FrontRightStatus",
-    //         Constants.NetworkTables.red.kMediumPurple.toHexString());
-    //     this.currentFRStatus = this.currentFRStatus + " Not Connected";
-    //   }
-
-    //   if (!modules[2].isDriveConnected()) {
-    //     SmartDashboard.putString(
-    //         "Tester/Drive/BackLeftStatus",
-    // Constants.NetworkTables.red.kMediumPurple.toHexString());
-    //     this.currentBLStatus = this.currentBLStatus + " Not Connected";
-    //   }
-
-    //   if (!modules[3].isDriveConnected()) {
-    //     SmartDashboard.putString(
-    //         "Tester/Drive/BackRightStatus",
-    //         Constants.NetworkTables.red.kMediumPurple.toHexString());
-    //     this.currentBRStatus = this.currentBRStatus + "Not Connected";
-    //   }
-    // }
-  }
-
+  
   public boolean isDriveCorrectSpeed(int module) {
     return MathUtil.isNear(this.speed, getModuleVelocity(module), 0.01);
-    // if (MathUtil.isNear(this.speed, drive.getFrontRightVelocity(), 0.01)
-    //     && MathUtil.isNear(this.speed, drive.getBackLeftVelocity(), 0.01)
-    //     && MathUtil.isNear(this.speed, drive.getBackRightVelocity(), 0.01)
-    //     && MathUtil.isNear(this.speed, drive.getFrontLeftVelocity(), 0.01)) {
-    //   SmartDashboard.putString(
-    //       "Tester/Drive/IsSameSpeed", Constants.NetworkTables.green.toHexString());
-    // } else {
-    //   if (!MathUtil.isNear(this.speed, drive.getFrontLeftVelocity(), 0.01)) {
-    //     SmartDashboard.putString(
-    //         "Tester/Drive/FrontLeftColorStatus",
-    // Constants.NetworkTables.red.kOrange.toHexString());
-    //     this.currentFLStatus =
-    //         this.currentFLStatus
-    //             + " Too Slow by"
-    //             + (100 - (drive.getFrontLeftVelocity() / this.speed) * 100)
-    //             + "%";
-    //   }
-    // if (!MathUtil.isNear(this.speed, drive.getFrontRightVelocity(), 0.01)) {
-    //   SmartDashboard.putString(
-    //       "Tester/Drive/FrontRightColorStatus",
-    //       Constants.NetworkTables.red.kOrange.toHexString());
-    //   this.currentFRStatus =
-    //       this.currentFRStatus
-    //           + " Too Slow by"
-    //           + (100 - (drive.getFrontRightVelocity() / this.speed) * 100)
-    //           + "%";
-    // }
+  }
 
-    // if (!MathUtil.isNear(this.speed, drive.getBackLeftVelocity(), 0.01)) {
-    //   SmartDashboard.putString(
-    //       "Tester/Drive/BackLeftColorStatus",
-    //       Constants.NetworkTables.yellow.kOrange.toHexString());
-    //   this.currentBLStatus =
-    //       this.currentBLStatus
-    //           + " Too Slow by"
-    //           + (100 - (drive.getBackLeftVelocity() / this.speed) * 100)
-    //           + "%";
-    // }
-
-    //   if (!MathUtil.isNear(this.speed, drive.getBackRightVelocity(), 0.01)) {
-    //     SmartDashboard.putString(
-    //         "Tester/Drive/BackRightColorStatus",
-    //         Constants.NetworkTables.yellow.kOrange.toHexString());
-    //     this.currentBRStatus =
-    //         this.currentBRStatus
-    //             + " Too Slow by"
-    //             + (100 - (drive.getBackRightVelocity() / this.speed) * 100)
-    //             + "%";
-    //   }
-    // }
+  public boolean isCorrectAngle(int module) {
+    return MathUtil.isNear(this.angle, getModuleAngle(module), 1.0);
   }
 
   /** Adds a new timestamped vision measurement. */

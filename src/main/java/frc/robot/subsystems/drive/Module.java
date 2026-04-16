@@ -146,4 +146,12 @@ public class Module {
   public boolean isDriveConnected() {
     return inputs.driveConnected;
   }
+
+  public boolean isTurnConnected() {
+    return inputs.turnConnected;
+  }
+
+  public double getTurnVelocity() {
+    return inputs.turnVelocityRadPerSec;
+  }
 }

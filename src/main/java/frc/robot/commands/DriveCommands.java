@@ -414,7 +414,7 @@ public class DriveCommands {
                 "Tester/Drive/Front Left Color Status",
                 Constants.NetworkTables.red.kBlack.toHexString());
             this.currentFLStatus = this.currentFLStatus + " Not Connected";
-          } else if (!drive.isDriveCorrectSpeed(0)) {
+          } else if (!drive.isDriveCorrectSpeed(0) || !drive.isCorrectAngle(0)) {
             SmartDashboard.putString(
                 "Tester/Drive/Front Left Color Status",
                 Constants.NetworkTables.red.kOrange.toHexString());
