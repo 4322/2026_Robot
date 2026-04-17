@@ -60,7 +60,7 @@ public class TesterTurn extends Command {
       this.currentFLStatus =
           this.currentFLStatus
               + " Incorrect Angle Speed by "
-              + (100 - ((drive.getModuleAngle(0) / drive.anglePerSecondRequested) * 100))
+              + (100 - ((drive.getModuleTurnVelocity(0) / drive.anglePerSecondRequested) * 100))
               + "%";
     } else {
       this.currentFLColorStatus = Constants.NetworkTables.green;
@@ -74,7 +74,7 @@ public class TesterTurn extends Command {
       this.currentFRStatus =
           this.currentFRStatus
               + " Incorrect Angle Speed by "
-              + (100 - ((drive.getModuleAngle(1) / drive.anglePerSecondRequested) * 100))
+              + (100 - ((drive.getModuleTurnVelocity(1) / drive.anglePerSecondRequested) * 100))
               + "%";
     } else {
       this.currentFRColorStatus = Constants.NetworkTables.green;
@@ -88,7 +88,7 @@ public class TesterTurn extends Command {
       this.currentBLStatus =
           this.currentBLStatus
               + " Incorrect Angle Speed by "
-              + (100 - ((drive.getModuleAngle(2) / drive.anglePerSecondRequested) * 100))
+              + (100 - ((drive.getModuleTurnVelocity(2) / drive.anglePerSecondRequested) * 100))
               + "%";
 
     } else {
@@ -103,7 +103,7 @@ public class TesterTurn extends Command {
       this.currentBRStatus =
           this.currentBRStatus
               + " Incorrect Angle Speed by "
-              + (100 - ((drive.getModuleAngle(3) / drive.anglePerSecondRequested) * 100))
+              + (100 - ((drive.getModuleTurnVelocity(3) / drive.anglePerSecondRequested) * 100))
               + "%";
     } else {
       this.currentBRColorStatus = Constants.NetworkTables.green;
@@ -114,7 +114,7 @@ public class TesterTurn extends Command {
     SmartDashboard.putString("Tester/Drive/Turn/Front Turn Right Status", this.currentFRStatus);
     SmartDashboard.putString("Tester/Drive/Turn/Back Turn Left Status", this.currentBLStatus);
     SmartDashboard.putString("Tester/Drive/Turn/Back Turn Right Status", this.currentBRStatus);
-    
+
     SmartDashboard.putString(frontLeftKey, this.currentFLColorStatus.toHexString());
     SmartDashboard.putString(frontRightKey, this.currentFRColorStatus.toHexString());
     SmartDashboard.putString(backLeftKey, this.currentBLColorStatus.toHexString());
