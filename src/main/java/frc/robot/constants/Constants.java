@@ -246,7 +246,7 @@ public final class Constants {
     public static final double servoToEncoderGearRatio = 45 / 32.0;
     public static final double safeAngleDeg = 0;
     public static final double homingVelocityThresholdRPS = 0.02;
-    public static final double minHomingSec = 0.150; 
+    public static final double minHomingSec = 0.150;
     public static final double smallToleranceDeg = 0.4;
     public static final double largeToleranceDeg = 2.0;
     public static final int idleTimeout = 0;
@@ -258,7 +258,6 @@ public final class Constants {
     public static final double kS = 0;
     public static final double motionMagicCruiseVelocity = 0;
     public static final double motionMagicAcceleration = 0;
-
 
     public static final int homePulseWidth = 610; // min 500
     public static final double lowCalibrationDeg = 10;

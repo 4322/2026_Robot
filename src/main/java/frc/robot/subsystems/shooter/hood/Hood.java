@@ -154,4 +154,8 @@ public class Hood {
   public double getPositionDegrees() {
     return inputs.hoodDegrees;
   }
+
+  public void setBrakeMode(boolean brake) {
+    io.setBrakeMode(brake);
+  }
 }
