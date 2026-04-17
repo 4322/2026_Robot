@@ -7,6 +7,7 @@ import org.littletonrobotics.junction.Logger;
 public class Rollers {
   private RollersIO rollersIO;
   private RollersIOInputsAutoLogged inputs = new RollersIOInputsAutoLogged();
+  private double requestedSetpoint = 0;
 
   public enum RollersState {
     IDLE,
@@ -14,8 +15,7 @@ public class Rollers {
     INTAKE,
     EJECT,
     SMOOSH,
-    DISABLED,
-    TESTING
+    DISABLED
   }
 
   public RollersState state = RollersState.DISABLED;
@@ -40,20 +40,24 @@ public class Rollers {
       case DISABLED -> {
         rollersIO.stopMotor();
       }
-      case TESTING -> {}
       case DEPLOY -> {
+        requestedSetpoint = Constants.Rollers.voltageDeploy;
         rollersIO.setVoltage(Constants.Rollers.voltageDeploy);
       }
       case IDLE -> {
+        requestedSetpoint = 0;
         rollersIO.stopMotor();
       }
       case INTAKE -> {
+        requestedSetpoint = Constants.Rollers.voltageIntake;
         rollersIO.setVoltage(Constants.Rollers.voltageIntake);
       }
       case EJECT -> {
+        requestedSetpoint = Constants.Rollers.voltageEject;
         rollersIO.setVoltage(Constants.Rollers.voltageEject);
       }
       case SMOOSH -> {
+        requestedSetpoint = Constants.Rollers.voltageSmoosh;
         rollersIO.setVoltage(Constants.Rollers.voltageSmoosh);
       }
     }
@@ -65,14 +69,6 @@ public class Rollers {
 
   public double getLeaderRollerSpeed() {
     return inputs.leaderRotationsPerSec;
-  }
-
-  private double requestedSetpoint = 0;
-
-  public void setRollerSpeed(double speed) {
-    state = RollersState.TESTING;
-    rollersIO.setVoltage(speed);
-    this.requestedSetpoint = speed;
   }
 
   public double getRequestedSetpoint() {

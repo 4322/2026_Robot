@@ -34,7 +34,6 @@ public class TesterRollers extends Command {
   public void execute() {
     rollerFollower = " ";
     rollerLeader = " ";
-    rollers.setRollerSpeed(0.5);
 
     if (!rollers.leaderRollerConnected()) {
       currentLeaderRollerColorStatus = Constants.NetworkTables.red;
