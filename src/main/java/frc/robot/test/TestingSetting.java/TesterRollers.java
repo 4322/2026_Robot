@@ -41,7 +41,8 @@ public class TesterRollers extends Command {
       rollerLeader = " Not Connected";
     } else if (!rollers.leaderRollerAtGoal()) {
       currentLeaderRollerColorStatus = Constants.NetworkTables.orange;
-      rollerLeader =  "Not Spinning at Goal by"
+      rollerLeader =
+          "Not Spinning at Goal by"
               + +(100 - ((rollers.getLeaderRollerSpeed() / rollers.getRequestedSetpoint()) * 100))
               + "%";
     } else {
@@ -53,12 +54,13 @@ public class TesterRollers extends Command {
       rollerFollower = " Not Connected";
     } else if (!rollers.followerRollerAtGoal()) {
       currentFollowerRollerColorStatus = Constants.NetworkTables.orange;
-      rollerFollower = "Not Spinning at Goal by"
+      rollerFollower =
+          "Not Spinning at Goal by"
               + +(100 - ((rollers.getFollowerRollerSpeed() / rollers.getRequestedSetpoint()) * 100))
               + "%";
       ;
     } else {
-    currentFollowerRollerColorStatus = Constants.NetworkTables.green;
+      currentFollowerRollerColorStatus = Constants.NetworkTables.green;
     }
 
     if (!rollers.rollersSpinningTogether()) {
@@ -81,7 +83,7 @@ public class TesterRollers extends Command {
       rollerLeader =
           rollerLeader
               + "Diffrence of "
-              + (rollers.getLeaderRollerSpeed() -rollers.getFollowerRollerSpeed())
+              + (rollers.getLeaderRollerSpeed() - rollers.getFollowerRollerSpeed())
               + " RPS";
       rollerFollower =
           rollerFollower
@@ -89,18 +91,19 @@ public class TesterRollers extends Command {
               + (rollers.getFollowerRollerSpeed() - rollers.getLeaderRollerSpeed())
               + " RPS";
     } else {
-    currentFollowerRollerColorStatus = Constants.NetworkTables.green;
-    currentLeaderRollerColorStatus = Constants.NetworkTables.green;
-    rollerLeader = rollerLeader + " Rollers Spinning Together";
-    rollerFollower = rollerFollower + " Rollers Spinning Together";
+      currentFollowerRollerColorStatus = Constants.NetworkTables.green;
+      currentLeaderRollerColorStatus = Constants.NetworkTables.green;
+      rollerLeader = rollerLeader + " Rollers Spinning Together";
+      rollerFollower = rollerFollower + " Rollers Spinning Together";
     }
 
-    SmartDashboard.putString(currentLeaderRollerStatusKey, currentLeaderRollerColorStatus.toHexString());
-    SmartDashboard.putString(currentFollowerRollerStatusKey, currentFollowerRollerColorStatus.toHexString());
+    SmartDashboard.putString(
+        currentLeaderRollerStatusKey, currentLeaderRollerColorStatus.toHexString());
+    SmartDashboard.putString(
+        currentFollowerRollerStatusKey, currentFollowerRollerColorStatus.toHexString());
 
     SmartDashboard.putString(currentFollowerRollerStatusKey, test + rollerFollower);
     SmartDashboard.putString(currentLeaderRollerStatusKey, test + rollerLeader);
-
   }
 
   @Override

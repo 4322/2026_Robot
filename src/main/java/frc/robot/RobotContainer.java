@@ -68,6 +68,7 @@ import frc.robot.subsystems.vision.visionGlobalPose.VisionGlobalPoseIOSim;
 import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetection;
 import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetectionIO;
 import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetectionIOPhoton;
+import frc.robot.test.TesterSelector;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -97,6 +98,7 @@ public class RobotContainer {
   public static Simulator simulator;
 
   public static AutonomousSelector autonomousSelector;
+  public static TesterSelector testerSelector;
 
   private static Field2d field;
 
@@ -400,9 +402,18 @@ public class RobotContainer {
     return autonomousSelector.get();
   }
 
+  public Command getTesterCommand() {
+    return testerSelector.get();
+  }
+
   public void configureAutonomousSelector() {
     autonomousSelector =
         new AutonomousSelector(drive, hood, turret, shooter, visionObjectDetection, led, intake);
+  }
+
+  public void configureTesterSelector() {
+    testerSelector =
+        new TesterSelector(drive, hood, turret, shooter, visionObjectDetection, led, intake);
   }
 
   public void setBrakeMode(boolean brake) {

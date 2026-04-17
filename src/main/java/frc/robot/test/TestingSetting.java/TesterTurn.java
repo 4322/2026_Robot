@@ -54,7 +54,7 @@ public class TesterTurn extends Command {
     } else if (!drive.isCorrectAngleSpeed(0)) {
       this.currentFLColorStatus = Constants.NetworkTables.orange;
       this.currentFLStatus =
-        " Incorrect Angle Speed by "
+          " Incorrect Angle Speed by "
               + (100 - ((drive.getModuleTurnVelocity(0) / drive.anglePerSecondRequested) * 100))
               + "%";
     } else {
@@ -104,11 +104,14 @@ public class TesterTurn extends Command {
       this.currentBRColorStatus = Constants.NetworkTables.green;
     }
 
-
-    SmartDashboard.putString("Tester/Drive/Turn/Front Turn Left Status", test + this.currentFLStatus);
-    SmartDashboard.putString("Tester/Drive/Turn/Front Turn Right Status", test + this.currentFRStatus);
-    SmartDashboard.putString("Tester/Drive/Turn/Back Turn Left Status", test + this.currentBLStatus);
-    SmartDashboard.putString("Tester/Drive/Turn/Back Turn Right Status", test + this.currentBRStatus);
+    SmartDashboard.putString(
+        "Tester/Drive/Turn/Front Turn Left Status", test + this.currentFLStatus);
+    SmartDashboard.putString(
+        "Tester/Drive/Turn/Front Turn Right Status", test + this.currentFRStatus);
+    SmartDashboard.putString(
+        "Tester/Drive/Turn/Back Turn Left Status", test + this.currentBLStatus);
+    SmartDashboard.putString(
+        "Tester/Drive/Turn/Back Turn Right Status", test + this.currentBRStatus);
 
     SmartDashboard.putString(frontLeftKey, this.currentFLColorStatus.toHexString());
     SmartDashboard.putString(frontRightKey, this.currentFRColorStatus.toHexString());

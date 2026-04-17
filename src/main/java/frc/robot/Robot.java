@@ -33,6 +33,7 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter;
  */
 public class Robot extends LoggedRobot {
   private Command autonomousCommand;
+  private Command testerCommand;
   private RobotContainer robotContainer;
   private Timer allianceUpdateTimer = new Timer();
   private DigitalInput coastButton = new DigitalInput(Constants.dioCoastButton);
@@ -330,6 +331,7 @@ public class Robot extends LoggedRobot {
     // and put our autonomous chooser on the dashboard.
     robotContainer = new RobotContainer();
     robotContainer.configureAutonomousSelector();
+    robotContainer.configureTesterSelector();
 
     allianceUpdateTimer.start();
 
@@ -481,6 +483,8 @@ public class Robot extends LoggedRobot {
   public void testInit() {
     // Cancels all running commands at the start of test mode.
     CommandScheduler.getInstance().cancelAll();
+    autonomousCommand = robotContainer.getAutonomousCommand();
+    testerCommand = robotContainer.getTesterCommand();
   }
 
   /** This function is called periodically during test mode. */

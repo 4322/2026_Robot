@@ -49,11 +49,11 @@ public class TesterDrive extends Command {
 
     if (!drive.isDriveConnected(0)) {
       this.currentFLColorStatus = Constants.NetworkTables.red;
-      this.currentFLStatus =  driveConnectionMessage;
+      this.currentFLStatus = driveConnectionMessage;
     } else if (!drive.isDriveCorrectSpeed(0)) {
       this.currentFLColorStatus = Constants.NetworkTables.orange;
       this.currentFLStatus =
-     " Too Slow by "
+          " Too Slow by "
               + (100 - ((drive.getModuleVelocity(0) / drive.requestedSpeed) * 100))
               + "%";
     } else {
@@ -62,7 +62,7 @@ public class TesterDrive extends Command {
 
     if (!drive.isDriveConnected(1)) {
       this.currentFRColorStatus = Constants.NetworkTables.red;
-      this.currentFRStatus =  driveConnectionMessage;
+      this.currentFRStatus = driveConnectionMessage;
     } else if (!drive.isDriveCorrectSpeed(1)) {
       this.currentFRColorStatus = Constants.NetworkTables.orange;
       this.currentFRStatus =
@@ -79,7 +79,7 @@ public class TesterDrive extends Command {
     } else if (!drive.isDriveCorrectSpeed(2)) {
       this.currentBLColorStatus = Constants.NetworkTables.orange;
       this.currentBLStatus =
-       " Too Slow by "
+          " Too Slow by "
               + (100 - ((drive.getModuleVelocity(2) / drive.requestedSpeed) * 100))
               + "%";
 
@@ -99,16 +99,20 @@ public class TesterDrive extends Command {
     } else {
       this.currentBRColorStatus = Constants.NetworkTables.green;
     }
-    
+
     SmartDashboard.putString(frontLeftKey, this.currentFLColorStatus.toHexString());
     SmartDashboard.putString(frontRightKey, this.currentFRColorStatus.toHexString());
     SmartDashboard.putString(backLeftKey, this.currentBLColorStatus.toHexString());
     SmartDashboard.putString(backRightKey, this.currentBRColorStatus.toHexString());
-    
-    SmartDashboard.putString("Tester/Drive/Drive/Front Drive Left Status", test + this.currentFLStatus);
-    SmartDashboard.putString("Tester/Drive/Drive/Front Drive Right Status", test + this.currentFRStatus);
-    SmartDashboard.putString("Tester/Drive/Drive/Back Drive Left Status", test + this.currentBLStatus);
-    SmartDashboard.putString("Tester/Drive/Drive/Back Drive Right Status", test + this.currentBRStatus);
+
+    SmartDashboard.putString(
+        "Tester/Drive/Drive/Front Drive Left Status", test + this.currentFLStatus);
+    SmartDashboard.putString(
+        "Tester/Drive/Drive/Front Drive Right Status", test + this.currentFRStatus);
+    SmartDashboard.putString(
+        "Tester/Drive/Drive/Back Drive Left Status", test + this.currentBLStatus);
+    SmartDashboard.putString(
+        "Tester/Drive/Drive/Back Drive Right Status", test + this.currentBRStatus);
   }
 
   @Override

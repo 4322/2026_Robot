@@ -42,13 +42,10 @@ public class TesterSelector {
       VisionObjectDetection visionObjectDetection,
       LED led,
       Intake intake) {
-    test = List.of(
-        new Test(
-            TestName.DO_NOTHING,
-            new SequentialCommandGroup()),
-        new Test(
-            TestName.DRIVE_TEST,
-          new DriveTest(drive)));
+    test =
+        List.of(
+            new Test(TestName.DO_NOTHING, new SequentialCommandGroup()),
+            new Test(TestName.DRIVE_TEST, new DriveTest(drive)));
     for (Test nextAuto : test) {
       if (nextAuto.name == defaultTestName) {
         testerSelector.addDefaultOption(nextAuto.name.toString(), nextAuto.command);
@@ -58,17 +55,17 @@ public class TesterSelector {
     }
   }
 
-  // public SequentialCommandGroup get() {
-  //   if (Constants.currentMode == Mode.SIM) {
-  //     for (Test nextTest : test) {
-  //       if (nextTest.name == Simulator.getAutoScenario()) {
-  //         Logger.recordOutput("AutoName", Simulator.getAutoScenario());
-  //         return nextTest.command;
-  //       }
-  //     }
-  //     System.out.println("Simulated auto " + Simulator.getAutoScenario() + " not found");
-  //     System.exit(1);
-  //   }
-  //   return autonomousSelector.get();
-  // }
+  public SequentialCommandGroup get() {
+    // if (Constants.currentMode == Mode.SIM) {
+    //   for (Test nextTest : test) {
+    //     if (nextTest.name == Simulator.getAutoScenario()) {
+    //       Logger.recordOutput("AutoName", Simulator.getAutoScenario());
+    //       return nextTest.command;
+    //     }
+    //   }
+    //   System.out.println("Simulated auto " + Simulator.getTesterScenario() + " not found");
+    //   System.exit(1);
+    // }
+    return testerSelector.get();
+  }
 }
