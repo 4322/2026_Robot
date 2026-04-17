@@ -1,4 +1,5 @@
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.constants.Constants;
 import frc.robot.subsystems.drive.Drive;
@@ -9,6 +10,10 @@ public class TesterTurn extends Command {
   private String currentFRStatus = "Front Right:";
   private String currentBLStatus = "Back Left:";
   private String currentBRStatus = "Back Right:";
+  private Color currentFLColorStatus = new Color(0, 0, 0);
+  private Color currentFRColorStatus = new Color(0, 0, 0);
+  private Color currentBLColorStatus = new Color(0, 0, 0);
+  private Color currentBRColorStatus = new Color(0, 0, 0);
   private String test;
   private double numberTest;
   private String frontLeftKey = "Tester/Drive/Turn/FL Turn Color Status";
@@ -34,54 +39,52 @@ public class TesterTurn extends Command {
     SmartDashboard.putString(frontRightKey, Constants.NetworkTables.purple.toHexString());
     SmartDashboard.putString(backLeftKey, Constants.NetworkTables.purple.toHexString());
     SmartDashboard.putString(backRightKey, Constants.NetworkTables.purple.toHexString());
-
-    this.currentFLStatus = this.currentFLStatus + " Running Test " + test;
-    this.currentFRStatus = this.currentFRStatus + " Running Test " + test;
-    this.currentBLStatus = this.currentBLStatus + " Running Test " + test;
-    this.currentBRStatus = this.currentBRStatus + " Running Test " + test;
-    this.numberTest = 0;
+    this.currentFLColorStatus = Constants.NetworkTables.purple;
+    this.currentFRColorStatus = Constants.NetworkTables.purple;
+    this.currentBLColorStatus = Constants.NetworkTables.purple;
+    this.currentBRColorStatus = Constants.NetworkTables.purple;
   }
 
   @Override
   public void execute() {
-    this.currentFLStatus = this.currentFLStatus + " #" + (numberTest + 1);
-    this.currentFRStatus = this.currentFRStatus + " #" + (numberTest + 1);
-    this.currentBLStatus = this.currentBLStatus + " #" + (numberTest + 1);
-    this.currentBRStatus = this.currentBRStatus + " #" + (numberTest + 1);
+    this.currentFLStatus = " ";
+    this.currentFRStatus = " ";
+    this.currentBLStatus = " ";
+    this.currentBRStatus = " ";
 
     if (!drive.isTurnConnected(0)) {
-      SmartDashboard.putString(frontLeftKey, Constants.NetworkTables.red.toHexString());
       this.currentFLStatus = this.currentFLStatus + turnConnectionMessage;
+      this.currentFLColorStatus = Constants.NetworkTables.red;
     } else if (!drive.isCorrectAngleSpeed(0)) {
-      SmartDashboard.putString(frontLeftKey, Constants.NetworkTables.orange.toHexString());
+      this.currentFLColorStatus = Constants.NetworkTables.orange;
       this.currentFLStatus =
           this.currentFLStatus
               + " Incorrect Angle Speed by "
               + (100 - ((drive.getModuleAngle(0) / drive.anglePerSecondRequested) * 100))
               + "%";
     } else {
-      SmartDashboard.putString(frontLeftKey, Constants.NetworkTables.green.toHexString());
+      this.currentFLColorStatus = Constants.NetworkTables.green;
     }
 
     if (!drive.isTurnConnected(1)) {
-      SmartDashboard.putString(frontRightKey, Constants.NetworkTables.red.toHexString());
+      this.currentFRColorStatus = Constants.NetworkTables.red;
       this.currentFRStatus = this.currentFRStatus + turnConnectionMessage;
     } else if (!drive.isCorrectAngleSpeed(1)) {
-      SmartDashboard.putString(frontRightKey, Constants.NetworkTables.orange.toHexString());
+      this.currentFRColorStatus = Constants.NetworkTables.orange;
       this.currentFRStatus =
           this.currentFRStatus
               + " Incorrect Angle Speed by "
               + (100 - ((drive.getModuleAngle(1) / drive.anglePerSecondRequested) * 100))
               + "%";
     } else {
-      SmartDashboard.putString(frontRightKey, Constants.NetworkTables.green.toHexString());
+      this.currentFRColorStatus = Constants.NetworkTables.green;
     }
 
     if (!drive.isTurnConnected(2)) {
-      SmartDashboard.putString(backLeftKey, Constants.NetworkTables.red.toHexString());
+      this.currentBLColorStatus = Constants.NetworkTables.red;
       this.currentBLStatus = this.currentBLStatus + turnConnectionMessage;
     } else if (!drive.isCorrectAngleSpeed(2)) {
-      SmartDashboard.putString(backLeftKey, Constants.NetworkTables.orange.toHexString());
+      this.currentBLColorStatus = Constants.NetworkTables.orange;
       this.currentBLStatus =
           this.currentBLStatus
               + " Incorrect Angle Speed by "
@@ -89,30 +92,33 @@ public class TesterTurn extends Command {
               + "%";
 
     } else {
-      SmartDashboard.putString(backLeftKey, Constants.NetworkTables.green.toHexString());
+      this.currentBLColorStatus = Constants.NetworkTables.green;
     }
 
     if (!drive.isTurnConnected(3)) {
-      SmartDashboard.putString(backRightKey, Constants.NetworkTables.red.toHexString());
+      this.currentBRColorStatus = Constants.NetworkTables.red;
       this.currentBRStatus = this.currentBRStatus + turnConnectionMessage;
     } else if (!drive.isCorrectAngleSpeed(3)) {
-      SmartDashboard.putString(backRightKey, Constants.NetworkTables.orange.toHexString());
+      this.currentBRColorStatus = Constants.NetworkTables.orange;
       this.currentBRStatus =
           this.currentBRStatus
               + " Incorrect Angle Speed by "
               + (100 - ((drive.getModuleAngle(3) / drive.anglePerSecondRequested) * 100))
               + "%";
     } else {
-      SmartDashboard.putString(backRightKey, Constants.NetworkTables.green.toHexString());
+      this.currentBRColorStatus = Constants.NetworkTables.green;
     }
+
+
     SmartDashboard.putString("Tester/Drive/Turn/Front Turn Left Status", this.currentFLStatus);
     SmartDashboard.putString("Tester/Drive/Turn/Front Turn Right Status", this.currentFRStatus);
     SmartDashboard.putString("Tester/Drive/Turn/Back Turn Left Status", this.currentBLStatus);
     SmartDashboard.putString("Tester/Drive/Turn/Back Turn Right Status", this.currentBRStatus);
-    this.currentFLStatus = "Front Left:";
-    this.currentFRStatus = "Front Right:";
-    this.currentBLStatus = "Back Left:";
-    this.currentBRStatus = "Back Right:";
+    
+    SmartDashboard.putString(frontLeftKey, this.currentFLColorStatus.toHexString());
+    SmartDashboard.putString(frontRightKey, this.currentFRColorStatus.toHexString());
+    SmartDashboard.putString(backLeftKey, this.currentBLColorStatus.toHexString());
+    SmartDashboard.putString(backRightKey, this.currentBRColorStatus.toHexString());
   }
 
   @Override
