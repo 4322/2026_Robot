@@ -3,6 +3,8 @@ package frc.robot.subsystems.led;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.drive.Drive;
+import frc.robot.subsystems.shooter.Shooter;
+import frc.robot.subsystems.shooter.Shooter.ShooterState;
 import frc.robot.subsystems.shooter.areaManager.AreaManager;
 import frc.robot.util.HubShiftUtil;
 import org.littletonrobotics.junction.Logger;
@@ -10,21 +12,18 @@ import org.littletonrobotics.junction.Logger;
 public class LED extends SubsystemBase {
   private LEDState state = LEDState.DISABLED;
 
-  private boolean climberDeployed = false;
-  private boolean autoFuelPickup = false;
-  private boolean turretUnwinding = false;
+  private boolean flash = false;
 
   private LEDIO io;
-  private Drive drive;
+  private Shooter shooter;
 
   public enum LEDState {
     DISABLED,
-    CLIMBER_DEPLOYED,
-    AUTO_FUEL_PICKUP,
-    TURRET_UNWINDING,
-    SHOOTING_AREA_ACTIVE,
-    SHOOTING_AREA_INACTIVE,
-    NON_SHOOTING_AREA
+    INACTIVE,
+    NON_SHOOTING_AREA,
+    PRESHOOT,
+    SHOOT,
+    IDLE
   }
 
   public enum AnimationType {
@@ -39,9 +38,9 @@ public class LED extends SubsystemBase {
     RGB_FADE
   }
 
-  public LED(LEDIO io, Drive drive) {
+  public LED(LEDIO io, Shooter shooter) {
     this.io = io;
-    this.drive = drive;
+    this.shooter = shooter;
   }
 
   @Override
@@ -49,21 +48,10 @@ public class LED extends SubsystemBase {
     Logger.recordOutput("LED/State", state.toString());
     if (DriverStation.isDisabled()) {
       setLEDState(LEDState.DISABLED);
-    } else if (climberDeployed) {
-      setLEDState(LEDState.CLIMBER_DEPLOYED);
-    } else if (autoFuelPickup) {
-      setLEDState(LEDState.AUTO_FUEL_PICKUP);
-    } else if (turretUnwinding) {
-      setLEDState(LEDState.TURRET_UNWINDING);
-    } else if (AreaManager.isShootingArea(drive.getRobotPose().getTranslation())) {
-      if (HubShiftUtil.getShiftedShiftInfo().active()) {
-        setLEDState(LEDState.SHOOTING_AREA_ACTIVE);
-      } else {
-        setLEDState(LEDState.SHOOTING_AREA_INACTIVE);
-      }
-
-    } else {
-      setLEDState(LEDState.NON_SHOOTING_AREA);
+    } else if (shooter.getState() == ShooterState.PRESHOOT) {
+      setLEDState(LEDState.PRESHOOT);
+    } else if (shooter.getState() == ShooterState.SHOOT) {
+      setLEDState(LEDState.SHOOT);
     }
   }
 
@@ -76,35 +64,13 @@ public class LED extends SubsystemBase {
         case DISABLED -> {
           io.setLEDs(AnimationType.RAINBOW, 0);
         }
-        case CLIMBER_DEPLOYED -> {}
-        case AUTO_FUEL_PICKUP -> {
-          io.setLEDs(AnimationType.STROBE, 0, 0, 0, 255);
-        }
-        case TURRET_UNWINDING -> {
-          io.setLEDs(AnimationType.LARSON, 0, 255, 0, 255);
-        }
-        case SHOOTING_AREA_ACTIVE -> {
-          io.setLEDs(AnimationType.COLOR_FLOW, 0, 0, 255, 0);
-        }
-        case SHOOTING_AREA_INACTIVE -> {
-          io.setLEDs(AnimationType.COLOR_FLOW, 0, 255, 255, 0);
+        case INACTIVE -> {
+          
         }
         case NON_SHOOTING_AREA -> {
           io.setLEDs(AnimationType.COLOR_FLOW, 0, 255, 0, 0);
         }
       }
     }
-  }
-
-  public void requestClimberDeployed(boolean value) {
-    climberDeployed = value;
-  }
-
-  public void requestAutoFuelPickup(boolean value) {
-    autoFuelPickup = value;
-  }
-
-  public void requestTurretUnwinding(boolean value) {
-    turretUnwinding = value;
   }
 }

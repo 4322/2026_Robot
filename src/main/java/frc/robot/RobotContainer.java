@@ -160,12 +160,6 @@ public class RobotContainer {
             Constants.visionObjectDetection == Constants.SubsystemMode.DISABLED
                 ? new VisionObjectDetection(drive, new VisionObjectDetectionIO() {})
                 : new VisionObjectDetection(drive, new VisionObjectDetectionIOPhoton());
-        led =
-            new LED(
-                Constants.ledMode == Constants.SubsystemMode.DISABLED
-                    ? new LEDIO() {}
-                    : new LEDIOCANdle(),
-                drive);
         flywheel =
             Constants.flywheelMode == Constants.SubsystemMode.DISABLED
                 ? new Flywheel(new FlywheelIO() {})
@@ -193,7 +187,13 @@ public class RobotContainer {
 
         shooter =
             new Shooter(flywheel, hood, spindexer, tunnel, turret, visionGlobalPose, drive, led);
-
+        led =
+            new LED(
+                Constants.ledMode == Constants.SubsystemMode.DISABLED
+                    ? new LEDIO() {}
+                    : new LEDIOCANdle(),
+                shooter);
+                
         rollers =
             Constants.rollerMode == Constants.SubsystemMode.DISABLED
                 ? new Rollers(new RollersIO() {})
