@@ -38,11 +38,18 @@ public class TesterDrive extends Command {
     this.currentFRColorStatus = Constants.NetworkTables.purple;
     this.currentBLColorStatus = Constants.NetworkTables.purple;
     this.currentBRColorStatus = Constants.NetworkTables.purple;
+    SmartDashboard.putString(frontLeftKey, this.currentFLColorStatus.toHexString());
+    SmartDashboard.putString(frontRightKey, this.currentFRColorStatus.toHexString());
+    SmartDashboard.putString(backLeftKey, this.currentBLColorStatus.toHexString());
+    SmartDashboard.putString(backRightKey, this.currentBRColorStatus.toHexString());
   }
 
   @Override
   public void execute() {
-
+    this.currentFLStatus = " ";
+    this.currentFRStatus = " ";
+    this.currentBLStatus = " ";
+    this.currentBRStatus = " ";
     if (!drive.isDriveConnected(0)) {
       this.currentFLColorStatus = Constants.NetworkTables.red;
       this.currentFLStatus = this.currentFLStatus + driveConnectionMessage;
