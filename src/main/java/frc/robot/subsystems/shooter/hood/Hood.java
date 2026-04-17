@@ -19,14 +19,13 @@ public class Hood {
   private double requestedAngleDeg;
   private Timer atGoalTimer = new Timer();
   private Timer homingTimer = new Timer();
-  private int burstIntervalCount = 0;
   private boolean homed = false;
   private boolean trenchOverride = false;
   private boolean isScoring = false;
 
   public Hood(HoodIO io) {
     this.io = io;
-    moveMotorToPosition(0); // avoid initial pop-up of servo when powered on
+    io.setAngle(0); // avoid initial pop-up of servo when powered on
   }
 
   public void inputsPeriodic() {
@@ -52,7 +51,7 @@ public class Hood {
         if (!homed) {
           homeHood();
         } else {
-          moveMotorToPosition(requestedAngleDeg);
+          io.setAngle(requestedAngleDeg);
           updateAtGoalTimer();
         }
         updateNetworkTableValues();
@@ -69,7 +68,7 @@ public class Hood {
       homingTimer.stop();
       homingTimer.reset();
     } else {
-      moveMotorToPosition(0);
+      io.setAngle(0);
       homingTimer.start();
       if (homingTimer.hasElapsed(Constants.Hood.minHomingSec)
           && Math.abs(inputs.encoderVelocity) <= Constants.Hood.homingVelocityThresholdRPS) {
@@ -114,10 +113,6 @@ public class Hood {
   private void setGoal(double degrees) {
     requestedAngleDeg = degrees;
     updateAtGoalTimer();
-  }
-
-  private void moveMotorToPosition(double hoodDegrees) {
-    io.setAngle(hoodDegrees);
   }
 
   public void trenchOverride(boolean override) {
