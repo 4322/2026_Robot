@@ -47,19 +47,14 @@ public class TesterTurn extends Command {
 
   @Override
   public void execute() {
-    this.currentFLStatus = " ";
-    this.currentFRStatus = " ";
-    this.currentBLStatus = " ";
-    this.currentBRStatus = " ";
 
     if (!drive.isTurnConnected(0)) {
-      this.currentFLStatus = this.currentFLStatus + turnConnectionMessage;
+      this.currentFLStatus = turnConnectionMessage;
       this.currentFLColorStatus = Constants.NetworkTables.red;
     } else if (!drive.isCorrectAngleSpeed(0)) {
       this.currentFLColorStatus = Constants.NetworkTables.orange;
       this.currentFLStatus =
-          this.currentFLStatus
-              + " Incorrect Angle Speed by "
+        " Incorrect Angle Speed by "
               + (100 - ((drive.getModuleTurnVelocity(0) / drive.anglePerSecondRequested) * 100))
               + "%";
     } else {
@@ -68,7 +63,7 @@ public class TesterTurn extends Command {
 
     if (!drive.isTurnConnected(1)) {
       this.currentFRColorStatus = Constants.NetworkTables.red;
-      this.currentFRStatus = this.currentFRStatus + turnConnectionMessage;
+      this.currentFRStatus = turnConnectionMessage;
     } else if (!drive.isCorrectAngleSpeed(1)) {
       this.currentFRColorStatus = Constants.NetworkTables.orange;
       this.currentFRStatus =
@@ -82,7 +77,7 @@ public class TesterTurn extends Command {
 
     if (!drive.isTurnConnected(2)) {
       this.currentBLColorStatus = Constants.NetworkTables.red;
-      this.currentBLStatus = this.currentBLStatus + turnConnectionMessage;
+      this.currentBLStatus = turnConnectionMessage;
     } else if (!drive.isCorrectAngleSpeed(2)) {
       this.currentBLColorStatus = Constants.NetworkTables.orange;
       this.currentBLStatus =
@@ -97,7 +92,7 @@ public class TesterTurn extends Command {
 
     if (!drive.isTurnConnected(3)) {
       this.currentBRColorStatus = Constants.NetworkTables.red;
-      this.currentBRStatus = this.currentBRStatus + turnConnectionMessage;
+      this.currentBRStatus = turnConnectionMessage;
     } else if (!drive.isCorrectAngleSpeed(3)) {
       this.currentBRColorStatus = Constants.NetworkTables.orange;
       this.currentBRStatus =
@@ -110,10 +105,10 @@ public class TesterTurn extends Command {
     }
 
 
-    SmartDashboard.putString("Tester/Drive/Turn/Front Turn Left Status", this.currentFLStatus);
-    SmartDashboard.putString("Tester/Drive/Turn/Front Turn Right Status", this.currentFRStatus);
-    SmartDashboard.putString("Tester/Drive/Turn/Back Turn Left Status", this.currentBLStatus);
-    SmartDashboard.putString("Tester/Drive/Turn/Back Turn Right Status", this.currentBRStatus);
+    SmartDashboard.putString("Tester/Drive/Turn/Front Turn Left Status", test + this.currentFLStatus);
+    SmartDashboard.putString("Tester/Drive/Turn/Front Turn Right Status", test + this.currentFRStatus);
+    SmartDashboard.putString("Tester/Drive/Turn/Back Turn Left Status", test + this.currentBLStatus);
+    SmartDashboard.putString("Tester/Drive/Turn/Back Turn Right Status", test + this.currentBRStatus);
 
     SmartDashboard.putString(frontLeftKey, this.currentFLColorStatus.toHexString());
     SmartDashboard.putString(frontRightKey, this.currentFRColorStatus.toHexString());

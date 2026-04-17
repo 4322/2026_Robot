@@ -14,7 +14,6 @@ public class TesterRollers extends Command {
   private Color currentFollowerRollerColorStatus = Constants.NetworkTables.purple;
   private String rollerLeader = " Roller Leader: ";
   private String rollerFollower = " Roller Follower: ";
-  private double rollerTest;
 
   public TesterRollers(Rollers rollers, String test) {
     this.rollers = rollers;

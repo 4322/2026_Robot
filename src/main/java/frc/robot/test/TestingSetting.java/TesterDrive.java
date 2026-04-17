@@ -46,18 +46,14 @@ public class TesterDrive extends Command {
 
   @Override
   public void execute() {
-    this.currentFLStatus = " ";
-    this.currentFRStatus = " ";
-    this.currentBLStatus = " ";
-    this.currentBRStatus = " ";
+
     if (!drive.isDriveConnected(0)) {
       this.currentFLColorStatus = Constants.NetworkTables.red;
-      this.currentFLStatus = this.currentFLStatus + driveConnectionMessage;
+      this.currentFLStatus =  driveConnectionMessage;
     } else if (!drive.isDriveCorrectSpeed(0)) {
       this.currentFLColorStatus = Constants.NetworkTables.orange;
       this.currentFLStatus =
-          this.currentFLStatus
-              + " Too Slow by "
+     " Too Slow by "
               + (100 - ((drive.getModuleVelocity(0) / drive.requestedSpeed) * 100))
               + "%";
     } else {
@@ -66,12 +62,11 @@ public class TesterDrive extends Command {
 
     if (!drive.isDriveConnected(1)) {
       this.currentFRColorStatus = Constants.NetworkTables.red;
-      this.currentFRStatus = this.currentFRStatus + driveConnectionMessage;
+      this.currentFRStatus =  driveConnectionMessage;
     } else if (!drive.isDriveCorrectSpeed(1)) {
       this.currentFRColorStatus = Constants.NetworkTables.orange;
       this.currentFRStatus =
-          this.currentFRStatus
-              + " Too Slow by "
+          " Too Slow by "
               + (100 - ((drive.getModuleVelocity(1) / drive.requestedSpeed) * 100))
               + "%";
     } else {
@@ -80,12 +75,11 @@ public class TesterDrive extends Command {
 
     if (!drive.isDriveConnected(2)) {
       this.currentBLColorStatus = Constants.NetworkTables.red;
-      this.currentBLStatus = this.currentBLStatus + driveConnectionMessage;
+      this.currentBLStatus = driveConnectionMessage;
     } else if (!drive.isDriveCorrectSpeed(2)) {
       this.currentBLColorStatus = Constants.NetworkTables.orange;
       this.currentBLStatus =
-          this.currentBLStatus
-              + " Too Slow by "
+       " Too Slow by "
               + (100 - ((drive.getModuleVelocity(2) / drive.requestedSpeed) * 100))
               + "%";
 
@@ -95,12 +89,11 @@ public class TesterDrive extends Command {
 
     if (!drive.isDriveConnected(3)) {
       this.currentBRColorStatus = Constants.NetworkTables.red;
-      this.currentBRStatus = this.currentBRStatus + driveConnectionMessage;
+      this.currentBRStatus = driveConnectionMessage;
     } else if (!drive.isDriveCorrectSpeed(3)) {
       this.currentBRColorStatus = Constants.NetworkTables.orange;
       this.currentBRStatus =
-          this.currentBRStatus
-              + " Too Slow by "
+          " Too Slow by "
               + (100 - ((drive.getModuleVelocity(3) / drive.requestedSpeed) * 100))
               + "%";
     } else {
