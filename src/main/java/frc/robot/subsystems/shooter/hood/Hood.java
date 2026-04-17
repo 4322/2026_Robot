@@ -14,7 +14,6 @@ public class Hood {
   private static final LoggedTunableNumber smallToleranceDeg =
       new LoggedTunableNumber("Hood/smallToleranceDeg", Constants.Hood.smallToleranceDeg);
 
-
   private HoodIO io;
   private HoodIOInputsAutoLogged inputs = new HoodIOInputsAutoLogged();
   private double requestedAngleDeg;
@@ -44,7 +43,7 @@ public class Hood {
       case TUNING -> {
         if (!homed) {
           homeHood();
-        } 
+        }
       }
       case NORMAL -> {
         if (Constants.currentMode == Constants.Mode.SIM && !homed) {

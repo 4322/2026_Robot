@@ -140,5 +140,4 @@ public class HoodIOTalonFx implements HoodIO {
     hoodMotor.setControl(
         new MotionMagicVoltage(Units.degreesToRotations(degs)).withEnableFOC(true).withSlot(0));
   }
-
 }
