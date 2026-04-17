@@ -8,7 +8,6 @@ import frc.robot.Robot;
 import frc.robot.constants.Constants;
 import frc.robot.constants.Constants.ShotCalculatorParameters;
 import frc.robot.subsystems.drive.Drive;
-import frc.robot.subsystems.led.LED;
 import frc.robot.subsystems.shooter.firingManager.FiringManager;
 import frc.robot.subsystems.shooter.flywheel.Flywheel;
 import frc.robot.subsystems.shooter.hood.Hood;
@@ -41,7 +40,6 @@ public class Shooter extends SubsystemBase {
   private Tunnel tunnel;
   private Turret turret;
   private Drive drive;
-  private LED led;
   private Double hoodOverrideDeg = null;
   private Double flywheelOverrideRPS = null;
   private Double turretOverrideDeg = null;
@@ -69,14 +67,12 @@ public class Shooter extends SubsystemBase {
       Tunnel tunnel,
       Turret turret,
       VisionGlobalPose visionGlobalPose,
-      Drive drive,
-      LED led) {
+      Drive drive) {
     this.flywheel = flywheel;
     this.hood = hood;
     this.spindexer = spindexer;
     this.tunnel = tunnel;
     this.turret = turret;
-    this.led = led;
     this.drive = drive;
 
     ShotCalculator.Config config = new ShotCalculator.Config();

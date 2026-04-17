@@ -2,11 +2,8 @@ package frc.robot.subsystems.led;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.shooter.Shooter.ShooterState;
-import frc.robot.subsystems.shooter.areaManager.AreaManager;
-import frc.robot.util.HubShiftUtil;
 import org.littletonrobotics.junction.Logger;
 
 public class LED extends SubsystemBase {
@@ -64,9 +61,7 @@ public class LED extends SubsystemBase {
         case DISABLED -> {
           io.setLEDs(AnimationType.RAINBOW, 0);
         }
-        case INACTIVE -> {
-          
-        }
+        case INACTIVE -> {}
         case NON_SHOOTING_AREA -> {
           io.setLEDs(AnimationType.COLOR_FLOW, 0, 255, 0, 0);
         }

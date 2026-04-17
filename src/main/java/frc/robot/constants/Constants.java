@@ -99,6 +99,13 @@ public final class Constants {
   // all the zone information and updating robot pose constantly
   public static final boolean debugZoneAreas = false;
 
+  // Only used for LEDs as of right now
+  public static final boolean hubShiftUtilenabled = true;
+  // Override for winning auto for sim
+  public static final boolean hubShiftUtilWinOverride = true;
+  // Only for checking shifts in sim
+  public static final boolean hubShiftUtilDebug = true;
+
   public static class Drive {
     public static final int gyroID = 0;
     public static boolean zeroTurnEncoders = false; // for initial swerve homing only

@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.Timer;
 import frc.robot.constants.Constants;
 import java.util.Optional;
 import java.util.function.Supplier;
+import org.littletonrobotics.junction.Logger;
 
 public class HubShiftUtil {
   public enum ShiftEnum {
@@ -62,12 +63,16 @@ public class HubShiftUtil {
 
     // Be able to manually set alliance to win
     if (!winningAllianceOverride.isEmpty()) {
+      Logger.recordOutput("HubShiftUtil/winningAllianceOverride", winningAllianceOverride.get());
       return winningAllianceOverride.get();
     }
 
     // Return override value
     var winOverride = getAllianceWinOverride();
     if (!winOverride.isEmpty()) {
+      Logger.recordOutput("HubShiftUtil/winOverride", winOverride.get()
+          ? (alliance == Alliance.Blue ? Alliance.Red : Alliance.Blue)
+          : (alliance == Alliance.Blue ? Alliance.Blue : Alliance.Red));
       return winOverride.get()
           ? (alliance == Alliance.Blue ? Alliance.Red : Alliance.Blue)
           : (alliance == Alliance.Blue ? Alliance.Blue : Alliance.Red);

@@ -185,15 +185,14 @@ public class RobotContainer {
                 ? new Turret(new TurretIO() {})
                 : new Turret(new TurretIOTalonFx());
 
-        shooter =
-            new Shooter(flywheel, hood, spindexer, tunnel, turret, visionGlobalPose, drive, led);
+        shooter = new Shooter(flywheel, hood, spindexer, tunnel, turret, visionGlobalPose, drive);
         led =
             new LED(
                 Constants.ledMode == Constants.SubsystemMode.DISABLED
                     ? new LEDIO() {}
                     : new LEDIOCANdle(),
                 shooter);
-                
+
         rollers =
             Constants.rollerMode == Constants.SubsystemMode.DISABLED
                 ? new Rollers(new RollersIO() {})
@@ -256,12 +255,6 @@ public class RobotContainer {
                 ? new VisionObjectDetection(drive, new VisionObjectDetectionIO() {})
                 : new VisionObjectDetection(
                     drive, new VisionObjectDetectionIO() {}); // TODO make sim for this
-        led =
-            new LED(
-                Constants.ledMode == Constants.SubsystemMode.DISABLED
-                    ? new LEDIO() {}
-                    : new LEDIOSim(),
-                drive);
         flywheel =
             Constants.flywheelMode == Constants.SubsystemMode.DISABLED
                 ? new Flywheel(new FlywheelIO() {})
@@ -287,8 +280,14 @@ public class RobotContainer {
                 ? new Turret(new TurretIO() {})
                 : new Turret(new TurretIOSim());
 
-        shooter =
-            new Shooter(flywheel, hood, spindexer, tunnel, turret, visionGlobalPose, drive, led);
+        shooter = new Shooter(flywheel, hood, spindexer, tunnel, turret, visionGlobalPose, drive);
+
+        led =
+            new LED(
+                Constants.ledMode == Constants.SubsystemMode.DISABLED
+                    ? new LEDIO() {}
+                    : new LEDIOSim(),
+                shooter);
 
         deployer =
             Constants.deployerMode == Constants.SubsystemMode.DISABLED
@@ -319,15 +318,15 @@ public class RobotContainer {
                 new VisionGlobalPoseIO() {},
                 new VisionGlobalPoseIO() {},
                 new VisionGlobalPoseIO() {});
-        led = new LED(new LEDIO() {}, drive);
+
         visionObjectDetection = new VisionObjectDetection(drive, new VisionObjectDetectionIO() {});
         flywheel = new Flywheel(new FlywheelIO() {});
         hood = new Hood(new HoodIO() {});
         spindexer = new Spindexer(new SpindexerIO() {});
         tunnel = new Tunnel(new TunnelIO() {});
         turret = new Turret(new TurretIO() {});
-        shooter =
-            new Shooter(flywheel, hood, spindexer, tunnel, turret, visionGlobalPose, drive, led);
+        shooter = new Shooter(flywheel, hood, spindexer, tunnel, turret, visionGlobalPose, drive);
+        led = new LED(new LEDIO() {}, shooter);
         rollers = new Rollers(new RollersIO() {});
         deployer = new Deployer(new DeployerIO() {});
         intake = new Intake(deployer, rollers);

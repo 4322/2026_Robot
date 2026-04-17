@@ -20,7 +20,7 @@ import java.util.Map;
 import org.littletonrobotics.junction.Logger;
 
 public class Simulator {
-  private static final RegressTests regressTest = RegressTests.TRENCHES;
+  private static final RegressTests regressTest = RegressTests.FULL_MATCH;
   public static AutoName autoScenario;
   private TeleopScenario teleopScenario;
   private List<TeleAnomaly> teleAnomalies;
@@ -44,7 +44,8 @@ public class Simulator {
     ZONES,
     INTAKE_TEST,
     DRIVE_WHILE_SHOOTING,
-    TRENCHES
+    TRENCHES,
+    FULL_MATCH // For testing hub shift util
   }
 
   private enum TeleAnomaly {
@@ -67,7 +68,8 @@ public class Simulator {
     Slowly_Up_down,
     ZONES,
     INTAKE_TEST,
-    TRENCHES
+    TRENCHES,
+    FULL_MATCH
   }
 
   private enum EventType {
@@ -274,6 +276,8 @@ public class Simulator {
       case TRENCHES -> List.of(
           new RegressionTest("Trenches", TeleopScenario.TRENCHES, Alliance.Blue),
           new RegressionTest("Trenches", TeleopScenario.TRENCHES, Alliance.Red));
+      case FULL_MATCH -> List.of(
+          new RegressionTest("Full Match", TeleopScenario.FULL_MATCH, Alliance.Blue));
       default -> List.of();
     };
   }
@@ -718,6 +722,10 @@ public class Simulator {
               EventType.MOVE_JOYSTICK_DRIVE,
               new Pose2d(1, 0, Rotation2d.kZero)),
           new SimEvent(t += 5, "End", EventType.END_OF_SCENARIO));
+      case FULL_MATCH -> List.of(
+          new SimEvent(
+              t += 0.1, "Start pose", EventType.SET_POSE, new FieldPose2d(3, 1, Rotation2d.kZero)),
+          new SimEvent(t += 140, "End", EventType.END_OF_SCENARIO));
       default -> List.of();
     };
   }

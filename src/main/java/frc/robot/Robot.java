@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.constants.Constants;
+import frc.robot.util.HubShiftUtil;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -470,11 +471,45 @@ public class Robot extends LoggedRobot {
     if (autonomousCommand != null) {
       autonomousCommand.cancel();
     }
+    if (Constants.hubShiftUtilenabled) {
+      if (Constants.currentMode == Constants.Mode.SIM) {
+        HubShiftUtil.setWinOverride(Constants.hubShiftUtilWinOverride);
+      }
+      HubShiftUtil.initialize();
+    }
   }
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+    if (Constants.hubShiftUtilenabled) {
+      Logger.recordOutput(
+          "HubShiftUtil/firstActiveAlliance", HubShiftUtil.getFirstActiveAlliance());
+      Logger.recordOutput(
+          "HubShiftUtil/officialShiftInfo/currentShift",
+          HubShiftUtil.getOfficialShiftInfo().currentShift().toString());
+      Logger.recordOutput(
+          "HubShiftUtil/officialShiftInfo/active", HubShiftUtil.getOfficialShiftInfo().active());
+      Logger.recordOutput(
+          "HubShiftUtil/officialShiftInfo/elapsedTime",
+          HubShiftUtil.getOfficialShiftInfo().elapsedTime());
+      Logger.recordOutput(
+          "HubShiftUtil/officialShiftInfo/remainingTime",
+          HubShiftUtil.getOfficialShiftInfo().remainingTime());
+
+      Logger.recordOutput(
+          "HubShiftUtil/shiftedShiftInfo/currentShift",
+          HubShiftUtil.getShiftedShiftInfo().currentShift().toString());
+      Logger.recordOutput(
+          "HubShiftUtil/shiftedShiftInfo/active", HubShiftUtil.getShiftedShiftInfo().active());
+      Logger.recordOutput(
+          "HubShiftUtil/shiftedShiftInfo/elapsedTime",
+          HubShiftUtil.getShiftedShiftInfo().elapsedTime());
+      Logger.recordOutput(
+          "HubShiftUtil/shiftedShiftInfo/remainingTime",
+          HubShiftUtil.getShiftedShiftInfo().remainingTime());
+    }
+  }
 
   /** This function is called once when test mode is enabled. */
   @Override
