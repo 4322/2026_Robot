@@ -102,8 +102,8 @@ public class TesterRollers extends Command {
     SmartDashboard.putString(
         currentFollowerRollerStatusKey, currentFollowerRollerColorStatus.toHexString());
 
-    SmartDashboard.putString(currentFollowerRollerStatusKey, test + rollerFollower);
-    SmartDashboard.putString(currentLeaderRollerStatusKey, test + rollerLeader);
+    SmartDashboard.putString(currentFollowerRollerStatusKey,  SmartDashboard.getString(currentFollowerRollerStatusKey, "") + test + rollerFollower);
+    SmartDashboard.putString(currentLeaderRollerStatusKey, SmartDashboard.getString(currentLeaderRollerStatusKey, "") + test + rollerLeader);
   }
 
   @Override

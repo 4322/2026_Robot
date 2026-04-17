@@ -99,19 +99,19 @@ public class TesterDrive extends Command {
       this.currentBRColorStatus = Constants.NetworkTables.green;
     }
 
-    SmartDashboard.putString(frontLeftKey, this.currentFLColorStatus.toHexString());
+    SmartDashboard.putString(backLeftKey, this.currentFLColorStatus.toHexString());
     SmartDashboard.putString(frontRightKey, this.currentFRColorStatus.toHexString());
     SmartDashboard.putString(backLeftKey, this.currentBLColorStatus.toHexString());
     SmartDashboard.putString(backRightKey, this.currentBRColorStatus.toHexString());
 
     SmartDashboard.putString(
-        "Tester/Drive/Drive/Front Drive Left Status", test + this.currentFLStatus);
+        "Tester/Drive/Drive/Front Drive Left Status", SmartDashboard.getString("Tester/Drive/Drive/Front Drive Left Status", "") + test + this.currentFLStatus);
     SmartDashboard.putString(
-        "Tester/Drive/Drive/Front Drive Right Status", test + this.currentFRStatus);
+        "Tester/Drive/Drive/Front Drive Right Status", SmartDashboard.getString("Tester/Drive/Drive/Front Drive Right Status", "") + test + this.currentFRStatus);
     SmartDashboard.putString(
-        "Tester/Drive/Drive/Back Drive Left Status", test + this.currentBLStatus);
+        "Tester/Drive/Drive/Back Drive Left Status", SmartDashboard.getString("Tester/Drive/Drive/Back Drive Left Status", "") + test + this.currentBLStatus);
     SmartDashboard.putString(
-        "Tester/Drive/Drive/Back Drive Right Status", test + this.currentBRStatus);
+        "Tester/Drive/Drive/Back Drive Right Status", SmartDashboard.getString("Tester/Drive/Drive/Back Drive Right Status", "") + test + this.currentBRStatus);
   }
 
   @Override
