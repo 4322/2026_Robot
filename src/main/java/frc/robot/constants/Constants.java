@@ -69,7 +69,7 @@ public final class Constants {
           || visionGlobalPose == SubsystemMode.TUNING);
 
   public static final double scoringDoubleToleranceTime = 0.5;
-  public static final double passingDoubleToleranceTime = 0.150;
+  public static final double passingDoubleToleranceTime = 0.25;
 
   { // set dependent operational modes
     if (firingManagerMode == SubsystemMode.TUNING) {
