@@ -116,12 +116,14 @@ public final class Constants {
   }
 
   public static class Spindexer {
-    public static final int spindexerMotorId = 4;
+    public static final int leaderMotorId = 0;
+    public static final int followerMotorId = 0;
+
     public static final double supplyCurrentLimit = 60;
     public static final double supplyCurrentLowerLimit = 40;
     public static final double supplyCurrentLowerTime = 0.5; // fast start
     public static final double statorCurrentLimit = 120;
-    public static final InvertedValue motorInvert = InvertedValue.CounterClockwise_Positive;
+    public static final InvertedValue leaderMotorInvert = InvertedValue.CounterClockwise_Positive;
     public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
     public static final double kS = 0.34;
     public static final double kV = 1.47;
