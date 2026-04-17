@@ -381,7 +381,7 @@ public class DriveCommands {
     double gyroDelta = 0.0;
   }
 
-  public Command TesterDrive(Drive drive, String test) {
+  public static Command TesterDrive(Drive drive, String test) {
     return Commands.run(
         () -> {
           TesterDrive(drive, test);
@@ -389,7 +389,7 @@ public class DriveCommands {
         drive);
   }
 
-  public Command TesterTurn(Drive drive, String test) {
+  public static Command TesterTurn(Drive drive, String test) {
     return Commands.run(
         () -> {
           TesterTurn(drive, test);

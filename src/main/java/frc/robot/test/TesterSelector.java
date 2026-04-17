@@ -18,6 +18,7 @@ public class TesterSelector {
 
   public enum TestName {
     DO_NOTHING,
+    DRIVE_TEST,
   }
 
   private class Test {
@@ -31,7 +32,7 @@ public class TesterSelector {
   }
 
   private List<Test> test;
-  private TestName defaultAuto = TestName.DO_NOTHING;
+  private TestName defaultTestName = TestName.DO_NOTHING;
 
   public TesterSelector(
       Drive drive,
@@ -41,10 +42,15 @@ public class TesterSelector {
       VisionObjectDetection visionObjectDetection,
       LED led,
       Intake intake) {
-    test = List.of(new Test(defaultAuto, null));
-
+    test = List.of(
+        new Test(
+            TestName.DO_NOTHING,
+            new SequentialCommandGroup()),
+        new Test(
+            TestName.DRIVE_TEST,
+          new DriveTest(drive)));
     for (Test nextAuto : test) {
-      if (nextAuto.name == defaultAuto) {
+      if (nextAuto.name == defaultTestName) {
         testerSelector.addDefaultOption(nextAuto.name.toString(), nextAuto.command);
       } else {
         testerSelector.addOption(nextAuto.name.toString(), nextAuto.command);
