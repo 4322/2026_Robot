@@ -246,7 +246,7 @@ public final class Constants {
     public static final double servoToEncoderGearRatio = 45 / 32.0;
     public static final double safeAngleDeg = 0;
     public static final double homingVelocityThresholdRPS = 0.02;
-    public static final double minHomingSec = 0.4; // allow for servo latency + enable overhead
+    public static final double minHomingSec = 0.150; 
     public static final double smallToleranceDeg = 0.4;
     public static final double largeToleranceDeg = 2.0;
     public static final int idleTimeout = 0;
@@ -259,48 +259,8 @@ public final class Constants {
     public static final double motionMagicCruiseVelocity = 0;
     public static final double motionMagicAcceleration = 0;
 
-    // Calibrate hood after replacing servo, shaft gears or sector gear
-    // 1. Remove encoder shaft gear
-    // 2. Connect programmer to servo
-    // 3. Set switch to S position
-    // 4. Press P once to program position mode
-    // 5. Press S twice one second apart to enter test mode
-    // 6. Verify servo operation using L and R buttons (minimum 4 turns)
-    // 7. Press L to place servo in lowest position
-    // 8. Remove power from the servo
-    // 9. Rotate servo gear 90 degrees clockwise
-    // 10. Lower hood all the way to the turret plate
-    // 11. Install encoder shaft gear
-    // 12. Connect programmer to servo
-    // 13. Press S twice one second apart to enter test mode
-    // 14. Verify that hood raises fully when R is pressed and lowers fully when L is pressed
-    // 15. Reconnect servo to normal PWN cable to servo hub
-    // 16. Turn on the robot
-    // 17. Deploy code with hood tuning mode enabled
-    // 18. Open Elastic and add field for tuningPulseWidth
-    // 19. Enable the robot
-    // 20. Find the highest value of tuningPulseWidth that makes the hood go all the way down
-    //     Start with 700 and work down
-    //     For each trial, go up to 800 and then down to the position being tested
-    //     If 500 doesn't lower the hood fully, repeat the above steps properly
-    // 21. Set homePulseWidth below to the found value + 5 to reduce servo current
-    // 22. Set servoPositionScaleFactor below to 1.0
-    // 23. Redeploy
-    // 24. Enable the robot
-    // 25. Set tuningGoalDegree to 10
-    // 26. Observe reported HoodDegrees on AdvantageScope
-    // 27. Set servoLowPositionScaleFactor = 10 / HoodDegrees
-    // 28. Set tuningGoalDegree to 38
-    // 29. Observe reported HoodDegrees on AdvantageScope
-    // 30. Set servoLowPositionScaleFactor = 38 / HoodDegrees
-    // 31. Redeploy
-    // 32. Move hood to different positions using tuningGoalDegree and observe correct angle in
-    // AdvantageScope
-    // 33. Deploy code with hood in normal mode
 
     public static final int homePulseWidth = 610; // min 500
-    public static final double servoLowPositionScaleFactor = 1.0526; // variations in potentiometer
-    public static final double servoHighPositionScaleFactor = 1.0243; // variations in potentiometer
     public static final double lowCalibrationDeg = 10;
     public static final double highCalibrationDeg = 38;
   }
