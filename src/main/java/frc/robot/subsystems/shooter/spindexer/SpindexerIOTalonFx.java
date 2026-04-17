@@ -77,7 +77,7 @@ public class SpindexerIOTalonFx implements SpindexerIO {
     StatusCode followerConfigStatus = followerMotor.getConfigurator().apply(config);
     StatusCode followerMotorSetStatus =
         followerMotor.setControl(
-            new Follower(leaderMotor.getDeviceID(), MotorAlignmentValue.Opposed));
+            new Follower(leaderMotor.getDeviceID(), MotorAlignmentValue.Aligned));
 
     if (leaderConfigStatus != StatusCode.OK) {
       DriverStation.reportError(
