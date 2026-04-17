@@ -1,3 +1,4 @@
+package frc.robot.commands;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -15,7 +16,6 @@ public class TesterTurn extends Command {
   private Color currentBLColorStatus = new Color(0, 0, 0);
   private Color currentBRColorStatus = new Color(0, 0, 0);
   private String test;
-  private double numberTest;
   private String frontLeftKey = "Tester/Drive/Turn/FL Turn Color Status";
   private String frontRightKey = "Tester/Drive/Turn/FR Turn Color Status";
   private String backLeftKey = "Tester/Drive/Turn/BL Turn Color Status";

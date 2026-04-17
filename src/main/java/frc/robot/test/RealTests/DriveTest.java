@@ -23,14 +23,14 @@ public class DriveTest extends SequentialCommandGroup {
                     ChassisSpeeds.fromFieldRelativeSpeeds(
                         drive.getMaxLinearSpeedMetersPerSec(), 0, 0, Rotation2d.fromDegrees(0)))),
         new ParallelCommandGroup(
-            DriveCommands.TesterDrive(drive, "Drive Forward"), new WaitCommand(5)),
+            DriveCommands.DriveTesting(drive, "Drive Forward"), new WaitCommand(5)),
         new InstantCommand(
             () ->
                 drive.runVelocity(
                     ChassisSpeeds.fromFieldRelativeSpeeds(
                         -drive.getMaxLinearSpeedMetersPerSec(), 0, 0, Rotation2d.fromDegrees(0)))),
         new ParallelCommandGroup(
-            DriveCommands.TesterDrive(drive, "Drive BackWard"), new WaitCommand(5)),
+            DriveCommands.DriveTesting(drive, "Drive BackWard"), new WaitCommand(5)),
         new InstantCommand(
             () ->
                 drive.runVelocity(
@@ -42,6 +42,6 @@ public class DriveTest extends SequentialCommandGroup {
                     ChassisSpeeds.fromFieldRelativeSpeeds(
                         0, drive.getMaxLinearSpeedMetersPerSec(), 0, Rotation2d.fromDegrees(0)))),
         new ParallelCommandGroup(
-            DriveCommands.TesterDrive(drive, "Drive Left"), new WaitCommand(5)));
+            DriveCommands.DriveTesting(drive, "Drive Left"), new WaitCommand(5)));
   }
 }

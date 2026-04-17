@@ -1,3 +1,4 @@
+package frc.robot.commands;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -34,7 +35,6 @@ public class TesterRollers extends Command {
   public void execute() {
     rollerFollower = " ";
     rollerLeader = " ";
-
     if (!rollers.leaderRollerConnected()) {
       currentLeaderRollerColorStatus = Constants.NetworkTables.red;
       rollerLeader = " Not Connected";

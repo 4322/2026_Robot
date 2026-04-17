@@ -10,12 +10,13 @@ import frc.robot.commands.DriveCommands;
 import frc.robot.commands.IntakeCommands;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.intake.rollers.Rollers;
 
 import org.littletonrobotics.junction.Logger;
 
 public class RollerTest extends SequentialCommandGroup {
 
-  public RollerTest(Drive drive, Intake intake) {
+  public RollerTest(Intake intake, Rollers rollers) {
     setName("RollerTest");
 
     addCommands(
@@ -24,25 +25,7 @@ public class RollerTest extends SequentialCommandGroup {
             () ->
                 IntakeCommands.intake(intake)),
         new ParallelCommandGroup(
-            DriveCommands.TesterDrive(drive, "Drive Forward"), new WaitCommand(5)),
-        new InstantCommand(
-            () ->
-                drive.runVelocity(
-                    ChassisSpeeds.fromFieldRelativeSpeeds(
-                        -drive.getMaxLinearSpeedMetersPerSec(), 0, 0, Rotation2d.fromDegrees(0)))),
-        new ParallelCommandGroup(
-            DriveCommands.TesterDrive(drive, "Drive BackWard"), new WaitCommand(5)),
-        new InstantCommand(
-            () ->
-                drive.runVelocity(
-                    ChassisSpeeds.fromFieldRelativeSpeeds(
-                        0, drive.getMaxLinearSpeedMetersPerSec(), 0, Rotation2d.fromDegrees(0)))),
-        new InstantCommand(
-            () ->
-                drive.runVelocity(
-                    ChassisSpeeds.fromFieldRelativeSpeeds(
-                        0, drive.getMaxLinearSpeedMetersPerSec(), 0, Rotation2d.fromDegrees(0)))),
-        new ParallelCommandGroup(
-            DriveCommands.TesterDrive(drive, "Drive Left"), new WaitCommand(5)));
+            IntakeCommands.rollerTesting(rollers, "string"), new WaitCommand(5))
+        );
   }
 }

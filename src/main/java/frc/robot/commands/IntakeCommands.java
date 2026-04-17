@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.Intake.IntakeState;
+import frc.robot.subsystems.intake.rollers.Rollers;
 
 public class IntakeCommands {
   private static Command transitionToIntake(Intake intake, CommandXboxController controller) {
@@ -98,4 +99,9 @@ public class IntakeCommands {
         .finallyDo(() -> toggleOff(intake))
         .onlyIf(() -> intake.hasExtended());
   }
+
+  public static Command rollerTesting(Rollers rollers, String test) {
+    return new TesterRollers(rollers, test);
+  }
+
 }
