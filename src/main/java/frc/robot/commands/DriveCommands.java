@@ -24,8 +24,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.constants.Constants;
 import frc.robot.subsystems.drive.Drive;
-import frc.robot.subsystems.intake.Intake;
-import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.util.LoggedTunableNumber;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -383,12 +381,11 @@ public class DriveCommands {
     double gyroDelta = 0.0;
   }
 
-    public static Command DriveTesting(Drive drive, String test) {
+  public static Command DriveTesting(Drive drive, String test) {
     return new TesterDrive(drive, test);
   }
 
   public static Command TurnTesting(Drive drive, String test) {
     return new TesterTurn(drive, test);
   }
-
 }
