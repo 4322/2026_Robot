@@ -1,6 +1,9 @@
 package frc.robot.test;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.constants.Constants;
+import frc.robot.constants.Constants.Mode;
+import frc.robot.subsystems.Simulator;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.rollers.Rollers;
@@ -14,6 +17,8 @@ import frc.robot.test.RealTests.DriveTest;
 import frc.robot.test.RealTests.FlywheelTest;
 import frc.robot.test.RealTests.RollerTest;
 import java.util.List;
+import java.util.logging.Logger;
+
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 public class TesterSelector {
@@ -67,16 +72,16 @@ public class TesterSelector {
   }
 
   public SequentialCommandGroup get() {
-    // if (Constants.currentMode == Mode.SIM) {
-    //   for (Test nextTest : test) {
-    //     if (nextTest.name == Simulator.getAutoScenario()) {
-    //       Logger.recordOutput("AutoName", Simulator.getAutoScenario());
-    //       return nextTest.command;
-    //     }
-    //   }
-    //   System.out.println("Simulated auto " + Simulator.getTesterScenario() + " not found");
-    //   System.exit(1);
-    // }
+    if (Constants.currentMode == Mode.SIM) {
+      for (Test nextTest : test) {
+        if (nextTest.name == Simulator.getTesterScenario()) {
+          Logger.recordOutput("TesterName", Simulator.getTesterScenario());
+          return nextTest.command;
+        }
+      }
+      System.out.println("Simulated test " + Simulator.getTesterScenario() + " not found");
+      System.exit(1);
+    }
     return testerSelector.get();
   }
 }
