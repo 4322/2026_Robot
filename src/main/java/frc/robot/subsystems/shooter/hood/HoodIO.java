@@ -20,5 +20,7 @@ public interface HoodIO {
 
   public default void setAngle(double angle) {}
 
+  public default void setVoltage(double voltage) {}
+
   public default void setBrakeMode(boolean mode) {}
 }

@@ -67,8 +67,9 @@ public class Hood {
     if (!DriverStation.isEnabled()) {
       homingTimer.stop();
       homingTimer.reset();
+      io.setVoltage(0);
     } else {
-      io.setAngle(0);
+      io.setVoltage(Constants.Hood.homingVoltage);
       homingTimer.start();
       if (homingTimer.hasElapsed(Constants.Hood.minHomingSec)
           && Math.abs(inputs.hoodRPS) <= Constants.Hood.homingVelocityThresholdRPS) {

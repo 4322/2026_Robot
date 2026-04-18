@@ -5,6 +5,7 @@ import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
+import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -92,6 +93,11 @@ public class HoodIOTalonFx implements HoodIO {
   @Override
   public void setHomed() {
     hoodMotor.setPosition(0);
+  }
+
+  @Override
+  public void setVoltage(double voltage) {
+    hoodMotor.setControl(new VoltageOut(voltage).withEnableFOC(true));
   }
 
   @Override

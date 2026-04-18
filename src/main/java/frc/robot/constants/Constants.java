@@ -132,7 +132,7 @@ public final class Constants {
     public static final double kD = 0;
     public static final double stoppedMechanismRotationsPerSec = 0.1; // TODO
 
-    public static final double motorToMechanismRatio = 12.0; // 10 inch wheel
+    public static final double motorToMechanismRatio = 36 / 12.0 * (90 / 35.0); // 10 inch wheel
     // Normally 7 RPS for shooting
     public static final double unjamRPS = -4.0;
     public static final double shootRPS = 7.0;
@@ -246,7 +246,8 @@ public final class Constants {
     public static final double encoderToHoodGearRatio = 164 / 11.0;
     public static final double motorToEncoderGearRatio = 5.0;
     public static final double safeAngleDeg = 0;
-    public static final double homingVelocityThresholdRPS = 0.02;
+    public static final double homingVoltage = -2.0;
+    public static final double homingVelocityThresholdRPS = 0.1;
     public static final double minHomingSec = 0.150;
     public static final double smallToleranceDeg = 0.4;
     public static final double largeToleranceDeg = 2.0;
