@@ -225,10 +225,13 @@ public final class Constants {
     // 2. Set magnetic offsets to 0 on both encoders in Phoenix Tuner
     // 3. Set CANCoderOneOffsetRot = 0.25 - (PhoenixTuner AbsolutePosition)
     // 4. Set CANCoderTwoOffsetRot = 0.8157 - (PhoenixTuner AbsolutePosition)
+    // 5. Deploy
+    // 6. Verify correct turret degrees
+    // 7. Remove lock bolt
     //    CANCoderOne = Encoder 9
     //    CANCoderTwo = Encoder 4.73
-    public static final double CANCoderOneOffsetRot = 0.25 - 0.0793;
-    public static final double CANCoderTwoOffsetRot = 0.8157 - 0.8806;
+    public static final double CANCoderOneOffsetRot = 0.25 - 0.0781;
+    public static final double CANCoderTwoOffsetRot = 0.8157 - 0.8732;
 
     // Derivation of above values:
     // 290 degrees * 90/10 = encoder 1 should have rotated 7.25 rotations ->
