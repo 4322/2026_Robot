@@ -54,7 +54,11 @@ public class TesterDrive extends Command {
       this.currentFLStatus = "FL " + driveConnectionMessage;
     } else if (!drive.isDriveCorrectSpeed(0)) {
       this.currentFLColorStatus = Constants.NetworkTables.orange;
-      this.currentFLStatus =  "FL " + " Too Slow by " + (100 - ((drive.getModuleVelocity(0) / drive.requestedSpeed) * 100)) + "% ";
+      this.currentFLStatus =
+          "FL "
+              + " Too Slow by "
+              + (100 - ((drive.getModuleVelocity(0) / drive.requestedSpeed) * 100))
+              + "% ";
     } else {
       this.currentFLColorStatus = Constants.NetworkTables.green;
     }
@@ -64,8 +68,9 @@ public class TesterDrive extends Command {
       this.currentFRStatus = "FR " + driveConnectionMessage;
     } else if (!drive.isDriveCorrectSpeed(1)) {
       this.currentFRColorStatus = Constants.NetworkTables.orange;
-      this.currentFRStatus = "FR "+
-          " Too Slow by "
+      this.currentFRStatus =
+          "FR "
+              + " Too Slow by "
               + (100 - ((drive.getModuleVelocity(1) / drive.requestedSpeed) * 100))
               + "%";
     } else {
@@ -77,7 +82,9 @@ public class TesterDrive extends Command {
       this.currentBLStatus = "BL " + driveConnectionMessage;
     } else if (!drive.isDriveCorrectSpeed(2)) {
       this.currentBLColorStatus = Constants.NetworkTables.orange;
-      this.currentBLStatus = "BL " + " Too Slow by "
+      this.currentBLStatus =
+          "BL "
+              + " Too Slow by "
               + (100 - ((drive.getModuleVelocity(2) / drive.requestedSpeed) * 100))
               + "%";
 
@@ -91,7 +98,8 @@ public class TesterDrive extends Command {
     } else if (!drive.isDriveCorrectSpeed(3)) {
       this.currentBRColorStatus = Constants.NetworkTables.orange;
       this.currentBRStatus =
-          "BR " + " Too Slow by "
+          "BR "
+              + " Too Slow by "
               + (100 - ((drive.getModuleVelocity(3) / drive.requestedSpeed) * 100))
               + "%";
     } else {
@@ -104,13 +112,25 @@ public class TesterDrive extends Command {
     SmartDashboard.putString(backRightKey, this.currentBRColorStatus.toHexString());
 
     SmartDashboard.putString(
-        "Tester/Drive/Drive/Front Drive Left Status", SmartDashboard.getString("Tester/Drive/Drive/Front Drive Left Status", "") + test + this.currentFLStatus);
+        "Tester/Drive/Drive/Front Drive Left Status",
+        SmartDashboard.getString("Tester/Drive/Drive/Front Drive Left Status", "")
+            + test
+            + this.currentFLStatus);
     SmartDashboard.putString(
-        "Tester/Drive/Drive/Front Drive Right Status", SmartDashboard.getString("Tester/Drive/Drive/Front Drive Right Status", "") + test + this.currentFRStatus);
+        "Tester/Drive/Drive/Front Drive Right Status",
+        SmartDashboard.getString("Tester/Drive/Drive/Front Drive Right Status", "")
+            + test
+            + this.currentFRStatus);
     SmartDashboard.putString(
-        "Tester/Drive/Drive/Back Drive Left Status", SmartDashboard.getString("Tester/Drive/Drive/Back Drive Left Status", "") + test + this.currentBLStatus);
+        "Tester/Drive/Drive/Back Drive Left Status",
+        SmartDashboard.getString("Tester/Drive/Drive/Back Drive Left Status", "")
+            + test
+            + this.currentBLStatus);
     SmartDashboard.putString(
-        "Tester/Drive/Drive/Back Drive Right Status", SmartDashboard.getString("Tester/Drive/Drive/Back Drive Right Status", "") + test + this.currentBRStatus);
+        "Tester/Drive/Drive/Back Drive Right Status",
+        SmartDashboard.getString("Tester/Drive/Drive/Back Drive Right Status", "")
+            + test
+            + this.currentBRStatus);
   }
 
   @Override

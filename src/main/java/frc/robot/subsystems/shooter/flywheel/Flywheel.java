@@ -79,4 +79,39 @@ public class Flywheel {
           "Flywheel/FlywheelAtGoal", Constants.NetworkTables.red.toHexString());
     }
   }
+
+  public boolean followerConnected() {
+    return inputs.followerMotorConnected;
+  }
+
+  public boolean leaderConnected() {
+    return inputs.leaderMotorConnected;
+  }
+
+  public double getRequestedSetpoint() {
+    return requestedSetpoint;
+  }
+
+  public double getLeaderRollerSpeed() {
+    return inputs.leaderMechanismRPS;
+  }
+
+  public double getFollowerRollerSpeed() {
+    return inputs.followerMechanismRPS;
+  }
+
+  public boolean leaderRollerAtGoal() {
+    return Math.abs(inputs.leaderMechanismRPS - requestedSetpoint)
+        < Constants.Flywheel.smallToleranceRPS;
+  }
+
+  public boolean followerRollerAtGoal() {
+    return Math.abs(inputs.followerMechanismRPS - requestedSetpoint)
+        < Constants.Flywheel.smallToleranceRPS;
+  }
+
+  public boolean rollersSpinningTogether() {
+    return Math.abs(inputs.leaderMechanismRPS - inputs.followerMechanismRPS)
+        < Constants.Flywheel.rollerTogetherToleranceRPS;
+  }
 }

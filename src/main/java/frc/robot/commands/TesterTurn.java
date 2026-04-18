@@ -106,13 +106,25 @@ public class TesterTurn extends Command {
     }
 
     SmartDashboard.putString(
-        "Tester/Drive/Turn/Front Turn Left Status", SmartDashboard.getString("Tester/Drive/Turn/Front Turn Left Status", "") + test + this.currentFLStatus);
+        "Tester/Drive/Turn/Front Turn Left Status",
+        SmartDashboard.getString("Tester/Drive/Turn/Front Turn Left Status", "")
+            + test
+            + this.currentFLStatus);
     SmartDashboard.putString(
-        "Tester/Drive/Turn/Front Turn Right Status", SmartDashboard.getString("Tester/Drive/Turn/Front Turn Right Status", "") + test + this.currentFRStatus);
+        "Tester/Drive/Turn/Front Turn Right Status",
+        SmartDashboard.getString("Tester/Drive/Turn/Front Turn Right Status", "")
+            + test
+            + this.currentFRStatus);
     SmartDashboard.putString(
-        "Tester/Drive/Turn/Back Turn Left Status", SmartDashboard.getString("Tester/Drive/Turn/Back Turn Left Status", "") + test + this.currentBLStatus);
+        "Tester/Drive/Turn/Back Turn Left Status",
+        SmartDashboard.getString("Tester/Drive/Turn/Back Turn Left Status", "")
+            + test
+            + this.currentBLStatus);
     SmartDashboard.putString(
-        "Tester/Drive/Turn/Back Turn Right Status", SmartDashboard.getString("Tester/Drive/Turn/Back Turn Right Status", "") + test + this.currentBRStatus);
+        "Tester/Drive/Turn/Back Turn Right Status",
+        SmartDashboard.getString("Tester/Drive/Turn/Back Turn Right Status", "")
+            + test
+            + this.currentBRStatus);
 
     SmartDashboard.putString(frontLeftKey, this.currentFLColorStatus.toHexString());
     SmartDashboard.putString(frontRightKey, this.currentFRColorStatus.toHexString());

@@ -8,6 +8,7 @@ import frc.robot.constants.Constants;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.shooter.Shooter;
+import frc.robot.subsystems.shooter.flywheel.Flywheel;
 
 public class ShooterCommands {
 
@@ -102,5 +103,9 @@ public class ShooterCommands {
             })
         .finallyDo(() -> shooter.unjamOverride(false))
         .withTimeout(timeout);
+  }
+
+  public static Command flywheelTesting(Flywheel flywheel, String test) {
+    return new TesterFlywheel(flywheel, test);
   }
 }

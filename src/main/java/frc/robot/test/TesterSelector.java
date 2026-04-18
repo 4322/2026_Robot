@@ -3,12 +3,16 @@ package frc.robot.test;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.intake.rollers.Rollers;
 import frc.robot.subsystems.led.LED;
 import frc.robot.subsystems.shooter.Shooter;
+import frc.robot.subsystems.shooter.flywheel.Flywheel;
 import frc.robot.subsystems.shooter.hood.Hood;
 import frc.robot.subsystems.shooter.turret.Turret;
 import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetection;
 import frc.robot.test.RealTests.DriveTest;
+import frc.robot.test.RealTests.FlywheelTest;
+import frc.robot.test.RealTests.RollerTest;
 import java.util.List;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
@@ -20,7 +24,8 @@ public class TesterSelector {
   public enum TestName {
     DO_NOTHING,
     DRIVE_TEST,
-    Roller_TEST
+    Roller_TEST,
+    FLYWHEEL_TEST,
   }
 
   private class Test {
@@ -41,13 +46,17 @@ public class TesterSelector {
       Hood hood,
       Turret turret,
       Shooter shooter,
+      Flywheel flywheel,
       VisionObjectDetection visionObjectDetection,
       LED led,
-      Intake intake) {
+      Intake intake,
+      Rollers rollers) {
     test =
         List.of(
             new Test(TestName.DO_NOTHING, new SequentialCommandGroup()),
-            new Test(TestName.DRIVE_TEST, new DriveTest(drive)));
+            new Test(TestName.DRIVE_TEST, new DriveTest(drive)),
+            new Test(TestName.Roller_TEST, new RollerTest(intake, rollers)),
+            new Test(TestName.FLYWHEEL_TEST, new FlywheelTest(flywheel, intake)));
     for (Test nextAuto : test) {
       if (nextAuto.name == defaultTestName) {
         testerSelector.addDefaultOption(nextAuto.name.toString(), nextAuto.command);

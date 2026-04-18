@@ -163,6 +163,7 @@ public final class Constants {
     public static final double supplyCurrentLimit = 40;
     public static final InvertedValue motorInvert = InvertedValue.Clockwise_Positive;
     public static final NeutralModeValue neutralMode = NeutralModeValue.Coast;
+    public static final double rollerTogetherToleranceRPS = 0.1;
 
     // max RPS for a burst is 75 due to drop in battery voltage
     public static final double kS = 0.32;
