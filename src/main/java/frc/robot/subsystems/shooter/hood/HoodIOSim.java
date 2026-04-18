@@ -1,41 +1,41 @@
 package frc.robot.subsystems.shooter.hood;
 
-import edu.wpi.first.math.MathUtil;
-import org.littletonrobotics.junction.Logger;
+import edu.wpi.first.wpilibj.DriverStation;
+import frc.robot.constants.Constants;
 
 public class HoodIOSim implements HoodIO {
-  private double velocity = 0;
-  private double rotations = 0;
-  private double position = 0;
-  private double maxRPS = 0.2;
-  private double degreePerSecond = 37;
-  private double prevPosition = 0;
+  private double positionDeg = 0;
+  private double requestedPositionDeg = 0;
 
   @Override
   public void updateInputs(HoodIOInputs inputs) {
     inputs.encoderConnected = true;
-    inputs.encoderRotations = rotations; // Convert degrees to rotations
-    inputs.hoodDegrees = position;
-    inputs.encoderRPS = velocity;
-    inputs.servoEnabled = true;
+    inputs.motorConnected = true;
+
+    simPos();
+
+    inputs.hoodDegrees = positionDeg;
+    inputs.encoderDegrees = positionDeg / 5;
   }
 
   @Override
   public void setEncoderHomed() {
-    this.rotations = 0;
-    this.position = 0;
+    this.positionDeg = 0;
+    this.requestedPositionDeg = 0;
   }
 
   @Override
-  public void simEstimatedPosition() {
-    this.position =
-        MathUtil.clamp((this.maxRPS * this.degreePerSecond * this.velocity), 0, 38) + prevPosition;
-    prevPosition = position;
+  public void setAngle(double requestedPosDeg) {
+    this.requestedPositionDeg = requestedPosDeg;
   }
 
-  @Override
-  public void setPulseWidth(int pulseWidth) {
-    // TODO
-    Logger.recordOutput("Shooter/Hood/pulseWidth", pulseWidth);
+  private void simPos() {
+    if (DriverStation.isEnabled()) {
+      if (positionDeg < requestedPositionDeg) {
+        positionDeg += (requestedPositionDeg - positionDeg) * Constants.Sim.hoodRate;
+      } else {
+        positionDeg -= (positionDeg - requestedPositionDeg) * Constants.Sim.hoodRate;
+      }
+    }
   }
 }

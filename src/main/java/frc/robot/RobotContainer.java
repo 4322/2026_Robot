@@ -47,8 +47,8 @@ import frc.robot.subsystems.shooter.flywheel.FlywheelIOSim;
 import frc.robot.subsystems.shooter.flywheel.FlywheelIOTalonFx;
 import frc.robot.subsystems.shooter.hood.Hood;
 import frc.robot.subsystems.shooter.hood.HoodIO;
-import frc.robot.subsystems.shooter.hood.HoodIOServo;
 import frc.robot.subsystems.shooter.hood.HoodIOSim;
+import frc.robot.subsystems.shooter.hood.HoodIOTalonFx;
 import frc.robot.subsystems.shooter.spindexer.Spindexer;
 import frc.robot.subsystems.shooter.spindexer.SpindexerIO;
 import frc.robot.subsystems.shooter.spindexer.SpindexerIOSim;
@@ -174,7 +174,7 @@ public class RobotContainer {
         hood =
             Constants.hoodMode == Constants.SubsystemMode.DISABLED
                 ? new Hood(new HoodIO() {})
-                : new Hood(new HoodIOServo());
+                : new Hood(new HoodIOTalonFx());
 
         spindexer =
             Constants.spindexerMode == Constants.SubsystemMode.DISABLED
@@ -409,5 +409,6 @@ public class RobotContainer {
     spindexer.enableBrakeMode(brake);
     turret.setBrakeMode(brake);
     deployer.setBrakeMode(brake);
+    hood.setBrakeMode(brake);
   }
 }
