@@ -239,13 +239,12 @@ public final class Constants {
 
   public static class Hood {
     public static final int motorId = 7;
-    public static final int encoderId = 3;
-    public static final int statorCurrentLimit = 0;
-    public static final int supplyCurrentLimit = 30;
+    public static final int statorCurrentLimit = 60;
+    public static final int supplyCurrentLimit = 5;
     public static final InvertedValue motorInvert = InvertedValue.CounterClockwise_Positive;
     public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
     public static final double encoderToHoodGearRatio = 164 / 11.0;
-    public static final double servoToEncoderGearRatio = 45 / 32.0;
+    public static final double motorToEncoderGearRatio = 5.0;
     public static final double safeAngleDeg = 0;
     public static final double homingVelocityThresholdRPS = 0.02;
     public static final double minHomingSec = 0.150;
@@ -258,8 +257,8 @@ public final class Constants {
     public static final double kD = 0;
     public static final double kI = 0;
     public static final double kS = 0;
-    public static final double motionMagicCruiseVelocity = 0;
-    public static final double motionMagicAcceleration = 0;
+    public static final double motionMagicCruiseVelocity = 0.1;
+    public static final double motionMagicAcceleration = 0.4;
 
     public static final int homePulseWidth = 610; // min 500
     public static final double lowCalibrationDeg = 10;

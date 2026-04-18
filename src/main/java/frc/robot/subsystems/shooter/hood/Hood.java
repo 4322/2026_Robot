@@ -71,8 +71,8 @@ public class Hood {
       io.setAngle(0);
       homingTimer.start();
       if (homingTimer.hasElapsed(Constants.Hood.minHomingSec)
-          && Math.abs(inputs.encoderVelocity) <= Constants.Hood.homingVelocityThresholdRPS) {
-        io.setEncoderHomed();
+          && Math.abs(inputs.hoodRPS) <= Constants.Hood.homingVelocityThresholdRPS) {
+        io.setHomed();
         setGoal(0);
         homed = true;
         homingTimer.stop();

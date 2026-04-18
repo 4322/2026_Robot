@@ -9,17 +9,15 @@ public class HoodIOSim implements HoodIO {
 
   @Override
   public void updateInputs(HoodIOInputs inputs) {
-    inputs.encoderConnected = true;
     inputs.motorConnected = true;
 
     simPos();
 
     inputs.hoodDegrees = positionDeg;
-    inputs.encoderDegrees = positionDeg / 5;
   }
 
   @Override
-  public void setEncoderHomed() {
+  public void setHomed() {
     this.positionDeg = 0;
     this.requestedPositionDeg = 0;
   }
