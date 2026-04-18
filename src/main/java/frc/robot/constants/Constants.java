@@ -116,8 +116,8 @@ public final class Constants {
   }
 
   public static class Spindexer {
-    public static final int leaderMotorId = 0;
-    public static final int followerMotorId = 0;
+    public static final int leaderMotorId = 4;
+    public static final int followerMotorId = 6;
 
     public static final double supplyCurrentLimit = 60;
     public static final double supplyCurrentLowerLimit = 40;
@@ -238,7 +238,7 @@ public final class Constants {
   }
 
   public static class Hood {
-    public static final int motorId = 3;
+    public static final int motorId = 7;
     public static final int encoderId = 3;
     public static final int statorCurrentLimit = 0;
     public static final int supplyCurrentLimit = 30;
