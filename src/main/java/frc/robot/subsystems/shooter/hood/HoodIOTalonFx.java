@@ -34,7 +34,7 @@ public class HoodIOTalonFx implements HoodIO {
       new Debouncer(0.5, Debouncer.DebounceType.kFalling);
 
   public HoodIOTalonFx() {
-    hoodMotor = new TalonFX(Constants.Hood.motorId, Constants.CANivore.CANBus);
+    hoodMotor = new TalonFX(Constants.Hood.motorId);
 
     config.CurrentLimits.StatorCurrentLimit = Constants.Hood.statorCurrentLimit;
     config.CurrentLimits.SupplyCurrentLimit = Constants.Hood.supplyCurrentLimit;
