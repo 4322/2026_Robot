@@ -135,7 +135,7 @@ public final class Constants {
     public static final double motorToMechanismRatio = 36 / 12.0 * (90 / 35.0); // 10 inch wheel
     // Normally 7 RPS for shooting
     public static final double unjamRPS = -4.0;
-    public static final double shootRPS = 7.0;
+    public static final double shootRPS = 9.0;
   }
 
   public static class Tunnel {
