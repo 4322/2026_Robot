@@ -21,9 +21,9 @@ import java.util.Map;
 import org.littletonrobotics.junction.Logger;
 
 public class Simulator {
-  private static final RegressTests regressTest = RegressTests.TRENCHES;
+  private static final RegressTests regressTest = RegressTests.TEST;
   public static AutoName autoScenario;
-  private static TestName testerScenario;
+  private static TestName testScenario;
   private TeleopScenario teleopScenario;
   private List<TeleAnomaly> teleAnomalies;
   private List<AutoAnomaly> autoAnomalies;
@@ -253,18 +253,12 @@ public class Simulator {
     }
 
     RegressionTest(
-        String name,
-        AutoName autoName,
-        TestName testScenario,
-        List<TestAnomaly> testAnomalies,
-        Alliance alliance) {
+        String name, TestName testScenario, List<TestAnomaly> testAnomalies, Alliance alliance) {
       this(name, null, null, null, testScenario, testAnomalies, alliance);
     }
 
-    @SuppressWarnings("unused")
-    RegressionTest(
-        String name, TestName testScenario, List<TestAnomaly> testAnomalies, Alliance alliance) {
-      this(name, null, testScenario, testAnomalies, alliance);
+    RegressionTest(String name, TestName testScenario, Alliance alliance) {
+      this(name, testScenario, null, alliance);
     }
   }
 
@@ -284,7 +278,7 @@ public class Simulator {
           new RegressionTest("Subsystem Test", TeleopScenario.SUBSYSTEM_TEST, Alliance.Blue));
       case TEST_AUTOROTATE -> List.of(
           new RegressionTest("Auto Rotate", TeleopScenario.AUTO_ROTATE, Alliance.Blue),
-          new RegressionTest("Test Wheels", TestName.DRIVE_TEST, testAnomalies, currentAlliance));
+          new RegressionTest("Test Wheels", TestName.DRIVE_TEST, Alliance.Blue));
       case TURRET -> List.of(
           new RegressionTest("Turret Test", TeleopScenario.TURRET, Alliance.Blue));
       case ALL_AUTOS -> List.of(
@@ -315,8 +309,7 @@ public class Simulator {
       case TRENCHES -> List.of(
           new RegressionTest("Trenches", TeleopScenario.TRENCHES, Alliance.Blue),
           new RegressionTest("Trenches", TeleopScenario.TRENCHES, Alliance.Red));
-      case TEST -> List.of(
-          new RegressionTest("Test Drive", TestName.DRIVE_TEST, testAnomalies, Alliance.Blue));
+      case TEST -> List.of(new RegressionTest("Test Drive", TestName.DRIVE_TEST, Alliance.Blue));
 
       default -> List.of();
     };
@@ -767,14 +760,14 @@ public class Simulator {
   }
 
   private List<SimEvent> buildTestScenario() {
-    if (testerScenario == null) {
+    if (testScenario == null) {
       return List.of();
     }
     double t = 0.0;
     int eventNum = 1;
 
-    return switch (testerScenario) {
-      default -> List.of(new SimEvent(t += 5, "End", EventType.END_OF_SCENARIO));
+    return switch (testScenario) {
+      default -> List.of(new SimEvent(t += 100, "End", EventType.END_OF_SCENARIO));
     };
   }
 
@@ -986,7 +979,11 @@ public class Simulator {
     Logger.recordOutput("Sim/EventName", "Disabled");
     Logger.recordOutput("Sim/EventType", "Disabled");
 
-    DriverStationSim.setAutonomous(events == autoEvents);
+    if (events == testEvents) {
+      DriverStationSim.setTest(true);
+    } else {
+      DriverStationSim.setAutonomous(events == autoEvents);
+    }
     if (currentAlliance == Alliance.Red) {
       DriverStationSim.setAllianceStationId(AllianceStationID.Red2);
     } else {
@@ -996,8 +993,10 @@ public class Simulator {
     eventIterator = events.iterator();
     if (events == autoEvents) {
       currentScenario = autoScenario.toString();
-    } else {
+    } else if (events == teleopEvents) {
       currentScenario = teleopScenario.toString();
+    } else {
+      currentScenario = testScenario.toString();
     }
   }
 
@@ -1022,6 +1021,8 @@ public class Simulator {
     autoAnomalies = currentRegressionTest.autoAnomalies;
     teleopScenario = currentRegressionTest.teleopScenario;
     teleAnomalies = currentRegressionTest.teleAnomalies;
+    testScenario = currentRegressionTest.testScenario;
+    testAnomalies = currentRegressionTest.testAnomalies;
     currentAlliance = currentRegressionTest.alliance;
     autoEvents = buildAutoScenario();
     teleopEvents = buildTeleopScenario();
@@ -1096,8 +1097,8 @@ public class Simulator {
     return autoScenario;
   }
 
-  public static TestName getTesterScenario() {
-    return testerScenario;
+  public static TestName getTestScenario() {
+    return testScenario;
   }
 
   private void configureControllerTestBindings() {

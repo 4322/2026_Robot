@@ -131,6 +131,7 @@ public class AutonomousSelector {
 
   public SequentialCommandGroup get() {
     if (Constants.currentMode == Mode.SIM) {
+      if (Simulator.getAutoScenario() == null) {}
       for (Auto nextAuto : autos) {
         if (nextAuto.name == Simulator.getAutoScenario()) {
           Logger.recordOutput("AutoName", Simulator.getAutoScenario());

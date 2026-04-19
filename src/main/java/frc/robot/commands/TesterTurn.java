@@ -17,10 +17,6 @@ public class TesterTurn extends Command {
   private Color currentBLColorStatus = new Color(0, 0, 0);
   private Color currentBRColorStatus = new Color(0, 0, 0);
   private String test;
-  private String frontLeftKey = "Tester/Drive/Turn/FL Turn Color Status";
-  private String frontRightKey = "Tester/Drive/Turn/FR Turn Color Status";
-  private String backLeftKey = "Tester/Drive/Turn/BL Turn Color Status";
-  private String backRightKey = "Tester/Drive/Turn/BR Turn Color Status";
   private String turnConnectionMessage = " Turn Not Connected";
 
   // If Not working = color
@@ -36,10 +32,14 @@ public class TesterTurn extends Command {
 
   @Override
   public void initialize() {
-    SmartDashboard.putString(frontLeftKey, Constants.NetworkTables.purple.toHexString());
-    SmartDashboard.putString(frontRightKey, Constants.NetworkTables.purple.toHexString());
-    SmartDashboard.putString(backLeftKey, Constants.NetworkTables.purple.toHexString());
-    SmartDashboard.putString(backRightKey, Constants.NetworkTables.purple.toHexString());
+    SmartDashboard.putString(
+        Constants.Tester.TurnKeyFL, Constants.NetworkTables.purple.toHexString());
+    SmartDashboard.putString(
+        Constants.Tester.TurnKeyFR, Constants.NetworkTables.purple.toHexString());
+    SmartDashboard.putString(
+        Constants.Tester.TurnKeyBL, Constants.NetworkTables.purple.toHexString());
+    SmartDashboard.putString(
+        Constants.Tester.TurnKeyBR, Constants.NetworkTables.purple.toHexString());
     this.currentFLColorStatus = Constants.NetworkTables.purple;
     this.currentFRColorStatus = Constants.NetworkTables.purple;
     this.currentBLColorStatus = Constants.NetworkTables.purple;
@@ -106,30 +106,34 @@ public class TesterTurn extends Command {
     }
 
     SmartDashboard.putString(
-        "Tester/Drive/Turn/Front Turn Left Status",
+        Constants.Tester.TurnKeyFL,
         SmartDashboard.getString("Tester/Drive/Turn/Front Turn Left Status", "")
             + test
             + this.currentFLStatus);
     SmartDashboard.putString(
-        "Tester/Drive/Turn/Front Turn Right Status",
+        Constants.Tester.TurnKeyFR,
         SmartDashboard.getString("Tester/Drive/Turn/Front Turn Right Status", "")
             + test
             + this.currentFRStatus);
     SmartDashboard.putString(
-        "Tester/Drive/Turn/Back Turn Left Status",
+        Constants.Tester.TurnKeyBL,
         SmartDashboard.getString("Tester/Drive/Turn/Back Turn Left Status", "")
             + test
             + this.currentBLStatus);
     SmartDashboard.putString(
-        "Tester/Drive/Turn/Back Turn Right Status",
+        Constants.Tester.TurnKeyBR,
         SmartDashboard.getString("Tester/Drive/Turn/Back Turn Right Status", "")
             + test
             + this.currentBRStatus);
 
-    SmartDashboard.putString(frontLeftKey, this.currentFLColorStatus.toHexString());
-    SmartDashboard.putString(frontRightKey, this.currentFRColorStatus.toHexString());
-    SmartDashboard.putString(backLeftKey, this.currentBLColorStatus.toHexString());
-    SmartDashboard.putString(backRightKey, this.currentBRColorStatus.toHexString());
+    SmartDashboard.putString(
+        Constants.Tester.TurnColorKeyFL, this.currentFLColorStatus.toHexString());
+    SmartDashboard.putString(
+        Constants.Tester.TurnColorKeyFR, this.currentFRColorStatus.toHexString());
+    SmartDashboard.putString(
+        Constants.Tester.TurnColorKeyBL, this.currentBLColorStatus.toHexString());
+    SmartDashboard.putString(
+        Constants.Tester.TurnColorKeyBR, this.currentBRColorStatus.toHexString());
   }
 
   @Override

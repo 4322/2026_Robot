@@ -73,12 +73,12 @@ public class TesterSelector {
   public SequentialCommandGroup get() {
     if (Constants.currentMode == Mode.SIM) {
       for (Test nextTest : test) {
-        if (nextTest.name == Simulator.getTesterScenario()) {
-          Logger.recordOutput("TesterName", Simulator.getTesterScenario());
+        if (nextTest.name == Simulator.getTestScenario()) {
+          Logger.recordOutput("TesterName", Simulator.getTestScenario());
           return nextTest.command;
         }
       }
-      System.out.println("Simulated test " + Simulator.getTesterScenario() + " not found");
+      System.out.println("Simulated test " + Simulator.getTestScenario() + " not found");
       System.exit(1);
     }
     return testerSelector.get();

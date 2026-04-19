@@ -9,9 +9,6 @@ import frc.robot.subsystems.intake.rollers.Rollers;
 public class TesterRollers extends Command {
   private Rollers rollers;
   private String test;
-  private String currentLeaderRollerStatusKey = "Tester/Intake/Rollers/Leader Roller Color Status";
-  private String currentFollowerRollerStatusKey =
-      "Tester/Intake/Rollers/Follower Roller Color Status";
   private Color currentLeaderRollerColorStatus = Constants.NetworkTables.purple;
   private Color currentFollowerRollerColorStatus = Constants.NetworkTables.purple;
   private String rollerLeader = " Roller Leader: ";
@@ -27,9 +24,9 @@ public class TesterRollers extends Command {
     currentLeaderRollerColorStatus = Constants.NetworkTables.purple;
     currentFollowerRollerColorStatus = Constants.NetworkTables.purple;
     SmartDashboard.putString(
-        currentLeaderRollerStatusKey, Constants.NetworkTables.purple.toHexString());
+        Constants.Tester.RollerKeyLeader, Constants.NetworkTables.purple.toHexString());
     SmartDashboard.putString(
-        currentFollowerRollerStatusKey, Constants.NetworkTables.purple.toHexString());
+        Constants.Tester.RollerKeyFollower, Constants.NetworkTables.purple.toHexString());
   }
 
   @Override
@@ -98,16 +95,16 @@ public class TesterRollers extends Command {
     }
 
     SmartDashboard.putString(
-        currentLeaderRollerStatusKey, currentLeaderRollerColorStatus.toHexString());
+        Constants.Tester.RollerColorKeyLeader, currentLeaderRollerColorStatus.toHexString());
     SmartDashboard.putString(
-        currentFollowerRollerStatusKey, currentFollowerRollerColorStatus.toHexString());
+        Constants.Tester.RollerColorKeyFollower, currentFollowerRollerColorStatus.toHexString());
 
     SmartDashboard.putString(
-        currentFollowerRollerStatusKey,
-        SmartDashboard.getString(currentFollowerRollerStatusKey, "") + test + rollerFollower);
+        Constants.Tester.RollerKeyFollower,
+        SmartDashboard.getString(Constants.Tester.RollerKeyFollower, "") + test + rollerFollower);
     SmartDashboard.putString(
-        currentLeaderRollerStatusKey,
-        SmartDashboard.getString(currentLeaderRollerStatusKey, "") + test + rollerLeader);
+        Constants.Tester.RollerKeyLeader,
+        SmartDashboard.getString(Constants.Tester.RollerKeyLeader, "") + test + rollerLeader);
   }
 
   @Override
