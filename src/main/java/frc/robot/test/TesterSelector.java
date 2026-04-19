@@ -17,8 +17,7 @@ import frc.robot.test.RealTests.DriveTest;
 import frc.robot.test.RealTests.FlywheelTest;
 import frc.robot.test.RealTests.RollerTest;
 import java.util.List;
-import java.util.logging.Logger;
-
+import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 public class TesterSelector {
