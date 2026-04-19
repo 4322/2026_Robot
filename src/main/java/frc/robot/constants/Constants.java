@@ -47,7 +47,7 @@ public final class Constants {
   public static SubsystemMode driveMode = SubsystemMode.NORMAL;
   public static final SubsystemMode flywheelMode = SubsystemMode.NORMAL;
   public static final SubsystemMode hoodMode = SubsystemMode.NORMAL;
-  public static final SubsystemMode spindexerMode = SubsystemMode.TUNING;
+  public static final SubsystemMode spindexerMode = SubsystemMode.NORMAL;
   public static final SubsystemMode tunnelMode = SubsystemMode.NORMAL;
   public static SubsystemMode turretMode = SubsystemMode.NORMAL;
   public static final SubsystemMode deployerMode = SubsystemMode.NORMAL;
@@ -123,14 +123,14 @@ public final class Constants {
     public static final double supplyCurrentLowerLimit = 40;
     public static final double supplyCurrentLowerTime = 0.5; // fast start
     public static final double statorCurrentLimit = 120;
-    public static final InvertedValue leaderMotorInvert = InvertedValue.CounterClockwise_Positive;
+    public static final InvertedValue leaderMotorInvert = InvertedValue.Clockwise_Positive;
     public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
-    public static final double kS = 0.34;
-    public static final double kV = 1.47;
-    public static final double kP = 5.0;
+    public static final double kS = 0.29;
+    public static final double kV = 0.9;
+    public static final double kP = 5.0; // TODO
     public static final double kI = 0;
     public static final double kD = 0;
-    public static final double stoppedMechanismRotationsPerSec = 0.1; // TODO
+    public static final double stoppedMechanismRotationsPerSec = 0.1;
 
     public static final double motorToMechanismRatio = 36 / 12.0 * (90 / 35.0); // 10 inch wheel
     // Normally 7 RPS for shooting
