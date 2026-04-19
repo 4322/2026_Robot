@@ -39,11 +39,7 @@ public class Hood {
       case DISABLED -> {
         homed = true;
       }
-      case TUNING -> {
-        if (!homed) {
-          homeHood();
-        }
-      }
+      case TUNING -> {}
       case NORMAL -> {
         if (Constants.currentMode == Constants.Mode.SIM && !homed) {
           homed = true;

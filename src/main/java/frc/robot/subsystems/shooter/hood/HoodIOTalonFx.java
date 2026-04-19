@@ -47,7 +47,12 @@ public class HoodIOTalonFx implements HoodIO {
     config.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
     config.Feedback.SensorToMechanismRatio =
         Constants.Hood.motorToEncoderGearRatio * Constants.Hood.encoderToHoodGearRatio;
-    ;
+    config.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
+    config.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
+    config.SoftwareLimitSwitch.ReverseSoftLimitThreshold =
+        Units.degreesToRotations(Constants.Hood.minPhysicalLimitDeg);
+    config.SoftwareLimitSwitch.ForwardSoftLimitThreshold =
+        Units.degreesToRotations(Constants.Hood.maxPhysicalLimitDeg);
 
     config.Slot0.kS = Constants.Hood.kS;
     config.Slot0.kV = Constants.Hood.kV;
@@ -97,7 +102,8 @@ public class HoodIOTalonFx implements HoodIO {
 
   @Override
   public void setVoltage(double voltage) {
-    hoodMotor.setControl(new VoltageOut(voltage).withEnableFOC(true));
+    hoodMotor.setControl(
+        new VoltageOut(voltage).withEnableFOC(true).withIgnoreSoftwareLimits(true));
   }
 
   @Override

@@ -46,8 +46,8 @@ public final class Constants {
 
   public static SubsystemMode driveMode = SubsystemMode.NORMAL;
   public static final SubsystemMode flywheelMode = SubsystemMode.NORMAL;
-  public static final SubsystemMode hoodMode = SubsystemMode.NORMAL;
-  public static final SubsystemMode spindexerMode = SubsystemMode.NORMAL;
+  public static final SubsystemMode hoodMode = SubsystemMode.TUNING;
+  public static final SubsystemMode spindexerMode = SubsystemMode.TUNING;
   public static final SubsystemMode tunnelMode = SubsystemMode.NORMAL;
   public static SubsystemMode turretMode = SubsystemMode.NORMAL;
   public static final SubsystemMode deployerMode = SubsystemMode.NORMAL;
@@ -244,17 +244,19 @@ public final class Constants {
     public static final int motorId = 7;
     public static final int statorCurrentLimit = 60;
     public static final int supplyCurrentLimit = 5;
-    public static final InvertedValue motorInvert = InvertedValue.CounterClockwise_Positive;
+    public static final InvertedValue motorInvert = InvertedValue.Clockwise_Positive;
     public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
     public static final double encoderToHoodGearRatio = 164 / 11.0;
     public static final double motorToEncoderGearRatio = 5.0;
     public static final double safeAngleDeg = 0;
-    public static final double homingVoltage = -2.0;
+    public static final double homingVoltage = -1.5;
     public static final double homingVelocityThresholdRPS = 0.1;
     public static final double minHomingSec = 0.150;
     public static final double smallToleranceDeg = 0.4;
     public static final double largeToleranceDeg = 2.0;
     public static final int idleTimeout = 0;
+    public static final double minPhysicalLimitDeg = 0.0;
+    public static final double maxPhysicalLimitDeg = 37.0;
 
     public static final double kV = 0;
     public static final double kP = 1.0;
@@ -263,10 +265,6 @@ public final class Constants {
     public static final double kS = 0;
     public static final double motionMagicCruiseVelocity = 0.1;
     public static final double motionMagicAcceleration = 0.4;
-
-    public static final int homePulseWidth = 610; // min 500
-    public static final double lowCalibrationDeg = 10;
-    public static final double highCalibrationDeg = 38;
   }
 
   public static class Control {
