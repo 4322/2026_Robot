@@ -3,11 +3,9 @@ package frc.robot.subsystems.intake.deployer;
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.StatusSignal;
-import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
-import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.ParentDevice;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
@@ -25,13 +23,10 @@ import frc.robot.constants.Constants;
 
 public class DeployerIOTalonFX implements DeployerIO {
   private TalonFX deployerMotor;
-  private CANcoder canCoder;
   private TalonFXConfiguration motorConfigs = new TalonFXConfiguration();
-  private CANcoderConfiguration canCoderConfigs = new CANcoderConfiguration();
   public double requestedPosDeg;
 
   private final StatusSignal<Angle> position;
-  private final StatusSignal<Angle> absolutePosition;
   private final StatusSignal<AngularVelocity> velocity;
   private final StatusSignal<Voltage> appliedVolts;
   private final StatusSignal<Current> supplyCurrent;
@@ -40,16 +35,11 @@ public class DeployerIOTalonFX implements DeployerIO {
 
   private final Debouncer motorConnectedDebounce =
       new Debouncer(0.5, Debouncer.DebounceType.kFalling);
-  private final Debouncer encoderConnectedDebounce =
-      new Debouncer(0.5, Debouncer.DebounceType.kFalling);
 
   public DeployerIOTalonFX() {
     deployerMotor = new TalonFX(Constants.Deployer.motorId, Constants.CANivore.CANBus);
-    canCoder = new CANcoder(Constants.Deployer.CANCoderID, Constants.CANivore.CANBus);
 
-    motorConfigs.Feedback.FeedbackRemoteSensorID = canCoder.getDeviceID();
 
-    // encoder is not absolute, only start in retracted position and can't use FusedCandoer!
     motorConfigs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
     motorConfigs.Feedback.SensorToMechanismRatio =
         Constants.Deployer.sensorToMechanismRatio * Constants.Deployer.RotorToSensorRatio;
@@ -82,20 +72,6 @@ public class DeployerIOTalonFX implements DeployerIO {
     motorConfigs.HardwareLimitSwitch.ReverseLimitEnable = false;
     motorConfigs.HardwareLimitSwitch.ForwardLimitEnable = false;
 
-    canCoderConfigs.MagnetSensor.MagnetOffset = -Constants.Deployer.SesnorOffsetRotations;
-    canCoderConfigs.MagnetSensor.SensorDirection = Constants.Deployer.sensorDirection;
-    canCoderConfigs.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 1; // range 0 to 1.0
-
-    // Must configure CANcoder before TalonFX since TalonFX is using CANcoder as feedback device
-    StatusCode CANcoderStatus = canCoder.getConfigurator().apply(canCoderConfigs);
-    if (CANcoderStatus != StatusCode.OK) {
-      DriverStation.reportError(
-          "Talon "
-              + canCoder.getDeviceID()
-              + " error (CANCoder): "
-              + CANcoderStatus.getDescription(),
-          false);
-    }
     StatusCode deployerConfigStatus = deployerMotor.getConfigurator().apply(motorConfigs);
     if (deployerConfigStatus != StatusCode.OK) {
       DriverStation.reportError(
@@ -106,17 +82,11 @@ public class DeployerIOTalonFX implements DeployerIO {
           false);
     }
 
-    try {
-      // wait for encoder position to be received
-      Thread.sleep(100);
-    } catch (InterruptedException e) {
-    }
+   
     deployerMotor.setPosition(
-        canCoder.getAbsolutePosition().getValueAsDouble()
-            / Constants.Deployer.sensorToMechanismRatio);
+        deployerMotor.getPosition().getValueAsDouble() / Constants.Deployer.sensorToMechanismRatio);
 
     position = deployerMotor.getPosition();
-    absolutePosition = canCoder.getAbsolutePosition();
     velocity = deployerMotor.getVelocity();
     appliedVolts = deployerMotor.getMotorVoltage();
     statorCurrent = deployerMotor.getStatorCurrent();
@@ -125,14 +95,7 @@ public class DeployerIOTalonFX implements DeployerIO {
 
     // Configure periodic frames
     BaseStatusSignal.setUpdateFrequencyForAll(
-        50.0,
-        position,
-        absolutePosition,
-        velocity,
-        appliedVolts,
-        statorCurrent,
-        supplyCurrent,
-        temp);
+        50.0, position, velocity, appliedVolts, statorCurrent, supplyCurrent, temp);
     ParentDevice.optimizeBusUtilizationForAll(deployerMotor);
   }
 
@@ -143,8 +106,6 @@ public class DeployerIOTalonFX implements DeployerIO {
         BaseStatusSignal.refreshAll(
             position, velocity, appliedVolts, statorCurrent, supplyCurrent, temp);
 
-    var encoderStatus = BaseStatusSignal.refreshAll(absolutePosition);
-
     inputs.motorConnected = motorConnectedDebounce.calculate(motorStatus.isOK());
     inputs.angleDeg = Units.rotationsToDegrees(position.getValueAsDouble());
     inputs.motorDegreesPerSec = Units.rotationsToDegrees(velocity.getValueAsDouble());
@@ -153,8 +114,6 @@ public class DeployerIOTalonFX implements DeployerIO {
     inputs.motorTempCelcius = temp.getValueAsDouble();
     inputs.appliedVolts = appliedVolts.getValueAsDouble();
 
-    inputs.encoderConnected = encoderConnectedDebounce.calculate(encoderStatus.isOK());
-    inputs.encoderRotations = absolutePosition.getValueAsDouble();
   }
 
   @Override
