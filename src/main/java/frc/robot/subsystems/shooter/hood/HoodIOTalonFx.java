@@ -8,6 +8,7 @@ import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
+import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.util.Units;
@@ -53,8 +54,10 @@ public class HoodIOTalonFx implements HoodIO {
         Units.degreesToRotations(Constants.Hood.minPhysicalLimitDeg);
     config.SoftwareLimitSwitch.ForwardSoftLimitThreshold =
         Units.degreesToRotations(Constants.Hood.maxPhysicalLimitDeg);
+    config.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
+    config.Slot0.GravityArmPositionOffset = 0;
 
-    config.Slot0.kS = Constants.Hood.kS;
+    config.Slot0.kG = Constants.Hood.kG;
     config.Slot0.kV = Constants.Hood.kV;
     config.Slot0.kP = Constants.Hood.kP;
     config.Slot0.kI = Constants.Hood.kI;

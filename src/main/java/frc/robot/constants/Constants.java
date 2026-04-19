@@ -46,7 +46,7 @@ public final class Constants {
 
   public static SubsystemMode driveMode = SubsystemMode.NORMAL;
   public static final SubsystemMode flywheelMode = SubsystemMode.NORMAL;
-  public static final SubsystemMode hoodMode = SubsystemMode.TUNING;
+  public static final SubsystemMode hoodMode = SubsystemMode.NORMAL;
   public static final SubsystemMode spindexerMode = SubsystemMode.TUNING;
   public static final SubsystemMode tunnelMode = SubsystemMode.NORMAL;
   public static SubsystemMode turretMode = SubsystemMode.NORMAL;
@@ -243,28 +243,29 @@ public final class Constants {
   public static class Hood {
     public static final int motorId = 7;
     public static final int statorCurrentLimit = 60;
-    public static final int supplyCurrentLimit = 5;
+    public static final int supplyCurrentLimit = 15;
     public static final InvertedValue motorInvert = InvertedValue.Clockwise_Positive;
     public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
     public static final double encoderToHoodGearRatio = 164 / 11.0;
     public static final double motorToEncoderGearRatio = 5.0;
     public static final double safeAngleDeg = 0;
     public static final double homingVoltage = -1.5;
-    public static final double homingVelocityThresholdRPS = 0.1;
+    public static final double homingVelocityThresholdRPS = 0.01;
     public static final double minHomingSec = 0.150;
     public static final double smallToleranceDeg = 0.4;
     public static final double largeToleranceDeg = 2.0;
     public static final int idleTimeout = 0;
     public static final double minPhysicalLimitDeg = 0.0;
-    public static final double maxPhysicalLimitDeg = 37.0;
+    public static final double maxPhysicalLimitDeg =
+        37.0; // physical max 37.4 - don't overrun the stop
 
     public static final double kV = 0;
-    public static final double kP = 1.0;
-    public static final double kD = 0;
+    public static final double kP = 500.0;
+    public static final double kD = 5.0;
     public static final double kI = 0;
-    public static final double kS = 0;
-    public static final double motionMagicCruiseVelocity = 0.1;
-    public static final double motionMagicAcceleration = 0.4;
+    public static final double kG = 0.24;
+    public static final double motionMagicCruiseVelocity = 1.3;
+    public static final double motionMagicAcceleration = 5.0;
   }
 
   public static class Control {
