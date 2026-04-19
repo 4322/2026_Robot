@@ -309,7 +309,7 @@ public class Simulator {
       case TRENCHES -> List.of(
           new RegressionTest("Trenches", TeleopScenario.TRENCHES, Alliance.Blue),
           new RegressionTest("Trenches", TeleopScenario.TRENCHES, Alliance.Red));
-      case TEST -> List.of(new RegressionTest("Test Drive", TestName.DRIVE_TEST, Alliance.Blue));
+      case TEST -> List.of(new RegressionTest("Tester", TestName.DRIVE_TEST, Alliance.Blue));
 
       default -> List.of();
     };
@@ -767,7 +767,13 @@ public class Simulator {
     int eventNum = 1;
 
     return switch (testScenario) {
-      default -> List.of(new SimEvent(t += 100, "End", EventType.END_OF_SCENARIO));
+      default -> List.of(
+          new SimEvent(
+              t += 1.0,
+              "Start pose",
+              EventType.SET_POSE,
+              new FieldPose2d(12.0, 4.0, Rotation2d.k180deg)),
+          new SimEvent(t += 100, "End", EventType.END_OF_SCENARIO));
     };
   }
 
