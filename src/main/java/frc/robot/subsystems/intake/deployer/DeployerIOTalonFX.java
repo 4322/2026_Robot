@@ -39,7 +39,6 @@ public class DeployerIOTalonFX implements DeployerIO {
   public DeployerIOTalonFX() {
     deployerMotor = new TalonFX(Constants.Deployer.motorId, Constants.CANivore.CANBus);
 
-
     motorConfigs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
     motorConfigs.Feedback.SensorToMechanismRatio =
         Constants.Deployer.sensorToMechanismRatio * Constants.Deployer.RotorToSensorRatio;
@@ -82,7 +81,6 @@ public class DeployerIOTalonFX implements DeployerIO {
           false);
     }
 
-   
     deployerMotor.setPosition(
         deployerMotor.getPosition().getValueAsDouble() / Constants.Deployer.sensorToMechanismRatio);
 
@@ -113,7 +111,6 @@ public class DeployerIOTalonFX implements DeployerIO {
     inputs.statorCurrentAmps = statorCurrent.getValueAsDouble();
     inputs.motorTempCelcius = temp.getValueAsDouble();
     inputs.appliedVolts = appliedVolts.getValueAsDouble();
-
   }
 
   @Override
