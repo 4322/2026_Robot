@@ -37,18 +37,10 @@ public class AutonomousSelector {
 
   public enum AutoName {
     DO_NOTHING,
-    C_DEPOT_OUTPOST,
-    R_FULL_SWEEP_SHOOT,
-    R_HALF_SWEEP_SHOOT,
-    R_DISRUPT_SWEEP_SHOOT,
-    R_HALF_SUPER_SWEEP_SHOOT,
-    L_HALF_SWEEP_SHOOT,
 
     R_2_SWEEP,
     L_2_SWEEP,
-    R_SWEEP_BUMP,
-    L_SWEEP_BUMP,
-    R_ROUTPOST,
+    
     R_2056,
     L_2056,
 
