@@ -57,7 +57,6 @@ public final class Constants {
   public static final SubsystemMode visionObjectDetection = SubsystemMode.DISABLED;
   public static final SubsystemMode firingManagerMode = SubsystemMode.NORMAL;
   public static final boolean turretLocked = false;
-  public static boolean shootOnTheMoveEnabled = false;
   public static final boolean frontRightCameraEnable = true;
   public static final boolean frontLeftCameraEnable = true;
   public static final boolean backRightCameraEnable = true;
@@ -72,9 +71,6 @@ public final class Constants {
   public static final double passingDoubleToleranceTime = 0.25;
 
   { // set dependent operational modes
-    if (firingManagerMode == SubsystemMode.TUNING) {
-      shootOnTheMoveEnabled = false;
-    }
     if (turretLocked) {
       turretMode = SubsystemMode.DISABLED;
     }
