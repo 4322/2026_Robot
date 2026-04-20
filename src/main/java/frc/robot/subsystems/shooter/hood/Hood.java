@@ -25,7 +25,6 @@ public class Hood {
 
   public Hood(HoodIO io) {
     this.io = io;
-    io.setAngle(0); // avoid initial pop-up of servo when powered on
   }
 
   public void inputsPeriodic() {
