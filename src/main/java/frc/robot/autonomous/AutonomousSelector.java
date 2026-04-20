@@ -20,6 +20,8 @@ import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.shooter.hood.Hood;
 import frc.robot.subsystems.shooter.turret.Turret;
 import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetection;
+import frc.robot.util.LoggedTunableNumber;
+
 import java.util.List;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
@@ -28,6 +30,11 @@ public class AutonomousSelector {
 
   private LoggedDashboardChooser<SequentialCommandGroup> autonomousSelector =
       new LoggedDashboardChooser<SequentialCommandGroup>("Autonomous");
+  
+  private LoggedDashboardChooser<AutoStartPosition> startPositionSelector =
+      new LoggedDashboardChooser<AutoStartPosition>("Auto Start Position");
+  
+  private static LoggedTunableNumber autoStartDelay = new LoggedTunableNumber("Auto Start Delay");
 
   public enum AutoName {
     DO_NOTHING,
@@ -54,6 +61,11 @@ public class AutonomousSelector {
     DRIVE_SYS_ID_QUASISTATIC_REVERSE,
     DRIVE_SYS_ID_DYNAMIC_FORWARD,
     DRIVE_SYS_ID_DYNAMIC_REVERSE
+  }
+
+  public enum AutoStartPosition {
+    INSIDE_TRENCH,
+    OUTSIDE_TRENCH
   }
 
   private class Auto {
@@ -127,6 +139,9 @@ public class AutonomousSelector {
         autonomousSelector.addOption(nextAuto.name.toString(), nextAuto.command);
       }
     }
+
+    startPositionSelector.addDefaultOption("Inside Trench", AutoStartPosition.INSIDE_TRENCH);
+    startPositionSelector.addOption("Outside Trench", AutoStartPosition.OUTSIDE_TRENCH);
   }
 
   public SequentialCommandGroup get() {
