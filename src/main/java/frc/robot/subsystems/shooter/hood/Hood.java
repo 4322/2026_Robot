@@ -69,7 +69,7 @@ public class Hood {
       if (homingTimer.hasElapsed(Constants.Hood.minHomingSec)
           && Math.abs(inputs.hoodRPS) <= Constants.Hood.homingVelocityThresholdRPS) {
         io.setHomed();
-        setGoal(0);
+        setGoal(Constants.Hood.safeAngleDeg);
         homed = true;
         homingTimer.stop();
         homingTimer.reset();
