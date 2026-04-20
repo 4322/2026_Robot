@@ -3,19 +3,16 @@
   "robotLength": 0.811,
   "holonomicMode": true,
   "pathFolders": [
+    ".Unused_LT",
+    ".Unused_R_Half_SuperSweep",
+    ".Unused_R_NeutralR_Full",
     "C_Depot",
-    "C_DepotOutpost",
-    "LT",
     "R_2056",
-    "New New Folder",
     "R_2Sweep",
-    "R_Half_SuperSweep",
-    "R_NeutralGeneral",
-    "R_NeutralRMid",
-    "R_NeutralR_Disrupt",
-    "R_NeutralR_Full",
-    "R_NeutralR_Midline",
-    "R_ROutpost"
+    ".Unused_R_NeutralGeneral",
+    ".Unused_R_NeutralRMid",
+    ".Unused_R_NeutralR_Disrupt",
+    ".Unused_R_NeutralR_Midline"
   ],
   "autoFolders": [
     "C",

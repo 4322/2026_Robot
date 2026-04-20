@@ -7,13 +7,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "C_Start_To_Depot"
+            "pathName": null
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "C_Depot_To_Outpost"
+            "pathName": null
           }
         }
       ]

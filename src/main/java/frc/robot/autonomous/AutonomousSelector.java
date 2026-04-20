@@ -21,7 +21,6 @@ import frc.robot.subsystems.shooter.hood.Hood;
 import frc.robot.subsystems.shooter.turret.Turret;
 import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetection;
 import frc.robot.util.LoggedTunableNumber;
-
 import java.util.List;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
@@ -30,10 +29,10 @@ public class AutonomousSelector {
 
   private LoggedDashboardChooser<SequentialCommandGroup> autonomousSelector =
       new LoggedDashboardChooser<SequentialCommandGroup>("Autonomous");
-  
+
   private LoggedDashboardChooser<AutoStartPosition> startPositionSelector =
       new LoggedDashboardChooser<AutoStartPosition>("Auto Start Position");
-  
+
   private static LoggedTunableNumber autoStartDelay = new LoggedTunableNumber("Auto Start Delay");
 
   public enum AutoName {
@@ -92,10 +91,18 @@ public class AutonomousSelector {
     autos =
         List.of(
             new Auto(AutoName.DO_NOTHING, new DoNothing(hood)),
-            new Auto(AutoName.R_2_SWEEP, new R2Sweep(drive, intake, shooter)),
-            new Auto(AutoName.L_2_SWEEP, new L2Sweep(drive, intake, shooter)),
-            new Auto(AutoName.R_2056, new R2056(drive, intake, shooter)),
-            new Auto(AutoName.L_2056, new L2056(drive, intake, shooter)),
+            new Auto(
+                AutoName.R_2_SWEEP,
+                new R2Sweep(drive, intake, shooter, startPositionSelector, autoStartDelay)),
+            new Auto(
+                AutoName.L_2_SWEEP,
+                new L2Sweep(drive, intake, shooter, startPositionSelector, autoStartDelay)),
+            new Auto(
+                AutoName.R_2056,
+                new R2056(drive, intake, shooter, startPositionSelector, autoStartDelay)),
+            new Auto(
+                AutoName.L_2056,
+                new L2056(drive, intake, shooter, startPositionSelector, autoStartDelay)),
             new Auto(AutoName.C_START_TO_DEPOT, new CenterStartToDepot(drive, intake, shooter)),
             new Auto(
                 AutoName.DRIVE_WHEEL_RADIUS_CHARACTERIZATION,

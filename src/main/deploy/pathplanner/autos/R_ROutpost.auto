@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "R_ROutpost_A"
+            "pathName": null
           }
         },
         {
@@ -19,7 +19,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "R_ROutpost_B"
+            "pathName": null
           }
         }
       ]

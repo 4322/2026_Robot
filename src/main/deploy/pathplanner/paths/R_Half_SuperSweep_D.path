@@ -45,7 +45,7 @@
     "rotation": -90.0
   },
   "reversed": false,
-  "folder": "R_Half_SuperSweep",
+  "folder": ".Unused_R_Half_SuperSweep",
   "idealStartingState": {
     "velocity": 1.0,
     "rotation": -90.0

@@ -40,50 +40,7 @@ public class Robot extends LoggedRobot {
 
   public static Alliance alliance = DriverStation.Alliance.Blue;
 
-  public static PathPlannerPath R_NeutralR_Intake_Mid_Flip;
-  public static PathPlannerPath R_NeutralRMid_To_ShootR;
-  public static PathPlannerPath R_NeutralR_Intake_To_Mid;
-  public static PathPlannerPath R_Neutral_Mid_To_ShootR;
-  public static PathPlannerPath R_NeutralR_Intake_Full_Flip;
-  public static PathPlannerPath R_NeutralR_Intake_Full;
-  public static PathPlannerPath R_StartR_To_NeutralR_Intake;
-  public static PathPlannerPath R_NeutralR_Intake_Full_Midline;
-  public static PathPlannerPath R_NeutralR_Intake_Full_Midline_Flip;
-  public static PathPlannerPath R_StartR_To_NeutralR_Intake_Midline;
-  public static PathPlannerPath R_StartR_To_NeutralR_Intake_Disrupt;
-  public static PathPlannerPath R_NeutralR_Intake_Full_Disrupt;
-  public static PathPlannerPath R_NeutralR_Intake_Full_Disrupt_Flip;
-
-  public static PathPlannerPath L_NeutralL_Intake_Mid_Flip;
-  public static PathPlannerPath L_NeutralLMid_To_ShootL;
-  public static PathPlannerPath L_NeutralL_Intake_To_Mid;
-  public static PathPlannerPath L_Neutral_Mid_To_ShootL;
-  public static PathPlannerPath L_NeutralL_Intake_Full_Flip;
-  public static PathPlannerPath L_NeutralL_Intake_Full;
-  public static PathPlannerPath L_StartL_To_NeutralL_Intake;
-  public static PathPlannerPath L_NeutralL_Intake_Full_Midline;
-  public static PathPlannerPath L_NeutralL_Intake_Full_Midline_Flip;
-  public static PathPlannerPath L_StartL_To_NeutralL_Intake_Midline;
-  public static PathPlannerPath L_StartL_To_NeutralL_Intake_Disrupt;
-  public static PathPlannerPath L_NeutralL_Intake_Full_Disrupt;
-  public static PathPlannerPath L_NeutralL_Intake_Full_Disrupt_Flip;
-
-  public static PathPlannerPath L_NeutralLMid_To_ShootL_LT;
-  public static PathPlannerPath L_Neutral_Mid_To_ShootL_LT;
-
-  public static PathPlannerPath R_NeutralRMid_To_ShootR_LT;
-  public static PathPlannerPath R_Neutral_Mid_To_ShootR_LT;
-
-  public static PathPlannerPath C_Depot_To_Outpost;
-  public static PathPlannerPath C_Start_To_Depot;
-
   public static PathPlannerPath C_To_Depot;
-
-  public static PathPlannerPath R_Half_SuperSweep_B;
-  public static PathPlannerPath R_Half_SuperSweep_C;
-  public static PathPlannerPath R_Half_SuperSweep_D;
-  public static PathPlannerPath R_Half_SuperSweep_E;
-  public static PathPlannerPath R_Half_SuperSweep_F;
 
   public static PathPlannerPath R_2SWEEP_A;
   public static PathPlannerPath R_2SWEEP_B;
@@ -92,6 +49,8 @@ public class Robot extends LoggedRobot {
   public static PathPlannerPath R_2SWEEP_F;
   public static PathPlannerPath R_2SWEEP_H;
 
+  public static PathPlannerPath R_2SWEEP_A_OUT;
+
   public static PathPlannerPath L_2SWEEP_A;
   public static PathPlannerPath L_2SWEEP_B;
   public static PathPlannerPath L_2SWEEP_CG;
@@ -99,8 +58,7 @@ public class Robot extends LoggedRobot {
   public static PathPlannerPath L_2SWEEP_F;
   public static PathPlannerPath L_2SWEEP_H;
 
-  public static PathPlannerPath R_ROutpost_A;
-  public static PathPlannerPath R_ROutpost_B;
+  public static PathPlannerPath L_2SWEEP_A_OUT;
 
   public static PathPlannerPath R_2056_A;
   public static PathPlannerPath R_2056_B;
@@ -108,11 +66,15 @@ public class Robot extends LoggedRobot {
   public static PathPlannerPath R_2056_D;
   public static PathPlannerPath R_2056_G;
 
+  public static PathPlannerPath R_2056_A_OUT;
+
   public static PathPlannerPath L_2056_A;
   public static PathPlannerPath L_2056_B;
   public static PathPlannerPath L_2056_C;
   public static PathPlannerPath L_2056_D;
   public static PathPlannerPath L_2056_G;
+
+  public static PathPlannerPath L_2056_A_OUT;
 
   public Robot() {
     Logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME); // Set a metadata value
@@ -240,39 +202,6 @@ public class Robot extends LoggedRobot {
     Logger.disableConsoleCapture();
 
     try {
-      C_Depot_To_Outpost = PathPlannerPath.fromPathFile("C_Depot_To_Outpost");
-      C_Start_To_Depot = PathPlannerPath.fromPathFile("C_Start_To_Depot");
-
-      R_NeutralR_Intake_Mid_Flip = PathPlannerPath.fromPathFile("R_NeutralR_Intake_Mid_Flip");
-      R_NeutralRMid_To_ShootR = PathPlannerPath.fromPathFile("R_NeutralRMid_To_ShootR");
-      R_NeutralR_Intake_To_Mid = PathPlannerPath.fromPathFile("R_NeutralR_Intake_To_Mid");
-      R_Neutral_Mid_To_ShootR = PathPlannerPath.fromPathFile("R_Neutral_Mid_To_ShootR");
-      R_NeutralR_Intake_Full_Flip = PathPlannerPath.fromPathFile("R_NeutralR_Intake_Full_Flip");
-      R_NeutralR_Intake_Full = PathPlannerPath.fromPathFile("R_NeutralR_Intake_Full");
-      R_StartR_To_NeutralR_Intake = PathPlannerPath.fromPathFile("R_StartR_To_NeutralR_Intake");
-
-      R_NeutralR_Intake_Full_Midline =
-          PathPlannerPath.fromPathFile("R_NeutralR_Intake_Full_Midline");
-      R_NeutralR_Intake_Full_Midline_Flip =
-          PathPlannerPath.fromPathFile("R_NeutralR_Intake_Full_Midline_Flip");
-      R_StartR_To_NeutralR_Intake_Midline =
-          PathPlannerPath.fromPathFile("R_StartR_To_NeutralR_Intake_Midline");
-      R_StartR_To_NeutralR_Intake_Disrupt =
-          PathPlannerPath.fromPathFile("R_StartR_To_NeutralR_Intake_Disrupt");
-      R_NeutralR_Intake_Full_Disrupt =
-          PathPlannerPath.fromPathFile("R_NeutralR_Intake_Full_Disrupt");
-      R_NeutralR_Intake_Full_Disrupt_Flip =
-          PathPlannerPath.fromPathFile("R_NeutralR_Intake_Full_Disrupt_Flip");
-
-      R_NeutralRMid_To_ShootR_LT = PathPlannerPath.fromPathFile("R_NeutralRMid_To_ShootR_LT");
-      R_Neutral_Mid_To_ShootR_LT = PathPlannerPath.fromPathFile("R_Neutral_Mid_To_ShootR_LT");
-
-      R_Half_SuperSweep_B = PathPlannerPath.fromPathFile("R_Half_SuperSweep_B");
-      R_Half_SuperSweep_C = PathPlannerPath.fromPathFile("R_Half_SuperSweep_C");
-      R_Half_SuperSweep_D = PathPlannerPath.fromPathFile("R_Half_SuperSweep_D");
-      R_Half_SuperSweep_E = PathPlannerPath.fromPathFile("R_Half_SuperSweep_E");
-      R_Half_SuperSweep_F = PathPlannerPath.fromPathFile("R_Half_SuperSweep_F");
-
       R_2SWEEP_A = PathPlannerPath.fromPathFile("R_2Sweep_A");
       R_2SWEEP_B = PathPlannerPath.fromPathFile("R_2Sweep_B");
       R_2SWEEP_CG = PathPlannerPath.fromPathFile("R_2Sweep_CG");
@@ -280,8 +209,7 @@ public class Robot extends LoggedRobot {
       R_2SWEEP_F = PathPlannerPath.fromPathFile("R_2Sweep_F");
       R_2SWEEP_H = PathPlannerPath.fromPathFile("R_2Sweep_H");
 
-      R_ROutpost_A = PathPlannerPath.fromPathFile("R_ROutpost_A");
-      R_ROutpost_B = PathPlannerPath.fromPathFile("R_ROutpost_B");
+      R_2SWEEP_A_OUT = PathPlannerPath.fromPathFile("R_2Sweep_A_Out");
 
       R_2056_A = PathPlannerPath.fromPathFile("R_2056_A");
       R_2056_B = PathPlannerPath.fromPathFile("R_2056_B");
@@ -289,24 +217,9 @@ public class Robot extends LoggedRobot {
       R_2056_D = PathPlannerPath.fromPathFile("R_2056_D");
       R_2056_G = PathPlannerPath.fromPathFile("R_2056_G");
 
+      R_2056_A_OUT = PathPlannerPath.fromPathFile("R_2056_A_Out");
+
       C_To_Depot = PathPlannerPath.fromPathFile("Start_To_Depot");
-
-      L_NeutralL_Intake_Mid_Flip = R_NeutralR_Intake_Mid_Flip.mirrorPath();
-      L_NeutralLMid_To_ShootL = R_NeutralRMid_To_ShootR.mirrorPath();
-      L_NeutralL_Intake_To_Mid = R_NeutralR_Intake_To_Mid.mirrorPath();
-      L_Neutral_Mid_To_ShootL = R_Neutral_Mid_To_ShootR.mirrorPath();
-      L_NeutralL_Intake_Full_Flip = R_NeutralR_Intake_Full_Flip.mirrorPath();
-      L_NeutralL_Intake_Full = R_NeutralR_Intake_Full.mirrorPath();
-      L_StartL_To_NeutralL_Intake = R_StartR_To_NeutralR_Intake.mirrorPath();
-      L_NeutralL_Intake_Full_Midline = R_NeutralR_Intake_Full_Midline.mirrorPath();
-      L_NeutralL_Intake_Full_Midline_Flip = R_NeutralR_Intake_Full_Midline_Flip.mirrorPath();
-      L_StartL_To_NeutralL_Intake_Midline = R_StartR_To_NeutralR_Intake_Midline.mirrorPath();
-      L_StartL_To_NeutralL_Intake_Disrupt = R_StartR_To_NeutralR_Intake_Disrupt.mirrorPath();
-      L_NeutralL_Intake_Full_Disrupt = R_NeutralR_Intake_Full_Disrupt.mirrorPath();
-      L_NeutralL_Intake_Full_Disrupt_Flip = R_NeutralR_Intake_Full_Disrupt_Flip.mirrorPath();
-
-      L_NeutralLMid_To_ShootL_LT = R_NeutralRMid_To_ShootR_LT.mirrorPath();
-      L_Neutral_Mid_To_ShootL_LT = R_Neutral_Mid_To_ShootR_LT.mirrorPath();
 
       L_2SWEEP_A = R_2SWEEP_A.mirrorPath();
       L_2SWEEP_B = R_2SWEEP_B.mirrorPath();
@@ -315,11 +228,15 @@ public class Robot extends LoggedRobot {
       L_2SWEEP_F = R_2SWEEP_F.mirrorPath();
       L_2SWEEP_H = R_2SWEEP_H.mirrorPath();
 
+      L_2SWEEP_A_OUT = R_2SWEEP_A_OUT.mirrorPath();
+
       L_2056_A = R_2056_A.mirrorPath();
       L_2056_B = R_2056_B.mirrorPath();
       L_2056_C = R_2056_C.mirrorPath();
       L_2056_D = R_2056_D.mirrorPath();
       L_2056_G = R_2056_G.mirrorPath();
+
+      L_2056_A_OUT = R_2056_A_OUT.mirrorPath();
 
     } catch (Exception e) {
       DriverStation.reportError("Failed to load PathPlanner path - " + e.getMessage(), true);
