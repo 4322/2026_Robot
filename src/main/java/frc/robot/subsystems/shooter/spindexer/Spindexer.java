@@ -46,10 +46,13 @@ public class Spindexer {
             }
           }
           case IDLE -> {
-            if (inputs.leaderMechanismRPS < Constants.Spindexer.stopTreshold) {
+            if (inputs.leaderMechanismRPS < Constants.Spindexer.stopTreshold
+                || requestedSpeed == 0) {
               io.stop();
+              requestedSpeed = 0;
             } else {
-              io.setTargetMechanismRotations(1);
+              requestedSpeed = 0.5;
+              io.setTargetMechanismRotations(requestedSpeed);
             }
           }
           case INDEXING -> {
@@ -71,7 +74,6 @@ public class Spindexer {
   public void requestIdle() {
     if (!unjamOverride) {
       state = SpindexerStates.IDLE;
-      requestedSpeed = 0;
     }
   }
 
