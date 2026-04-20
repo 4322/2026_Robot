@@ -61,7 +61,7 @@ public final class Constants {
   public static final boolean frontRightCameraEnable = true;
   public static final boolean frontLeftCameraEnable = true;
   public static final boolean backRightCameraEnable = true;
-  public static final boolean backLeftCameraEnable = true;
+  public static final boolean backLeftCameraEnable = false;
   public static final boolean tuningWithLoggableNumbers =
       (driveMode == SubsystemMode.TUNING
           || firingManagerMode == SubsystemMode.TUNING
@@ -131,6 +131,7 @@ public final class Constants {
     public static final double kI = 0;
     public static final double kD = 0;
     public static final double stoppedMechanismRotationsPerSec = 0.1;
+    public static final double stopTreshold = 0.75;
 
     public static final double motorToMechanismRatio = 36 / 12.0 * (90 / 35.0); // 10 inch wheel
     // Normally 7 RPS for shooting
@@ -169,7 +170,7 @@ public final class Constants {
     // max RPS for a burst is 75 due to drop in battery voltage
     public static final double kS = 0.32;
     public static final double kV = 0.123;
-    public static final double kP = 0.5;
+    public static final double kP = 0.75;
     public static final double kI = 0;
     public static final double kD = 0;
 
