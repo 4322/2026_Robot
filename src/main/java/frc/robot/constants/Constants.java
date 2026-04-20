@@ -57,7 +57,6 @@ public final class Constants {
   public static final SubsystemMode visionObjectDetection = SubsystemMode.DISABLED;
   public static final SubsystemMode firingManagerMode = SubsystemMode.NORMAL;
   public static final boolean turretLocked = false;
-  public static boolean shootOnTheMoveEnabled = false;
   public static final boolean frontRightCameraEnable = true;
   public static final boolean frontLeftCameraEnable = true;
   public static final boolean backRightCameraEnable = true;
@@ -72,9 +71,6 @@ public final class Constants {
   public static final double passingDoubleToleranceTime = 0.25;
 
   { // set dependent operational modes
-    if (firingManagerMode == SubsystemMode.TUNING) {
-      shootOnTheMoveEnabled = false;
-    }
     if (turretLocked) {
       turretMode = SubsystemMode.DISABLED;
     }
@@ -251,7 +247,7 @@ public final class Constants {
     public static final double motorToEncoderGearRatio = 5.0;
     public static final double safeAngleDeg = 0;
     public static final double homingDegrees =
-        -0.25; // eliminate current draw and squeal when hood is down
+        -0.35; // eliminate current draw and squeal when hood is down
     public static final double homingVoltage = -1.5;
     public static final double homingVelocityThresholdRPS = 0.01;
     public static final double minHomingSec = 0.150;
@@ -448,7 +444,7 @@ public final class Constants {
       // putFiringMapEntryScoring(3.2, new FiringParameters(46.8, 18.0, 1.09, 35, 9));
       // putFiringMapEntryScoring(4.07, new FiringParameters(50.6, 23.1, 1.15, 35, 9));
       // putFiringMapEntryScoring(4.699, new FiringParameters(53.2, 25.8, 1.05, 35, 9));
-      
+
       putFiringMapEntryScoring(1.560, new FiringParameters(46, 7, 1.3, 45, 9));
       putFiringMapEntryScoring(3.427, new FiringParameters(52, 17, 1.25, 45, 9));
       putFiringMapEntryScoring(5.817, new FiringParameters(63, 28, 1.35, 45, 9));
@@ -466,17 +462,17 @@ public final class Constants {
 
       // Passing
       // need to be 112 inches past the blue line to clear the net
-      putFiringMapEntryPassing(3.46, new FiringParameters(38, 30, 1.1, 35, 7));
-      putFiringMapEntryPassing(3.87, new FiringParameters(40, 30, 1.2, 35, 7));
-      putFiringMapEntryPassing(4.38, new FiringParameters(43, 30, 1.05, 35, 7));
-      putFiringMapEntryPassing(4.82, new FiringParameters(46, 30, 1.1, 35, 7));
-      putFiringMapEntryPassing(5.27, new FiringParameters(48.2, 30, 1.12, 35, 7));
-      putFiringMapEntryPassing(5.8, new FiringParameters(50, 30, 1.14, 35, 7));
-      putFiringMapEntryPassing(6.28, new FiringParameters(53, 30, 1.26, 35, 7));
-      putFiringMapEntryPassing(6.90, new FiringParameters(56, 30, 1.32, 35, 7));
-      putFiringMapEntryPassing(7.4, new FiringParameters(59, 37, 1.25, 35, 7));
-      putFiringMapEntryPassing(8.1, new FiringParameters(62, 37, 1.5, 35, 7));
-      putFiringMapEntryPassing(9.1, new FiringParameters(67, 36, 1.52, 35, 7));
+      // putFiringMapEntryPassing(3.46, new FiringParameters(38, 30, 1.1, 35, 7));
+      // putFiringMapEntryPassing(3.87, new FiringParameters(40, 30, 1.2, 35, 7));
+      // putFiringMapEntryPassing(4.38, new FiringParameters(43, 30, 1.05, 35, 7));
+      // putFiringMapEntryPassing(4.82, new FiringParameters(46, 30, 1.1, 35, 7));
+      // putFiringMapEntryPassing(5.27, new FiringParameters(48.2, 30, 1.12, 35, 7));
+      // putFiringMapEntryPassing(5.8, new FiringParameters(50, 30, 1.14, 35, 7));
+      // putFiringMapEntryPassing(6.28, new FiringParameters(53, 30, 1.26, 35, 7));
+      // putFiringMapEntryPassing(6.90, new FiringParameters(56, 30, 1.32, 35, 7));
+      putFiringMapEntryPassing(4.60, new FiringParameters(43, 30, 1.5, 45, 7));
+      putFiringMapEntryPassing(7.349, new FiringParameters(62, 34, 1.4, 45, 7));
+      putFiringMapEntryPassing(10.31, new FiringParameters(80, 38, 1.4, 45, 7));
     }
 
     // can't maintain burst for full field passes due to battery voltage drop

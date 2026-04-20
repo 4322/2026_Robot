@@ -96,7 +96,6 @@ public class Hood {
     } else {
       SmartDashboard.putString("Hood/HoodAtGoal", Constants.NetworkTables.red.toHexString());
     }
-    SmartDashboard.putNumber("Hood/HoodDegrees", inputs.hoodDegrees);
   }
 
   public void requestGoal(double degrees, boolean isScoring) {
