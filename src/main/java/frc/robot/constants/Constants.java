@@ -250,6 +250,8 @@ public final class Constants {
     public static final double encoderToHoodGearRatio = 164 / 11.0;
     public static final double motorToEncoderGearRatio = 5.0;
     public static final double safeAngleDeg = 0;
+    public static final double homingDegrees =
+        -0.25; // eliminate current draw and squeal when hood is down
     public static final double homingVoltage = -1.5;
     public static final double homingVelocityThresholdRPS = 0.01;
     public static final double minHomingSec = 0.150;
@@ -261,8 +263,8 @@ public final class Constants {
         37.0; // physical max 37.4 - don't overrun the stop
 
     public static final double kV = 0;
-    public static final double kP = 500.0;
-    public static final double kD = 5.0;
+    public static final double kP = 3000; // motion magic prevents oscillations
+    public static final double kD = 0;
     public static final double kI = 0;
     public static final double kG = 0.24;
     public static final double motionMagicCruiseVelocity = 1.3;

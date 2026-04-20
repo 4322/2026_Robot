@@ -25,7 +25,6 @@ public class Hood {
 
   public Hood(HoodIO io) {
     this.io = io;
-    io.setAngle(0); // avoid initial pop-up of servo when powered on
   }
 
   public void inputsPeriodic() {
@@ -70,7 +69,7 @@ public class Hood {
       if (homingTimer.hasElapsed(Constants.Hood.minHomingSec)
           && Math.abs(inputs.hoodRPS) <= Constants.Hood.homingVelocityThresholdRPS) {
         io.setHomed();
-        setGoal(0);
+        setGoal(Constants.Hood.safeAngleDeg);
         homed = true;
         homingTimer.stop();
         homingTimer.reset();

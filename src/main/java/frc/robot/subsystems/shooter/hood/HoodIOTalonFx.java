@@ -100,7 +100,7 @@ public class HoodIOTalonFx implements HoodIO {
 
   @Override
   public void setHomed() {
-    hoodMotor.setPosition(0);
+    hoodMotor.setPosition(Units.degreesToRotations(Constants.Hood.homingDegrees));
   }
 
   @Override
