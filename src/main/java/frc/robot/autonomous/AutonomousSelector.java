@@ -103,7 +103,9 @@ public class AutonomousSelector {
             new Auto(
                 AutoName.L_2056,
                 new L2056(drive, intake, shooter, startPositionSelector, autoStartDelay)),
-            new Auto(AutoName.C_START_TO_DEPOT, new CenterStartToDepot(drive, intake, shooter)),
+            new Auto(
+                AutoName.C_START_TO_DEPOT,
+                new CenterStartToDepot(drive, intake, shooter, autoStartDelay)),
             new Auto(
                 AutoName.DRIVE_WHEEL_RADIUS_CHARACTERIZATION,
                 new SequentialCommandGroup(

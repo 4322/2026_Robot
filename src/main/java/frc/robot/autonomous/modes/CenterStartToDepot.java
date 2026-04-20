@@ -16,10 +16,12 @@ import frc.robot.constants.Constants;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.shooter.Shooter;
+import frc.robot.util.LoggedTunableNumber;
 import org.littletonrobotics.junction.Logger;
 
 public class CenterStartToDepot extends SequentialCommandGroup {
-  public CenterStartToDepot(Drive drive, Intake intake, Shooter shooter) {
+  public CenterStartToDepot(
+      Drive drive, Intake intake, Shooter shooter, LoggedTunableNumber autoStartDelay) {
     PathPlannerPath path = Robot.C_To_Depot;
     Pose2d startPoseBlue = path.getStartingHolonomicPose().get();
     Pose2d startPoseRed = path.flipPath().getStartingHolonomicPose().get();
@@ -35,25 +37,24 @@ public class CenterStartToDepot extends SequentialCommandGroup {
                 drive.setPose(startPoseRed);
               }
             }),
+        new WaitCommand(autoStartDelay.get()),
+        IntakeCommands.intake(intake),
+        new WaitUntilCommand(() -> intake.hasExtended()),
         new ParallelCommandGroup(
-            new SequentialCommandGroup(
-                IntakeCommands.intake(intake),
-                new WaitUntilCommand(() -> intake.hasExtended()),
-                new ParallelCommandGroup(
-                        ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake),
-                        IntakeCommands.autoSmoosh(
-                            intake,
-                            Constants.Autonomous.twoSweepSmooshDelayFirstPass,
-                            Constants.Autonomous.twoSweepShootTimeFirstPass))
-                    .withTimeout(5),
-                new WaitCommand(3),
-                new ParallelCommandGroup(
-                    AutoBuilder.followPath(Robot.C_To_Depot),
-                    ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake)),
-                new WaitCommand(3),
+                ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake),
                 IntakeCommands.autoSmoosh(
                     intake,
                     Constants.Autonomous.twoSweepSmooshDelayFirstPass,
-                    Constants.Autonomous.twoSweepShootTimeFirstPass))));
+                    Constants.Autonomous.twoSweepShootTimeFirstPass))
+            .withTimeout(5),
+        new WaitCommand(3),
+        new ParallelCommandGroup(
+            AutoBuilder.followPath(Robot.C_To_Depot),
+            ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake)),
+        new WaitCommand(3),
+        IntakeCommands.autoSmoosh(
+            intake,
+            Constants.Autonomous.twoSweepSmooshDelayFirstPass,
+            Constants.Autonomous.twoSweepShootTimeFirstPass));
   }
 }

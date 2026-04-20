@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Robot;
 import frc.robot.autonomous.AutonomousSelector.AutoStartPosition;
@@ -46,6 +47,7 @@ public class R2056 extends SequentialCommandGroup {
                 drive.setPose(startPoseRed);
               }
             }),
+        new WaitCommand(autoStartDelay.get()),
         IntakeCommands.intake(intake),
         AutoBuilder.followPath(firstPath),
         new ParallelDeadlineGroup(
