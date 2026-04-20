@@ -132,22 +132,7 @@ public class FiringManager {
         "AreaManager/InAllianceZone",
         AreaManager.getZoneOfPosition(turretPosition.getTranslation()) == Zone.ALLIANCE_ZONE);
 
-    // if (Constants.firingManagerMode == Constants.SubsystemMode.TUNING) {
-    //   Logger.recordOutput(
-    //       "FiringManager/requestedTuning/flywheelSpeedRPS", tunableFlywheelSpeedRPS.get());
-    //   Logger.recordOutput("FiringManager/requestedTuning/hoodAngle", tunableHoodAngle.get());
-    //   Logger.recordOutput(
-    //       "FiringManager/requestedTuning/tunnelSpeedRPS", tunableTunnelSpeedRPS.get());
-    //   Logger.recordOutput(
-    //       "FiringManager/requestedTuning/indexerSpeedRPS", tunableIndexerSpeedRPS.get());
-    //   return new FiringSolution(
-    //       tunableFlywheelSpeedRPS.get(),
-    //       tunableHoodAngle.get(),
-    //       adjustForTurretLock(vectorToGoal.getAngle().getDegrees()),
-    //       tunableTunnelSpeedRPS.get(),
-    //       tunableIndexerSpeedRPS.get());
 
-    // } else
     if (Constants.shootOnTheMoveEnabled) {
       return new FiringSolution(
           solutionParameters.getFlywheelRPS(),

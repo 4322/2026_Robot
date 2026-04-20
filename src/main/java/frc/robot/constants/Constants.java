@@ -441,15 +441,17 @@ public final class Constants {
       // Meters is center of turret to 3 inches behind center from hub
 
       // Shooting
-      putFiringMapEntryScoring(1.09, new FiringParameters(46.2, 0.12, 1.2, 35, 9));
-      putFiringMapEntryScoring(1.59, new FiringParameters(40.9, 6.5, 1.0, 35, 9));
-      putFiringMapEntryScoring(2.10, new FiringParameters(40.0, 10.9, 1, 35, 9));
-      putFiringMapEntryScoring(2.7, new FiringParameters(43.1, 16.4, 0.9, 35, 9));
-      putFiringMapEntryScoring(3.2, new FiringParameters(46.8, 18.0, 1.09, 35, 9));
-      putFiringMapEntryScoring(4.07, new FiringParameters(50.6, 23.1, 1.15, 35, 9));
-      putFiringMapEntryScoring(4.699, new FiringParameters(53.2, 25.8, 1.05, 35, 9));
-      putFiringMapEntryScoring(5.137, new FiringParameters(54.9, 26.5, 1.1, 35, 9));
-      putFiringMapEntryScoring(5.817, new FiringParameters(59.67, 25.6, 1.3, 35, 9));
+      // putFiringMapEntryScoring(1.09, new FiringParameters(46.2, 0.12, 1.2, 35, 9));
+      // putFiringMapEntryScoring(1.59, new FiringParameters(40.9, 6.5, 1.0, 35, 9));
+      // putFiringMapEntryScoring(2.10, new FiringParameters(40.0, 10.9, 1, 35, 9));
+      // putFiringMapEntryScoring(2.7, new FiringParameters(43.1, 16.4, 0.9, 35, 9));
+      // putFiringMapEntryScoring(3.2, new FiringParameters(46.8, 18.0, 1.09, 35, 9));
+      // putFiringMapEntryScoring(4.07, new FiringParameters(50.6, 23.1, 1.15, 35, 9));
+      // putFiringMapEntryScoring(4.699, new FiringParameters(53.2, 25.8, 1.05, 35, 9));
+      
+      putFiringMapEntryScoring(1.560, new FiringParameters(46, 7, 1.3, 45, 9));
+      putFiringMapEntryScoring(3.427, new FiringParameters(52, 17, 1.25, 45, 9));
+      putFiringMapEntryScoring(5.817, new FiringParameters(63, 28, 1.35, 45, 9));
 
       /* Tuned shots with fresh kicker wheels
       putFiringMapEntryScoring(1.111, new FiringParameters(45, 3.5, 1, 35, 7));
