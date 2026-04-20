@@ -251,7 +251,7 @@ public final class Constants {
     public static final double motorToEncoderGearRatio = 5.0;
     public static final double safeAngleDeg = 0;
     public static final double homingDegrees =
-        -0.25; // eliminate current draw and squeal when hood is down
+        -0.35; // eliminate current draw and squeal when hood is down
     public static final double homingVoltage = -1.5;
     public static final double homingVelocityThresholdRPS = 0.01;
     public static final double minHomingSec = 0.150;
