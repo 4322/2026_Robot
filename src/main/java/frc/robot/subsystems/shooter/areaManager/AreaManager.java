@@ -46,32 +46,6 @@ public class AreaManager {
     }
   }
 
-  public static boolean isTrench(Translation2d position) {
-    return ((FieldConstants.Blue.trenchLeft.contains(position)
-        || FieldConstants.Blue.trenchRight.contains(position)
-        || FieldConstants.Red.trenchLeft.contains(position)
-        || FieldConstants.Red.trenchRight.contains(position)));
-  }
-
-  public static boolean isHoodDangerZone(Translation2d position) {
-    if (Robot.alliance == Alliance.Blue) {
-      return FieldConstants.Blue.stopShootLeftNeutral.contains(position)
-          || FieldConstants.Blue.stopShootRightNeutral.contains(position)
-          || FieldConstants.Red.stopShootLeftFull.contains(position)
-          || FieldConstants.Red.stopShootRightFull.contains(position);
-    } else {
-      return FieldConstants.Red.stopShootLeftNeutral.contains(position)
-          || FieldConstants.Red.stopShootRightNeutral.contains(position)
-          || FieldConstants.Blue.stopShootLeftFull.contains(position)
-          || FieldConstants.Blue.stopShootRightFull.contains(position);
-    }
-  }
-
-  public static boolean isTowerZone(Translation2d position) {
-    return FieldConstants.Blue.towerZone.contains(position)
-        || FieldConstants.Red.towerZone.contains(position);
-  }
-
   public static Zone getZoneOfPosition(Translation2d position) {
     if (Robot.alliance == Alliance.Blue) {
       if (FieldConstants.Blue.stopShootLeftNeutral.contains(position)) {
