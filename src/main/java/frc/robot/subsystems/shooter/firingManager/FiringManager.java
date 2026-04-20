@@ -15,7 +15,6 @@ import frc.robot.subsystems.shooter.FiringSolution;
 import frc.robot.subsystems.shooter.areaManager.AreaManager;
 import frc.robot.subsystems.shooter.areaManager.AreaManager.Zone;
 import frc.robot.util.GeomUtil;
-import frc.robot.util.LoggedTunableNumber;
 import org.littletonrobotics.junction.Logger;
 
 public class FiringManager {
@@ -27,15 +26,6 @@ public class FiringManager {
     NEUTRAL_LEFT,
     NEUTRAL_RIGHT
   }
-
-  private static final LoggedTunableNumber tunableFlywheelSpeedRPS =
-      new LoggedTunableNumber("FiringManager/flywheelSpeedRPS", 0);
-  private static final LoggedTunableNumber tunableHoodAngle =
-      new LoggedTunableNumber("FiringManager/hoodAngle", 0);
-  private static final LoggedTunableNumber tunableTunnelSpeedRPS =
-      new LoggedTunableNumber("FiringManager/tunnelSpeedRPS", 0);
-  private static final LoggedTunableNumber tunableIndexerSpeedRPS =
-      new LoggedTunableNumber("FiringManager/indexerSpeedRPS", 0);
 
   public static FiringSolution getFiringSolution(
       Pose2d turretPosition, Translation2d robotVelocity, boolean isScoring) {
@@ -142,22 +132,23 @@ public class FiringManager {
         "AreaManager/InAllianceZone",
         AreaManager.getZoneOfPosition(turretPosition.getTranslation()) == Zone.ALLIANCE_ZONE);
 
-    if (Constants.firingManagerMode == Constants.SubsystemMode.TUNING) {
-      Logger.recordOutput(
-          "FiringManager/requestedTuning/flywheelSpeedRPS", tunableFlywheelSpeedRPS.get());
-      Logger.recordOutput("FiringManager/requestedTuning/hoodAngle", tunableHoodAngle.get());
-      Logger.recordOutput(
-          "FiringManager/requestedTuning/tunnelSpeedRPS", tunableTunnelSpeedRPS.get());
-      Logger.recordOutput(
-          "FiringManager/requestedTuning/indexerSpeedRPS", tunableIndexerSpeedRPS.get());
-      return new FiringSolution(
-          tunableFlywheelSpeedRPS.get(),
-          tunableHoodAngle.get(),
-          adjustForTurretLock(vectorToGoal.getAngle().getDegrees()),
-          tunableTunnelSpeedRPS.get(),
-          tunableIndexerSpeedRPS.get());
+    // if (Constants.firingManagerMode == Constants.SubsystemMode.TUNING) {
+    //   Logger.recordOutput(
+    //       "FiringManager/requestedTuning/flywheelSpeedRPS", tunableFlywheelSpeedRPS.get());
+    //   Logger.recordOutput("FiringManager/requestedTuning/hoodAngle", tunableHoodAngle.get());
+    //   Logger.recordOutput(
+    //       "FiringManager/requestedTuning/tunnelSpeedRPS", tunableTunnelSpeedRPS.get());
+    //   Logger.recordOutput(
+    //       "FiringManager/requestedTuning/indexerSpeedRPS", tunableIndexerSpeedRPS.get());
+    //   return new FiringSolution(
+    //       tunableFlywheelSpeedRPS.get(),
+    //       tunableHoodAngle.get(),
+    //       adjustForTurretLock(vectorToGoal.getAngle().getDegrees()),
+    //       tunableTunnelSpeedRPS.get(),
+    //       tunableIndexerSpeedRPS.get());
 
-    } else if (Constants.shootOnTheMoveEnabled) {
+    // } else
+    if (Constants.shootOnTheMoveEnabled) {
       return new FiringSolution(
           solutionParameters.getFlywheelRPS(),
           solutionParameters.getHoodAngleDeg(),

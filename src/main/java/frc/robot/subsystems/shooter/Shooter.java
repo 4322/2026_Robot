@@ -16,6 +16,7 @@ import frc.robot.subsystems.shooter.spindexer.Spindexer;
 import frc.robot.subsystems.shooter.tunnel.Tunnel;
 import frc.robot.subsystems.shooter.turret.Turret;
 import frc.robot.subsystems.vision.visionGlobalPose.VisionGlobalPose;
+import frc.robot.util.LoggedTunableNumber;
 import frc.robot.util.firecontrol.ShotCalculator;
 import frc.robot.util.firecontrol.ShotLUT;
 import org.littletonrobotics.junction.Logger;
@@ -34,6 +35,15 @@ public class Shooter extends SubsystemBase {
 
   private ShooterState state = ShooterState.STARTING_CONFIG;
   private ShooterState requestedState = ShooterState.STARTING_CONFIG;
+
+  private static final LoggedTunableNumber tunableFlywheelSpeedRPS =
+      new LoggedTunableNumber("FiringManager/flywheelSpeedRPS", 0.0);
+  private static final LoggedTunableNumber tunableHoodAngle =
+      new LoggedTunableNumber("FiringManager/hoodAngle", 0.0);
+  private static final LoggedTunableNumber tunableTunnelSpeedRPS =
+      new LoggedTunableNumber("FiringManager/tunnelSpeedRPS", 0.0);
+  private static final LoggedTunableNumber tunableIndexerSpeedRPS =
+      new LoggedTunableNumber("FiringManager/indexerSpeedRPS", 0.0);
 
   private Flywheel flywheel;
   private Hood hood;
@@ -359,7 +369,14 @@ public class Shooter extends SubsystemBase {
         shot = passCalc.calculate(inputs);
       }
 
-      if (shot.isValid()) {
+      if (Constants.firingManagerMode == Constants.SubsystemMode.TUNING) {
+        targetHoodAngleDeg = tunableHoodAngle.get();
+        targetFlywheelSpeedRPS = tunableFlywheelSpeedRPS.get();
+        targetFFRadPerSec = shot.turretAngularVelocityRadPerSec();
+        targetTunnelSpeedRPS = tunableTunnelSpeedRPS.get();
+        targetSpindexerSpeedRPS = tunableIndexerSpeedRPS.get();
+        targetTurretAngleDeg = shot.turretAngle().getDegrees();
+      } else if (shot.isValid()) {
         targetHoodAngleDeg = shot.hoodAngle();
         targetFlywheelSpeedRPS = shot.rpm() / 60.0;
         targetTurretAngleDeg = shot.turretAngle().getDegrees();
