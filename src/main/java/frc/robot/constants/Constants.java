@@ -491,16 +491,16 @@ public final class Constants {
     // TODO get exact values
     public static class Red {
       public static final Translation2d hubTranslation = FieldConstants.Red.hubTranslation;
-      public static final Translation2d allianceRightTranslation = new Translation2d(14.5, 1.75);
-      public static final Translation2d allianceLeftTranslation = new Translation2d(14.5, 6.25);
+      public static final Translation2d allianceRightTranslation = new Translation2d(15.5, 1);
+      public static final Translation2d allianceLeftTranslation = new Translation2d(15.5, 7);
       public static final Translation2d neutralRightTranslation = new Translation2d(8.25, 1.75);
       public static final Translation2d neutralLeftTranslation = new Translation2d(8.25, 6.25);
     }
 
     public static class Blue {
       public static final Translation2d hubTranslation = FieldConstants.Blue.hubTranslation;
-      public static final Translation2d allianceRightTranslation = new Translation2d(2, 1.75);
-      public static final Translation2d allianceLeftTranslation = new Translation2d(2, 6.25);
+      public static final Translation2d allianceRightTranslation = new Translation2d(1, 1);
+      public static final Translation2d allianceLeftTranslation = new Translation2d(1, 7);
       public static final Translation2d neutralRightTranslation = new Translation2d(8.25, 1.75);
       public static final Translation2d neutralLeftTranslation = new Translation2d(8.25, 6.25);
     }
