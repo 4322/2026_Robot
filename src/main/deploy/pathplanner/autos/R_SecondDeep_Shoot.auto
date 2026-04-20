@@ -7,19 +7,25 @@
         {
           "type": "path",
           "data": {
-            "pathName": null
+            "pathName": "R_SecondDeep_A_Outside"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": null
+            "pathName": "R_SecondDeep_B_Full"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "R_SecondDeep_C"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "C",
+  "folder": "2nd",
   "choreoAuto": false
 }

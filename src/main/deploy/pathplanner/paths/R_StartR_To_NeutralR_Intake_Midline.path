@@ -45,7 +45,7 @@
     "rotation": 119.99999999999999
   },
   "reversed": false,
-  "folder": ".Unused_R_NeutralR_Midline",
+  "folder": "Unused",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 90.0

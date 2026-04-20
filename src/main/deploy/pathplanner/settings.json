@@ -3,20 +3,17 @@
   "robotLength": 0.811,
   "holonomicMode": true,
   "pathFolders": [
-    ".Unused_LT",
-    ".Unused_R_Half_SuperSweep",
-    ".Unused_R_NeutralR_Full",
     "C_Depot",
+    "Unused",
     "R_2056",
     "R_2Sweep",
-    ".Unused_R_NeutralGeneral",
-    ".Unused_R_NeutralRMid",
-    ".Unused_R_NeutralR_Disrupt",
-    ".Unused_R_NeutralR_Midline"
+    "R_SecondDeep"
   ],
   "autoFolders": [
     "C",
-    "R"
+    "2nd",
+    "R",
+    "Unused"
   ],
   "defaultMaxVel": 3.0,
   "defaultMaxAccel": 3.0,

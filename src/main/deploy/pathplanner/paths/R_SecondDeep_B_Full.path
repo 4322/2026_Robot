@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.4,
-        "y": 1.3
+        "x": 8.968687589158344,
+        "y": 3.7180028530670475
       },
       "prevControl": null,
       "nextControl": {
-        "x": 8.4,
-        "y": 2.3
+        "x": 7.86567469879518,
+        "y": 2.9313012048192775
       },
       "isLocked": false,
-      "linkedName": "R.Neutral.Intake.Disrupt"
+      "linkedName": "R.SecondDeep_A"
     },
     {
       "anchor": {
-        "x": 8.4,
-        "y": 3.5
+        "x": 5.979857346647646,
+        "y": 2.592339514978602
       },
       "prevControl": {
-        "x": 8.4,
-        "y": 2.5
+        "x": 7.817146932952925,
+        "y": 2.7993580599144083
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "R.Neutral.Intake.Disrupt.Half"
+      "linkedName": "R.SecondDeep_B"
     }
   ],
   "rotationTargets": [],
@@ -33,7 +33,7 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 1.0,
+    "maxVelocity": 3.0,
     "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
@@ -41,14 +41,14 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 1.0,
-    "rotation": 133.411104835076
+    "velocity": 2.0,
+    "rotation": -135.0
   },
   "reversed": false,
-  "folder": "Unused",
+  "folder": "R_SecondDeep",
   "idealStartingState": {
     "velocity": 1.0,
-    "rotation": 119.99999999999999
+    "rotation": -135.0
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }

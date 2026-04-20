@@ -7,25 +7,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": null
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 4.0
+            "pathName": "R_SecondDeep_A_Outside"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": null
+            "pathName": "R_SecondDeep_B_Pass"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "R",
+  "folder": "2nd",
   "choreoAuto": false
 }
