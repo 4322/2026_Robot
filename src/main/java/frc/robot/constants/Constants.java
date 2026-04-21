@@ -171,8 +171,8 @@ public final class Constants {
     public static final double kD = 0;
 
     public static final double motorToMechanismRatio = 1;
-    public static final double largeToleranceRPS = 4.0;
-    public static final double smallToleranceRPS = 2.0;
+    public static final double largeToleranceRPS = 6.0;
+    public static final double smallToleranceRPS = 4.0;
     public static final int idleRPS = 15;
     public static final int idleTimeout = 5;
 
@@ -251,8 +251,8 @@ public final class Constants {
     public static final double homingVoltage = -1.5;
     public static final double homingVelocityThresholdRPS = 0.01;
     public static final double minHomingSec = 0.150;
-    public static final double smallToleranceDeg = 0.4;
-    public static final double largeToleranceDeg = 2.0;
+    public static final double smallToleranceDeg = 2.0; // shoot early, the hood will get there
+    public static final double largeToleranceDeg = 3.0;
     public static final int idleTimeout = 0;
     public static final double minPhysicalLimitDeg = 0.0;
     public static final double maxPhysicalLimitDeg =
