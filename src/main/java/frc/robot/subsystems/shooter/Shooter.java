@@ -67,6 +67,8 @@ public class Shooter extends SubsystemBase {
   private boolean resetIdleTimeout = false;
   private boolean hasBeenScoring = false;
 
+  private boolean inShootingArea = false;
+
   private ShotCalculator scoreCalc;
   private ShotCalculator passCalc;
 
@@ -453,5 +455,13 @@ public class Shooter extends SubsystemBase {
 
   public void turretUnjamOverride(boolean override) {
     turret.unjamOverride(override);
+  }
+
+  public void setInShootingArea(boolean inShootingArea) {
+    this.inShootingArea = inShootingArea;
+  }
+
+  public boolean isInShootingArea() {
+    return inShootingArea;
   }
 }

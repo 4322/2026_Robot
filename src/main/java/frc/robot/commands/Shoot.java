@@ -30,8 +30,10 @@ public class Shoot extends Command {
         "Shooter/currentZone",
         AreaManager.getZoneOfPosition(drive.getTurretTranslation()).toString());
     if ((!AreaManager.isShootingArea(drive.getTurretTranslation())) && !ignoreArea) {
+      shooter.setInShootingArea(false);
       shooter.requestIdle(null, null, null);
     } else {
+      shooter.setInShootingArea(true);
       if (AreaManager.getZoneOfPosition(drive.getTurretTranslation()) == Zone.ALLIANCE_ZONE) {
         shooter.requestShoot(false, true);
       } else {
@@ -42,6 +44,7 @@ public class Shoot extends Command {
 
   @Override
   public void end(boolean interrupted) {
+    shooter.setInShootingArea(false);
     shooter.requestIdle(null, null, null);
   }
 }
