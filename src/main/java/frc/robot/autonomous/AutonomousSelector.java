@@ -30,9 +30,6 @@ public class AutonomousSelector {
   private LoggedDashboardChooser<SequentialCommandGroup> autonomousSelector =
       new LoggedDashboardChooser<SequentialCommandGroup>("Autonomous");
 
-  private LoggedDashboardChooser<AutoStartPosition> startPositionSelector =
-      new LoggedDashboardChooser<AutoStartPosition>("Auto Start Position");
-
   private static LoggedTunableNumber autoStartDelay = new LoggedTunableNumber("Auto Start Delay");
 
   public enum AutoName {
@@ -40,7 +37,7 @@ public class AutonomousSelector {
 
     R_2_SWEEP,
     L_2_SWEEP,
-    
+
     R_2056,
     L_2056,
 
@@ -52,11 +49,6 @@ public class AutonomousSelector {
     DRIVE_SYS_ID_QUASISTATIC_REVERSE,
     DRIVE_SYS_ID_DYNAMIC_FORWARD,
     DRIVE_SYS_ID_DYNAMIC_REVERSE
-  }
-
-  public enum AutoStartPosition {
-    INSIDE_TRENCH,
-    OUTSIDE_TRENCH
   }
 
   private class Auto {
@@ -83,18 +75,10 @@ public class AutonomousSelector {
     autos =
         List.of(
             new Auto(AutoName.DO_NOTHING, new DoNothing(hood)),
-            new Auto(
-                AutoName.R_2_SWEEP,
-                new R2Sweep(drive, intake, shooter, startPositionSelector, autoStartDelay)),
-            new Auto(
-                AutoName.L_2_SWEEP,
-                new L2Sweep(drive, intake, shooter, startPositionSelector, autoStartDelay)),
-            new Auto(
-                AutoName.R_2056,
-                new R2056(drive, intake, shooter, startPositionSelector, autoStartDelay)),
-            new Auto(
-                AutoName.L_2056,
-                new L2056(drive, intake, shooter, startPositionSelector, autoStartDelay)),
+            new Auto(AutoName.R_2_SWEEP, new R2Sweep(drive, intake, shooter, autoStartDelay)),
+            new Auto(AutoName.L_2_SWEEP, new L2Sweep(drive, intake, shooter, autoStartDelay)),
+            new Auto(AutoName.R_2056, new R2056(drive, intake, shooter, autoStartDelay)),
+            new Auto(AutoName.L_2056, new L2056(drive, intake, shooter, autoStartDelay)),
             new Auto(
                 AutoName.C_START_TO_DEPOT,
                 new CenterStartToDepot(drive, intake, shooter, autoStartDelay)),
@@ -139,9 +123,6 @@ public class AutonomousSelector {
         autonomousSelector.addOption(nextAuto.name.toString(), nextAuto.command);
       }
     }
-
-    startPositionSelector.addDefaultOption("Inside Trench", AutoStartPosition.INSIDE_TRENCH);
-    startPositionSelector.addOption("Outside Trench", AutoStartPosition.OUTSIDE_TRENCH);
   }
 
   public SequentialCommandGroup get() {

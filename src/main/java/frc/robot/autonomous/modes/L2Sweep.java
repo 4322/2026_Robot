@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Robot;
-import frc.robot.autonomous.AutonomousSelector.AutoStartPosition;
 import frc.robot.commands.IntakeCommands;
 import frc.robot.commands.ShooterCommands;
 import frc.robot.constants.Constants;
@@ -19,22 +18,12 @@ import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.util.LoggedTunableNumber;
-import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 public class L2Sweep extends SequentialCommandGroup {
   private PathPlannerPath firstPath;
 
-  public L2Sweep(
-      Drive drive,
-      Intake intake,
-      Shooter shooter,
-      LoggedDashboardChooser<AutoStartPosition> startPositionSelector,
-      LoggedTunableNumber autoStartDelay) {
-    if (startPositionSelector.get() == AutoStartPosition.OUTSIDE_TRENCH) {
-      firstPath = Robot.L_2SWEEP_A_OUT;
-    } else {
-      firstPath = Robot.L_2SWEEP_A;
-    }
+  public L2Sweep(Drive drive, Intake intake, Shooter shooter, LoggedTunableNumber autoStartDelay) {
+    firstPath = Robot.L_2SWEEP_A;
     Pose2d startPoseBlue = firstPath.getStartingHolonomicPose().get();
     Pose2d startPoseRed = firstPath.flipPath().getStartingHolonomicPose().get();
 
