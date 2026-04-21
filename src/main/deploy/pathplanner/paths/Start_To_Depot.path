@@ -3,41 +3,41 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.4956348074179737,
-        "y": 4.028530670470756
+        "x": 3.614795180722891,
+        "y": 4.177060240963855
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.6546219686162615,
-        "y": 5.503537803138374
+        "x": 0.9702891566265057,
+        "y": 4.264481927710843
       },
       "isLocked": false,
-      "linkedName": "C.LeftBump.Start"
+      "linkedName": "C.Hub.Start"
     },
     {
       "anchor": {
-        "x": 0.8432097004279597,
-        "y": 7.405520684736091
+        "x": 1.516674698795181,
+        "y": 5.9473493975903615
       },
       "prevControl": {
-        "x": 1.0311702361688064,
-        "y": 7.593481220476938
+        "x": 1.870321538010388,
+        "y": 5.96149527115897
       },
       "nextControl": {
-        "x": 0.6552491646871133,
-        "y": 7.217560148995244
+        "x": 1.2434819277108435,
+        "y": 5.9364216867469874
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 0.8432097004279597,
-        "y": 5.063623395149786
+        "x": 0.6533855421686747,
+        "y": 5.9473493975903615
       },
       "prevControl": {
-        "x": 0.8043937232524963,
-        "y": 6.279857346647646
+        "x": 0.9033855421686747,
+        "y": 5.9473493975903615
       },
       "nextControl": null,
       "isLocked": false,
@@ -46,8 +46,8 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.5,
-      "rotationDegrees": -135.0
+      "waypointRelativePos": 1.744398340248964,
+      "rotationDegrees": 180.0
     }
   ],
   "constraintZones": [
@@ -90,13 +90,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -135.0
+    "rotation": 180.0
   },
   "reversed": false,
   "folder": "C_Depot",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 90.0
+    "rotation": 180.0
   },
   "useDefaultConstraints": true
 }
