@@ -472,8 +472,8 @@ public class Robot extends LoggedRobot {
       autonomousCommand.cancel();
     }
     if (Constants.hubShiftUtilenabled) {
-      if (Constants.currentMode == Constants.Mode.SIM) {
-        HubShiftUtil.setWinOverride(Constants.hubShiftUtilWinOverride);
+      if (Constants.currentMode == Constants.Mode.SIM && Constants.hubShiftUtilWinOverride) {
+        HubShiftUtil.setOverrideAlliance(Robot.alliance);
       }
       HubShiftUtil.initialize();
     }
@@ -483,6 +483,9 @@ public class Robot extends LoggedRobot {
   @Override
   public void teleopPeriodic() {
     if (Constants.hubShiftUtilenabled) {
+      Logger.recordOutput("HubShiftUtil/schedule", HubShiftUtil.getSchedule());
+      Logger.recordOutput("HubShiftUtil/fiveSecondsLeft", HubShiftUtil.fiveSecondsLeft());
+
       Logger.recordOutput(
           "HubShiftUtil/firstActiveAlliance", HubShiftUtil.getFirstActiveAlliance());
       Logger.recordOutput(

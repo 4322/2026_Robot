@@ -38,7 +38,6 @@ import frc.robot.subsystems.intake.rollers.RollersIOSim;
 import frc.robot.subsystems.intake.rollers.RollersIOTalonFX;
 import frc.robot.subsystems.led.LED;
 import frc.robot.subsystems.led.LEDIO;
-import frc.robot.subsystems.led.LEDIOCANdle;
 import frc.robot.subsystems.led.LEDIOSim;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.shooter.flywheel.Flywheel;
