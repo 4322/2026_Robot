@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Threads;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.constants.Constants;
@@ -483,6 +484,11 @@ public class Robot extends LoggedRobot {
   @Override
   public void teleopPeriodic() {
     if (Constants.hubShiftUtilenabled) {
+      SmartDashboard.putNumber(
+          "HubShiftUtil/Time Left in Shift", HubShiftUtil.getOfficialShiftInfo().remainingTime());
+      SmartDashboard.putBoolean(
+          "HubShiftUtil/Shift Active", HubShiftUtil.getOfficialShiftInfo().active());
+
       Logger.recordOutput("HubShiftUtil/schedule", HubShiftUtil.getSchedule());
       Logger.recordOutput("HubShiftUtil/fiveSecondsLeft", HubShiftUtil.fiveSecondsLeft());
 
