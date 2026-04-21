@@ -20,7 +20,7 @@ import java.util.Map;
 import org.littletonrobotics.junction.Logger;
 
 public class Simulator {
-  private static final RegressTests regressTest = RegressTests.TRENCHES;
+  private static final RegressTests regressTest = RegressTests.DO_NOTHING;
   public static AutoName autoScenario;
   private TeleopScenario teleopScenario;
   private List<TeleAnomaly> teleAnomalies;
