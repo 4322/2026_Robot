@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.Timer;
 import frc.robot.constants.Constants;
 import java.util.Optional;
 import java.util.function.Supplier;
+import org.littletonrobotics.junction.Logger;
 
 public class HubShiftUtil {
   public enum ShiftEnum {
@@ -62,12 +63,18 @@ public class HubShiftUtil {
 
     // Be able to manually set alliance to win
     if (!winningAllianceOverride.isEmpty()) {
+      Logger.recordOutput("HubShiftUtil/winningAllianceOverride", winningAllianceOverride.get());
       return winningAllianceOverride.get();
     }
 
     // Return override value
     var winOverride = getAllianceWinOverride();
     if (!winOverride.isEmpty()) {
+      Logger.recordOutput(
+          "HubShiftUtil/winOverride",
+          winOverride.get()
+              ? (alliance == Alliance.Blue ? Alliance.Red : Alliance.Blue)
+              : (alliance == Alliance.Blue ? Alliance.Blue : Alliance.Red));
       return winOverride.get()
           ? (alliance == Alliance.Blue ? Alliance.Red : Alliance.Blue)
           : (alliance == Alliance.Blue ? Alliance.Blue : Alliance.Red);
@@ -93,7 +100,7 @@ public class HubShiftUtil {
     shiftTimer.restart();
   }
 
-  private static boolean[] getSchedule() {
+  public static boolean[] getSchedule() {
     boolean[] currentSchedule;
     Alliance startAlliance = getFirstActiveAlliance();
     currentSchedule =
@@ -154,6 +161,10 @@ public class HubShiftUtil {
     return shiftInfo;
   }
 
+  public static boolean fiveSecondsLeft() {
+    return getOfficialShiftInfo().remainingTime() <= 5.0;
+  }
+
   public static ShiftInfo getOfficialShiftInfo() {
     return getShiftInfo(getSchedule(), shiftStartTimes, shiftEndTimes);
   }
@@ -200,10 +211,20 @@ public class HubShiftUtil {
     // }
   }
 
+  /**
+   * Overrides the alliance that goes first
+   *
+   * @param alliance alliance that goes first
+   */
   public static void setOverrideAlliance(Alliance alliance) {
     winningAllianceOverride = Optional.of(alliance);
   }
 
+  /**
+   * Overrides the alliance that wins auto
+   *
+   * @param win the alliance to win auto
+   */
   public static void setWinOverride(boolean win) {
     allianceWinOverride = () -> Optional.of(win);
   }
