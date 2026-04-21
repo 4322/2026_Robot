@@ -60,7 +60,7 @@ public final class Constants {
   public static final boolean frontRightCameraEnable = true;
   public static final boolean frontLeftCameraEnable = true;
   public static final boolean backRightCameraEnable = true;
-  public static final boolean backLeftCameraEnable = false;
+  public static final boolean backLeftCameraEnable = true;
   public static final boolean tuningWithLoggableNumbers =
       (driveMode == SubsystemMode.TUNING
           || firingManagerMode == SubsystemMode.TUNING
@@ -132,7 +132,7 @@ public final class Constants {
     public static final double motorToMechanismRatio = 36 / 12.0 * (90 / 35.0); // 10 inch wheel
     // Normally 7 RPS for shooting
     public static final double unjamRPS = -4.0;
-    public static final double shootRPS = 9.0;
+    public static final double shootRPS = 11.0;
   }
 
   public static class Tunnel {
@@ -152,7 +152,7 @@ public final class Constants {
     public static final double minPercentVelocity = 0.95;
     // Normally 37 RPS for shooting
     public static final double unjamRPS = -25.0;
-    public static final double shootRPS = 45;
+    public static final double shootRPS = 55;
   }
 
   public static class Flywheel {
