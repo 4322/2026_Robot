@@ -76,6 +76,18 @@ public class Robot extends LoggedRobot {
 
   public static PathPlannerPath L_2056_A_OUT;
 
+  public static PathPlannerPath R_SECONDDEEP_A;
+  public static PathPlannerPath R_SECONDDEEP_A_OUT;
+  public static PathPlannerPath R_SECONDDEEP_B_SCORE;
+  public static PathPlannerPath R_SECONDDEEP_B_PASS;
+  public static PathPlannerPath R_SECONDDEEP_C;
+
+  public static PathPlannerPath L_SECONDDEEP_A;
+  public static PathPlannerPath L_SECONDDEEP_A_OUT;
+  public static PathPlannerPath L_SECONDDEEP_B_SCORE;
+  public static PathPlannerPath L_SECONDDEEP_B_PASS;
+  public static PathPlannerPath L_SECONDDEEP_C;
+
   public Robot() {
     Logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME); // Set a metadata value
     Logger.recordMetadata("BuildDate", BuildConstants.BUILD_DATE);
@@ -221,6 +233,12 @@ public class Robot extends LoggedRobot {
 
       C_To_Depot = PathPlannerPath.fromPathFile("Start_To_Depot");
 
+      R_SECONDDEEP_A = PathPlannerPath.fromPathFile("R_SecondDeep_A");
+      R_SECONDDEEP_B_SCORE = PathPlannerPath.fromPathFile("R_SecondDeep_B_Score");
+      R_SECONDDEEP_B_PASS = PathPlannerPath.fromPathFile("R_SecondDeep_B_Pass");
+      R_SECONDDEEP_C = PathPlannerPath.fromPathFile("R_SecondDeep_C");
+      R_SECONDDEEP_A_OUT = PathPlannerPath.fromPathFile("R_SecondDeep_A_Out");
+
       L_2SWEEP_A = R_2SWEEP_A.mirrorPath();
       L_2SWEEP_B = R_2SWEEP_B.mirrorPath();
       L_2SWEEP_CG = R_2SWEEP_CG.mirrorPath();
@@ -237,6 +255,12 @@ public class Robot extends LoggedRobot {
       L_2056_G = R_2056_G.mirrorPath();
 
       L_2056_A_OUT = R_2056_A_OUT.mirrorPath();
+
+      L_SECONDDEEP_A = R_SECONDDEEP_A.mirrorPath();
+      L_SECONDDEEP_B_SCORE = R_SECONDDEEP_B_SCORE.mirrorPath();
+      L_SECONDDEEP_B_PASS = R_SECONDDEEP_B_PASS.mirrorPath();
+      L_SECONDDEEP_C = R_SECONDDEEP_C.mirrorPath();
+      L_SECONDDEEP_A_OUT = R_SECONDDEEP_A_OUT.mirrorPath();
 
     } catch (Exception e) {
       DriverStation.reportError("Failed to load PathPlanner path - " + e.getMessage(), true);
