@@ -76,17 +76,23 @@ public class Robot extends LoggedRobot {
 
   public static PathPlannerPath L_2056_A_OUT;
 
-  public static PathPlannerPath R_SECONDDEEP_A;
-  public static PathPlannerPath R_SECONDDEEP_A_OUT;
-  public static PathPlannerPath R_SECONDDEEP_B_SCORE;
-  public static PathPlannerPath R_SECONDDEEP_B_PASS;
-  public static PathPlannerPath R_SECONDDEEP_C;
+  public static PathPlannerPath R_SECOND_DEEP_A;
+  public static PathPlannerPath R_SECOND_DEEP_A_OUT;
+  public static PathPlannerPath R_SECOND_DEEP_B_SCORE;
+  public static PathPlannerPath R_SECOND_DEEP_B_PASS;
+  public static PathPlannerPath R_SECOND_DEEP_C;
 
-  public static PathPlannerPath L_SECONDDEEP_A;
-  public static PathPlannerPath L_SECONDDEEP_A_OUT;
-  public static PathPlannerPath L_SECONDDEEP_B_SCORE;
-  public static PathPlannerPath L_SECONDDEEP_B_PASS;
-  public static PathPlannerPath L_SECONDDEEP_C;
+  public static PathPlannerPath L_SECOND_DEEP_A;
+  public static PathPlannerPath L_SECOND_DEEP_A_OUT;
+  public static PathPlannerPath L_SECOND_DEEP_B_SCORE;
+  public static PathPlannerPath L_SECOND_DEEP_B_PASS;
+  public static PathPlannerPath L_SECOND_DEEP_C;
+
+  public static PathPlannerPath R_SECOND_SHALLOW_A;
+  public static PathPlannerPath R_SECOND_SHALLOW_B;
+
+  public static PathPlannerPath L_SECOND_SHALLOW_A;
+  public static PathPlannerPath L_SECOND_SHALLOW_B;
 
   public Robot() {
     Logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME); // Set a metadata value
@@ -233,11 +239,14 @@ public class Robot extends LoggedRobot {
 
       C_To_Depot = PathPlannerPath.fromPathFile("Start_To_Depot");
 
-      R_SECONDDEEP_A = PathPlannerPath.fromPathFile("R_SecondDeep_A");
-      R_SECONDDEEP_B_SCORE = PathPlannerPath.fromPathFile("R_SecondDeep_B_Score");
-      R_SECONDDEEP_B_PASS = PathPlannerPath.fromPathFile("R_SecondDeep_B_Pass");
-      R_SECONDDEEP_C = PathPlannerPath.fromPathFile("R_SecondDeep_C");
-      R_SECONDDEEP_A_OUT = PathPlannerPath.fromPathFile("R_SecondDeep_A_Out");
+      R_SECOND_DEEP_A = PathPlannerPath.fromPathFile("R_SecondDeep_A");
+      R_SECOND_DEEP_B_SCORE = PathPlannerPath.fromPathFile("R_SecondDeep_B_Score");
+      R_SECOND_DEEP_B_PASS = PathPlannerPath.fromPathFile("R_SecondDeep_B_Pass");
+      R_SECOND_DEEP_C = PathPlannerPath.fromPathFile("R_SecondDeep_C");
+      R_SECOND_DEEP_A_OUT = PathPlannerPath.fromPathFile("R_SecondDeep_A_Out");
+
+      R_SECOND_SHALLOW_A = PathPlannerPath.fromPathFile("R_SecondShallow_A");
+      R_SECOND_SHALLOW_B = PathPlannerPath.fromPathFile("R_SecondShallow_B");
 
       L_2SWEEP_A = R_2SWEEP_A.mirrorPath();
       L_2SWEEP_B = R_2SWEEP_B.mirrorPath();
@@ -256,12 +265,14 @@ public class Robot extends LoggedRobot {
 
       L_2056_A_OUT = R_2056_A_OUT.mirrorPath();
 
-      L_SECONDDEEP_A = R_SECONDDEEP_A.mirrorPath();
-      L_SECONDDEEP_B_SCORE = R_SECONDDEEP_B_SCORE.mirrorPath();
-      L_SECONDDEEP_B_PASS = R_SECONDDEEP_B_PASS.mirrorPath();
-      L_SECONDDEEP_C = R_SECONDDEEP_C.mirrorPath();
-      L_SECONDDEEP_A_OUT = R_SECONDDEEP_A_OUT.mirrorPath();
+      L_SECOND_DEEP_A = R_SECOND_DEEP_A.mirrorPath();
+      L_SECOND_DEEP_B_SCORE = R_SECOND_DEEP_B_SCORE.mirrorPath();
+      L_SECOND_DEEP_B_PASS = R_SECOND_DEEP_B_PASS.mirrorPath();
+      L_SECOND_DEEP_C = R_SECOND_DEEP_C.mirrorPath();
+      L_SECOND_DEEP_A_OUT = R_SECOND_DEEP_A_OUT.mirrorPath();
 
+      L_SECOND_SHALLOW_A = R_SECOND_SHALLOW_A.mirrorPath();
+      L_SECOND_SHALLOW_B = R_SECOND_SHALLOW_B.mirrorPath();
     } catch (Exception e) {
       DriverStation.reportError("Failed to load PathPlanner path - " + e.getMessage(), true);
       System.exit(1);

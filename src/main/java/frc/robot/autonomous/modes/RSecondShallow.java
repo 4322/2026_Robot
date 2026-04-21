@@ -18,16 +18,16 @@ import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.util.LoggedTunableNumber;
 
-public class RSecondDeepScore extends SequentialCommandGroup {
+public class RSecondShallow extends SequentialCommandGroup {
   private PathPlannerPath firstPath;
 
-  public RSecondDeepScore(
+  public RSecondShallow(
       Drive drive, Intake intake, Shooter shooter, LoggedTunableNumber autoStartDelay) {
-    firstPath = Robot.R_SECOND_DEEP_A_OUT;
+    firstPath = Robot.R_SECOND_SHALLOW_A;
     Pose2d startPoseBlue = firstPath.getStartingHolonomicPose().get();
     Pose2d startPoseRed = firstPath.flipPath().getStartingHolonomicPose().get();
 
-    setName("R_SECOND_DEEP_SCORE");
+    setName("R_SECOND_SHALLOW");
     addCommands(
         new InstantCommand(
             () -> {
@@ -41,9 +41,7 @@ public class RSecondDeepScore extends SequentialCommandGroup {
         IntakeCommands.intake(intake),
         AutoBuilder.followPath(firstPath),
         new ParallelDeadlineGroup(
-            new SequentialCommandGroup(
-                AutoBuilder.followPath(Robot.R_SECOND_DEEP_B_SCORE),
-                AutoBuilder.followPath(Robot.R_SECOND_DEEP_C)),
+            AutoBuilder.followPath(Robot.R_SECOND_SHALLOW_B),
             ShooterCommands.idle(shooter, intake, 15.0, 40.0, null),
             ShooterCommands.autoUnjam(shooter, Constants.Autonomous.unjamTimeSec)),
         new ParallelCommandGroup(

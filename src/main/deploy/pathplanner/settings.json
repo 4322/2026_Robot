@@ -4,10 +4,11 @@
   "holonomicMode": true,
   "pathFolders": [
     "C_Depot",
-    "Unused",
+    "R_SecondShallow",
     "R_2056",
     "R_2Sweep",
-    "R_SecondDeep"
+    "R_SecondDeep",
+    "Unused"
   ],
   "autoFolders": [
     "C",

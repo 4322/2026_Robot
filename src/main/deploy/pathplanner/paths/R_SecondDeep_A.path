@@ -48,12 +48,12 @@
     },
     {
       "anchor": {
-        "x": 8.968687589158344,
-        "y": 3.7180028530670475
+        "x": 8.728963855421688,
+        "y": 4.515819277108434
       },
       "prevControl": {
-        "x": 9.745007132667615,
-        "y": 4.144978601997147
+        "x": 9.505283398930958,
+        "y": 4.942795026038533
       },
       "nextControl": null,
       "isLocked": false,
@@ -83,7 +83,7 @@
   },
   "goalEndState": {
     "velocity": 1.0,
-    "rotation": -135.0
+    "rotation": 180.0
   },
   "reversed": false,
   "folder": "R_SecondDeep",

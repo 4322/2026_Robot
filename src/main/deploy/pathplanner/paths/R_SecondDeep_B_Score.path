@@ -3,32 +3,37 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.968687589158344,
-        "y": 3.7180028530670475
+        "x": 8.728963855421688,
+        "y": 4.515819277108434
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.86567469879518,
-        "y": 2.9313012048192775
+        "x": 7.472963013251295,
+        "y": 5.477551363800422
       },
       "isLocked": false,
       "linkedName": "R.SecondDeep_A"
     },
     {
       "anchor": {
-        "x": 5.979857346647646,
-        "y": 2.592339514978602
+        "x": 6.051674698795181,
+        "y": 5.4993132530120485
       },
       "prevControl": {
-        "x": 7.817146932952925,
-        "y": 2.7993580599144083
+        "x": 7.843819277108435,
+        "y": 5.4993132530120485
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": "R.SecondDeep_B"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.5120331950207432,
+      "rotationDegrees": 149.09647694340526
+    }
+  ],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [],
@@ -42,13 +47,13 @@
   },
   "goalEndState": {
     "velocity": 2.0,
-    "rotation": -135.0
+    "rotation": 135.0
   },
   "reversed": false,
   "folder": "R_SecondDeep",
   "idealStartingState": {
     "velocity": 1.0,
-    "rotation": -135.0
+    "rotation": 180.0
   },
   "useDefaultConstraints": true
 }

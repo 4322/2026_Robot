@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.968687589158344,
-        "y": 3.7180028530670475
+        "x": 8.728963855421688,
+        "y": 4.515819277108434
       },
       "prevControl": null,
       "nextControl": {
-        "x": 8.77267469879518,
-        "y": 3.4776867469879518
+        "x": 8.532950965058523,
+        "y": 4.275503171029338
       },
       "isLocked": false,
       "linkedName": "R.SecondDeep_A"
     },
     {
       "anchor": {
-        "x": 8.32175463623395,
-        "y": 0.48333808844507875
+        "x": 7.767325301204821,
+        "y": 0.4288554216867476
       },
       "prevControl": {
-        "x": 8.360570613409413,
-        "y": 1.686633380884452
+        "x": 7.806141278380284,
+        "y": 1.6321507141261211
       },
       "nextControl": null,
       "isLocked": false,
@@ -67,7 +67,7 @@
   "folder": "R_SecondDeep",
   "idealStartingState": {
     "velocity": 1.0,
-    "rotation": -135.0
+    "rotation": 180.0
   },
   "useDefaultConstraints": true
 }

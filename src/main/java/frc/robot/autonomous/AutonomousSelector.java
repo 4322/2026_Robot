@@ -7,8 +7,12 @@ import frc.robot.autonomous.modes.CenterStartToDepot;
 import frc.robot.autonomous.modes.DoNothing;
 import frc.robot.autonomous.modes.L2056;
 import frc.robot.autonomous.modes.L2Sweep;
+import frc.robot.autonomous.modes.LSecondDeepScore;
+import frc.robot.autonomous.modes.LSecondShallow;
 import frc.robot.autonomous.modes.R2056;
 import frc.robot.autonomous.modes.R2Sweep;
+import frc.robot.autonomous.modes.RSecondDeepScore;
+import frc.robot.autonomous.modes.RSecondShallow;
 import frc.robot.commands.DriveCommands;
 import frc.robot.constants.Constants;
 import frc.robot.constants.Constants.Mode;
@@ -42,6 +46,11 @@ public class AutonomousSelector {
     L_2056,
 
     C_START_TO_DEPOT,
+
+    R_SECOND_SHALLOW,
+    L_SECOND_SHALLOW,
+    R_SECOND_DEEP_SCORE,
+    L_SECOND_DEEP_SCORE,
 
     DRIVE_WHEEL_RADIUS_CHARACTERIZATION,
     DRIVE_SIMPLE_FF_CHARACTERIZATION,
@@ -82,6 +91,18 @@ public class AutonomousSelector {
             new Auto(
                 AutoName.C_START_TO_DEPOT,
                 new CenterStartToDepot(drive, intake, shooter, autoStartDelay)),
+            new Auto(
+                AutoName.R_SECOND_SHALLOW,
+                new RSecondShallow(drive, intake, shooter, autoStartDelay)),
+            new Auto(
+                AutoName.L_SECOND_SHALLOW,
+                new LSecondShallow(drive, intake, shooter, autoStartDelay)),
+            new Auto(
+                AutoName.R_SECOND_DEEP_SCORE,
+                new RSecondDeepScore(drive, intake, shooter, autoStartDelay)),
+            new Auto(
+                AutoName.L_SECOND_DEEP_SCORE,
+                new LSecondDeepScore(drive, intake, shooter, autoStartDelay)),
             new Auto(
                 AutoName.DRIVE_WHEEL_RADIUS_CHARACTERIZATION,
                 new SequentialCommandGroup(
