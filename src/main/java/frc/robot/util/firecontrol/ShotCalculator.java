@@ -28,6 +28,9 @@ import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.constants.Constants;
+import frc.robot.constants.Constants.SubsystemMode;
 import org.littletonrobotics.junction.Logger;
 
 /**
@@ -547,6 +550,10 @@ public class ShotCalculator {
     Logger.recordOutput(logPath + "normalDistToTarget", distance);
     Logger.recordOutput(logPath + "projDistToTarget", projDist);
     Logger.recordOutput(logPath + "targetPosition", hubCenter);
+
+    if (Constants.firingManagerMode == SubsystemMode.TUNING) {
+      SmartDashboard.putNumber("Tuning/distanceToTarget", distance);
+    }
 
     return new LaunchParameters(
         effectiveRPMValue,
