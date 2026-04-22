@@ -249,10 +249,6 @@ public class Simulator {
     RegressionTest(String name, TeleopScenario teleopScenario, Alliance alliance) {
       this(name, null, teleopScenario, null, null, null, alliance);
     }
-
-
-
-
   }
 
   private List<RegressionTest> regressionTestCases() {
@@ -271,7 +267,8 @@ public class Simulator {
           new RegressionTest("Subsystem Test", TeleopScenario.SUBSYSTEM_TEST, Alliance.Blue));
       case TEST_AUTOROTATE -> List.of(
           new RegressionTest("Auto Rotate", TeleopScenario.AUTO_ROTATE, Alliance.Blue),
-          new RegressionTest("Test Wheels", TeleopScenario.TEST, TestName.DRIVE_TEST, Alliance.Blue));
+          new RegressionTest(
+              "Test Wheels", TeleopScenario.TEST, TestName.DRIVE_TEST, Alliance.Blue));
       case TURRET -> List.of(
           new RegressionTest("Turret Test", TeleopScenario.TURRET, Alliance.Blue));
       case ALL_AUTOS -> List.of(
@@ -302,7 +299,8 @@ public class Simulator {
       case TRENCHES -> List.of(
           new RegressionTest("Trenches", TeleopScenario.TRENCHES, Alliance.Blue),
           new RegressionTest("Trenches", TeleopScenario.TRENCHES, Alliance.Red));
-      case TEST -> List.of(new RegressionTest("Tester", TeleopScenario.TEST,TestName.DRIVE_TEST, Alliance.Blue));
+      case TEST -> List.of(
+          new RegressionTest("Tester", TeleopScenario.TEST, TestName.DRIVE_TEST, Alliance.Blue));
 
       default -> List.of();
     };
@@ -748,6 +746,7 @@ public class Simulator {
               EventType.MOVE_JOYSTICK_DRIVE,
               new Pose2d(1, 0, Rotation2d.kZero)),
           new SimEvent(t += 5, "End", EventType.END_OF_SCENARIO));
+      case TEST -> List.of(new SimEvent(t += 500000, "End", EventType.END_OF_SCENARIO));
       default -> List.of();
     };
   }
@@ -978,7 +977,7 @@ public class Simulator {
     Logger.recordOutput("Sim/EventName", "Disabled");
     Logger.recordOutput("Sim/EventType", "Disabled");
 
-      DriverStationSim.setAutonomous(events == autoEvents);
+    DriverStationSim.setAutonomous(events == autoEvents);
     if (currentAlliance == Alliance.Red) {
       DriverStationSim.setAllianceStationId(AllianceStationID.Red2);
     } else {
@@ -990,7 +989,7 @@ public class Simulator {
       currentScenario = autoScenario.toString();
     } else if (events == teleopEvents) {
       currentScenario = teleopScenario.toString();
-    } 
+    }
   }
 
   private void setNextRegressTest() {
@@ -1024,7 +1023,7 @@ public class Simulator {
       events = autoEvents;
     } else if (!teleopEvents.isEmpty()) {
       events = teleopEvents;
-    } 
+    }
     setPose(new Pose2d(0, 0, Rotation2d.kZero));
     resetScenario();
   }
