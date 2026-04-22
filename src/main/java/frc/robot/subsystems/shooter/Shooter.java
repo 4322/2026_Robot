@@ -322,7 +322,7 @@ public class Shooter extends SubsystemBase {
         targetTurretAngleDeg = Constants.fixedSolutionRed.turretAngleDeg;
       }
     } else {
-      Translation2d shootTarget = FiringManager.getShootingTarget(drive.getTurretTranslation());
+      Translation2d shootTarget = FiringManager.getShootingTarget(drive.getTurretPose());
       Translation2d shootForward;
       ShotCalculator.ShotInputs inputs;
 

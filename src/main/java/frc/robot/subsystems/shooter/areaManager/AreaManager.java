@@ -1,6 +1,6 @@
 package frc.robot.subsystems.shooter.areaManager;
 
-import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.Robot;
 import frc.robot.constants.FieldConstants;
@@ -13,20 +13,14 @@ public class AreaManager {
     RIGHT_OPPOSITION,
     LEFT_NEUTRAL,
     RIGHT_NEUTRAL,
-    LEFT_TRENCH,
-    RIGHT_TRENCH,
-    LEFT_OPPOSITION_TRENCH,
-    RIGHT_OPPOSITION_TRENCH,
     LEFT_STOP_SHOOT,
     RIGHT_STOP_SHOOT,
     LEFT_OPPOSITION_STOP_SHOOT,
     RIGHT_OPPOSITION_STOP_SHOOT,
-    ALLIANCE_TOWER,
-    OPPOSITION_TOWER,
     UNKNOWN
   }
 
-  public static boolean isShootingArea(Translation2d position) {
+  public static boolean isShootingArea(Pose2d position) {
     if (Robot.alliance == Alliance.Blue) {
       return !(FieldConstants.Red.frontOfHub.contains(position)
           // Not in neutral side of blue trench
@@ -46,7 +40,7 @@ public class AreaManager {
     }
   }
 
-  public static Zone getZoneOfPosition(Translation2d position) {
+  public static Zone getZoneOfPosition(Pose2d position) {
     if (Robot.alliance == Alliance.Blue) {
       if (FieldConstants.Blue.stopShootLeftNeutral.contains(position)) {
         return Zone.LEFT_STOP_SHOOT;
@@ -93,7 +87,7 @@ public class AreaManager {
 
   // Returns true if positions are same larger zone, ignoring right/left designations (ex. right
   // neutral and left neutral -> true)
-  public static boolean isSameCompleteZone(Translation2d position1, Translation2d position2) {
+  public static boolean isSameCompleteZone(Pose2d position1, Pose2d position2) {
     Zone zone1 = getZoneOfPosition(position1);
     Zone zone2 = getZoneOfPosition(position2);
 
@@ -104,12 +98,6 @@ public class AreaManager {
       return true;
     } else if ((zone1 == Zone.LEFT_NEUTRAL || zone1 == Zone.RIGHT_NEUTRAL)
         && (zone2 == Zone.LEFT_NEUTRAL || zone2 == Zone.RIGHT_NEUTRAL)) {
-      return true;
-    } else if ((zone1 == Zone.LEFT_TRENCH || zone1 == Zone.RIGHT_TRENCH)
-        && (zone2 == Zone.LEFT_TRENCH || zone2 == Zone.RIGHT_TRENCH)) {
-      return true;
-    } else if ((zone1 == Zone.LEFT_OPPOSITION_TRENCH || zone1 == Zone.RIGHT_OPPOSITION_TRENCH)
-        && (zone2 == Zone.LEFT_OPPOSITION_TRENCH || zone2 == Zone.RIGHT_OPPOSITION_TRENCH)) {
       return true;
     } else if ((zone1 == Zone.LEFT_STOP_SHOOT || zone1 == Zone.RIGHT_STOP_SHOOT)
         && (zone2 == Zone.LEFT_STOP_SHOOT || zone2 == Zone.RIGHT_STOP_SHOOT)) {

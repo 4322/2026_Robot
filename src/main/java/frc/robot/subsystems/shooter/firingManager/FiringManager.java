@@ -1,5 +1,6 @@
 package frc.robot.subsystems.shooter.firingManager;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.Robot;
@@ -18,7 +19,7 @@ public class FiringManager {
     NEUTRAL_RIGHT
   }
 
-  public static Translation2d getShootingTarget(Translation2d robotPosition) {
+  public static Translation2d getShootingTarget(Pose2d robotPosition) {
     Zone zone = AreaManager.getZoneOfPosition(robotPosition);
 
     if (Robot.alliance == Alliance.Blue) {

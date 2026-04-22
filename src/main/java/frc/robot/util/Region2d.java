@@ -4,29 +4,32 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import java.awt.geom.*;
-import java.util.HashMap;
-import java.util.Map.Entry;
-import java.util.Set;
 import org.littletonrobotics.junction.Logger;
 
 /**
  * This class models a region of the field. It is defined by its vertices and the transition points
- * to neighboring regions.
- * Created by FRC 3061
+ * to neighboring regions. Created by FRC 3061
  * https://github.com/HuskieRobotics/3061-lib/blob/main/src/main/java/frc/robot/Region2d.java
  */
 public class Region2d {
   private Path2D shape;
-  private HashMap<Region2d, Translation2d> transitionMap;
+  private String id;
+  private Pose2d[] points;
 
   /**
    * Create a Region2d, a polygon, from an array of Translation2d specifying vertices of a polygon.
    * The polygon is created using the even-odd winding rule.
    *
    * @param points the array of Translation2d that define the vertices of the region.
+   * @param id the identifier for the region. (for logging purposes)
    */
-  public Region2d(Translation2d[] points) {
-    this.transitionMap = new HashMap<>();
+  public Region2d(Translation2d[] points, String id) {
+    this.points = new Pose2d[points.length + 1];
+    for (int i = 0; i < points.length; i++) {
+      this.points[i] = new Pose2d(points[i], Rotation2d.kZero);
+    }
+    this.points[points.length] = new Pose2d(points[0], Rotation2d.kZero); // Close the path
+    this.id = id;
     this.shape = new Path2D.Double(Path2D.WIND_EVEN_ODD, points.length);
     this.shape.moveTo(points[0].getX(), points[0].getY());
 
@@ -38,35 +41,33 @@ public class Region2d {
   }
 
   /**
+   * Create a rectangular Region2d from two opposite corners.
+   *
+   * @param cornerA one rectangle corner
+   * @param cornerB opposite rectangle corner
+   * @param id the identifier for the region. (for logging purposes)
+   */
+  public Region2d(Translation2d cornerA, Translation2d cornerB, String id) {
+    this(
+        new Translation2d[] {
+          new Translation2d(
+              Math.min(cornerA.getX(), cornerB.getX()), Math.min(cornerA.getY(), cornerB.getY())),
+          new Translation2d(
+              Math.max(cornerA.getX(), cornerB.getX()), Math.min(cornerA.getY(), cornerB.getY())),
+          new Translation2d(
+              Math.max(cornerA.getX(), cornerB.getX()), Math.max(cornerA.getY(), cornerB.getY())),
+          new Translation2d(
+              Math.min(cornerA.getX(), cornerB.getX()), Math.max(cornerA.getY(), cornerB.getY()))
+        },
+        id);
+  }
+
+  /**
    * Log the bounding rectangle of the region and the transition points to neighboring regions.
    * These can be visualized using AdvantageScope to confirm that the regions are properly defined.
    */
   public void logPoints() {
-    // log the bounding rectangle of the region
-    Rectangle2D rect = this.shape.getBounds2D();
-    Logger.recordOutput("Region2d/point0", new Pose2d(rect.getX(), rect.getY(), new Rotation2d()));
-    Logger.recordOutput(
-        "Region2d/point1",
-        new Pose2d(rect.getX() + rect.getWidth(), rect.getY(), new Rotation2d()));
-    Logger.recordOutput(
-        "Region2d/point2",
-        new Pose2d(rect.getX(), rect.getY() + rect.getHeight(), new Rotation2d()));
-    Logger.recordOutput(
-        "Region2d/point3",
-        new Pose2d(
-            rect.getX() + rect.getWidth(), rect.getY() + rect.getHeight(), new Rotation2d()));
-
-    // assume that there are at most 4 neighbors
-    for (int i = 0; i < 4; i++) {
-      Logger.recordOutput("Region2d/transition" + i, new Pose2d());
-    }
-    int i = 0;
-    for (Entry<Region2d, Translation2d> entry : transitionMap.entrySet()) {
-      Translation2d point = entry.getValue();
-      Logger.recordOutput(
-          "Region2d/transition" + i, new Pose2d(point.getX(), point.getY(), new Rotation2d()));
-      i++;
-    }
+    Logger.recordOutput("Region2d/" + id, points);
   }
 
   /**
@@ -78,46 +79,5 @@ public class Region2d {
   public boolean contains(Pose2d other) {
 
     return this.shape.contains(new Point2D.Double(other.getX(), other.getY()));
-  }
-
-  /**
-   * Add a neighboring Region2d and the ideal point through which to transition from this region to
-   * the other region. Normally, this method will be invoked once per transition. The transition
-   * point doesn't need to be on the boundary between the two regions. It may be advantageous for
-   * the transition point to be located within the other region to influence the generated path.
-   * Therefore, the transition point from one region to another may not be the same when traversing
-   * the regions in the opposite direction.
-   *
-   * @param other the other region
-   * @param point a Translation2d representing the transition point
-   */
-  public void addNeighbor(Region2d other, Translation2d point) {
-    transitionMap.put(other, point);
-  }
-
-  /**
-   * Returns a Set of this region's neighbors
-   *
-   * @return
-   */
-  public Set<Region2d> getNeighbors() {
-    return transitionMap.keySet();
-  }
-
-  /**
-   * Get the transition pont between this region and another region. Returns null if they aren't a
-   * neighbor.
-   *
-   * @param other the other region
-   * @return the transition point, represented as a Translation2d
-   */
-  public Translation2d getTransitionPoint(Region2d other) {
-    if (getNeighbors().contains(other)) {
-
-      return transitionMap.get(other);
-
-    } else {
-      return null;
-    }
   }
 }
