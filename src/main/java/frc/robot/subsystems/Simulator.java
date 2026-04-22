@@ -76,7 +76,8 @@ public class Simulator {
     Slowly_Up_down,
     ZONES,
     INTAKE_TEST,
-    TRENCHES
+    TRENCHES,
+    TEST
   }
 
   private enum EventType {
@@ -241,25 +242,17 @@ public class Simulator {
     }
 
     RegressionTest(
-        String name,
-        TeleopScenario teleopScenario,
-        List<TeleAnomaly> teleAnomalies,
-        Alliance alliance) {
-      this(name, null, teleopScenario, teleAnomalies, null, null, alliance);
+        String name, TeleopScenario teleopScenario, TestName testScenario, Alliance alliance) {
+      this(name, null, teleopScenario, null, testScenario, null, alliance);
     }
 
     RegressionTest(String name, TeleopScenario teleopScenario, Alliance alliance) {
-      this(name, teleopScenario, null, alliance);
+      this(name, null, teleopScenario, null, null, null, alliance);
     }
 
-    RegressionTest(
-        String name, TestName testScenario, List<TestAnomaly> testAnomalies, Alliance alliance) {
-      this(name, null, null, null, testScenario, testAnomalies, alliance);
-    }
 
-    RegressionTest(String name, TestName testScenario, Alliance alliance) {
-      this(name, testScenario, null, alliance);
-    }
+
+
   }
 
   private List<RegressionTest> regressionTestCases() {
@@ -278,7 +271,7 @@ public class Simulator {
           new RegressionTest("Subsystem Test", TeleopScenario.SUBSYSTEM_TEST, Alliance.Blue));
       case TEST_AUTOROTATE -> List.of(
           new RegressionTest("Auto Rotate", TeleopScenario.AUTO_ROTATE, Alliance.Blue),
-          new RegressionTest("Test Wheels", TestName.DRIVE_TEST, Alliance.Blue));
+          new RegressionTest("Test Wheels", TeleopScenario.TEST, TestName.DRIVE_TEST, Alliance.Blue));
       case TURRET -> List.of(
           new RegressionTest("Turret Test", TeleopScenario.TURRET, Alliance.Blue));
       case ALL_AUTOS -> List.of(
@@ -309,7 +302,7 @@ public class Simulator {
       case TRENCHES -> List.of(
           new RegressionTest("Trenches", TeleopScenario.TRENCHES, Alliance.Blue),
           new RegressionTest("Trenches", TeleopScenario.TRENCHES, Alliance.Red));
-      case TEST -> List.of(new RegressionTest("Tester", TestName.DRIVE_TEST, Alliance.Blue));
+      case TEST -> List.of(new RegressionTest("Tester", TeleopScenario.TEST,TestName.DRIVE_TEST, Alliance.Blue));
 
       default -> List.of();
     };
