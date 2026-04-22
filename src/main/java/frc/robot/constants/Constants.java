@@ -60,7 +60,7 @@ public final class Constants {
   public static final boolean frontRightCameraEnable = true;
   public static final boolean frontLeftCameraEnable = true;
   public static final boolean backRightCameraEnable = true;
-  public static final boolean backLeftCameraEnable = false;
+  public static final boolean backLeftCameraEnable = true;
   public static final boolean tuningWithLoggableNumbers =
       (driveMode == SubsystemMode.TUNING
           || firingManagerMode == SubsystemMode.TUNING
@@ -132,7 +132,7 @@ public final class Constants {
     public static final double motorToMechanismRatio = 36 / 12.0 * (90 / 35.0); // 10 inch wheel
     // Normally 7 RPS for shooting
     public static final double unjamRPS = -4.0;
-    public static final double shootRPS = 9.0;
+    public static final double shootRPS = 11.0;
   }
 
   public static class Tunnel {
@@ -152,7 +152,7 @@ public final class Constants {
     public static final double minPercentVelocity = 0.95;
     // Normally 37 RPS for shooting
     public static final double unjamRPS = -25.0;
-    public static final double shootRPS = 35;
+    public static final double shootRPS = 55;
   }
 
   public static class Flywheel {
@@ -171,8 +171,8 @@ public final class Constants {
     public static final double kD = 0;
 
     public static final double motorToMechanismRatio = 1;
-    public static final double largeToleranceRPS = 4.0;
-    public static final double smallToleranceRPS = 2.0;
+    public static final double largeToleranceRPS = 6.0;
+    public static final double smallToleranceRPS = 4.0;
     public static final int idleRPS = 15;
     public static final int idleTimeout = 5;
 
@@ -251,8 +251,8 @@ public final class Constants {
     public static final double homingVoltage = -1.5;
     public static final double homingVelocityThresholdRPS = 0.01;
     public static final double minHomingSec = 0.150;
-    public static final double smallToleranceDeg = 0.4;
-    public static final double largeToleranceDeg = 2.0;
+    public static final double smallToleranceDeg = 2.0; // shoot early, the hood will get there
+    public static final double largeToleranceDeg = 3.0;
     public static final int idleTimeout = 0;
     public static final double minPhysicalLimitDeg = 0.0;
     public static final double maxPhysicalLimitDeg =
@@ -437,39 +437,14 @@ public final class Constants {
       // Meters is center of turret to 3 inches behind center from hub
 
       // Shooting
-      // putFiringMapEntryScoring(1.09, new FiringParameters(46.2, 0.12, 1.2, 35, 9));
-      // putFiringMapEntryScoring(1.59, new FiringParameters(40.9, 6.5, 1.0, 35, 9));
-      // putFiringMapEntryScoring(2.10, new FiringParameters(40.0, 10.9, 1, 35, 9));
-      // putFiringMapEntryScoring(2.7, new FiringParameters(43.1, 16.4, 0.9, 35, 9));
-      // putFiringMapEntryScoring(3.2, new FiringParameters(46.8, 18.0, 1.09, 35, 9));
-      // putFiringMapEntryScoring(4.07, new FiringParameters(50.6, 23.1, 1.15, 35, 9));
-      // putFiringMapEntryScoring(4.699, new FiringParameters(53.2, 25.8, 1.05, 35, 9));
-
       putFiringMapEntryScoring(1.560, new FiringParameters(46, 7, 1.3, 45, 9));
+      putFiringMapEntryScoring(2.4, new FiringParameters(46, 13, 1.15, 45, 9));
       putFiringMapEntryScoring(3.427, new FiringParameters(52, 17, 1.25, 45, 9));
+      putFiringMapEntryScoring(4.6, new FiringParameters(56.5, 22.5, 1.2, 45, 9));
+      putFiringMapEntryScoring(5.13, new FiringParameters(60.5, 21, 1.35, 45, 9));
       putFiringMapEntryScoring(5.817, new FiringParameters(63, 28, 1.35, 45, 9));
 
-      /* Tuned shots with fresh kicker wheels
-      putFiringMapEntryScoring(1.111, new FiringParameters(45, 3.5, 1, 35, 7));
-      putFiringMapEntryScoring(2.129, new FiringParameters(44.7, 5, 1, 35, 7));
-      putFiringMapEntryScoring(2.741, new FiringParameters(45, 10, 1, 35, 7));
-      putFiringMapEntryScoring(3.546, new FiringParameters(52, 10, 1, 35, 7));
-      putFiringMapEntryScoring(4.538, new FiringParameters(53, 15, 1, 35, 7));
-      putFiringMapEntryScoring(4.734, new FiringParameters(56, 18, 1, 35, 7));
-      putFiringMapEntryScoring(5.133, new FiringParameters(56, 20, 1, 35, 7));
-      putFiringMapEntryScoring(5.59, new FiringParameters(58, 22, 1, 35, 7));
-       */
-
       // Passing
-      // need to be 112 inches past the blue line to clear the net
-      // putFiringMapEntryPassing(3.46, new FiringParameters(38, 30, 1.1, 35, 7));
-      // putFiringMapEntryPassing(3.87, new FiringParameters(40, 30, 1.2, 35, 7));
-      // putFiringMapEntryPassing(4.38, new FiringParameters(43, 30, 1.05, 35, 7));
-      // putFiringMapEntryPassing(4.82, new FiringParameters(46, 30, 1.1, 35, 7));
-      // putFiringMapEntryPassing(5.27, new FiringParameters(48.2, 30, 1.12, 35, 7));
-      // putFiringMapEntryPassing(5.8, new FiringParameters(50, 30, 1.14, 35, 7));
-      // putFiringMapEntryPassing(6.28, new FiringParameters(53, 30, 1.26, 35, 7));
-      // putFiringMapEntryPassing(6.90, new FiringParameters(56, 30, 1.32, 35, 7));
       putFiringMapEntryPassing(4.60, new FiringParameters(43, 30, 1.5, 45, 7));
       putFiringMapEntryPassing(7.349, new FiringParameters(62, 34, 1.4, 45, 7));
       putFiringMapEntryPassing(10.31, new FiringParameters(80, 38, 1.4, 45, 7));

@@ -191,8 +191,7 @@ public class RobotContainer {
                 ? new Turret(new TurretIO() {})
                 : new Turret(new TurretIOTalonFx());
 
-        shooter =
-            new Shooter(flywheel, hood, spindexer, tunnel, turret, visionGlobalPose, drive, led);
+        shooter = new Shooter(flywheel, hood, spindexer, tunnel, turret, visionGlobalPose, drive);
 
         rollers =
             Constants.rollerMode == Constants.SubsystemMode.DISABLED
@@ -287,8 +286,7 @@ public class RobotContainer {
                 ? new Turret(new TurretIO() {})
                 : new Turret(new TurretIOSim());
 
-        shooter =
-            new Shooter(flywheel, hood, spindexer, tunnel, turret, visionGlobalPose, drive, led);
+        shooter = new Shooter(flywheel, hood, spindexer, tunnel, turret, visionGlobalPose, drive);
 
         deployer =
             Constants.deployerMode == Constants.SubsystemMode.DISABLED
@@ -326,8 +324,7 @@ public class RobotContainer {
         spindexer = new Spindexer(new SpindexerIO() {});
         tunnel = new Tunnel(new TunnelIO() {});
         turret = new Turret(new TurretIO() {});
-        shooter =
-            new Shooter(flywheel, hood, spindexer, tunnel, turret, visionGlobalPose, drive, led);
+        shooter = new Shooter(flywheel, hood, spindexer, tunnel, turret, visionGlobalPose, drive);
         rollers = new Rollers(new RollersIO() {});
         deployer = new Deployer(new DeployerIO() {});
         intake = new Intake(deployer, rollers);
@@ -402,7 +399,7 @@ public class RobotContainer {
 
   public void configureAutonomousSelector() {
     autonomousSelector =
-        new AutonomousSelector(drive, hood, turret, shooter, visionObjectDetection, led, intake);
+        new AutonomousSelector(drive, hood, turret, shooter, visionObjectDetection, intake);
   }
 
   public void setBrakeMode(boolean brake) {
