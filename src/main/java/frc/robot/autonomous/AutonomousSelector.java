@@ -15,7 +15,6 @@ import frc.robot.constants.Constants.Mode;
 import frc.robot.subsystems.Simulator;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.intake.Intake;
-import frc.robot.subsystems.led.LED;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.shooter.hood.Hood;
 import frc.robot.subsystems.shooter.turret.Turret;
@@ -75,17 +74,15 @@ public class AutonomousSelector {
       Turret turret,
       Shooter shooter,
       VisionObjectDetection visionObjectDetection,
-      LED led,
       Intake intake) {
     autos =
         List.of(
             new Auto(AutoName.DO_NOTHING, new DoNothing(hood)),
-            new Auto(AutoName.R_2_SWEEP, new R2Sweep(drive, led, intake, shooter)),
-            new Auto(AutoName.L_2_SWEEP, new L2Sweep(drive, led, intake, shooter)),
-            new Auto(AutoName.R_2056, new R2056(drive, led, intake, shooter)),
-            new Auto(AutoName.L_2056, new L2056(drive, led, intake, shooter)),
-            new Auto(
-                AutoName.C_START_TO_DEPOT, new CenterStartToDepot(drive, led, intake, shooter)),
+            new Auto(AutoName.R_2_SWEEP, new R2Sweep(drive, intake, shooter)),
+            new Auto(AutoName.L_2_SWEEP, new L2Sweep(drive, intake, shooter)),
+            new Auto(AutoName.R_2056, new R2056(drive, intake, shooter)),
+            new Auto(AutoName.L_2056, new L2056(drive, intake, shooter)),
+            new Auto(AutoName.C_START_TO_DEPOT, new CenterStartToDepot(drive, intake, shooter)),
             new Auto(
                 AutoName.DRIVE_WHEEL_RADIUS_CHARACTERIZATION,
                 new SequentialCommandGroup(

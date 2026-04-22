@@ -46,7 +46,14 @@ public class Spindexer {
             }
           }
           case IDLE -> {
-            io.stop();
+            if (inputs.leaderMechanismRPS < Constants.Spindexer.stopTreshold
+                || requestedSpeed == 0) {
+              io.stop();
+              requestedSpeed = 0;
+            } else {
+              requestedSpeed = 0.5;
+              io.setTargetMechanismRotations(requestedSpeed);
+            }
           }
           case INDEXING -> {
             io.setTargetMechanismRotations(requestedSpeed);
@@ -67,7 +74,6 @@ public class Spindexer {
   public void requestIdle() {
     if (!unjamOverride) {
       state = SpindexerStates.IDLE;
-      requestedSpeed = 0;
     }
   }
 
@@ -95,10 +101,10 @@ public class Spindexer {
   }
 
   public boolean isStopped() {
-    return inputs.mechanismRPS < Constants.Spindexer.stoppedMechanismRotationsPerSec;
+    return inputs.leaderMechanismRPS < Constants.Spindexer.stoppedMechanismRotationsPerSec;
   }
 
   public double getVelocity() {
-    return inputs.mechanismRPS;
+    return inputs.leaderMechanismRPS;
   }
 }
