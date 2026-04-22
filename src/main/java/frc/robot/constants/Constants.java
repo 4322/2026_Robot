@@ -457,9 +457,9 @@ public final class Constants {
   public static final double fixedSolutionBlueDeg = 0;
   // Trench structure - distance 2.90
   public static final FiringSolution fixedSolutionBlue =
-      new FiringSolution(53, 10, fixedSolutionBlueDeg, 35, 7);
+      new FiringSolution(50.649, 16.099, fixedSolutionBlueDeg, 55, 11);
   public static final FiringSolution fixedSolutionRed =
-      new FiringSolution(50, 15, fixedSolutionBlueDeg + 180, 35, 7);
+      new FiringSolution(50.649, 16.099, fixedSolutionBlueDeg + 180, 55, 11);
 
   public static class FiringTargetTranslations {
     // Right/left are determined as view from blue alliance driver station
