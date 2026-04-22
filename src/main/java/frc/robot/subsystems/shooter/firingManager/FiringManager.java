@@ -28,12 +28,12 @@ public class FiringManager {
         case ALLIANCE_ZONE:
           Logger.recordOutput("FiringManager/targetZone", "Hub");
           return Constants.FiringTargetTranslations.Blue.hubTranslation;
-        case RIGHT_NEUTRAL:
-          Logger.recordOutput("FiringManager/targetZone", "Alliance Right");
-          return Constants.FiringTargetTranslations.Blue.allianceRightTranslation;
-        case LEFT_NEUTRAL:
+        case PASS_RIGHT:
           Logger.recordOutput("FiringManager/targetZone", "Alliance Left");
           return Constants.FiringTargetTranslations.Blue.allianceLeftTranslation;
+        case PASS_LEFT:
+          Logger.recordOutput("FiringManager/targetZone", "Alliance Right");
+          return Constants.FiringTargetTranslations.Blue.allianceRightTranslation;
         case RIGHT_OPPOSITION:
           if (Constants.FiringManager.alwaysTargetAllianceZone) {
             Logger.recordOutput("FiringManager/targetZone", "Alliance Right");
@@ -59,10 +59,10 @@ public class FiringManager {
         case ALLIANCE_ZONE:
           Logger.recordOutput("FiringManager/targetZone", "Hub");
           return Constants.FiringTargetTranslations.Red.hubTranslation;
-        case RIGHT_NEUTRAL:
+        case PASS_RIGHT:
           Logger.recordOutput("FiringManager/targetZone", "Alliance Right");
           return Constants.FiringTargetTranslations.Red.allianceRightTranslation;
-        case LEFT_NEUTRAL:
+        case PASS_LEFT:
           Logger.recordOutput("FiringManager/targetZone", "Alliance Left");
           return Constants.FiringTargetTranslations.Red.allianceLeftTranslation;
         case RIGHT_OPPOSITION:

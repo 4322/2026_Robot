@@ -22,6 +22,8 @@ public class FieldConstants {
   public static double edgeOfHubNeutral = 47.00;
   public static double trenchZoneArea = 22.20;
 
+  public static double bumpLength = Units.inchesToMeters(73.00);
+
   // Very small tolerance to cover the actual trench bar
   public static double stopShootingZoneBuffer = Units.inchesToMeters(2.0);
 
@@ -38,7 +40,7 @@ public class FieldConstants {
   public static final double fieldEdgeTolerance =
       Units.inchesToMeters(
           48); // Entire length of side of hub to towards the driverstation to the neutral zone
-  // Added to still detect robot with minor odom or vision discrepancy
+  // Added to still detect robot with minor odometry or vision discrepancy
 
   // All left/right designations are relative to blue alliance station
   public static class Blue {
@@ -115,6 +117,37 @@ public class FieldConstants {
                 blueLineX - Units.inchesToMeters(22.20),
                 centerLineY + Units.inchesToMeters(58.41 / 2)),
             "blue/frontOfHub");
+
+    // These zones are based on which side they're passing to, facing the blue driver station
+    // Only cover neutral zone
+
+    // Area to pass to right side of alliance zone, from perspective of blue alliance station
+    public static Region2d passLeftZone =
+        new Region2d(
+            new Translation2d[] {
+              new Translation2d(
+                  redLineX - hubOffset,
+                  centerLineY + Units.inchesToMeters(47.00 / 2) + bumpLength / 2),
+              new Translation2d(
+                  blueLineX + hubOffset, centerLineY - Units.inchesToMeters(47.00 / 2)),
+              new Translation2d(blueLineX + hubOffset, -fieldEdgeTolerance),
+              new Translation2d(redLineX - hubOffset, -fieldEdgeTolerance)
+            },
+            "blue/passLeftZone");
+
+    // Area to pass to left side of alliance zone, from perspective of blue alliance station
+    public static Region2d passRightZone =
+        new Region2d(
+            new Translation2d[] {
+              new Translation2d(
+                  redLineX - hubOffset,
+                  centerLineY + Units.inchesToMeters(47.00 / 2) + bumpLength / 2),
+              new Translation2d(
+                  blueLineX + hubOffset, centerLineY - Units.inchesToMeters(47.00 / 2)),
+              new Translation2d(blueLineX + hubOffset, fieldWidth + fieldEdgeTolerance),
+              new Translation2d(redLineX - hubOffset, fieldWidth + fieldEdgeTolerance)
+            },
+            "blue/passRightZone");
   }
 
   public static class Red {
@@ -192,6 +225,37 @@ public class FieldConstants {
                 redLineX + Units.inchesToMeters(22.20 + 40),
                 centerLineY + Units.inchesToMeters(58.41 / 2)),
             "red/frontOfHub");
+
+    // These zones are based on which side they're passing to, facing the blue driver station
+    // Only cover neutral zone
+
+    // Area to pass to left side of alliance zone, from perspective of red alliance station
+    public static Region2d passLeftZone =
+        new Region2d(
+            new Translation2d[] {
+              new Translation2d(
+                  redLineX - hubOffset, centerLineY + Units.inchesToMeters(47.00 / 2)),
+              new Translation2d(
+                  blueLineX + hubOffset,
+                  centerLineY - Units.inchesToMeters(47.00 / 2) - bumpLength / 2),
+              new Translation2d(blueLineX + hubOffset, fieldWidth + fieldEdgeTolerance),
+              new Translation2d(redLineX - hubOffset, fieldWidth + fieldEdgeTolerance)
+            },
+            "red/passRightZone");
+
+    // Area to pass to right side of alliance zone, from perspective of red alliance station
+    public static Region2d passRightZone =
+        new Region2d(
+            new Translation2d[] {
+              new Translation2d(
+                  redLineX - hubOffset, centerLineY + Units.inchesToMeters(47.00 / 2)),
+              new Translation2d(
+                  blueLineX + hubOffset,
+                  centerLineY - Units.inchesToMeters(47.00 / 2) - bumpLength / 2),
+              new Translation2d(blueLineX + hubOffset, -fieldEdgeTolerance),
+              new Translation2d(redLineX - hubOffset, -fieldEdgeTolerance)
+            },
+            "red/passLeftZone");
   }
 
   public static class Neutral {
@@ -228,6 +292,12 @@ public class FieldConstants {
 
     Neutral.rightNeutral.logPoints();
     Neutral.leftNeutral.logPoints();
+
+    Blue.passRightZone.logPoints();
+    Blue.passLeftZone.logPoints();
+
+    Red.passRightZone.logPoints();
+    Red.passLeftZone.logPoints();
   }
 
   public static final double aprilTagWidth = Units.inchesToMeters(6.50);

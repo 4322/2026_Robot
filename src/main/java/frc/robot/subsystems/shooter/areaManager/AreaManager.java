@@ -15,6 +15,8 @@ public class AreaManager {
     RIGHT_NEUTRAL,
     LEFT_STOP_SHOOT,
     RIGHT_STOP_SHOOT,
+    PASS_RIGHT,
+    PASS_LEFT,
     LEFT_OPPOSITION_STOP_SHOOT,
     RIGHT_OPPOSITION_STOP_SHOOT,
     UNKNOWN
@@ -56,10 +58,10 @@ public class AreaManager {
         return Zone.RIGHT_OPPOSITION;
       } else if (FieldConstants.Red.leftAllianceZone.contains(position)) {
         return Zone.LEFT_OPPOSITION;
-      } else if (FieldConstants.Neutral.rightNeutral.contains(position)) {
-        return Zone.RIGHT_NEUTRAL;
-      } else if (FieldConstants.Neutral.leftNeutral.contains(position)) {
-        return Zone.LEFT_NEUTRAL;
+      } else if (FieldConstants.Blue.passLeftZone.contains(position)) {
+        return Zone.PASS_LEFT;
+      } else if (FieldConstants.Blue.passRightZone.contains(position)) {
+        return Zone.PASS_RIGHT;
       }
     } else {
       if (FieldConstants.Red.stopShootLeftNeutral.contains(position)) {
@@ -76,10 +78,10 @@ public class AreaManager {
         return Zone.RIGHT_OPPOSITION;
       } else if (FieldConstants.Blue.leftAllianceZone.contains(position)) {
         return Zone.LEFT_OPPOSITION;
-      } else if (FieldConstants.Neutral.rightNeutral.contains(position)) {
-        return Zone.RIGHT_NEUTRAL;
-      } else if (FieldConstants.Neutral.leftNeutral.contains(position)) {
-        return Zone.LEFT_NEUTRAL;
+      } else if (FieldConstants.Red.passLeftZone.contains(position)) {
+        return Zone.PASS_LEFT;
+      } else if (FieldConstants.Red.passRightZone.contains(position)) {
+        return Zone.PASS_RIGHT;
       }
     }
     return Zone.UNKNOWN;
