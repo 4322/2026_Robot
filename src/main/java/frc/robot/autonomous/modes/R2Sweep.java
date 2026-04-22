@@ -5,7 +5,6 @@ import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
@@ -54,7 +53,7 @@ public class R2Sweep extends SequentialCommandGroup {
             AutoBuilder.followPath(Robot.R_2SWEEP_F),
             ShooterCommands.idle(shooter, intake, 14.0, 40.0, 165.0),
             ShooterCommands.autoUnjam(shooter, Constants.Autonomous.unjamTimeSec)),
-          new ParallelDeadlineGroup(
+        new ParallelDeadlineGroup(
             AutoBuilder.followPath(Robot.L_2056_C),
             ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake),
             IntakeCommands.autoSmoosh(
