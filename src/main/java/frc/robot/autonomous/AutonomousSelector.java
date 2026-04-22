@@ -17,7 +17,6 @@ import frc.robot.constants.Constants.Mode;
 import frc.robot.subsystems.Simulator;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.intake.Intake;
-import frc.robot.subsystems.led.LED;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.shooter.hood.Hood;
 import frc.robot.subsystems.shooter.turret.Turret;
@@ -75,7 +74,6 @@ public class AutonomousSelector {
       Turret turret,
       Shooter shooter,
       VisionObjectDetection visionObjectDetection,
-      LED led,
       Intake intake) {
     autos =
         List.of(
