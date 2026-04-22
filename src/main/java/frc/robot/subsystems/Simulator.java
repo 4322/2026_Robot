@@ -14,7 +14,6 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.RobotContainer;
 import frc.robot.autonomous.AutonomousSelector.AutoName;
 import frc.robot.test.TesterSelector.TestName;
-
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -22,17 +21,18 @@ import java.util.Map;
 import org.littletonrobotics.junction.Logger;
 
 public class Simulator {
-  private static final RegressTests regressTest = RegressTests.TRENCHES;
+  private static final RegressTests regressTest = RegressTests.TEST;
   public static AutoName autoScenario;
+  private static TestName testScenario;
   private TeleopScenario teleopScenario;
   private List<TeleAnomaly> teleAnomalies;
   private List<AutoAnomaly> autoAnomalies;
+  private List<TestAnomaly> testAnomalies;
   private String currentScenario;
   private String gameSpecificMessage = "";
   private final Map<Integer, Double> axisValues = new HashMap<Integer, Double>();
   private Timer warmupTimer = new Timer();
   public static boolean slipWheels = false;
-  private TestName testScenario;
 
   private enum RegressTests {
     DO_NOTHING,
@@ -47,7 +47,8 @@ public class Simulator {
     ZONES,
     INTAKE_TEST,
     DRIVE_WHILE_SHOOTING,
-    TRENCHES
+    TRENCHES,
+    TEST
   }
 
   private enum TeleAnomaly {
@@ -56,6 +57,11 @@ public class Simulator {
 
   private enum AutoAnomaly {
     NONE
+  }
+
+  private enum TestAnomaly {
+    NONE,
+    DRIVE_FL_TOO_SLOW
   }
 
   private enum TeleopScenario {
@@ -174,6 +180,8 @@ public class Simulator {
     private List<AutoAnomaly> autoAnomalies;
     private TeleopScenario teleopScenario;
     private List<TeleAnomaly> teleAnomalies;
+    private TestName testScenario;
+    private List<TestAnomaly> testAnomalies;
     private Alliance alliance;
 
     RegressionTest(
@@ -182,19 +190,23 @@ public class Simulator {
         List<AutoAnomaly> autoAnomalies,
         TeleopScenario teleopScenario,
         List<TeleAnomaly> teleAnomalies,
+        TestName testScenario,
+        List<TestAnomaly> testAnomalies,
         Alliance alliance) {
       this.name = name;
       this.autoScenario = autoScenario;
       this.autoAnomalies = autoAnomalies;
       this.teleopScenario = teleopScenario;
       this.teleAnomalies = teleAnomalies;
+      this.testScenario = testScenario;
+      this.testAnomalies = testAnomalies;
       this.alliance = alliance;
     }
 
     @SuppressWarnings("unused")
     RegressionTest(
         String name, AutoName autoScenario, List<AutoAnomaly> autoAnomalies, Alliance alliance) {
-      this(name, autoScenario, autoAnomalies, null, null, alliance);
+      this(name, autoScenario, autoAnomalies, null, null, null, null, alliance);
     }
 
     @SuppressWarnings("unused")
@@ -203,19 +215,29 @@ public class Simulator {
         AutoName autoScenario,
         TeleopScenario teleopScenario,
         List<TeleAnomaly> teleAnomalies,
+        TestName testScenario,
+        List<TestAnomaly> testAnomalies,
         Alliance alliance) {
-      this(name, autoScenario, (List<AutoAnomaly>) null, teleopScenario, teleAnomalies, alliance);
+      this(
+          name,
+          autoScenario,
+          (List<AutoAnomaly>) null,
+          teleopScenario,
+          teleAnomalies,
+          testScenario,
+          testAnomalies,
+          alliance);
     }
 
     @SuppressWarnings("unused")
     RegressionTest(
         String name, AutoName autoScenario, TeleopScenario teleopScenario, Alliance alliance) {
-      this(name, autoScenario, teleopScenario, null, alliance);
+      this(name, autoScenario, teleopScenario, null, null, null, alliance);
     }
 
     @SuppressWarnings("unused")
     RegressionTest(String name, AutoName autoScenario, Alliance alliance) {
-      this(name, autoScenario, null, null, alliance);
+      this(name, autoScenario, null, null, null, null, alliance);
     }
 
     RegressionTest(
@@ -223,11 +245,20 @@ public class Simulator {
         TeleopScenario teleopScenario,
         List<TeleAnomaly> teleAnomalies,
         Alliance alliance) {
-      this(name, null, teleopScenario, teleAnomalies, alliance);
+      this(name, null, teleopScenario, teleAnomalies, null, null, alliance);
     }
 
     RegressionTest(String name, TeleopScenario teleopScenario, Alliance alliance) {
       this(name, teleopScenario, null, alliance);
+    }
+
+    RegressionTest(
+        String name, TestName testScenario, List<TestAnomaly> testAnomalies, Alliance alliance) {
+      this(name, null, null, null, testScenario, testAnomalies, alliance);
+    }
+
+    RegressionTest(String name, TestName testScenario, Alliance alliance) {
+      this(name, testScenario, null, alliance);
     }
   }
 
@@ -246,7 +277,8 @@ public class Simulator {
       case SUBSYSTEM_TEST_TELE -> List.of(
           new RegressionTest("Subsystem Test", TeleopScenario.SUBSYSTEM_TEST, Alliance.Blue));
       case TEST_AUTOROTATE -> List.of(
-          new RegressionTest("Auto Rotate", TeleopScenario.AUTO_ROTATE, Alliance.Blue));
+          new RegressionTest("Auto Rotate", TeleopScenario.AUTO_ROTATE, Alliance.Blue),
+          new RegressionTest("Test Wheels", TestName.DRIVE_TEST, Alliance.Blue));
       case TURRET -> List.of(
           new RegressionTest("Turret Test", TeleopScenario.TURRET, Alliance.Blue));
       case ALL_AUTOS -> List.of(
@@ -277,6 +309,8 @@ public class Simulator {
       case TRENCHES -> List.of(
           new RegressionTest("Trenches", TeleopScenario.TRENCHES, Alliance.Blue),
           new RegressionTest("Trenches", TeleopScenario.TRENCHES, Alliance.Red));
+      case TEST -> List.of(new RegressionTest("Tester", TestName.DRIVE_TEST, Alliance.Blue));
+
       default -> List.of();
     };
   }
@@ -725,6 +759,24 @@ public class Simulator {
     };
   }
 
+  private List<SimEvent> buildTestScenario() {
+    if (testScenario == null) {
+      return List.of();
+    }
+    double t = 0.0;
+    int eventNum = 1;
+
+    return switch (testScenario) {
+      default -> List.of(
+          new SimEvent(
+              t += 1.0,
+              "Start pose",
+              EventType.SET_POSE,
+              new FieldPose2d(12.0, 4.0, Rotation2d.k180deg)),
+          new SimEvent(t += 100, "End", EventType.END_OF_SCENARIO));
+    };
+  }
+
   @SuppressWarnings("unused")
   private boolean aListContains(AutoAnomaly aAnomaly) {
     if (autoAnomalies == null) {
@@ -745,6 +797,7 @@ public class Simulator {
   private RegressionTest currentRegressionTest;
   private List<SimEvent> autoEvents;
   private List<SimEvent> teleopEvents;
+  private List<SimEvent> testEvents;
   private List<SimEvent> events;
   private Iterator<SimEvent> eventIterator;
   private SimEvent currentEvent;
@@ -932,7 +985,11 @@ public class Simulator {
     Logger.recordOutput("Sim/EventName", "Disabled");
     Logger.recordOutput("Sim/EventType", "Disabled");
 
-    DriverStationSim.setAutonomous(events == autoEvents);
+    if (events == testEvents) {
+      DriverStationSim.setTest(true);
+    } else {
+      DriverStationSim.setAutonomous(events == autoEvents);
+    }
     if (currentAlliance == Alliance.Red) {
       DriverStationSim.setAllianceStationId(AllianceStationID.Red2);
     } else {
@@ -942,8 +999,10 @@ public class Simulator {
     eventIterator = events.iterator();
     if (events == autoEvents) {
       currentScenario = autoScenario.toString();
-    } else {
+    } else if (events == teleopEvents) {
       currentScenario = teleopScenario.toString();
+    } else {
+      currentScenario = testScenario.toString();
     }
   }
 
@@ -968,13 +1027,18 @@ public class Simulator {
     autoAnomalies = currentRegressionTest.autoAnomalies;
     teleopScenario = currentRegressionTest.teleopScenario;
     teleAnomalies = currentRegressionTest.teleAnomalies;
+    testScenario = currentRegressionTest.testScenario;
+    testAnomalies = currentRegressionTest.testAnomalies;
     currentAlliance = currentRegressionTest.alliance;
     autoEvents = buildAutoScenario();
     teleopEvents = buildTeleopScenario();
+    testEvents = buildTestScenario();
     if (!autoEvents.isEmpty()) {
       events = autoEvents;
-    } else {
+    } else if (!teleopEvents.isEmpty()) {
       events = teleopEvents;
+    } else {
+      events = testEvents;
     }
     setPose(new Pose2d(0, 0, Rotation2d.kZero));
     resetScenario();
@@ -987,10 +1051,6 @@ public class Simulator {
 
   private void holdButton(XboxController.Button button) {
     activeButtonBitmask |= 1 << (button.value - 1);
-  }
-
-  public static TestName getTestScenario() {
-    return testScenario;
   }
 
   private void releaseButton(XboxController.Button button) {
@@ -1041,6 +1101,10 @@ public class Simulator {
 
   public static AutoName getAutoScenario() {
     return autoScenario;
+  }
+
+  public static TestName getTestScenario() {
+    return testScenario;
   }
 
   private void configureControllerTestBindings() {
