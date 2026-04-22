@@ -309,8 +309,8 @@ public class Shooter extends SubsystemBase {
     if (fixedPositionShooting) {
       targetHoodAngleDeg = Constants.fixedSolutionBlue.hoodAngle;
       targetFlywheelSpeedRPS = Constants.fixedSolutionBlue.flywheelSpeedRPS;
-      targetTunnelSpeedRPS = Constants.fixedSolutionBlue.tunnelSpeedRPS;
-      targetSpindexerSpeedRPS = Constants.fixedSolutionBlue.indexerSpeedRPS;
+        targetTunnelSpeedRPS = Constants.Tunnel.shootRPS;
+        targetSpindexerSpeedRPS = Constants.Spindexer.shootRPS;
       targetFFRadPerSec = 0;
       if (Robot.alliance == DriverStation.Alliance.Blue) {
         targetTurretAngleDeg = Constants.fixedSolutionBlue.turretAngleDeg;
