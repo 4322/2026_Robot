@@ -985,11 +985,7 @@ public class Simulator {
     Logger.recordOutput("Sim/EventName", "Disabled");
     Logger.recordOutput("Sim/EventType", "Disabled");
 
-    if (events == testEvents) {
-      DriverStationSim.setTest(true);
-    } else {
       DriverStationSim.setAutonomous(events == autoEvents);
-    }
     if (currentAlliance == Alliance.Red) {
       DriverStationSim.setAllianceStationId(AllianceStationID.Red2);
     } else {
@@ -1001,9 +997,7 @@ public class Simulator {
       currentScenario = autoScenario.toString();
     } else if (events == teleopEvents) {
       currentScenario = teleopScenario.toString();
-    } else {
-      currentScenario = testScenario.toString();
-    }
+    } 
   }
 
   private void setNextRegressTest() {
@@ -1037,9 +1031,7 @@ public class Simulator {
       events = autoEvents;
     } else if (!teleopEvents.isEmpty()) {
       events = teleopEvents;
-    } else {
-      events = testEvents;
-    }
+    } 
     setPose(new Pose2d(0, 0, Rotation2d.kZero));
     resetScenario();
   }
