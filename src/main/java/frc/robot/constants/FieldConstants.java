@@ -15,7 +15,7 @@ public class FieldConstants {
   // Point B should be top left
   // All are relative to the blue alliance station
   // Using Wpilib coordinates
-  public static double trenchScaleFactor = 1.3;
+  public static double stopShootingZoneScale = 1.3;
 
   public static double fieldLength = Units.inchesToMeters(651.22);
   public static double fieldWidth = Units.inchesToMeters(317.69);
@@ -68,7 +68,7 @@ public class FieldConstants {
                 blueLineX + hubOffset - stopShootingZoneBuffer,
                 centerLineY + Units.inchesToMeters(133.47 - 24.97)),
             new Translation2d(
-                blueLineX + hubOffset + trenchScaleFactor * Units.inchesToMeters(22.20 + 6),
+                blueLineX + hubOffset + stopShootingZoneScale * Units.inchesToMeters(22.20 + 6),
                 fieldWidth + fieldEdgeTolerance),
             "blue/stopShootLeftNeutral");
 
@@ -78,7 +78,7 @@ public class FieldConstants {
         new Region2d(
             new Translation2d(blueLineX + hubOffset - stopShootingZoneBuffer, -fieldEdgeTolerance),
             new Translation2d(
-                blueLineX + hubOffset + trenchScaleFactor * Units.inchesToMeters(22.20 + 6),
+                blueLineX + hubOffset + stopShootingZoneScale * Units.inchesToMeters(22.20 + 6),
                 Units.inchesToMeters(50.59)),
             "blue/stopShootRightNeutral");
 
@@ -87,10 +87,10 @@ public class FieldConstants {
     public static Region2d stopShootLeftFull =
         new Region2d(
             new Translation2d(
-                blueLineX + hubOffset - trenchScaleFactor * Units.inchesToMeters(22.20 + 6),
+                blueLineX + hubOffset - stopShootingZoneScale * Units.inchesToMeters(22.20 + 6),
                 centerLineY + Units.inchesToMeters(133.47 - 24.97)),
             new Translation2d(
-                blueLineX + hubOffset + trenchScaleFactor * Units.inchesToMeters(22.20 + 6),
+                blueLineX + hubOffset + stopShootingZoneScale * Units.inchesToMeters(22.20 + 6),
                 fieldWidth + fieldEdgeTolerance),
             "blue/stopShootLeftFull");
 
@@ -99,10 +99,10 @@ public class FieldConstants {
     public static Region2d stopShootRightFull =
         new Region2d(
             new Translation2d(
-                blueLineX + hubOffset - trenchScaleFactor * Units.inchesToMeters(22.20 + 6),
+                blueLineX + hubOffset - stopShootingZoneScale * Units.inchesToMeters(22.20 + 6),
                 -fieldEdgeTolerance),
             new Translation2d(
-                blueLineX + hubOffset + trenchScaleFactor * Units.inchesToMeters(22.20 + 6),
+                blueLineX + hubOffset + stopShootingZoneScale * Units.inchesToMeters(22.20 + 6),
                 Units.inchesToMeters(50.59)),
             "blue/stopShootRightFull");
 
@@ -142,7 +142,7 @@ public class FieldConstants {
     public static Region2d stopShootLeftNeutral =
         new Region2d(
             new Translation2d(
-                redLineX - hubOffset - trenchScaleFactor * Units.inchesToMeters(22.20 + 6),
+                redLineX - hubOffset - stopShootingZoneScale * Units.inchesToMeters(22.20 + 6),
                 centerLineY + Units.inchesToMeters(133.47 - 24.97)),
             new Translation2d(
                 redLineX - hubOffset + stopShootingZoneBuffer, fieldWidth + fieldEdgeTolerance),
@@ -153,7 +153,7 @@ public class FieldConstants {
     public static Region2d stopShootRightNeutral =
         new Region2d(
             new Translation2d(
-                redLineX - hubOffset - trenchScaleFactor * Units.inchesToMeters(22.20 + 6),
+                redLineX - hubOffset - stopShootingZoneScale * Units.inchesToMeters(22.20 + 6),
                 -fieldEdgeTolerance),
             new Translation2d(
                 redLineX - hubOffset + stopShootingZoneBuffer, Units.inchesToMeters(50.59)),
@@ -164,10 +164,10 @@ public class FieldConstants {
     public static Region2d stopShootLeftFull =
         new Region2d(
             new Translation2d(
-                redLineX - hubOffset - trenchScaleFactor * Units.inchesToMeters(22.20 + 6),
+                redLineX - hubOffset - stopShootingZoneScale * Units.inchesToMeters(22.20 + 6),
                 centerLineY + Units.inchesToMeters(133.47 - 24.97)),
             new Translation2d(
-                redLineX - hubOffset + trenchScaleFactor * Units.inchesToMeters(22.20 + 6),
+                redLineX - hubOffset + stopShootingZoneScale * Units.inchesToMeters(22.20 + 6),
                 fieldWidth + fieldEdgeTolerance),
             "red/stopShootLeftFull");
 
@@ -176,10 +176,10 @@ public class FieldConstants {
     public static Region2d stopShootRightFull =
         new Region2d(
             new Translation2d(
-                redLineX - hubOffset - trenchScaleFactor * Units.inchesToMeters(22.20 + 6),
+                redLineX - hubOffset - stopShootingZoneScale * Units.inchesToMeters(22.20 + 6),
                 -fieldEdgeTolerance),
             new Translation2d(
-                redLineX - hubOffset + trenchScaleFactor * Units.inchesToMeters(22.20 + 6),
+                redLineX - hubOffset + stopShootingZoneScale * Units.inchesToMeters(22.20 + 6),
                 Units.inchesToMeters(50.59)),
             "red/stopShootRightFull");
 
@@ -197,13 +197,13 @@ public class FieldConstants {
   public static class Neutral {
     public static Region2d rightNeutral =
         new Region2d(
-            new Translation2d(blueLineX, -fieldEdgeTolerance),
-            new Translation2d(redLineX, centerLineY),
+            new Translation2d(blueLineX + hubOffset, -fieldEdgeTolerance),
+            new Translation2d(redLineX - hubOffset, centerLineY),
             "neutral/rightNeutral");
     public static Region2d leftNeutral =
         new Region2d(
-            new Translation2d(blueLineX, centerLineY),
-            new Translation2d(redLineX, fieldWidth + fieldEdgeTolerance),
+            new Translation2d(blueLineX + hubOffset, centerLineY),
+            new Translation2d(redLineX - hubOffset, fieldWidth + fieldEdgeTolerance),
             "neutral/leftNeutral");
   }
 
