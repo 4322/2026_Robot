@@ -60,7 +60,7 @@ public class TesterSelector {
             new Test(TestName.DO_NOTHING, new SequentialCommandGroup()),
             new Test(TestName.DRIVE_TEST, new DriveTest(drive)),
             new Test(TestName.Roller_TEST, new RollerTest(intake, rollers)),
-            new Test(TestName.FLYWHEEL_TEST, new FlywheelTest(flywheel, intake)));
+            new Test(TestName.FLYWHEEL_TEST, new FlywheelTest(flywheel, intake, shooter, drive)));
     for (Test nextAuto : test) {
       if (nextAuto.name == defaultTestName) {
         testerSelector.addDefaultOption(nextAuto.name.toString(), nextAuto.command);

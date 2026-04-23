@@ -2,6 +2,7 @@ package frc.robot.test.RealTests;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -17,31 +18,34 @@ public class DriveTest extends SequentialCommandGroup {
 
     addCommands(
         new InstantCommand(() -> Logger.recordOutput("Tester/testStarted", true)),
-        new InstantCommand(
-            () ->
-                drive.runVelocity(
+    new ParallelCommandGroup(
+    Commands.run(
+                () -> {
+                  drive.runVelocity(
                     ChassisSpeeds.fromFieldRelativeSpeeds(
-                        drive.getMaxLinearSpeedMetersPerSec(), 0, 0, Rotation2d.fromDegrees(0)))),
-        new ParallelCommandGroup(
+                        drive.getMaxLinearSpeedMetersPerSec(), 0, 0, Rotation2d.fromDegrees(0)));
+                },
+                drive),
             DriveCommands.DriveTesting(drive, "Drive Forward"), new WaitCommand(5)),
-        new InstantCommand(
-            () ->
-                drive.runVelocity(
-                    ChassisSpeeds.fromFieldRelativeSpeeds(
-                        -drive.getMaxLinearSpeedMetersPerSec(), 0, 0, Rotation2d.fromDegrees(0)))),
-        new ParallelCommandGroup(
-            DriveCommands.DriveTesting(drive, "Drive BackWard"), new WaitCommand(5)),
-        new InstantCommand(
-            () ->
-                drive.runVelocity(
-                    ChassisSpeeds.fromFieldRelativeSpeeds(
-                        0, drive.getMaxLinearSpeedMetersPerSec(), 0, Rotation2d.fromDegrees(0)))),
-        new InstantCommand(
-            () ->
-                drive.runVelocity(
-                    ChassisSpeeds.fromFieldRelativeSpeeds(
-                        0, drive.getMaxLinearSpeedMetersPerSec(), 0, Rotation2d.fromDegrees(0)))),
-        new ParallelCommandGroup(
-            DriveCommands.DriveTesting(drive, "Drive Left"), new WaitCommand(5)));
+        // new InstantCommand(
+        //     () ->
+        //         drive.runVelocity(
+        //             ChassisSpeeds.fromFieldRelativeSpeeds(
+        //                 -drive.getMaxLinearSpeedMetersPerSec(), 0, 0, Rotation2d.fromDegrees(0)))),
+        // new ParallelCommandGroup(
+        //     DriveCommands.DriveTesting(drive, "Drive BackWard"), new WaitCommand(5)),
+        // new InstantCommand(
+        //     () ->
+        //         drive.runVelocity(
+        //             ChassisSpeeds.fromFieldRelativeSpeeds(
+        //                 0, drive.getMaxLinearSpeedMetersPerSec(), 0, Rotation2d.fromDegrees(0)))),
+        // new InstantCommand(
+        //     () ->
+        //         drive.runVelocity(
+        //             ChassisSpeeds.fromFieldRelativeSpeeds(
+        //                 0, drive.getMaxLinearSpeedMetersPerSec(), 0, Rotation2d.fromDegrees(0)))),
+        // new ParallelCommandGroup(
+        //     DriveCommands.DriveTesting(drive, "Drive Left"), new WaitCommand(5))
+        );
   }
 }
