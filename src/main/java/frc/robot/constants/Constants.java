@@ -136,38 +136,38 @@ public final class Constants {
   }
 
   public static class Tester {
-    public static final String DriveKeyFL = "Drive/Front Drive Left Status";
-    public static final String DriveKeyFR = "Drive/Front Drive Right Status";
-    public static final String DriveKeyBL = "Drive/Back Drive Left Status";
-    public static final String DriveKeyBR = "Drive/Back Drive Right Status";
+    public static final String DriveKeyFL = "Drive/Front Left Status";
+    public static final String DriveKeyFR = "Drive/Front Right Status";
+    public static final String DriveKeyBL = "Drive/Back Left Status";
+    public static final String DriveKeyBR = "Drive/Back Right Status";
 
-    public static final String DriveColorKeyFL = "Drive/Front Drive Left Color Status";
-    public static final String DriveColorKeyFR = "Drive/Front Drive Right Color Status";
-    public static final String DriveColorKeyBL = "Drive/Back Drive Left Color Status";
-    public static final String DriveColorKeyBR = "Drive/Back Drive Right Color Status";
+    public static final String DriveColorKeyFL = "Drive/Front Left Color";
+    public static final String DriveColorKeyFR = "Drive/Front Right Color";
+    public static final String DriveColorKeyBL = "Drive/Back Left Color";
+    public static final String DriveColorKeyBR = "Drive/Back Right Color";
 
-    public static final String TurnKeyFL = "Turn/Front Turn Left Status";
-    public static final String TurnKeyFR = "Turn/Front Turn Right Status";
-    public static final String TurnKeyBL = "Turn/Back Turn Left Status";
-    public static final String TurnKeyBR = "Turn/Back Turn Right Status";
+    public static final String TurnKeyFL = "Turn/Front Left Status";
+    public static final String TurnKeyFR = "Turn/Front Right Status";
+    public static final String TurnKeyBL = "Turn/Back Left Status";
+    public static final String TurnKeyBR = "Turn/Back Right Status";
 
-    public static final String TurnColorKeyFL = "Turn/Front Turn Left Color Status";
-    public static final String TurnColorKeyFR = "Turn/Front Turn Right Color Status";
-    public static final String TurnColorKeyBL = "Turn/Back Turn Left Color Status";
-    public static final String TurnColorKeyBR = "Turn/Back Turn Right Color Status";
+    public static final String TurnColorKeyFL = "Turn/Front Left Color";
+    public static final String TurnColorKeyFR = "Turn/Front Right Color";
+    public static final String TurnColorKeyBL = "Turn/Back Left Color";
+    public static final String TurnColorKeyBR = "Turn/Back Right Color";
 
-    public static final String RollerKeyLeader = "Intake/Rollers/Leader Roller Status";
-    public static final String RollerKeyFollower = "Intake/Rollers/Follower Roller Status";
-    public static final String RollerColorKeyLeader = "Intake/Rollers/Leader Roller Color Status";
+    public static final String RollerKeyLeader = "Intake/Rollers/Roller Leader Status";
+    public static final String RollerKeyFollower = "Intake/Rollers/Roller Follower Status";
+    public static final String RollerColorKeyLeader = "Intake/Rollers/Roller Leader Color";
     public static final String RollerColorKeyFollower =
-        "Intake/Rollers/Follower Roller Color Status";
+        "Intake/Rollers/Roller Follower Color";
 
     public static final String FlywheelKeyLeader = "Shooter/Flywheel/Leader Flywheel Status";
     public static final String FlywheelKeyFollower = "Shooter/Flywheel/Follower Flywheel Status";
     public static final String FlywheelColorKeyLeader =
-        "Shooter/Flywheel/Leader Flywheel Color Status";
+        "Shooter/Flywheel/Leader Flywheel Color";
     public static final String FlywheelColorKeyFollower =
-        "Shooter/Flywheel/Follower Flywheel Color Status";
+        "Shooter/Flywheel/Follower Flywheel Color";
   }
 
   public static class Tunnel {
