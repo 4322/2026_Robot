@@ -5,7 +5,6 @@ import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.constants.Constants;
 import frc.robot.subsystems.drive.Drive;
-import org.littletonrobotics.junction.Logger;
 
 public class TesterTurn extends Command {
   private Drive drive;
@@ -43,7 +42,7 @@ public class TesterTurn extends Command {
     BRStatus = "";
     setColorStatus();
     setTextStatus();
-    Logger.recordOutput("Tester/Turn", testName);
+    SmartDashboard.putString("Tester/Turn", testName);
   }
 
   @Override
@@ -56,7 +55,7 @@ public class TesterTurn extends Command {
       FLColorStatus = Constants.NetworkTables.orange;
       FLStatus =
           " Incorrect Angle Speed by "
-              + (100 - ((drive.getModuleTurnVelocity(0) / drive.anglePerSecondRequested) * 100))
+              + (100 - ((drive.getModuleTurnVelocity(0) / drive.radPerSecondRequested) * 100))
               + "%";
     } else {
       FLColorStatus = Constants.NetworkTables.green;
@@ -71,7 +70,7 @@ public class TesterTurn extends Command {
       FRStatus =
           FRStatus
               + " Incorrect Angle Speed by "
-              + (100 - ((drive.getModuleTurnVelocity(1) / drive.anglePerSecondRequested) * 100))
+              + (100 - ((drive.getModuleTurnVelocity(1) / drive.radPerSecondRequested) * 100))
               + "%";
     } else {
       FRColorStatus = Constants.NetworkTables.green;
@@ -86,7 +85,7 @@ public class TesterTurn extends Command {
       BLStatus =
           BLStatus
               + " Incorrect Angle Speed by "
-              + (100 - ((drive.getModuleTurnVelocity(2) / drive.anglePerSecondRequested) * 100))
+              + (100 - ((drive.getModuleTurnVelocity(2) / drive.radPerSecondRequested) * 100))
               + "%";
 
     } else {
@@ -102,7 +101,7 @@ public class TesterTurn extends Command {
       BRStatus =
           BRStatus
               + " Incorrect Angle Speed by "
-              + (100 - ((drive.getModuleTurnVelocity(3) / drive.anglePerSecondRequested) * 100))
+              + (100 - ((drive.getModuleTurnVelocity(3) / drive.radPerSecondRequested) * 100))
               + "%";
     } else {
       BRColorStatus = Constants.NetworkTables.green;
@@ -117,16 +116,16 @@ public class TesterTurn extends Command {
   public void end(boolean interrupted) {}
 
   private void setTextStatus() {
-    SmartDashboard.putString(Constants.Tester.TurnKeyFL, FLStatus);
-    SmartDashboard.putString(Constants.Tester.TurnKeyFR, FRStatus);
-    SmartDashboard.putString(Constants.Tester.TurnKeyBL, BLStatus);
-    SmartDashboard.putString(Constants.Tester.TurnKeyBR, BRStatus);
+    SmartDashboard.putString(Constants.Tester.turnKeyFL, FLStatus);
+    SmartDashboard.putString(Constants.Tester.turnKeyFR, FRStatus);
+    SmartDashboard.putString(Constants.Tester.turnKeyBL, BLStatus);
+    SmartDashboard.putString(Constants.Tester.turnKeyBR, BRStatus);
   }
 
   private void setColorStatus() {
-    SmartDashboard.putString(Constants.Tester.TurnColorKeyFL, FLColorStatus.toHexString());
-    SmartDashboard.putString(Constants.Tester.TurnColorKeyFR, FRColorStatus.toHexString());
-    SmartDashboard.putString(Constants.Tester.TurnColorKeyBL, BLColorStatus.toHexString());
-    SmartDashboard.putString(Constants.Tester.TurnColorKeyBR, BRColorStatus.toHexString());
+    SmartDashboard.putString(Constants.Tester.turnColorKeyFL, FLColorStatus.toHexString());
+    SmartDashboard.putString(Constants.Tester.turnColorKeyFR, FRColorStatus.toHexString());
+    SmartDashboard.putString(Constants.Tester.turnColorKeyBL, BLColorStatus.toHexString());
+    SmartDashboard.putString(Constants.Tester.turnColorKeyBR, BRColorStatus.toHexString());
   }
 }

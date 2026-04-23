@@ -5,7 +5,6 @@ import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.constants.Constants;
 import frc.robot.subsystems.shooter.flywheel.Flywheel;
-import org.littletonrobotics.junction.Logger;
 
 public class TesterFlywheel extends Command {
   private Flywheel flywheel;
@@ -28,7 +27,7 @@ public class TesterFlywheel extends Command {
     followerStatus = "";
     setColorStatus();
     setTextStatus();
-    Logger.recordOutput("Tester/Flywheel", test);
+    SmartDashboard.putString("Tester/Flywheel", test);
   }
 
   @Override
@@ -108,13 +107,13 @@ public class TesterFlywheel extends Command {
 
   private void setColorStatus() {
     SmartDashboard.putString(
-        Constants.Tester.FlywheelColorKeyLeader, leaderColorStatus.toHexString());
+        Constants.Tester.flywheelColorKeyLeader, leaderColorStatus.toHexString());
     SmartDashboard.putString(
-        Constants.Tester.FlywheelColorKeyFollower, followerColorStatus.toHexString());
+        Constants.Tester.flywheelColorKeyFollower, followerColorStatus.toHexString());
   }
 
   private void setTextStatus() {
-    SmartDashboard.putString(Constants.Tester.FlywheelKeyFollower, followerStatus);
-    SmartDashboard.putString(Constants.Tester.FlywheelKeyLeader, leaderStatus);
+    SmartDashboard.putString(Constants.Tester.flywheelKeyFollower, followerStatus);
+    SmartDashboard.putString(Constants.Tester.flywheelKeyLeader, leaderStatus);
   }
 }

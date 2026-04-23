@@ -56,8 +56,8 @@ import org.littletonrobotics.junction.Logger;
 public class Drive extends SubsystemBase {
   // TunerConstants doesn't include these constants, so they are declared locally
   static final double ODOMETRY_FREQUENCY = Constants.CANivore.CANBus.isNetworkFD() ? 250.0 : 100.0;
-  public double requestedSpeed;
-  public double anglePerSecondRequested;
+  public double requestedMetersPerSecond;
+  public double radPerSecondRequested;
   private ArrayList<Double> currentPriority = new ArrayList<>();
 
   public static final double DRIVE_BASE_RADIUS =
@@ -233,7 +233,7 @@ public class Drive extends SubsystemBase {
     ChassisSpeeds discreteSpeeds = ChassisSpeeds.discretize(speeds, 0.02);
     SwerveModuleState[] setpointStates = kinematics.toSwerveModuleStates(discreteSpeeds);
     SwerveDriveKinematics.desaturateWheelSpeeds(setpointStates, TunerConstants.kSpeedAt12Volts);
-    this.anglePerSecondRequested = discreteSpeeds.omegaRadiansPerSecond;
+    this.radPerSecondRequested = discreteSpeeds.omegaRadiansPerSecond;
 
     // Log unoptimized setpoints and setpoint speeds
     Logger.recordOutput("Drive/SwerveStates/Setpoints", setpointStates);
@@ -243,7 +243,7 @@ public class Drive extends SubsystemBase {
       // Send setpoints to modules
       for (int i = 0; i < 4; i++) {
         modules[i].runSetpoint(setpointStates[i]);
-        this.requestedSpeed = setpointStates[i].speedMetersPerSecond;
+        this.requestedMetersPerSecond = setpointStates[i].speedMetersPerSecond;
       }
     }
 
@@ -381,7 +381,7 @@ public class Drive extends SubsystemBase {
   }
 
   public Double getModuleTurnVelocity(int module) {
-    return modules[module].getTurnVelocity();
+    return modules[module].getTurnVelocityRadPerSec();
   }
 
   public boolean isDriveConnected(int module) {
@@ -394,11 +394,16 @@ public class Drive extends SubsystemBase {
 
   public boolean isDriveCorrectSpeed(int module) {
     return MathUtil.isNear(
-        Math.abs(requestedSpeed), Math.abs(modules[module].getVelocityMetersPerSec()), 0.7);
+        Math.abs(requestedMetersPerSecond),
+        Math.abs(modules[module].getVelocityMetersPerSec()),
+        Constants.Tester.driveToleranceMetersPerSec);
   }
 
   public boolean isCorrectAngleSpeed(int module) {
-    return MathUtil.isNear(anglePerSecondRequested, modules[module].getTurnVelocity(), 1.0);
+    return MathUtil.isNear(
+        radPerSecondRequested,
+        modules[module].getTurnVelocityRadPerSec(),
+        Constants.Tester.turnToleranceRadPerSec);
   }
 
   /** Adds a new timestamped vision measurement. */

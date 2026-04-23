@@ -5,7 +5,6 @@ import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.constants.Constants;
 import frc.robot.subsystems.intake.rollers.Rollers;
-import org.littletonrobotics.junction.Logger;
 
 public class TesterRollers extends Command {
   private Rollers rollers;
@@ -28,7 +27,7 @@ public class TesterRollers extends Command {
     followerStatus = "";
     setColorStatus();
     setTextStatus();
-    Logger.recordOutput("Tester/Rollers", testName);
+    SmartDashboard.putString("Tester/Rollers", testName);
   }
 
   @Override
@@ -109,13 +108,13 @@ public class TesterRollers extends Command {
 
   private void setColorStatus() {
     SmartDashboard.putString(
-        Constants.Tester.RollerColorKeyLeader, leaderColorStatus.toHexString());
+        Constants.Tester.rollerColorKeyLeader, leaderColorStatus.toHexString());
     SmartDashboard.putString(
-        Constants.Tester.RollerColorKeyFollower, followerColorStatus.toHexString());
+        Constants.Tester.rollerColorKeyFollower, followerColorStatus.toHexString());
   }
 
   private void setTextStatus() {
-    SmartDashboard.putString(Constants.Tester.RollerKeyFollower, followerStatus);
-    SmartDashboard.putString(Constants.Tester.RollerKeyLeader, leaderStatus);
+    SmartDashboard.putString(Constants.Tester.rollerKeyFollower, followerStatus);
+    SmartDashboard.putString(Constants.Tester.rollerKeyLeader, leaderStatus);
   }
 }

@@ -5,7 +5,6 @@ import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.constants.Constants;
 import frc.robot.subsystems.drive.Drive;
-import org.littletonrobotics.junction.Logger;
 
 public class TesterDrive extends Command {
   private Drive drive;
@@ -43,7 +42,7 @@ public class TesterDrive extends Command {
     BRStatus = "";
     setColorStatus();
     setTextStatus();
-    Logger.recordOutput("Tester/Drive", testName);
+    SmartDashboard.putString("Tester/Drive", testName);
   }
 
   @Override
@@ -57,7 +56,9 @@ public class TesterDrive extends Command {
           "FL "
               + " Too Slow by "
               + (100
-                  - ((Math.abs(drive.getModuleVelocity(0)) / Math.abs(drive.requestedSpeed)) * 100))
+                  - ((Math.abs(drive.getModuleVelocity(0))
+                          / Math.abs(drive.requestedMetersPerSecond))
+                      * 100))
               + "% ";
     } else {
       FLColorStatus = Constants.NetworkTables.green;
@@ -73,7 +74,9 @@ public class TesterDrive extends Command {
           "FR "
               + " Too Slow by "
               + (100
-                  - ((Math.abs(drive.getModuleVelocity(1)) / Math.abs(drive.requestedSpeed)) * 100))
+                  - ((Math.abs(drive.getModuleVelocity(1))
+                          / Math.abs(drive.requestedMetersPerSecond))
+                      * 100))
               + "%";
     } else {
       FRColorStatus = Constants.NetworkTables.green;
@@ -89,7 +92,9 @@ public class TesterDrive extends Command {
           "BL "
               + " Too Slow by "
               + (100
-                  - ((Math.abs(drive.getModuleVelocity(2)) / Math.abs(drive.requestedSpeed)) * 100))
+                  - ((Math.abs(drive.getModuleVelocity(2))
+                          / Math.abs(drive.requestedMetersPerSecond))
+                      * 100))
               + "%";
 
     } else {
@@ -106,7 +111,9 @@ public class TesterDrive extends Command {
           "BR "
               + " Too Slow by "
               + (100
-                  - ((Math.abs(drive.getModuleVelocity(3)) / Math.abs(drive.requestedSpeed)) * 100))
+                  - ((Math.abs(drive.getModuleVelocity(3))
+                          / Math.abs(drive.requestedMetersPerSecond))
+                      * 100))
               + "%";
     } else {
       BRColorStatus = Constants.NetworkTables.green;
@@ -122,16 +129,16 @@ public class TesterDrive extends Command {
   public void end(boolean interrupted) {}
 
   private void setColorStatus() {
-    SmartDashboard.putString(Constants.Tester.DriveColorKeyFL, FLColorStatus.toHexString());
-    SmartDashboard.putString(Constants.Tester.DriveColorKeyFR, FRColorStatus.toHexString());
-    SmartDashboard.putString(Constants.Tester.DriveColorKeyBL, BLColorStatus.toHexString());
-    SmartDashboard.putString(Constants.Tester.DriveColorKeyBR, BRColorStatus.toHexString());
+    SmartDashboard.putString(Constants.Tester.driveColorKeyFL, FLColorStatus.toHexString());
+    SmartDashboard.putString(Constants.Tester.driveColorKeyFR, FRColorStatus.toHexString());
+    SmartDashboard.putString(Constants.Tester.driveColorKeyBL, BLColorStatus.toHexString());
+    SmartDashboard.putString(Constants.Tester.driveColorKeyBR, BRColorStatus.toHexString());
   }
 
   private void setTextStatus() {
-    SmartDashboard.putString(Constants.Tester.DriveKeyFL, FLStatus);
-    SmartDashboard.putString(Constants.Tester.DriveKeyFR, FRStatus);
-    SmartDashboard.putString(Constants.Tester.DriveKeyBL, BLStatus);
-    SmartDashboard.putString(Constants.Tester.DriveKeyBR, BRStatus);
+    SmartDashboard.putString(Constants.Tester.driveKeyFL, FLStatus);
+    SmartDashboard.putString(Constants.Tester.driveKeyFR, FRStatus);
+    SmartDashboard.putString(Constants.Tester.driveKeyBL, BLStatus);
+    SmartDashboard.putString(Constants.Tester.driveKeyBR, BRStatus);
   }
 }
