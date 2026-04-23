@@ -18,32 +18,36 @@ public class DriveTest extends SequentialCommandGroup {
 
     addCommands(
         new InstantCommand(() -> Logger.recordOutput("Tester/testStarted", true)),
-    new ParallelCommandGroup(
-    Commands.run(
+        new ParallelCommandGroup(
+            Commands.run(
                 () -> {
                   drive.runVelocity(
-                    ChassisSpeeds.fromFieldRelativeSpeeds(
-                        drive.getMaxLinearSpeedMetersPerSec(), 0, 0, Rotation2d.fromDegrees(0)));
+                      ChassisSpeeds.fromFieldRelativeSpeeds(
+                          drive.getMaxLinearSpeedMetersPerSec(), 0, 0, Rotation2d.fromDegrees(0)));
                 },
                 drive),
-            DriveCommands.DriveTesting(drive, "Drive Forward"), new WaitCommand(5)),
+            DriveCommands.DriveTesting(drive, "Drive Forward"),
+            new WaitCommand(5))
         // new InstantCommand(
         //     () ->
         //         drive.runVelocity(
         //             ChassisSpeeds.fromFieldRelativeSpeeds(
-        //                 -drive.getMaxLinearSpeedMetersPerSec(), 0, 0, Rotation2d.fromDegrees(0)))),
+        //                 -drive.getMaxLinearSpeedMetersPerSec(), 0, 0,
+        // Rotation2d.fromDegrees(0)))),
         // new ParallelCommandGroup(
         //     DriveCommands.DriveTesting(drive, "Drive BackWard"), new WaitCommand(5)),
         // new InstantCommand(
         //     () ->
         //         drive.runVelocity(
         //             ChassisSpeeds.fromFieldRelativeSpeeds(
-        //                 0, drive.getMaxLinearSpeedMetersPerSec(), 0, Rotation2d.fromDegrees(0)))),
+        //                 0, drive.getMaxLinearSpeedMetersPerSec(), 0,
+        // Rotation2d.fromDegrees(0)))),
         // new InstantCommand(
         //     () ->
         //         drive.runVelocity(
         //             ChassisSpeeds.fromFieldRelativeSpeeds(
-        //                 0, drive.getMaxLinearSpeedMetersPerSec(), 0, Rotation2d.fromDegrees(0)))),
+        //                 0, drive.getMaxLinearSpeedMetersPerSec(), 0,
+        // Rotation2d.fromDegrees(0)))),
         // new ParallelCommandGroup(
         //     DriveCommands.DriveTesting(drive, "Drive Left"), new WaitCommand(5))
         );
