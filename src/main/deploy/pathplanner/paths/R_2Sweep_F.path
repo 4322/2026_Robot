@@ -16,16 +16,16 @@
     },
     {
       "anchor": {
-        "x": 2.2,
+        "x": 2.732253922967189,
         "y": 2.566462196861627
       },
       "prevControl": {
-        "x": 4.553024843343607,
+        "x": 5.085278766310796,
         "y": 2.5018149466192163
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "R_2SweepB_End"
     }
   ],
   "rotationTargets": [
@@ -61,7 +61,7 @@
   },
   "goalEndState": {
     "velocity": 0.0,
-    "rotation": -135.0
+    "rotation": 135.0
   },
   "reversed": false,
   "folder": "R_2Sweep",
