@@ -1,5 +1,7 @@
 package frc.robot.commands;
 
+import org.littletonrobotics.junction.Logger;
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -8,7 +10,7 @@ import frc.robot.subsystems.drive.Drive;
 
 public class TesterDrive extends Command {
   private Drive drive;
-  private String currentFLStatus = "Front Left:";
+  private String FLStatus = "Front Left:";
   private String FRStatus = "Front Right:";
   private String BLStatus = "Back Left:";
   private String BRStatus = "Back Right:";
@@ -16,7 +18,7 @@ public class TesterDrive extends Command {
   private Color FRColorStatus;
   private Color BLColorStatus;
   private Color BRColorStatus;
-  private String test;
+  private String testName;
   private String driveConnectionMessage = " Drive Not Connected";
 
   // If Not working = color
@@ -25,9 +27,9 @@ public class TesterDrive extends Command {
   // If too slow = orange
   // If pulling too much current = blue;
   // still running Tests = purple
-  public TesterDrive(Drive drive, String test) {
+  public TesterDrive(Drive drive, String testName) {
     this.drive = drive;
-    this.test = test;
+    this.testName = testName;
   }
 
   @Override
@@ -40,16 +42,17 @@ public class TesterDrive extends Command {
     SmartDashboard.putString(Constants.Tester.DriveKeyFR, FRColorStatus.toHexString());
     SmartDashboard.putString(Constants.Tester.DriveKeyBL, BLColorStatus.toHexString());
     SmartDashboard.putString(Constants.Tester.DriveKeyBR, BRColorStatus.toHexString());
+    Logger.recordOutput("Tester/Drive", testName);
   }
 
   @Override
   public void execute() {
     if (!drive.isDriveConnected(0)) {
       FLColorStatus = Constants.NetworkTables.red;
-      currentFLStatus = "FL " + driveConnectionMessage;
+      FLStatus = "FL " + driveConnectionMessage;
     } else if (!drive.isDriveCorrectSpeed(0)) {
       FLColorStatus = Constants.NetworkTables.orange;
-      currentFLStatus =
+      FLStatus =
           "FL "
               + " Too Slow by "
               + (100 - ((drive.getModuleVelocity(0) / drive.requestedSpeed) * 100))
@@ -107,7 +110,7 @@ public class TesterDrive extends Command {
     SmartDashboard.putString(Constants.Tester.DriveColorKeyBR, BRColorStatus.toHexString());
 
     SmartDashboard.putString(
-        Constants.Tester.DriveKeyFL, currentFLStatus);
+        Constants.Tester.DriveKeyFL, FLStatus);
     SmartDashboard.putString(
         Constants.Tester.DriveKeyFR, FRStatus);
     SmartDashboard.putString(

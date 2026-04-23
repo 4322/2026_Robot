@@ -1,5 +1,7 @@
 package frc.robot.commands;
 
+import org.littletonrobotics.junction.Logger;
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -16,7 +18,7 @@ public class TesterTurn extends Command {
   private Color FRColorStatus;
   private Color BLColorStatus;
   private Color BRColorStatus;
-  private String test;
+  private String testName;
   private String turnConnectionMessage = " Turn Not Connected";
 
   // If Not working = color
@@ -25,9 +27,9 @@ public class TesterTurn extends Command {
   // If too slow = orange
   // If pulling too much current = blue;
   // still running Tests = purple
-  public TesterTurn(Drive drive, String test) {
+  public TesterTurn(Drive drive, String testName) {
     this.drive = drive;
-    this.test = test;
+    this.testName = testName;
   }
 
   @Override
@@ -44,6 +46,7 @@ public class TesterTurn extends Command {
     FRColorStatus = Constants.NetworkTables.purple;
     BLColorStatus = Constants.NetworkTables.purple;
     BRColorStatus = Constants.NetworkTables.purple;
+    Logger.recordOutput("Tester/Turn", testName);
   }
 
   @Override
@@ -107,16 +110,16 @@ public class TesterTurn extends Command {
 
     SmartDashboard.putString(
         Constants.Tester.TurnKeyFL,
-        SmartDashboard.getString(Constants.Tester.TurnKeyFL, "") + test + FLStatus);
+        SmartDashboard.getString(Constants.Tester.TurnKeyFL, "") + testName + FLStatus);
     SmartDashboard.putString(
         Constants.Tester.TurnKeyFR,
-        SmartDashboard.getString(Constants.Tester.TurnKeyFR, "") + test + FRStatus);
+        SmartDashboard.getString(Constants.Tester.TurnKeyFR, "") + testName + FRStatus);
     SmartDashboard.putString(
         Constants.Tester.TurnKeyBL,
-        SmartDashboard.getString(Constants.Tester.TurnKeyBL, "") + test + BLStatus);
+        SmartDashboard.getString(Constants.Tester.TurnKeyBL, "") + testName + BLStatus);
     SmartDashboard.putString(
         Constants.Tester.TurnKeyBR,
-        SmartDashboard.getString(Constants.Tester.TurnKeyBR, "") + test + BRStatus);
+        SmartDashboard.getString(Constants.Tester.TurnKeyBR, "") + testName + BRStatus);
 
     SmartDashboard.putString(Constants.Tester.TurnColorKeyFL, FLColorStatus.toHexString());
     SmartDashboard.putString(Constants.Tester.TurnColorKeyFR, FRColorStatus.toHexString());
