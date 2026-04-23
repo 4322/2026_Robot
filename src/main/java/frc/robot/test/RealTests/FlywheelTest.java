@@ -23,10 +23,9 @@ public class FlywheelTest extends SequentialCommandGroup {
         new InstantCommand(() -> IntakeCommands.intake(intake)),
         new InstantCommand(() -> IntakeCommands.idle(intake)),
         new ParallelCommandGroup(
-            ShooterCommands.aimAndShoot(shooter, drive, intake),
             Commands.run(
                 () -> {
                   flywheel.requestGoal(Constants.Flywheel.idleRPS, true);
-                })));
+                }), ShooterCommands.flywheelTesting(flywheel, "Idle Flywheel")));
   }
 }
