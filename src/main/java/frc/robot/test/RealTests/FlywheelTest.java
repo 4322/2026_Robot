@@ -1,11 +1,13 @@
 package frc.robot.test.RealTests;
 
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.IntakeCommands;
 import frc.robot.commands.ShooterCommands;
+import frc.robot.constants.Constants;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.shooter.Shooter;
@@ -21,8 +23,11 @@ public class FlywheelTest extends SequentialCommandGroup {
         new InstantCommand(() -> Logger.recordOutput("Tester/testStarted", true)),
         new InstantCommand(() -> IntakeCommands.intake(intake)),
         new InstantCommand(() -> IntakeCommands.idle(intake)),
-        new InstantCommand(() -> ShooterCommands.aimAndShoot(shooter, drive, intake)),
         new ParallelCommandGroup(
-            ShooterCommands.flywheelTesting(flywheel, "string"), new WaitCommand(5)));
+          ShooterCommands.aimAndShoot(shooter, drive, intake),
+                    Commands.run(
+                () -> {
+                  flywheel.requestGoal(Constants.Flywheel.idleRPS, true);
+                })));
   }
 }
