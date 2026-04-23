@@ -24,10 +24,10 @@ public class TesterFlywheel extends Command {
   public void initialize() {
     leaderColorStatus = Constants.NetworkTables.purple;
     followerColorStatus = Constants.NetworkTables.purple;
-    leaderStatus = null;
-    followerStatus = null;
-   setColorStatus();
-   setTextStatus();
+    leaderStatus = "";
+    followerStatus = "";
+    setColorStatus();
+    setTextStatus();
     Logger.recordOutput("Tester/Flywheel", test);
   }
 
@@ -101,8 +101,6 @@ public class TesterFlywheel extends Command {
         Constants.Tester.FlywheelColorKeyLeader, leaderColorStatus.toHexString());
     SmartDashboard.putString(
         Constants.Tester.FlywheelColorKeyFollower, followerColorStatus.toHexString());
-
-    
   }
 
   @Override
@@ -110,17 +108,15 @@ public class TesterFlywheel extends Command {
     return true;
   }
 
-  private void setColorStatus(){
-      SmartDashboard.putString(
+  private void setColorStatus() {
+    SmartDashboard.putString(
         Constants.Tester.FlywheelColorKeyLeader, leaderColorStatus.toHexString());
     SmartDashboard.putString(
         Constants.Tester.FlywheelColorKeyFollower, followerColorStatus.toHexString());
   }
 
-  private void setTextStatus(){
-SmartDashboard.putString(
-        Constants.Tester.FlywheelKeyFollower, followerStatus);
-    SmartDashboard.putString(
-        Constants.Tester.FlywheelKeyLeader, leaderStatus);
+  private void setTextStatus() {
+    SmartDashboard.putString(Constants.Tester.FlywheelKeyFollower, followerStatus);
+    SmartDashboard.putString(Constants.Tester.FlywheelKeyLeader, leaderStatus);
   }
 }

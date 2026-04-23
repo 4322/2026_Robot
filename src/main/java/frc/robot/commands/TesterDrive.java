@@ -37,12 +37,12 @@ public class TesterDrive extends Command {
     FRColorStatus = Constants.NetworkTables.purple;
     BLColorStatus = Constants.NetworkTables.purple;
     BRColorStatus = Constants.NetworkTables.purple;
-    FLStatus = null;
-    FRStatus = null;
-    BLStatus = null;
-    BRStatus = null;
-   setColorStatus();
-   setTextStatus();
+    FLStatus = "";
+    FRStatus = "";
+    BLStatus = "";
+    BRStatus = "";
+    setColorStatus();
+    setTextStatus();
     Logger.recordOutput("Tester/Drive", testName);
   }
 
@@ -105,14 +105,13 @@ public class TesterDrive extends Command {
       BRColorStatus = Constants.NetworkTables.green;
     }
 
-   setColorStatus();
+    setColorStatus();
 
-   setTextStatus();
+    setTextStatus();
   }
 
   @Override
   public void end(boolean interrupted) {}
-
 
   private void setColorStatus() {
     SmartDashboard.putString(Constants.Tester.DriveColorKeyFL, FLColorStatus.toHexString());

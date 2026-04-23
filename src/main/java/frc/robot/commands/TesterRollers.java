@@ -24,8 +24,8 @@ public class TesterRollers extends Command {
   public void initialize() {
     leaderColorStatus = Constants.NetworkTables.purple;
     followerColorStatus = Constants.NetworkTables.purple;
-    leaderStatus = null;
-    followerStatus = null;
+    leaderStatus = "";
+    followerStatus = "";
     setColorStatus();
     setTextStatus();
     Logger.recordOutput("Tester/Rollers", testName);
@@ -105,17 +105,15 @@ public class TesterRollers extends Command {
     return true;
   }
 
-  private void setColorStatus(){
-      SmartDashboard.putString(
+  private void setColorStatus() {
+    SmartDashboard.putString(
         Constants.Tester.RollerColorKeyLeader, leaderColorStatus.toHexString());
     SmartDashboard.putString(
         Constants.Tester.RollerColorKeyFollower, followerColorStatus.toHexString());
   }
 
-  private void setTextStatus(){
-    SmartDashboard.putString(
-        Constants.Tester.RollerKeyFollower,  followerStatus);
-    SmartDashboard.putString(
-        Constants.Tester.RollerKeyLeader, leaderStatus);
+  private void setTextStatus() {
+    SmartDashboard.putString(Constants.Tester.RollerKeyFollower, followerStatus);
+    SmartDashboard.putString(Constants.Tester.RollerKeyLeader, leaderStatus);
   }
 }

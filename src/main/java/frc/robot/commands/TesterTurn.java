@@ -37,12 +37,12 @@ public class TesterTurn extends Command {
     FRColorStatus = Constants.NetworkTables.purple;
     BLColorStatus = Constants.NetworkTables.purple;
     BRColorStatus = Constants.NetworkTables.purple;
-    FLStatus = null;
-    FRStatus = null;
-    BLStatus = null;
-    BRStatus = null;
-   setColorStatus();
-   setTextStatus();
+    FLStatus = "";
+    FRStatus = "";
+    BLStatus = "";
+    BRStatus = "";
+    setColorStatus();
+    setTextStatus();
     Logger.recordOutput("Tester/Turn", testName);
   }
 
@@ -113,17 +113,13 @@ public class TesterTurn extends Command {
   public void end(boolean interrupted) {}
 
   private void setTextStatus() {
-    SmartDashboard.putString(
-        Constants.Tester.TurnKeyFL, FLStatus);
-    SmartDashboard.putString(
-        Constants.Tester.TurnKeyFR, FRStatus);
-    SmartDashboard.putString(
-        Constants.Tester.TurnKeyBL, BLStatus);
-    SmartDashboard.putString(
-        Constants.Tester.TurnKeyBR, BRStatus);
+    SmartDashboard.putString(Constants.Tester.TurnKeyFL, FLStatus);
+    SmartDashboard.putString(Constants.Tester.TurnKeyFR, FRStatus);
+    SmartDashboard.putString(Constants.Tester.TurnKeyBL, BLStatus);
+    SmartDashboard.putString(Constants.Tester.TurnKeyBR, BRStatus);
   }
 
-  private void setColorStatus(){
+  private void setColorStatus() {
     SmartDashboard.putString(Constants.Tester.TurnColorKeyFL, FLColorStatus.toHexString());
     SmartDashboard.putString(Constants.Tester.TurnColorKeyFR, FRColorStatus.toHexString());
     SmartDashboard.putString(Constants.Tester.TurnColorKeyBL, BLColorStatus.toHexString());
