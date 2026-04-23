@@ -46,6 +46,7 @@ public class TesterFlywheel extends Command {
               + "%";
     } else {
       leaderColorStatus = Constants.NetworkTables.green;
+      leaderStatus = "Up To Speed";
     }
 
     if (!flywheel.followerConnected()) {
@@ -61,6 +62,7 @@ public class TesterFlywheel extends Command {
       ;
     } else {
       followerColorStatus = Constants.NetworkTables.green;
+      followerStatus = "Up To Speed";
     }
 
     if (!flywheel.rollersSpinningTogether()) {

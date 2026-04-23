@@ -46,6 +46,7 @@ public class TesterRollers extends Command {
               + "%";
     } else {
       leaderColorStatus = Constants.NetworkTables.green;
+      leaderStatus = "Up To Speed";
     }
 
     if (!rollers.followerRollerConnected()) {
@@ -60,6 +61,7 @@ public class TesterRollers extends Command {
       ;
     } else {
       followerColorStatus = Constants.NetworkTables.green;
+      followerStatus = "Up To Speed";
     }
 
     if (!rollers.rollersSpinningTogether()) {

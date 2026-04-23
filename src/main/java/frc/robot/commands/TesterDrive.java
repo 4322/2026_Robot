@@ -60,6 +60,7 @@ public class TesterDrive extends Command {
               + "% ";
     } else {
       FLColorStatus = Constants.NetworkTables.green;
+      FLStatus = "Up To Speed";
     }
 
     if (!drive.isDriveConnected(1)) {
@@ -74,6 +75,7 @@ public class TesterDrive extends Command {
               + "%";
     } else {
       FRColorStatus = Constants.NetworkTables.green;
+      FRStatus = "Up To Speed";
     }
 
     if (!drive.isDriveConnected(2)) {
@@ -89,6 +91,7 @@ public class TesterDrive extends Command {
 
     } else {
       BLColorStatus = Constants.NetworkTables.green;
+      BLStatus = "Up To Speed";
     }
 
     if (!drive.isDriveConnected(3)) {
@@ -103,6 +106,7 @@ public class TesterDrive extends Command {
               + "%";
     } else {
       BRColorStatus = Constants.NetworkTables.green;
+      BRStatus = "Up To Speed";
     }
 
     setColorStatus();

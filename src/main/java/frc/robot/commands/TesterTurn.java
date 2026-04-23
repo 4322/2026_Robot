@@ -60,6 +60,7 @@ public class TesterTurn extends Command {
               + "%";
     } else {
       FLColorStatus = Constants.NetworkTables.green;
+      FLStatus = "Up To Speed";
     }
 
     if (!drive.isTurnConnected(1)) {
@@ -74,6 +75,7 @@ public class TesterTurn extends Command {
               + "%";
     } else {
       FRColorStatus = Constants.NetworkTables.green;
+      FRStatus = "Up To Speed";
     }
 
     if (!drive.isTurnConnected(2)) {
@@ -89,6 +91,7 @@ public class TesterTurn extends Command {
 
     } else {
       BLColorStatus = Constants.NetworkTables.green;
+      BLStatus = "Up To Speed";
     }
 
     if (!drive.isTurnConnected(3)) {
@@ -103,6 +106,7 @@ public class TesterTurn extends Command {
               + "%";
     } else {
       BRColorStatus = Constants.NetworkTables.green;
+      BRStatus = "Up To Speed";
     }
 
     setTextStatus();
