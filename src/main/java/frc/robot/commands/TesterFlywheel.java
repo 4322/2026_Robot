@@ -33,8 +33,6 @@ public class TesterFlywheel extends Command {
 
   @Override
   public void execute() {
-    followerStatus = " ";
-    leaderStatus = " ";
     if (!flywheel.leaderConnected()) {
       leaderColorStatus = Constants.NetworkTables.red;
       leaderStatus = " Not Connected";
@@ -99,10 +97,8 @@ public class TesterFlywheel extends Command {
       followerStatus = followerStatus + " Flywheel Spinning Together";
     }
 
-    SmartDashboard.putString(
-        Constants.Tester.FlywheelColorKeyLeader, leaderColorStatus.toHexString());
-    SmartDashboard.putString(
-        Constants.Tester.FlywheelColorKeyFollower, followerColorStatus.toHexString());
+    setColorStatus();
+    setTextStatus();
   }
 
   @Override

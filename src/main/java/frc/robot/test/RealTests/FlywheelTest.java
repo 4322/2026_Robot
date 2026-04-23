@@ -26,6 +26,7 @@ public class FlywheelTest extends SequentialCommandGroup {
             Commands.run(
                 () -> {
                   flywheel.requestGoal(Constants.Flywheel.idleRPS, true);
-                }), ShooterCommands.flywheelTesting(flywheel, "Idle Flywheel")));
+                }),
+            ShooterCommands.flywheelTesting(flywheel, "Idle Flywheel")));
   }
 }
