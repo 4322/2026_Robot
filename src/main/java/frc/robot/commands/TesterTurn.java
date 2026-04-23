@@ -8,14 +8,14 @@ import frc.robot.subsystems.drive.Drive;
 
 public class TesterTurn extends Command {
   private Drive drive;
-  private String currentFLStatus = "Front Left:";
-  private String currentFRStatus = "Front Right:";
-  private String currentBLStatus = "Back Left:";
-  private String currentBRStatus = "Back Right:";
-  private Color currentFLColorStatus = new Color(0, 0, 0);
-  private Color currentFRColorStatus = new Color(0, 0, 0);
-  private Color currentBLColorStatus = new Color(0, 0, 0);
-  private Color currentBRColorStatus = new Color(0, 0, 0);
+  private String FLStatus = "";
+  private String FRStatus = "";
+  private String BLStatus = "";
+  private String BRStatus = "";
+  private Color FLColorStatus = new Color(0, 0, 0);
+  private Color FRColorStatus = new Color(0, 0, 0);
+  private Color BLColorStatus = new Color(0, 0, 0);
+  private Color BRColorStatus = new Color(0, 0, 0);
   private String test;
   private String turnConnectionMessage = " Turn Not Connected";
 
@@ -40,100 +40,100 @@ public class TesterTurn extends Command {
         Constants.Tester.TurnKeyBL, Constants.NetworkTables.purple.toHexString());
     SmartDashboard.putString(
         Constants.Tester.TurnKeyBR, Constants.NetworkTables.purple.toHexString());
-    this.currentFLColorStatus = Constants.NetworkTables.purple;
-    this.currentFRColorStatus = Constants.NetworkTables.purple;
-    this.currentBLColorStatus = Constants.NetworkTables.purple;
-    this.currentBRColorStatus = Constants.NetworkTables.purple;
+    this.FLColorStatus = Constants.NetworkTables.purple;
+    this.FRColorStatus = Constants.NetworkTables.purple;
+    this.BLColorStatus = Constants.NetworkTables.purple;
+    this.BRColorStatus = Constants.NetworkTables.purple;
   }
 
   @Override
   public void execute() {
 
     if (!drive.isTurnConnected(0)) {
-      this.currentFLStatus = turnConnectionMessage;
-      this.currentFLColorStatus = Constants.NetworkTables.red;
+      this.FLStatus = turnConnectionMessage;
+      this.FLColorStatus = Constants.NetworkTables.red;
     } else if (!drive.isCorrectAngleSpeed(0)) {
-      this.currentFLColorStatus = Constants.NetworkTables.orange;
-      this.currentFLStatus =
+      this.FLColorStatus = Constants.NetworkTables.orange;
+      this.FLStatus =
           " Incorrect Angle Speed by "
               + (100 - ((drive.getModuleTurnVelocity(0) / drive.anglePerSecondRequested) * 100))
               + "%";
     } else {
-      this.currentFLColorStatus = Constants.NetworkTables.green;
+      this.FLColorStatus = Constants.NetworkTables.green;
     }
 
     if (!drive.isTurnConnected(1)) {
-      this.currentFRColorStatus = Constants.NetworkTables.red;
-      this.currentFRStatus = turnConnectionMessage;
+      this.FRColorStatus = Constants.NetworkTables.red;
+      this.FRStatus = turnConnectionMessage;
     } else if (!drive.isCorrectAngleSpeed(1)) {
-      this.currentFRColorStatus = Constants.NetworkTables.orange;
-      this.currentFRStatus =
-          this.currentFRStatus
+      this.FRColorStatus = Constants.NetworkTables.orange;
+      this.FRStatus =
+          this.FRStatus
               + " Incorrect Angle Speed by "
               + (100 - ((drive.getModuleTurnVelocity(1) / drive.anglePerSecondRequested) * 100))
               + "%";
     } else {
-      this.currentFRColorStatus = Constants.NetworkTables.green;
+      this.FRColorStatus = Constants.NetworkTables.green;
     }
 
     if (!drive.isTurnConnected(2)) {
-      this.currentBLColorStatus = Constants.NetworkTables.red;
-      this.currentBLStatus = turnConnectionMessage;
+      this.BLColorStatus = Constants.NetworkTables.red;
+      this.BLStatus = turnConnectionMessage;
     } else if (!drive.isCorrectAngleSpeed(2)) {
-      this.currentBLColorStatus = Constants.NetworkTables.orange;
-      this.currentBLStatus =
-          this.currentBLStatus
+      this.BLColorStatus = Constants.NetworkTables.orange;
+      this.BLStatus =
+          this.BLStatus
               + " Incorrect Angle Speed by "
               + (100 - ((drive.getModuleTurnVelocity(2) / drive.anglePerSecondRequested) * 100))
               + "%";
 
     } else {
-      this.currentBLColorStatus = Constants.NetworkTables.green;
+      this.BLColorStatus = Constants.NetworkTables.green;
     }
 
     if (!drive.isTurnConnected(3)) {
-      this.currentBRColorStatus = Constants.NetworkTables.red;
-      this.currentBRStatus = turnConnectionMessage;
+      this.BRColorStatus = Constants.NetworkTables.red;
+      this.BRStatus = turnConnectionMessage;
     } else if (!drive.isCorrectAngleSpeed(3)) {
-      this.currentBRColorStatus = Constants.NetworkTables.orange;
-      this.currentBRStatus =
-          this.currentBRStatus
+      this.BRColorStatus = Constants.NetworkTables.orange;
+      this.BRStatus =
+          this.BRStatus
               + " Incorrect Angle Speed by "
               + (100 - ((drive.getModuleTurnVelocity(3) / drive.anglePerSecondRequested) * 100))
               + "%";
     } else {
-      this.currentBRColorStatus = Constants.NetworkTables.green;
+      this.BRColorStatus = Constants.NetworkTables.green;
     }
 
     SmartDashboard.putString(
         Constants.Tester.TurnKeyFL,
-        SmartDashboard.getString("Tester/Drive/Turn/Front Turn Left Status", "")
+        SmartDashboard.getString(Constants.Tester.TurnKeyFL, "")
             + test
-            + this.currentFLStatus);
+            + this.FLStatus);
     SmartDashboard.putString(
         Constants.Tester.TurnKeyFR,
-        SmartDashboard.getString("Tester/Drive/Turn/Front Turn Right Status", "")
+        SmartDashboard.getString(Constants.Tester.TurnKeyFR, "")
             + test
-            + this.currentFRStatus);
+            + this.FRStatus);
     SmartDashboard.putString(
         Constants.Tester.TurnKeyBL,
-        SmartDashboard.getString("Tester/Drive/Turn/Back Turn Left Status", "")
+        SmartDashboard.getString(Constants.Tester.TurnKeyBL, "")
             + test
-            + this.currentBLStatus);
+            + this.BLStatus);
     SmartDashboard.putString(
         Constants.Tester.TurnKeyBR,
-        SmartDashboard.getString("Tester/Drive/Turn/Back Turn Right Status", "")
+        SmartDashboard.getString(Constants.Tester.TurnKeyBR, "")
             + test
-            + this.currentBRStatus);
+            + this.BRStatus);
 
     SmartDashboard.putString(
-        Constants.Tester.TurnColorKeyFL, this.currentFLColorStatus.toHexString());
+        Constants.Tester.TurnColorKeyFL, this.FLColorStatus.toHexString());
     SmartDashboard.putString(
-        Constants.Tester.TurnColorKeyFR, this.currentFRColorStatus.toHexString());
+        Constants.Tester.TurnColorKeyFR, this.FRColorStatus.toHexString());
     SmartDashboard.putString(
-        Constants.Tester.TurnColorKeyBL, this.currentBLColorStatus.toHexString());
+        Constants.Tester.TurnColorKeyBL, this.BLColorStatus.toHexString());
     SmartDashboard.putString(
-        Constants.Tester.TurnColorKeyBR, this.currentBRColorStatus.toHexString());
+        Constants.Tester.TurnColorKeyBR, this.BRColorStatus.toHexString());
   }
 
   @Override

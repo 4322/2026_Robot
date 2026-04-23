@@ -9,8 +9,8 @@ import frc.robot.subsystems.intake.rollers.Rollers;
 public class TesterRollers extends Command {
   private Rollers rollers;
   private String test;
-  private Color currentLeaderRollerColorStatus = Constants.NetworkTables.purple;
-  private Color currentFollowerRollerColorStatus = Constants.NetworkTables.purple;
+  private Color leaderRollerColorStatus = Constants.NetworkTables.purple;
+  private Color followerRollerColorStatus = Constants.NetworkTables.purple;
   private String rollerLeader = " Roller Leader: ";
   private String rollerFollower = " Roller Follower: ";
 
@@ -21,8 +21,8 @@ public class TesterRollers extends Command {
 
   @Override
   public void initialize() {
-    currentLeaderRollerColorStatus = Constants.NetworkTables.purple;
-    currentFollowerRollerColorStatus = Constants.NetworkTables.purple;
+    leaderRollerColorStatus = Constants.NetworkTables.purple;
+    followerRollerColorStatus = Constants.NetworkTables.purple;
     SmartDashboard.putString(
         Constants.Tester.RollerKeyLeader, Constants.NetworkTables.purple.toHexString());
     SmartDashboard.putString(
@@ -34,30 +34,30 @@ public class TesterRollers extends Command {
     rollerFollower = " ";
     rollerLeader = " ";
     if (!rollers.leaderRollerConnected()) {
-      currentLeaderRollerColorStatus = Constants.NetworkTables.red;
+      leaderRollerColorStatus = Constants.NetworkTables.red;
       rollerLeader = " Not Connected";
     } else if (!rollers.leaderRollerAtGoal()) {
-      currentLeaderRollerColorStatus = Constants.NetworkTables.orange;
+      leaderRollerColorStatus = Constants.NetworkTables.orange;
       rollerLeader =
           "Not Spinning at Goal by"
               + +(100 - ((rollers.getLeaderRollerSpeed() / rollers.getRequestedSetpoint()) * 100))
               + "%";
     } else {
-      currentLeaderRollerColorStatus = Constants.NetworkTables.green;
+      leaderRollerColorStatus = Constants.NetworkTables.green;
     }
 
     if (!rollers.followerRollerConnected()) {
-      currentFollowerRollerColorStatus = Constants.NetworkTables.red;
+      followerRollerColorStatus = Constants.NetworkTables.red;
       rollerFollower = " Not Connected";
     } else if (!rollers.followerRollerAtGoal()) {
-      currentFollowerRollerColorStatus = Constants.NetworkTables.orange;
+      followerRollerColorStatus = Constants.NetworkTables.orange;
       rollerFollower =
           "Not Spinning at Goal by"
               + +(100 - ((rollers.getFollowerRollerSpeed() / rollers.getRequestedSetpoint()) * 100))
               + "%";
       ;
     } else {
-      currentFollowerRollerColorStatus = Constants.NetworkTables.green;
+      followerRollerColorStatus = Constants.NetworkTables.green;
     }
 
     if (!rollers.rollersSpinningTogether()) {
@@ -88,16 +88,16 @@ public class TesterRollers extends Command {
               + (rollers.getFollowerRollerSpeed() - rollers.getLeaderRollerSpeed())
               + " RPS";
     } else {
-      currentFollowerRollerColorStatus = Constants.NetworkTables.green;
-      currentLeaderRollerColorStatus = Constants.NetworkTables.green;
+      followerRollerColorStatus = Constants.NetworkTables.green;
+      leaderRollerColorStatus = Constants.NetworkTables.green;
       rollerLeader = rollerLeader + " Rollers Spinning Together";
       rollerFollower = rollerFollower + " Rollers Spinning Together";
     }
 
     SmartDashboard.putString(
-        Constants.Tester.RollerColorKeyLeader, currentLeaderRollerColorStatus.toHexString());
+        Constants.Tester.RollerColorKeyLeader, leaderRollerColorStatus.toHexString());
     SmartDashboard.putString(
-        Constants.Tester.RollerColorKeyFollower, currentFollowerRollerColorStatus.toHexString());
+        Constants.Tester.RollerColorKeyFollower, followerRollerColorStatus.toHexString());
 
     SmartDashboard.putString(
         Constants.Tester.RollerKeyFollower,

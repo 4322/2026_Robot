@@ -9,8 +9,8 @@ import frc.robot.subsystems.shooter.flywheel.Flywheel;
 public class TesterFlywheel extends Command {
   private Flywheel flywheel;
   private String test;
-  private Color currentLeaderFlywheelColorStatus = Constants.NetworkTables.purple;
-  private Color currentFollowerFlywheelColorStatus = Constants.NetworkTables.purple;
+  private Color leaderFlywheelColorStatus = Constants.NetworkTables.purple;
+  private Color followerFlywheelColorStatus = Constants.NetworkTables.purple;
   private String flywheelLeader = " Flywheel Leader: ";
   private String flywheelFollower = " Flywheel Follower: ";
 
@@ -21,8 +21,8 @@ public class TesterFlywheel extends Command {
 
   @Override
   public void initialize() {
-    currentLeaderFlywheelColorStatus = Constants.NetworkTables.purple;
-    currentFollowerFlywheelColorStatus = Constants.NetworkTables.purple;
+    leaderFlywheelColorStatus = Constants.NetworkTables.purple;
+    followerFlywheelColorStatus = Constants.NetworkTables.purple;
     SmartDashboard.putString(
         Constants.Tester.FlywheelKeyLeader, Constants.NetworkTables.purple.toHexString());
     SmartDashboard.putString(
@@ -34,23 +34,23 @@ public class TesterFlywheel extends Command {
     flywheelFollower = " ";
     flywheelLeader = " ";
     if (!flywheel.leaderConnected()) {
-      currentLeaderFlywheelColorStatus = Constants.NetworkTables.red;
+      leaderFlywheelColorStatus = Constants.NetworkTables.red;
       flywheelLeader = " Not Connected";
     } else if (!flywheel.leaderRollerAtGoal()) {
-      currentLeaderFlywheelColorStatus = Constants.NetworkTables.orange;
+      leaderFlywheelColorStatus = Constants.NetworkTables.orange;
       flywheelLeader =
           "Not Spinning at Goal by"
               + +(100 - ((flywheel.getLeaderRollerSpeed() / flywheel.getRequestedSetpoint()) * 100))
               + "%";
     } else {
-      currentLeaderFlywheelColorStatus = Constants.NetworkTables.green;
+      leaderFlywheelColorStatus = Constants.NetworkTables.green;
     }
 
     if (!flywheel.followerConnected()) {
-      currentFollowerFlywheelColorStatus = Constants.NetworkTables.red;
+      followerFlywheelColorStatus = Constants.NetworkTables.red;
       flywheelFollower = " Not Connected";
     } else if (!flywheel.followerRollerAtGoal()) {
-      currentFollowerFlywheelColorStatus = Constants.NetworkTables.orange;
+      followerFlywheelColorStatus = Constants.NetworkTables.orange;
       flywheelFollower =
           "Not Spinning at Goal by"
               + +(100
@@ -58,7 +58,7 @@ public class TesterFlywheel extends Command {
               + "%";
       ;
     } else {
-      currentFollowerFlywheelColorStatus = Constants.NetworkTables.green;
+      followerFlywheelColorStatus = Constants.NetworkTables.green;
     }
 
     if (!flywheel.rollersSpinningTogether()) {
@@ -89,17 +89,17 @@ public class TesterFlywheel extends Command {
               + (flywheel.getFollowerRollerSpeed() - flywheel.getLeaderRollerSpeed())
               + " RPS";
     } else {
-      currentFollowerFlywheelColorStatus = Constants.NetworkTables.green;
-      currentLeaderFlywheelColorStatus = Constants.NetworkTables.green;
+      followerFlywheelColorStatus = Constants.NetworkTables.green;
+      leaderFlywheelColorStatus = Constants.NetworkTables.green;
       flywheelLeader = flywheelLeader + " Flywheel Spinning Together";
       flywheelFollower = flywheelFollower + " Flywheel Spinning Together";
     }
 
     SmartDashboard.putString(
-        Constants.Tester.FlywheelColorKeyLeader, currentLeaderFlywheelColorStatus.toHexString());
+        Constants.Tester.FlywheelColorKeyLeader, leaderFlywheelColorStatus.toHexString());
     SmartDashboard.putString(
         Constants.Tester.FlywheelColorKeyFollower,
-        currentFollowerFlywheelColorStatus.toHexString());
+        followerFlywheelColorStatus.toHexString());
 
     SmartDashboard.putString(
         Constants.Tester.FlywheelKeyFollower,
