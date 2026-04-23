@@ -159,15 +159,12 @@ public final class Constants {
     public static final String RollerKeyLeader = "Rollers/Roller Leader Status";
     public static final String RollerKeyFollower = "Rollers/Roller Follower Status";
     public static final String RollerColorKeyLeader = "Rollers/Roller Leader Color";
-    public static final String RollerColorKeyFollower =
-        "Rollers/Roller Follower Color";
+    public static final String RollerColorKeyFollower = "Rollers/Roller Follower Color";
 
     public static final String FlywheelKeyLeader = "Flywheel/ Flywheel Leader Status";
     public static final String FlywheelKeyFollower = "Flywheel/Flywheel Follower Status";
-    public static final String FlywheelColorKeyLeader =
-        "Flywheel/Flywheel Leader Color";
-    public static final String FlywheelColorKeyFollower =
-        "Flywheel/Flywheel Follower Color";
+    public static final String FlywheelColorKeyLeader = "Flywheel/Flywheel Leader Color";
+    public static final String FlywheelColorKeyFollower = "Flywheel/Flywheel Follower Color";
   }
 
   public static class Tunnel {

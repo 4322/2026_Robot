@@ -4,7 +4,6 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.IntakeCommands;
 import frc.robot.commands.ShooterCommands;
 import frc.robot.constants.Constants;
@@ -24,8 +23,8 @@ public class FlywheelTest extends SequentialCommandGroup {
         new InstantCommand(() -> IntakeCommands.intake(intake)),
         new InstantCommand(() -> IntakeCommands.idle(intake)),
         new ParallelCommandGroup(
-          ShooterCommands.aimAndShoot(shooter, drive, intake),
-                    Commands.run(
+            ShooterCommands.aimAndShoot(shooter, drive, intake),
+            Commands.run(
                 () -> {
                   flywheel.requestGoal(Constants.Flywheel.idleRPS, true);
                 })));

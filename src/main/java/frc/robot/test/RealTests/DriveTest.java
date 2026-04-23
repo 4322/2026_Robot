@@ -28,7 +28,7 @@ public class DriveTest extends SequentialCommandGroup {
                 drive),
             DriveCommands.DriveTesting(drive, "Drive Forward"),
             new WaitCommand(5)),
-             new ParallelCommandGroup(
+        new ParallelCommandGroup(
             Commands.run(
                 () -> {
                   drive.runVelocity(
@@ -38,46 +38,45 @@ public class DriveTest extends SequentialCommandGroup {
                 drive),
             DriveCommands.DriveTesting(drive, "Drive BackWard"),
             new WaitCommand(5)),
-             new ParallelCommandGroup(
+        new ParallelCommandGroup(
             Commands.run(
                 () -> {
                   drive.runVelocity(
                       ChassisSpeeds.fromFieldRelativeSpeeds(
-                        0, drive.getMaxLinearSpeedMetersPerSec(), 0, Rotation2d.fromDegrees(0)));
+                          0, drive.getMaxLinearSpeedMetersPerSec(), 0, Rotation2d.fromDegrees(0)));
                 },
                 drive),
             DriveCommands.DriveTesting(drive, "Drive Left"),
             new WaitCommand(5)),
-             new ParallelCommandGroup(
+        new ParallelCommandGroup(
             Commands.run(
                 () -> {
                   drive.runVelocity(
                       ChassisSpeeds.fromFieldRelativeSpeeds(
-                         0, -drive.getMaxLinearSpeedMetersPerSec(), 0, Rotation2d.fromDegrees(0)));
+                          0, -drive.getMaxLinearSpeedMetersPerSec(), 0, Rotation2d.fromDegrees(0)));
                 },
                 drive),
             DriveCommands.DriveTesting(drive, "Drive Right"),
             new WaitCommand(5)),
-            new ParallelCommandGroup(
+        new ParallelCommandGroup(
             Commands.run(
                 () -> {
                   drive.runVelocity(
                       ChassisSpeeds.fromFieldRelativeSpeeds(
-                         0, 0, drive.getMaxAngularSpeedRadPerSec(), Rotation2d.fromDegrees(0)));
+                          0, 0, drive.getMaxAngularSpeedRadPerSec(), Rotation2d.fromDegrees(0)));
                 },
                 drive),
             DriveCommands.TurnTesting(drive, "Turn Right"),
             new WaitCommand(5)),
-             new ParallelCommandGroup(
+        new ParallelCommandGroup(
             Commands.run(
                 () -> {
                   drive.runVelocity(
                       ChassisSpeeds.fromFieldRelativeSpeeds(
-                         0, 0, -drive.getMaxAngularSpeedRadPerSec(), Rotation2d.fromDegrees(0)));
+                          0, 0, -drive.getMaxAngularSpeedRadPerSec(), Rotation2d.fromDegrees(0)));
                 },
                 drive),
             DriveCommands.TurnTesting(drive, "Turn Left"),
-            new WaitCommand(5))
-            );
+            new WaitCommand(5)));
   }
 }

@@ -18,6 +18,7 @@ public class RollerTest extends SequentialCommandGroup {
         new InstantCommand(() -> Logger.recordOutput("Tester/testStarted", true)),
         new ParallelCommandGroup(
             IntakeCommands.intake(intake),
-            IntakeCommands.rollerTesting(rollers, "string"), new WaitCommand(5)));
+            IntakeCommands.rollerTesting(rollers, "string"),
+            new WaitCommand(5)));
   }
 }
