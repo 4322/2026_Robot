@@ -19,6 +19,7 @@ public interface ModuleIO {
     public double driveAppliedVolts = 0.0;
     public double driveStatorCurrent = 0.0;
     public double driveSupplyCurrentAbs = 0.0;
+    public double driveSupplyCurrentAbsAvg = 0.0;
     public double driveTempCelcius = 0.0;
 
     public boolean turnConnected = false;
@@ -29,6 +30,7 @@ public interface ModuleIO {
     public double turnAppliedVolts = 0.0;
     public double turnStatorCurrent = 0.0;
     public double turnSupplyCurrentAbs = 0.0;
+    public double turnSupplyCurrentAbsAvg = 0.0;
 
     public double[] odometryTimestamps = new double[] {};
     public double[] odometryDrivePositionsRad = new double[] {};

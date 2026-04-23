@@ -7,7 +7,7 @@ public class AverageStat {
   private int nextIndex = 0;
   private double runningTotal = 0;
 
-  AverageStat(int maxSamples) {
+  public AverageStat(int maxSamples) {
     this.maxSamples = maxSamples;
     samples = new double[maxSamples];
   }

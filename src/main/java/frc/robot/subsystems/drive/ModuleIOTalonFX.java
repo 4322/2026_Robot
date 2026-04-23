@@ -39,6 +39,7 @@ import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.constants.Constants;
 import frc.robot.constants.Constants.SubsystemMode;
+import frc.robot.util.AverageStat;
 import java.util.Queue;
 
 /**
@@ -96,6 +97,10 @@ public class ModuleIOTalonFX implements ModuleIO {
       new Debouncer(0.5, Debouncer.DebounceType.kFalling);
   private final Debouncer turnEncoderConnectedDebounce =
       new Debouncer(0.5, Debouncer.DebounceType.kFalling);
+
+  // Average stat buffers
+  private AverageStat driveSupplyCurrentAvgStat = new AverageStat(50);
+  private AverageStat turnSupplyCurrentAvgStat = new AverageStat(50);
 
   public ModuleIOTalonFX(
       SwerveModuleConstants<TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration>
@@ -253,6 +258,8 @@ public class ModuleIOTalonFX implements ModuleIO {
     inputs.driveAppliedVolts = driveAppliedVolts.getValueAsDouble();
     inputs.driveStatorCurrent = driveStatorCurrent.getValueAsDouble();
     inputs.driveSupplyCurrentAbs = Math.abs(driveSupplyCurrent.getValueAsDouble());
+    driveSupplyCurrentAvgStat.addSample(inputs.driveSupplyCurrentAbs);
+    inputs.driveSupplyCurrentAbsAvg = driveSupplyCurrentAvgStat.getAverage();
     inputs.driveTempCelcius = driveTemp.getValueAsDouble();
 
     // Update turn inputs
@@ -264,6 +271,8 @@ public class ModuleIOTalonFX implements ModuleIO {
     inputs.turnAppliedVolts = turnAppliedVolts.getValueAsDouble();
     inputs.turnStatorCurrent = turnStatorCurrent.getValueAsDouble();
     inputs.turnSupplyCurrentAbs = Math.abs(turnSupplyCurrent.getValueAsDouble());
+    turnSupplyCurrentAvgStat.addSample(inputs.turnSupplyCurrentAbs);
+    inputs.turnSupplyCurrentAbsAvg = turnSupplyCurrentAvgStat.getAverage();
 
     // Update odometry inputs
     inputs.odometryTimestamps =
