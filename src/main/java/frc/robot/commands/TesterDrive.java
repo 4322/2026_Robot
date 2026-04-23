@@ -1,12 +1,11 @@
 package frc.robot.commands;
 
-import org.littletonrobotics.junction.Logger;
-
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.constants.Constants;
 import frc.robot.subsystems.drive.Drive;
+import org.littletonrobotics.junction.Logger;
 
 public class TesterDrive extends Command {
   private Drive drive;
@@ -109,15 +108,12 @@ public class TesterDrive extends Command {
     SmartDashboard.putString(Constants.Tester.DriveColorKeyBL, BLColorStatus.toHexString());
     SmartDashboard.putString(Constants.Tester.DriveColorKeyBR, BRColorStatus.toHexString());
 
-    SmartDashboard.putString(
-        Constants.Tester.DriveKeyFL, FLStatus);
-    SmartDashboard.putString(
-        Constants.Tester.DriveKeyFR, FRStatus);
+    SmartDashboard.putString(Constants.Tester.DriveKeyFL, FLStatus);
+    SmartDashboard.putString(Constants.Tester.DriveKeyFR, FRStatus);
     SmartDashboard.putString(
         Constants.Tester.DriveKeyBL,
         SmartDashboard.getString(Constants.Tester.DriveKeyBL, BLStatus));
-    SmartDashboard.putString(
-        Constants.Tester.DriveKeyBR, BRStatus);
+    SmartDashboard.putString(Constants.Tester.DriveKeyBR, BRStatus);
   }
 
   @Override

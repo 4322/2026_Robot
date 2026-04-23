@@ -159,7 +159,8 @@ public final class Constants {
     public static final String RollerKeyLeader = "Intake/Rollers/Leader Roller Status";
     public static final String RollerKeyFollower = "Intake/Rollers/Follower Roller Status";
     public static final String RollerColorKeyLeader = "Intake/Rollers/Leader Roller Color Status";
-    public static final String RollerColorKeyFollower = "Intake/Rollers/Follower Roller Color Status";
+    public static final String RollerColorKeyFollower =
+        "Intake/Rollers/Follower Roller Color Status";
 
     public static final String FlywheelKeyLeader = "Shooter/Flywheel/Leader Flywheel Status";
     public static final String FlywheelKeyFollower = "Shooter/Flywheel/Follower Flywheel Status";

@@ -1,12 +1,11 @@
 package frc.robot.commands;
 
-import org.littletonrobotics.junction.Logger;
-
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.constants.Constants;
 import frc.robot.subsystems.intake.rollers.Rollers;
+import org.littletonrobotics.junction.Logger;
 
 public class TesterRollers extends Command {
   private Rollers rollers;
@@ -104,7 +103,9 @@ public class TesterRollers extends Command {
 
     SmartDashboard.putString(
         Constants.Tester.RollerKeyFollower,
-        SmartDashboard.getString(Constants.Tester.RollerKeyFollower, "") + testName + rollerFollower);
+        SmartDashboard.getString(Constants.Tester.RollerKeyFollower, "")
+            + testName
+            + rollerFollower);
     SmartDashboard.putString(
         Constants.Tester.RollerKeyLeader,
         SmartDashboard.getString(Constants.Tester.RollerKeyLeader, "") + testName + rollerLeader);
