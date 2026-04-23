@@ -10,10 +10,10 @@ import org.littletonrobotics.junction.Logger;
 public class TesterRollers extends Command {
   private Rollers rollers;
   private String testName;
-  private Color leaderRollerColorStatus;
-  private Color followerRollerColorStatus;
-  private String rollerLeader = "  ";
-  private String rollerFollower = "  ";
+  private Color leaderColorStatus;
+  private Color followerColorStatus;
+  private String leaderStatus;
+  private String followerStatus;
 
   public TesterRollers(Rollers rollers, String testName) {
     this.rollers = rollers;
@@ -22,97 +22,100 @@ public class TesterRollers extends Command {
 
   @Override
   public void initialize() {
-    leaderRollerColorStatus = Constants.NetworkTables.purple;
-    followerRollerColorStatus = Constants.NetworkTables.purple;
-    SmartDashboard.putString(
-        Constants.Tester.RollerKeyLeader, Constants.NetworkTables.purple.toHexString());
-    SmartDashboard.putString(
-        Constants.Tester.RollerKeyFollower, Constants.NetworkTables.purple.toHexString());
+    leaderColorStatus = Constants.NetworkTables.purple;
+    followerColorStatus = Constants.NetworkTables.purple;
+    leaderStatus = null;
+    followerStatus = null;
+    setColorStatus();
+    setTextStatus();
     Logger.recordOutput("Tester/Rollers", testName);
   }
 
   @Override
   public void execute() {
-    rollerFollower = " ";
-    rollerLeader = " ";
+    followerStatus = " ";
+    leaderStatus = " ";
     if (!rollers.leaderRollerConnected()) {
-      leaderRollerColorStatus = Constants.NetworkTables.red;
-      rollerLeader = " Not Connected";
+      leaderColorStatus = Constants.NetworkTables.red;
+      leaderStatus = " Not Connected";
     } else if (!rollers.leaderRollerAtGoal()) {
-      leaderRollerColorStatus = Constants.NetworkTables.orange;
-      rollerLeader =
+      leaderColorStatus = Constants.NetworkTables.orange;
+      leaderStatus =
           "Not Spinning at Goal by"
               + +(100 - ((rollers.getLeaderRollerSpeed() / rollers.getRequestedSetpoint()) * 100))
               + "%";
     } else {
-      leaderRollerColorStatus = Constants.NetworkTables.green;
+      leaderColorStatus = Constants.NetworkTables.green;
     }
 
     if (!rollers.followerRollerConnected()) {
-      followerRollerColorStatus = Constants.NetworkTables.red;
-      rollerFollower = " Not Connected";
+      followerColorStatus = Constants.NetworkTables.red;
+      followerStatus = " Not Connected";
     } else if (!rollers.followerRollerAtGoal()) {
-      followerRollerColorStatus = Constants.NetworkTables.orange;
-      rollerFollower =
+      followerColorStatus = Constants.NetworkTables.orange;
+      followerStatus =
           "Not Spinning at Goal by"
               + +(100 - ((rollers.getFollowerRollerSpeed() / rollers.getRequestedSetpoint()) * 100))
               + "%";
       ;
     } else {
-      followerRollerColorStatus = Constants.NetworkTables.green;
+      followerColorStatus = Constants.NetworkTables.green;
     }
 
     if (!rollers.rollersSpinningTogether()) {
-      rollerLeader = " Rollers Not Spinning Together";
-      rollerFollower = " Rollers Not Spinning Together";
-      rollerLeader =
-          rollerLeader
+      leaderStatus = " Rollers Not Spinning Together";
+      followerStatus = " Rollers Not Spinning Together";
+      leaderStatus =
+          leaderStatus
               + " Leader at "
               + rollers.getLeaderRollerSpeed()
               + " RPS, Follower at "
               + rollers.getFollowerRollerSpeed()
               + " RPS";
-      rollerFollower =
-          rollerFollower
+      followerStatus =
+          followerStatus
               + " Leader at "
               + rollers.getLeaderRollerSpeed()
               + " RPS, Follower at "
               + rollers.getFollowerRollerSpeed()
               + " RPS";
-      rollerLeader =
-          rollerLeader
+      leaderStatus =
+          leaderStatus
               + "Diffrence of "
               + (rollers.getLeaderRollerSpeed() - rollers.getFollowerRollerSpeed())
               + " RPS";
-      rollerFollower =
-          rollerFollower
+      followerStatus =
+          followerStatus
               + "Diffrence of "
               + (rollers.getFollowerRollerSpeed() - rollers.getLeaderRollerSpeed())
               + " RPS";
     } else {
-      followerRollerColorStatus = Constants.NetworkTables.green;
-      leaderRollerColorStatus = Constants.NetworkTables.green;
-      rollerLeader = rollerLeader + " Rollers Spinning Together";
-      rollerFollower = rollerFollower + " Rollers Spinning Together";
+      followerColorStatus = Constants.NetworkTables.green;
+      leaderColorStatus = Constants.NetworkTables.green;
+      leaderStatus = leaderStatus + " Rollers Spinning Together";
+      followerStatus = followerStatus + " Rollers Spinning Together";
     }
 
-    SmartDashboard.putString(
-        Constants.Tester.RollerColorKeyLeader, leaderRollerColorStatus.toHexString());
-    SmartDashboard.putString(
-        Constants.Tester.RollerColorKeyFollower, followerRollerColorStatus.toHexString());
-
-    SmartDashboard.putString(
-        Constants.Tester.RollerKeyFollower,
-        SmartDashboard.getString(Constants.Tester.RollerKeyFollower, "")
-            + testName
-            + rollerFollower);
-    SmartDashboard.putString(
-        Constants.Tester.RollerKeyLeader,
-        SmartDashboard.getString(Constants.Tester.RollerKeyLeader, "") + testName + rollerLeader);
+    setColorStatus();
+    setTextStatus();
   }
 
   @Override
   public boolean isFinished() {
     return true;
+  }
+
+  private void setColorStatus(){
+      SmartDashboard.putString(
+        Constants.Tester.RollerColorKeyLeader, leaderColorStatus.toHexString());
+    SmartDashboard.putString(
+        Constants.Tester.RollerColorKeyFollower, followerColorStatus.toHexString());
+  }
+
+  private void setTextStatus(){
+    SmartDashboard.putString(
+        Constants.Tester.RollerKeyFollower,  followerStatus);
+    SmartDashboard.putString(
+        Constants.Tester.RollerKeyLeader, leaderStatus);
   }
 }

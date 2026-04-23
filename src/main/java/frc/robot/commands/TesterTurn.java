@@ -9,10 +9,10 @@ import org.littletonrobotics.junction.Logger;
 
 public class TesterTurn extends Command {
   private Drive drive;
-  private String FLStatus = "";
-  private String FRStatus = "";
-  private String BLStatus = "";
-  private String BRStatus = "";
+  private String FLStatus;
+  private String FRStatus;
+  private String BLStatus;
+  private String BRStatus;
   private Color FLColorStatus;
   private Color FRColorStatus;
   private Color BLColorStatus;
@@ -33,18 +33,16 @@ public class TesterTurn extends Command {
 
   @Override
   public void initialize() {
-    SmartDashboard.putString(
-        Constants.Tester.TurnKeyFL, Constants.NetworkTables.purple.toHexString());
-    SmartDashboard.putString(
-        Constants.Tester.TurnKeyFR, Constants.NetworkTables.purple.toHexString());
-    SmartDashboard.putString(
-        Constants.Tester.TurnKeyBL, Constants.NetworkTables.purple.toHexString());
-    SmartDashboard.putString(
-        Constants.Tester.TurnKeyBR, Constants.NetworkTables.purple.toHexString());
     FLColorStatus = Constants.NetworkTables.purple;
     FRColorStatus = Constants.NetworkTables.purple;
     BLColorStatus = Constants.NetworkTables.purple;
     BRColorStatus = Constants.NetworkTables.purple;
+    FLStatus = null;
+    FRStatus = null;
+    BLStatus = null;
+    BRStatus = null;
+   setColorStatus();
+   setTextStatus();
     Logger.recordOutput("Tester/Turn", testName);
   }
 
@@ -107,25 +105,28 @@ public class TesterTurn extends Command {
       BRColorStatus = Constants.NetworkTables.green;
     }
 
-    SmartDashboard.putString(
-        Constants.Tester.TurnKeyFL,
-        SmartDashboard.getString(Constants.Tester.TurnKeyFL, "") + testName + FLStatus);
-    SmartDashboard.putString(
-        Constants.Tester.TurnKeyFR,
-        SmartDashboard.getString(Constants.Tester.TurnKeyFR, "") + testName + FRStatus);
-    SmartDashboard.putString(
-        Constants.Tester.TurnKeyBL,
-        SmartDashboard.getString(Constants.Tester.TurnKeyBL, "") + testName + BLStatus);
-    SmartDashboard.putString(
-        Constants.Tester.TurnKeyBR,
-        SmartDashboard.getString(Constants.Tester.TurnKeyBR, "") + testName + BRStatus);
+    setTextStatus();
+    setColorStatus();
+  }
 
+  @Override
+  public void end(boolean interrupted) {}
+
+  private void setTextStatus() {
+    SmartDashboard.putString(
+        Constants.Tester.TurnKeyFL, FLStatus);
+    SmartDashboard.putString(
+        Constants.Tester.TurnKeyFR, FRStatus);
+    SmartDashboard.putString(
+        Constants.Tester.TurnKeyBL, BLStatus);
+    SmartDashboard.putString(
+        Constants.Tester.TurnKeyBR, BRStatus);
+  }
+
+  private void setColorStatus(){
     SmartDashboard.putString(Constants.Tester.TurnColorKeyFL, FLColorStatus.toHexString());
     SmartDashboard.putString(Constants.Tester.TurnColorKeyFR, FRColorStatus.toHexString());
     SmartDashboard.putString(Constants.Tester.TurnColorKeyBL, BLColorStatus.toHexString());
     SmartDashboard.putString(Constants.Tester.TurnColorKeyBR, BRColorStatus.toHexString());
   }
-
-  @Override
-  public void end(boolean interrupted) {}
 }

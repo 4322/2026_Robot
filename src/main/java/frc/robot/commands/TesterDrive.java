@@ -9,10 +9,10 @@ import org.littletonrobotics.junction.Logger;
 
 public class TesterDrive extends Command {
   private Drive drive;
-  private String FLStatus = "Front Left:";
-  private String FRStatus = "Front Right:";
-  private String BLStatus = "Back Left:";
-  private String BRStatus = "Back Right:";
+  private String FLStatus;
+  private String FRStatus;
+  private String BLStatus;
+  private String BRStatus;
   private Color FLColorStatus;
   private Color FRColorStatus;
   private Color BLColorStatus;
@@ -37,10 +37,12 @@ public class TesterDrive extends Command {
     FRColorStatus = Constants.NetworkTables.purple;
     BLColorStatus = Constants.NetworkTables.purple;
     BRColorStatus = Constants.NetworkTables.purple;
-    SmartDashboard.putString(Constants.Tester.DriveKeyFL, FLColorStatus.toHexString());
-    SmartDashboard.putString(Constants.Tester.DriveKeyFR, FRColorStatus.toHexString());
-    SmartDashboard.putString(Constants.Tester.DriveKeyBL, BLColorStatus.toHexString());
-    SmartDashboard.putString(Constants.Tester.DriveKeyBR, BRColorStatus.toHexString());
+    FLStatus = null;
+    FRStatus = null;
+    BLStatus = null;
+    BRStatus = null;
+   setColorStatus();
+   setTextStatus();
     Logger.recordOutput("Tester/Drive", testName);
   }
 
@@ -103,19 +105,26 @@ public class TesterDrive extends Command {
       BRColorStatus = Constants.NetworkTables.green;
     }
 
-    SmartDashboard.putString(Constants.Tester.DriveColorKeyFL, FLColorStatus.toHexString());
-    SmartDashboard.putString(Constants.Tester.DriveColorKeyFR, FRColorStatus.toHexString());
-    SmartDashboard.putString(Constants.Tester.DriveColorKeyBL, BLColorStatus.toHexString());
-    SmartDashboard.putString(Constants.Tester.DriveColorKeyBR, BRColorStatus.toHexString());
+   setColorStatus();
 
-    SmartDashboard.putString(Constants.Tester.DriveKeyFL, FLStatus);
-    SmartDashboard.putString(Constants.Tester.DriveKeyFR, FRStatus);
-    SmartDashboard.putString(
-        Constants.Tester.DriveKeyBL,
-        SmartDashboard.getString(Constants.Tester.DriveKeyBL, BLStatus));
-    SmartDashboard.putString(Constants.Tester.DriveKeyBR, BRStatus);
+   setTextStatus();
   }
 
   @Override
   public void end(boolean interrupted) {}
+
+
+  private void setColorStatus() {
+    SmartDashboard.putString(Constants.Tester.DriveKeyFL, FLColorStatus.toHexString());
+    SmartDashboard.putString(Constants.Tester.DriveKeyFR, FRColorStatus.toHexString());
+    SmartDashboard.putString(Constants.Tester.DriveKeyBL, BLColorStatus.toHexString());
+    SmartDashboard.putString(Constants.Tester.DriveKeyBR, BRColorStatus.toHexString());
+  }
+
+  private void setTextStatus() {
+    SmartDashboard.putString(Constants.Tester.DriveKeyFL, FLStatus);
+    SmartDashboard.putString(Constants.Tester.DriveKeyFR, FRStatus);
+    SmartDashboard.putString(Constants.Tester.DriveKeyBL, BLStatus);
+    SmartDashboard.putString(Constants.Tester.DriveKeyBR, BRStatus);
+  }
 }
