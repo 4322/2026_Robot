@@ -17,6 +17,7 @@ import edu.wpi.first.units.measure.Temperature;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.constants.Constants;
+import frc.robot.util.AverageStat;
 
 public class SpindexerIOTalonFx implements SpindexerIO {
   private TalonFX leaderMotor;
@@ -42,6 +43,8 @@ public class SpindexerIOTalonFx implements SpindexerIO {
       new Debouncer(0.5, Debouncer.DebounceType.kFalling);
   private final Debouncer followerMotorConnectedDebounce =
       new Debouncer(0.5, Debouncer.DebounceType.kFalling);
+
+  private AverageStat supplyAmpsAvgStat = new AverageStat(50);
 
   public SpindexerIOTalonFx() {
     leaderMotor = new TalonFX(Constants.Spindexer.leaderMotorId, Constants.CANivore.CANBus);
@@ -153,17 +156,20 @@ public class SpindexerIOTalonFx implements SpindexerIO {
     inputs.leaderMotorConnected = leaderMotorConnectedDebounce.calculate(leadMotorStatus.isOK());
     inputs.leaderVoltage = leaderAppliedVolts.getValueAsDouble();
     inputs.leaderMechanismRPS = leaderVelocity.getValueAsDouble();
-    inputs.leaderSupplyCurrentAmps = leaderSupplyCurrent.getValueAsDouble();
-    inputs.leaderStatorCurrentAmps = leaderStatorCurrent.getValueAsDouble();
+    inputs.leaderSupplyAmps = leaderSupplyCurrent.getValueAsDouble();
+    inputs.leaderStatorAmps = leaderStatorCurrent.getValueAsDouble();
     inputs.leaderMotorTempC = leaderTemp.getValueAsDouble();
 
     inputs.followerMotorConnected =
         followerMotorConnectedDebounce.calculate(followMotorStatus.isOK());
     inputs.followerVoltage = followerAppliedVolts.getValueAsDouble();
     inputs.followerMechanismRPS = followerVelocity.getValueAsDouble();
-    inputs.followerSupplyCurrentAmps = followerSupplyCurrent.getValueAsDouble();
-    inputs.followerStatorCurrentAmps = followerStatorCurrent.getValueAsDouble();
+    inputs.followerSupplyAmps = followerSupplyCurrent.getValueAsDouble();
+    inputs.followerStatorAmps = followerStatorCurrent.getValueAsDouble();
     inputs.followerMotorTempC = followerTemp.getValueAsDouble();
+
+    supplyAmpsAvgStat.addSample(inputs.leaderSupplyAmps + inputs.followerSupplyAmps);
+    inputs.supplyAmpsAvg = supplyAmpsAvgStat.getAverage();
   }
 
   @Override
