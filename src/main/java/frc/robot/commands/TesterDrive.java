@@ -115,10 +115,10 @@ public class TesterDrive extends Command {
 
 
   private void setColorStatus() {
-    SmartDashboard.putString(Constants.Tester.DriveKeyFL, FLColorStatus.toHexString());
-    SmartDashboard.putString(Constants.Tester.DriveKeyFR, FRColorStatus.toHexString());
-    SmartDashboard.putString(Constants.Tester.DriveKeyBL, BLColorStatus.toHexString());
-    SmartDashboard.putString(Constants.Tester.DriveKeyBR, BRColorStatus.toHexString());
+    SmartDashboard.putString(Constants.Tester.DriveColorKeyFL, FLColorStatus.toHexString());
+    SmartDashboard.putString(Constants.Tester.DriveColorKeyFR, FRColorStatus.toHexString());
+    SmartDashboard.putString(Constants.Tester.DriveColorKeyBL, BLColorStatus.toHexString());
+    SmartDashboard.putString(Constants.Tester.DriveColorKeyBR, BRColorStatus.toHexString());
   }
 
   private void setTextStatus() {
