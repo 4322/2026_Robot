@@ -17,9 +17,9 @@ public interface ModuleIO {
     public double drivePositionRad = 0.0;
     public double driveVelocityRadPerSec = 0.0;
     public double driveAppliedVolts = 0.0;
-    public double driveStatorCurrent = 0.0;
-    public double driveSupplyCurrentAbs = 0.0;
-    public double driveSupplyCurrentAbsAvg = 0.0;
+    public double driveStatorAmps = 0.0;
+    public double driveSupplyAmpsAbs = 0.0;
+    public double driveSupplyAmpsAbsAvg = 0.0;
     public double driveTempCelcius = 0.0;
 
     public boolean turnConnected = false;
@@ -28,9 +28,9 @@ public interface ModuleIO {
     public Rotation2d turnPosition = Rotation2d.kZero;
     public double turnVelocityRadPerSec = 0.0;
     public double turnAppliedVolts = 0.0;
-    public double turnStatorCurrent = 0.0;
-    public double turnSupplyCurrentAbs = 0.0;
-    public double turnSupplyCurrentAbsAvg = 0.0;
+    public double turnStatorAmps = 0.0;
+    public double turnSupplyAmpsAbs = 0.0;
+    public double turnSupplyAmpsAbsAvg = 0.0;
 
     public double[] odometryTimestamps = new double[] {};
     public double[] odometryDrivePositionsRad = new double[] {};
