@@ -56,7 +56,8 @@ public class TesterDrive extends Command {
       FLStatus =
           "FL "
               + " Too Slow by "
-              + (100 - ((drive.getModuleVelocity(0) / drive.requestedSpeed) * 100))
+              + (100
+                  - ((Math.abs(drive.getModuleVelocity(0)) / Math.abs(drive.requestedSpeed)) * 100))
               + "% ";
     } else {
       FLColorStatus = Constants.NetworkTables.green;
@@ -71,7 +72,8 @@ public class TesterDrive extends Command {
       FRStatus =
           "FR "
               + " Too Slow by "
-              + (100 - ((drive.getModuleVelocity(1) / drive.requestedSpeed) * 100))
+              + (100
+                  - ((Math.abs(drive.getModuleVelocity(1)) / Math.abs(drive.requestedSpeed)) * 100))
               + "%";
     } else {
       FRColorStatus = Constants.NetworkTables.green;
@@ -86,7 +88,8 @@ public class TesterDrive extends Command {
       BLStatus =
           "BL "
               + " Too Slow by "
-              + (100 - ((drive.getModuleVelocity(2) / drive.requestedSpeed) * 100))
+              + (100
+                  - ((Math.abs(drive.getModuleVelocity(2)) / Math.abs(drive.requestedSpeed)) * 100))
               + "%";
 
     } else {
@@ -102,7 +105,8 @@ public class TesterDrive extends Command {
       BRStatus =
           "BR "
               + " Too Slow by "
-              + (100 - ((drive.getModuleVelocity(3) / drive.requestedSpeed) * 100))
+              + (100
+                  - ((Math.abs(drive.getModuleVelocity(3)) / Math.abs(drive.requestedSpeed)) * 100))
               + "%";
     } else {
       BRColorStatus = Constants.NetworkTables.green;

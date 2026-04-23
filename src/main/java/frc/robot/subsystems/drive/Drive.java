@@ -393,11 +393,12 @@ public class Drive extends SubsystemBase {
   }
 
   public boolean isDriveCorrectSpeed(int module) {
-    return MathUtil.isNear(this.requestedSpeed, modules[module].getVelocityMetersPerSec(), 0.7);
+    return MathUtil.isNear(
+        Math.abs(requestedSpeed), Math.abs(modules[module].getVelocityMetersPerSec()), 0.7);
   }
 
   public boolean isCorrectAngleSpeed(int module) {
-    return MathUtil.isNear(this.anglePerSecondRequested, modules[module].getTurnVelocity(), 1.0);
+    return MathUtil.isNear(anglePerSecondRequested, modules[module].getTurnVelocity(), 1.0);
   }
 
   /** Adds a new timestamped vision measurement. */

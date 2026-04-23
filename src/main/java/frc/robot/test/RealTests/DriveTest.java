@@ -36,7 +36,7 @@ public class DriveTest extends SequentialCommandGroup {
                           -drive.getMaxLinearSpeedMetersPerSec(), 0, 0, Rotation2d.fromDegrees(0)));
                 },
                 drive),
-            DriveCommands.DriveTesting(drive, "Drive BackWard"),
+            DriveCommands.DriveTesting(drive, "Drive Backward"),
             new WaitCommand(5)),
         new ParallelCommandGroup(
             Commands.run(
