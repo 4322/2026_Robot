@@ -107,33 +107,21 @@ public class TesterTurn extends Command {
 
     SmartDashboard.putString(
         Constants.Tester.TurnKeyFL,
-        SmartDashboard.getString(Constants.Tester.TurnKeyFL, "")
-            + test
-            + this.FLStatus);
+        SmartDashboard.getString(Constants.Tester.TurnKeyFL, "") + test + this.FLStatus);
     SmartDashboard.putString(
         Constants.Tester.TurnKeyFR,
-        SmartDashboard.getString(Constants.Tester.TurnKeyFR, "")
-            + test
-            + this.FRStatus);
+        SmartDashboard.getString(Constants.Tester.TurnKeyFR, "") + test + this.FRStatus);
     SmartDashboard.putString(
         Constants.Tester.TurnKeyBL,
-        SmartDashboard.getString(Constants.Tester.TurnKeyBL, "")
-            + test
-            + this.BLStatus);
+        SmartDashboard.getString(Constants.Tester.TurnKeyBL, "") + test + this.BLStatus);
     SmartDashboard.putString(
         Constants.Tester.TurnKeyBR,
-        SmartDashboard.getString(Constants.Tester.TurnKeyBR, "")
-            + test
-            + this.BRStatus);
+        SmartDashboard.getString(Constants.Tester.TurnKeyBR, "") + test + this.BRStatus);
 
-    SmartDashboard.putString(
-        Constants.Tester.TurnColorKeyFL, this.FLColorStatus.toHexString());
-    SmartDashboard.putString(
-        Constants.Tester.TurnColorKeyFR, this.FRColorStatus.toHexString());
-    SmartDashboard.putString(
-        Constants.Tester.TurnColorKeyBL, this.BLColorStatus.toHexString());
-    SmartDashboard.putString(
-        Constants.Tester.TurnColorKeyBR, this.BRColorStatus.toHexString());
+    SmartDashboard.putString(Constants.Tester.TurnColorKeyFL, this.FLColorStatus.toHexString());
+    SmartDashboard.putString(Constants.Tester.TurnColorKeyFR, this.FRColorStatus.toHexString());
+    SmartDashboard.putString(Constants.Tester.TurnColorKeyBL, this.BLColorStatus.toHexString());
+    SmartDashboard.putString(Constants.Tester.TurnColorKeyBR, this.BRColorStatus.toHexString());
   }
 
   @Override

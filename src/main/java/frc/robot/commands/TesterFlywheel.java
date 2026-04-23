@@ -11,12 +11,12 @@ public class TesterFlywheel extends Command {
   private String test;
   private Color leaderFlywheelColorStatus = Constants.NetworkTables.purple;
   private Color followerFlywheelColorStatus = Constants.NetworkTables.purple;
-  private String flywheelLeader = " Flywheel Leader: ";
-  private String flywheelFollower = " Flywheel Follower: ";
+  private String flywheelLeader;
+  private String flywheelFollower;
 
-  public TesterFlywheel(Flywheel flywheel, String test) {
+  public TesterFlywheel(Flywheel flywheel, String testName) {
     this.flywheel = flywheel;
-    this.test = test;
+    this.test = testName;
   }
 
   @Override
@@ -98,8 +98,7 @@ public class TesterFlywheel extends Command {
     SmartDashboard.putString(
         Constants.Tester.FlywheelColorKeyLeader, leaderFlywheelColorStatus.toHexString());
     SmartDashboard.putString(
-        Constants.Tester.FlywheelColorKeyFollower,
-        followerFlywheelColorStatus.toHexString());
+        Constants.Tester.FlywheelColorKeyFollower, followerFlywheelColorStatus.toHexString());
 
     SmartDashboard.putString(
         Constants.Tester.FlywheelKeyFollower,

@@ -44,7 +44,6 @@ public class TesterDrive extends Command {
 
   @Override
   public void execute() {
-
     if (!drive.isDriveConnected(0)) {
       this.FLColorStatus = Constants.NetworkTables.red;
       this.currentFLStatus = "FL " + driveConnectionMessage;
@@ -109,24 +108,16 @@ public class TesterDrive extends Command {
 
     SmartDashboard.putString(
         Constants.Tester.DriveKeyFL,
-        SmartDashboard.getString(Constants.Tester.DriveKeyFL, "")
-            + test
-            + this.currentFLStatus);
+        SmartDashboard.getString(Constants.Tester.DriveKeyFL, "") + test + this.currentFLStatus);
     SmartDashboard.putString(
         Constants.Tester.DriveKeyFR,
-        SmartDashboard.getString(Constants.Tester.DriveKeyFR, "")
-            + test
-            + this.FRStatus);
+        SmartDashboard.getString(Constants.Tester.DriveKeyFR, "") + test + this.FRStatus);
     SmartDashboard.putString(
         Constants.Tester.DriveKeyBL,
-        SmartDashboard.getString(Constants.Tester.DriveKeyBL, "")
-            + test
-            + this.BLStatus);
+        SmartDashboard.getString(Constants.Tester.DriveKeyBL, "") + test + this.BLStatus);
     SmartDashboard.putString(
         Constants.Tester.DriveKeyBR,
-        SmartDashboard.getString(Constants.Tester.DriveKeyBR, "")
-            + test
-            + this.BRStatus);
+        SmartDashboard.getString(Constants.Tester.DriveKeyBR, "") + test + this.BRStatus);
   }
 
   @Override

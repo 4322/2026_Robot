@@ -8,15 +8,15 @@ import frc.robot.subsystems.intake.rollers.Rollers;
 
 public class TesterRollers extends Command {
   private Rollers rollers;
-  private String test;
+  private String testName;
   private Color leaderRollerColorStatus = Constants.NetworkTables.purple;
   private Color followerRollerColorStatus = Constants.NetworkTables.purple;
-  private String rollerLeader = " Roller Leader: ";
-  private String rollerFollower = " Roller Follower: ";
+  private String rollerLeader = "  ";
+  private String rollerFollower = "  ";
 
-  public TesterRollers(Rollers rollers, String test) {
+  public TesterRollers(Rollers rollers, String testName) {
     this.rollers = rollers;
-    this.test = test;
+    this.testName = testName;
   }
 
   @Override
@@ -101,10 +101,10 @@ public class TesterRollers extends Command {
 
     SmartDashboard.putString(
         Constants.Tester.RollerKeyFollower,
-        SmartDashboard.getString(Constants.Tester.RollerKeyFollower, "") + test + rollerFollower);
+        SmartDashboard.getString(Constants.Tester.RollerKeyFollower, "") + testName + rollerFollower);
     SmartDashboard.putString(
         Constants.Tester.RollerKeyLeader,
-        SmartDashboard.getString(Constants.Tester.RollerKeyLeader, "") + test + rollerLeader);
+        SmartDashboard.getString(Constants.Tester.RollerKeyLeader, "") + testName + rollerLeader);
   }
 
   @Override
