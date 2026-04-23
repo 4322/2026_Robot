@@ -17,7 +17,7 @@ public class TesterTurn extends Command {
   private Color BLColorStatus;
   private Color BRColorStatus;
   private String testName;
-  private String turnConnectionMessage = " Turn Not Connected";
+  private String turnConnectionMessage = "Turn Not Connected";
 
   // If Not working = color
   // If working = green
@@ -54,8 +54,9 @@ public class TesterTurn extends Command {
     } else if (!drive.isCorrectAngleSpeed(0)) {
       FLColorStatus = Constants.NetworkTables.orange;
       FLStatus =
-          " Incorrect Angle Speed by "
-              + (100 - ((drive.getModuleTurnVelocity(0) / drive.radPerSecondRequested) * 100))
+          "Angle Speed off by "
+              + String.format(
+                  "%.1f", 100 - drive.getModuleTurnVelocity(0) / drive.radPerSecondRequested * 100)
               + "%";
     } else {
       FLColorStatus = Constants.NetworkTables.green;
@@ -69,8 +70,9 @@ public class TesterTurn extends Command {
       FRColorStatus = Constants.NetworkTables.orange;
       FRStatus =
           FRStatus
-              + " Incorrect Angle Speed by "
-              + (100 - ((drive.getModuleTurnVelocity(1) / drive.radPerSecondRequested) * 100))
+              + "Angle Speed off by "
+              + String.format(
+                  "%.1f", 100 - drive.getModuleTurnVelocity(1) / drive.radPerSecondRequested * 100)
               + "%";
     } else {
       FRColorStatus = Constants.NetworkTables.green;
@@ -84,8 +86,9 @@ public class TesterTurn extends Command {
       BLColorStatus = Constants.NetworkTables.orange;
       BLStatus =
           BLStatus
-              + " Incorrect Angle Speed by "
-              + (100 - ((drive.getModuleTurnVelocity(2) / drive.radPerSecondRequested) * 100))
+              + "Angle Speed off by "
+              + String.format(
+                  "%.1f", 100 - drive.getModuleTurnVelocity(2) / drive.radPerSecondRequested * 100)
               + "%";
 
     } else {
@@ -100,8 +103,9 @@ public class TesterTurn extends Command {
       BRColorStatus = Constants.NetworkTables.orange;
       BRStatus =
           BRStatus
-              + " Incorrect Angle Speed by "
-              + (100 - ((drive.getModuleTurnVelocity(3) / drive.radPerSecondRequested) * 100))
+              + "Angle Speed off by "
+              + String.format(
+                  "%.1f", 100 - drive.getModuleTurnVelocity(3) / drive.radPerSecondRequested * 100)
               + "%";
     } else {
       BRColorStatus = Constants.NetworkTables.green;

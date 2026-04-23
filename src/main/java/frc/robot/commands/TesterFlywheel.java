@@ -34,12 +34,14 @@ public class TesterFlywheel extends Command {
   public void execute() {
     if (!flywheel.leaderConnected()) {
       leaderColorStatus = Constants.NetworkTables.red;
-      leaderStatus = " Not Connected";
+      leaderStatus = "Not Connected";
     } else if (!flywheel.leaderRollerAtGoal()) {
       leaderColorStatus = Constants.NetworkTables.orange;
       leaderStatus =
-          "Not Spinning at Goal by"
-              + +(100 - ((flywheel.getLeaderRollerSpeed() / flywheel.getRequestedSetpoint()) * 100))
+          "Slow by"
+              + String.format(
+                  "%.1f",
+                  100 - flywheel.getLeaderRollerSpeed() / flywheel.getRequestedSetpoint() * 100)
               + "%";
     } else {
       leaderColorStatus = Constants.NetworkTables.green;
@@ -48,13 +50,14 @@ public class TesterFlywheel extends Command {
 
     if (!flywheel.followerConnected()) {
       followerColorStatus = Constants.NetworkTables.red;
-      followerStatus = " Not Connected";
+      followerStatus = "Not Connected";
     } else if (!flywheel.followerRollerAtGoal()) {
       followerColorStatus = Constants.NetworkTables.orange;
       followerStatus =
-          "Not Spinning at Goal by"
-              + +(100
-                  - ((flywheel.getFollowerRollerSpeed() / flywheel.getRequestedSetpoint()) * 100))
+          "Slow by"
+              + String.format(
+                  "%.1f",
+                  100 - flywheel.getFollowerRollerSpeed() / flywheel.getRequestedSetpoint() * 100)
               + "%";
       ;
     } else {
@@ -63,37 +66,35 @@ public class TesterFlywheel extends Command {
     }
 
     if (!flywheel.rollersSpinningTogether()) {
-      leaderStatus = " Not Spinning Together";
-      followerStatus = " Not Spinning Together";
-      leaderStatus =
-          leaderStatus
-              + " Leader at "
-              + flywheel.getLeaderRollerSpeed()
-              + " RPS, Follower at "
-              + flywheel.getFollowerRollerSpeed()
+      leaderStatus = "Not Spinning Together";
+      followerStatus = "Not Spinning Together";
+      leaderStatus +=
+          "\nLeader at "
+              + String.format("%.1f", flywheel.getLeaderRollerSpeed())
+              + " RPS\nFollower at "
+              + String.format("%.1f", flywheel.getFollowerRollerSpeed())
               + " RPS";
-      followerStatus =
-          followerStatus
-              + " Leader at "
-              + flywheel.getLeaderRollerSpeed()
-              + " RPS, Follower at "
-              + flywheel.getFollowerRollerSpeed()
+      followerStatus +=
+          "\nLeader at "
+              + String.format("%.1f", flywheel.getLeaderRollerSpeed())
+              + " RPS\nFollower at "
+              + String.format("%.1f", flywheel.getFollowerRollerSpeed())
               + " RPS";
-      leaderStatus =
-          leaderStatus
-              + "Diffrence of "
-              + (flywheel.getLeaderRollerSpeed() - flywheel.getFollowerRollerSpeed())
+      leaderStatus +=
+          "\nDiffrence of "
+              + String.format(
+                  "%.1f", flywheel.getLeaderRollerSpeed() - flywheel.getFollowerRollerSpeed())
               + " RPS";
-      followerStatus =
-          followerStatus
-              + "Diffrence of "
-              + (flywheel.getFollowerRollerSpeed() - flywheel.getLeaderRollerSpeed())
+      followerStatus +=
+          "\nDiffrence of "
+              + String.format(
+                  "%.1f", flywheel.getFollowerRollerSpeed() - flywheel.getLeaderRollerSpeed())
               + " RPS";
     } else {
       followerColorStatus = Constants.NetworkTables.green;
       leaderColorStatus = Constants.NetworkTables.green;
-      leaderStatus = leaderStatus + " Flywheel Spinning Together";
-      followerStatus = followerStatus + " Flywheel Spinning Together";
+      leaderStatus += "\nFlywheel Spinning Together";
+      followerStatus += "\nFlywheel Spinning Together";
     }
 
     setColorStatus();

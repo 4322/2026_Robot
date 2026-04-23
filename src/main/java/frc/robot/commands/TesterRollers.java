@@ -36,12 +36,14 @@ public class TesterRollers extends Command {
     leaderStatus = " ";
     if (!rollers.leaderRollerConnected()) {
       leaderColorStatus = Constants.NetworkTables.red;
-      leaderStatus = " Not Connected";
+      leaderStatus = "Not Connected";
     } else if (!rollers.leaderRollerAtGoal()) {
       leaderColorStatus = Constants.NetworkTables.orange;
       leaderStatus =
-          "Not Spinning at Goal by"
-              + +(100 - ((rollers.getLeaderRollerSpeed() / rollers.getRequestedSetpoint()) * 100))
+          "Slow by"
+              + String.format(
+                  "%.1f",
+                  100 - rollers.getLeaderRollerSpeed() / rollers.getRequestedSetpoint() * 100)
               + "%";
     } else {
       leaderColorStatus = Constants.NetworkTables.green;
@@ -50,12 +52,14 @@ public class TesterRollers extends Command {
 
     if (!rollers.followerRollerConnected()) {
       followerColorStatus = Constants.NetworkTables.red;
-      followerStatus = " Not Connected";
+      followerStatus = "Not Connected";
     } else if (!rollers.followerRollerAtGoal()) {
       followerColorStatus = Constants.NetworkTables.orange;
       followerStatus =
-          "Not Spinning at Goal by"
-              + +(100 - ((rollers.getFollowerRollerSpeed() / rollers.getRequestedSetpoint()) * 100))
+          "Slow by"
+              + String.format(
+                  "%.1f",
+                  100 - rollers.getFollowerRollerSpeed() / rollers.getRequestedSetpoint() * 100)
               + "%";
       ;
     } else {
@@ -64,37 +68,35 @@ public class TesterRollers extends Command {
     }
 
     if (!rollers.rollersSpinningTogether()) {
-      leaderStatus = " Rollers Not Spinning Together";
-      followerStatus = " Rollers Not Spinning Together";
-      leaderStatus =
-          leaderStatus
-              + " Leader at "
-              + rollers.getLeaderRollerSpeed()
-              + " RPS, Follower at "
-              + rollers.getFollowerRollerSpeed()
+      leaderStatus = "Rollers Not Spinning Together";
+      followerStatus = "Rollers Not Spinning Together";
+      leaderStatus +=
+          "\nLeader at "
+              + String.format("%.1f", rollers.getLeaderRollerSpeed())
+              + " RPS\nFollower at "
+              + String.format("%.1f", rollers.getFollowerRollerSpeed())
               + " RPS";
-      followerStatus =
-          followerStatus
-              + " Leader at "
-              + rollers.getLeaderRollerSpeed()
-              + " RPS, Follower at "
-              + rollers.getFollowerRollerSpeed()
+      followerStatus +=
+          "\nLeader at "
+              + String.format("%.1f", rollers.getLeaderRollerSpeed())
+              + " RPS\nFollower at "
+              + String.format("%.1f", rollers.getFollowerRollerSpeed())
               + " RPS";
-      leaderStatus =
-          leaderStatus
-              + "Diffrence of "
-              + (rollers.getLeaderRollerSpeed() - rollers.getFollowerRollerSpeed())
+      leaderStatus +=
+          "\nDiffrence of "
+              + String.format(
+                  "%.1f", rollers.getLeaderRollerSpeed() - rollers.getFollowerRollerSpeed())
               + " RPS";
-      followerStatus =
-          followerStatus
-              + "Diffrence of "
-              + (rollers.getFollowerRollerSpeed() - rollers.getLeaderRollerSpeed())
+      followerStatus +=
+          "Diffrence of "
+              + String.format(
+                  "%.1f", rollers.getFollowerRollerSpeed() - rollers.getLeaderRollerSpeed())
               + " RPS";
     } else {
       followerColorStatus = Constants.NetworkTables.green;
       leaderColorStatus = Constants.NetworkTables.green;
-      leaderStatus = leaderStatus + " Rollers Spinning Together";
-      followerStatus = followerStatus + " Rollers Spinning Together";
+      leaderStatus += "\nRollers Spinning Together";
+      followerStatus += "\nRollers Spinning Together";
     }
 
     setColorStatus();

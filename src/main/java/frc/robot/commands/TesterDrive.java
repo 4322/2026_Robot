@@ -17,7 +17,7 @@ public class TesterDrive extends Command {
   private Color BLColorStatus;
   private Color BRColorStatus;
   private String testName;
-  private String driveConnectionMessage = " Drive Not Connected";
+  private String driveConnectionMessage = "Drive Not Connected";
 
   // If Not working = color
   // If working = green
@@ -55,10 +55,12 @@ public class TesterDrive extends Command {
       FLStatus =
           "FL "
               + " Too Slow by "
-              + (100
-                  - ((Math.abs(drive.getModuleVelocity(0))
-                          / Math.abs(drive.requestedMetersPerSecond))
-                      * 100))
+              + String.format(
+                  "%.1f",
+                  100
+                      - Math.abs(drive.getModuleVelocity(0))
+                          / Math.abs(drive.requestedMetersPerSecond)
+                          * 100)
               + "% ";
     } else {
       FLColorStatus = Constants.NetworkTables.green;
@@ -73,10 +75,12 @@ public class TesterDrive extends Command {
       FRStatus =
           "FR "
               + " Too Slow by "
-              + (100
-                  - ((Math.abs(drive.getModuleVelocity(1))
-                          / Math.abs(drive.requestedMetersPerSecond))
-                      * 100))
+              + String.format(
+                  "%.1f",
+                  100
+                      - Math.abs(drive.getModuleVelocity(1))
+                          / Math.abs(drive.requestedMetersPerSecond)
+                          * 100)
               + "%";
     } else {
       FRColorStatus = Constants.NetworkTables.green;
@@ -91,10 +95,12 @@ public class TesterDrive extends Command {
       BLStatus =
           "BL "
               + " Too Slow by "
-              + (100
-                  - ((Math.abs(drive.getModuleVelocity(2))
-                          / Math.abs(drive.requestedMetersPerSecond))
-                      * 100))
+              + String.format(
+                  "%.1f",
+                  100
+                      - Math.abs(drive.getModuleVelocity(2))
+                          / Math.abs(drive.requestedMetersPerSecond)
+                          * 100)
               + "%";
 
     } else {
@@ -110,10 +116,12 @@ public class TesterDrive extends Command {
       BRStatus =
           "BR "
               + " Too Slow by "
-              + (100
-                  - ((Math.abs(drive.getModuleVelocity(3))
-                          / Math.abs(drive.requestedMetersPerSecond))
-                      * 100))
+              + String.format(
+                  "%.1f",
+                  100
+                      - Math.abs(drive.getModuleVelocity(3))
+                          / Math.abs(drive.requestedMetersPerSecond)
+                          * 100)
               + "%";
     } else {
       BRColorStatus = Constants.NetworkTables.green;
