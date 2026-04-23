@@ -9,8 +9,8 @@ import frc.robot.subsystems.shooter.flywheel.Flywheel;
 public class TesterFlywheel extends Command {
   private Flywheel flywheel;
   private String test;
-  private Color leaderFlywheelColorStatus = Constants.NetworkTables.purple;
-  private Color followerFlywheelColorStatus = Constants.NetworkTables.purple;
+  private Color leaderFlywheelColorStatus;
+  private Color followerFlywheelColorStatus;
   private String flywheelLeader;
   private String flywheelFollower;
 

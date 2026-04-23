@@ -12,10 +12,10 @@ public class TesterDrive extends Command {
   private String FRStatus = "Front Right:";
   private String BLStatus = "Back Left:";
   private String BRStatus = "Back Right:";
-  private Color FLColorStatus = new Color(0, 0, 0);
-  private Color FRColorStatus = new Color(0, 0, 0);
-  private Color BLColorStatus = new Color(0, 0, 0);
-  private Color BRColorStatus = new Color(0, 0, 0);
+  private Color FLColorStatus;
+  private Color FRColorStatus;
+  private Color BLColorStatus;
+  private Color BRColorStatus;
   private String test;
   private String driveConnectionMessage = " Drive Not Connected";
 
@@ -32,92 +32,89 @@ public class TesterDrive extends Command {
 
   @Override
   public void initialize() {
-    this.FLColorStatus = Constants.NetworkTables.purple;
-    this.FRColorStatus = Constants.NetworkTables.purple;
-    this.BLColorStatus = Constants.NetworkTables.purple;
-    this.BRColorStatus = Constants.NetworkTables.purple;
-    SmartDashboard.putString(Constants.Tester.DriveKeyFL, this.FLColorStatus.toHexString());
-    SmartDashboard.putString(Constants.Tester.DriveKeyFR, this.FRColorStatus.toHexString());
-    SmartDashboard.putString(Constants.Tester.DriveKeyBL, this.BLColorStatus.toHexString());
-    SmartDashboard.putString(Constants.Tester.DriveKeyBR, this.BRColorStatus.toHexString());
+    FLColorStatus = Constants.NetworkTables.purple;
+    FRColorStatus = Constants.NetworkTables.purple;
+    BLColorStatus = Constants.NetworkTables.purple;
+    BRColorStatus = Constants.NetworkTables.purple;
+    SmartDashboard.putString(Constants.Tester.DriveKeyFL, FLColorStatus.toHexString());
+    SmartDashboard.putString(Constants.Tester.DriveKeyFR, FRColorStatus.toHexString());
+    SmartDashboard.putString(Constants.Tester.DriveKeyBL, BLColorStatus.toHexString());
+    SmartDashboard.putString(Constants.Tester.DriveKeyBR, BRColorStatus.toHexString());
   }
 
   @Override
   public void execute() {
     if (!drive.isDriveConnected(0)) {
-      this.FLColorStatus = Constants.NetworkTables.red;
-      this.currentFLStatus = "FL " + driveConnectionMessage;
+      FLColorStatus = Constants.NetworkTables.red;
+      currentFLStatus = "FL " + driveConnectionMessage;
     } else if (!drive.isDriveCorrectSpeed(0)) {
-      this.FLColorStatus = Constants.NetworkTables.orange;
-      this.currentFLStatus =
+      FLColorStatus = Constants.NetworkTables.orange;
+      currentFLStatus =
           "FL "
               + " Too Slow by "
               + (100 - ((drive.getModuleVelocity(0) / drive.requestedSpeed) * 100))
               + "% ";
     } else {
-      this.FLColorStatus = Constants.NetworkTables.green;
+      FLColorStatus = Constants.NetworkTables.green;
     }
 
     if (!drive.isDriveConnected(1)) {
-      this.FRColorStatus = Constants.NetworkTables.red;
-      this.FRStatus = "FR " + driveConnectionMessage;
+      FRColorStatus = Constants.NetworkTables.red;
+      FRStatus = "FR " + driveConnectionMessage;
     } else if (!drive.isDriveCorrectSpeed(1)) {
-      this.FRColorStatus = Constants.NetworkTables.orange;
-      this.FRStatus =
+      FRColorStatus = Constants.NetworkTables.orange;
+      FRStatus =
           "FR "
               + " Too Slow by "
               + (100 - ((drive.getModuleVelocity(1) / drive.requestedSpeed) * 100))
               + "%";
     } else {
-      this.FRColorStatus = Constants.NetworkTables.green;
+      FRColorStatus = Constants.NetworkTables.green;
     }
 
     if (!drive.isDriveConnected(2)) {
-      this.BLColorStatus = Constants.NetworkTables.red;
-      this.BLStatus = "BL " + driveConnectionMessage;
+      BLColorStatus = Constants.NetworkTables.red;
+      BLStatus = "BL " + driveConnectionMessage;
     } else if (!drive.isDriveCorrectSpeed(2)) {
-      this.BLColorStatus = Constants.NetworkTables.orange;
-      this.BLStatus =
+      BLColorStatus = Constants.NetworkTables.orange;
+      BLStatus =
           "BL "
               + " Too Slow by "
               + (100 - ((drive.getModuleVelocity(2) / drive.requestedSpeed) * 100))
               + "%";
 
     } else {
-      this.BLColorStatus = Constants.NetworkTables.green;
+      BLColorStatus = Constants.NetworkTables.green;
     }
 
     if (!drive.isDriveConnected(3)) {
-      this.BRColorStatus = Constants.NetworkTables.red;
-      this.BRStatus = driveConnectionMessage;
+      BRColorStatus = Constants.NetworkTables.red;
+      BRStatus = driveConnectionMessage;
     } else if (!drive.isDriveCorrectSpeed(3)) {
-      this.BRColorStatus = Constants.NetworkTables.orange;
-      this.BRStatus =
+      BRColorStatus = Constants.NetworkTables.orange;
+      BRStatus =
           "BR "
               + " Too Slow by "
               + (100 - ((drive.getModuleVelocity(3) / drive.requestedSpeed) * 100))
               + "%";
     } else {
-      this.BRColorStatus = Constants.NetworkTables.green;
+      BRColorStatus = Constants.NetworkTables.green;
     }
 
-    SmartDashboard.putString(Constants.Tester.DriveColorKeyFL, this.FLColorStatus.toHexString());
-    SmartDashboard.putString(Constants.Tester.DriveColorKeyFR, this.FRColorStatus.toHexString());
-    SmartDashboard.putString(Constants.Tester.DriveColorKeyBL, this.BLColorStatus.toHexString());
-    SmartDashboard.putString(Constants.Tester.DriveColorKeyBR, this.BRColorStatus.toHexString());
+    SmartDashboard.putString(Constants.Tester.DriveColorKeyFL, FLColorStatus.toHexString());
+    SmartDashboard.putString(Constants.Tester.DriveColorKeyFR, FRColorStatus.toHexString());
+    SmartDashboard.putString(Constants.Tester.DriveColorKeyBL, BLColorStatus.toHexString());
+    SmartDashboard.putString(Constants.Tester.DriveColorKeyBR, BRColorStatus.toHexString());
 
     SmartDashboard.putString(
-        Constants.Tester.DriveKeyFL,
-        SmartDashboard.getString(Constants.Tester.DriveKeyFL, "") + test + this.currentFLStatus);
+        Constants.Tester.DriveKeyFL, currentFLStatus);
     SmartDashboard.putString(
-        Constants.Tester.DriveKeyFR,
-        SmartDashboard.getString(Constants.Tester.DriveKeyFR, "") + test + this.FRStatus);
+        Constants.Tester.DriveKeyFR, FRStatus);
     SmartDashboard.putString(
         Constants.Tester.DriveKeyBL,
-        SmartDashboard.getString(Constants.Tester.DriveKeyBL, "") + test + this.BLStatus);
+        SmartDashboard.getString(Constants.Tester.DriveKeyBL, BLStatus));
     SmartDashboard.putString(
-        Constants.Tester.DriveKeyBR,
-        SmartDashboard.getString(Constants.Tester.DriveKeyBR, "") + test + this.BRStatus);
+        Constants.Tester.DriveKeyBR, BRStatus);
   }
 
   @Override

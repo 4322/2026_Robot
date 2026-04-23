@@ -9,8 +9,8 @@ import frc.robot.subsystems.intake.rollers.Rollers;
 public class TesterRollers extends Command {
   private Rollers rollers;
   private String testName;
-  private Color leaderRollerColorStatus = Constants.NetworkTables.purple;
-  private Color followerRollerColorStatus = Constants.NetworkTables.purple;
+  private Color leaderRollerColorStatus;
+  private Color followerRollerColorStatus;
   private String rollerLeader = "  ";
   private String rollerFollower = "  ";
 
