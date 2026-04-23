@@ -17,10 +17,6 @@ public class TesterDrive extends Command {
   private Color currentBLColorStatus = new Color(0, 0, 0);
   private Color currentBRColorStatus = new Color(0, 0, 0);
   private String test;
-  private String frontLeftKey = "Tester/Drive/Drive/FL Drive Color Status";
-  private String frontRightKey = "Tester/Drive/Drive/FR Drive Color Status";
-  private String backLeftKey = "Tester/Drive/Drive/BL Drive Color Status";
-  private String backRightKey = "Tester/Drive/Drive/BR Drive Color Status";
   private String driveConnectionMessage = " Drive Not Connected";
 
   // If Not working = color
@@ -40,10 +36,10 @@ public class TesterDrive extends Command {
     this.currentFRColorStatus = Constants.NetworkTables.purple;
     this.currentBLColorStatus = Constants.NetworkTables.purple;
     this.currentBRColorStatus = Constants.NetworkTables.purple;
-    SmartDashboard.putString(frontLeftKey, this.currentFLColorStatus.toHexString());
-    SmartDashboard.putString(frontRightKey, this.currentFRColorStatus.toHexString());
-    SmartDashboard.putString(backLeftKey, this.currentBLColorStatus.toHexString());
-    SmartDashboard.putString(backRightKey, this.currentBRColorStatus.toHexString());
+    SmartDashboard.putStringArray(Constants.Tester.DriveKeyFL, new String[] { this.currentFLColorStatus.toHexString() });
+    SmartDashboard.putStringArray(Constants.Tester.DriveKeyFR, new String[] { this.currentFRColorStatus.toHexString() });
+    SmartDashboard.putStringArray(Constants.Tester.DriveKeyBL, new String[] { this.currentBLColorStatus.toHexString() });
+    SmartDashboard.putStringArray(Constants.Tester.DriveKeyBR, new String[] { this.currentBRColorStatus.toHexString() });
   }
 
   @Override
@@ -106,10 +102,10 @@ public class TesterDrive extends Command {
       this.currentBRColorStatus = Constants.NetworkTables.green;
     }
 
-    SmartDashboard.putString(backLeftKey, this.currentFLColorStatus.toHexString());
-    SmartDashboard.putString(frontRightKey, this.currentFRColorStatus.toHexString());
-    SmartDashboard.putString(backLeftKey, this.currentBLColorStatus.toHexString());
-    SmartDashboard.putString(backRightKey, this.currentBRColorStatus.toHexString());
+    SmartDashboard.putStringArray(Constants.Tester.DriveColorKeyFL, new String[] { this.currentFLColorStatus.toHexString() });
+    SmartDashboard.putStringArray(Constants.Tester.DriveColorKeyFR, new String[] { this.currentFRColorStatus.toHexString() });
+    SmartDashboard.putStringArray(Constants.Tester.DriveColorKeyBL, new String[] { this.currentBLColorStatus.toHexString() });
+    SmartDashboard.putStringArray(Constants.Tester.DriveColorKeyBR, new String[] { this.currentBRColorStatus.toHexString() });
 
     SmartDashboard.putString(
         "Tester/Drive/Drive/Front Drive Left Status",

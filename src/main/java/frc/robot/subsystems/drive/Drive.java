@@ -393,7 +393,7 @@ public class Drive extends SubsystemBase {
   }
 
   public boolean isDriveCorrectSpeed(int module) {
-    return MathUtil.isNear(this.requestedSpeed, modules[module].getVelocityMetersPerSec(), 0.01);
+    return MathUtil.isNear(this.requestedSpeed, modules[module].getVelocityMetersPerSec(), 0.7);
   }
 
   public boolean isCorrectAngleSpeed(int module) {
