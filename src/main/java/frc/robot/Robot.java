@@ -37,6 +37,7 @@ public class Robot extends LoggedRobot {
   private Timer allianceUpdateTimer = new Timer();
   private DigitalInput coastButton = new DigitalInput(Constants.dioCoastButton);
   private Timer coastButtonTimer = new Timer();
+  private static Timer stabilizeCamerasTimer = new Timer();
 
   public static Alliance alliance = DriverStation.Alliance.Blue;
 
@@ -383,6 +384,18 @@ public class Robot extends LoggedRobot {
       power cycle the RIO
     */
 
+    // Reduce CPU usage to stop camera reconnect thrashing after an upset.
+    // Activate for 2 seconds, but not more often than every 15 seconds.
+    if (stabilizeCamerasTimer.isRunning()) {
+      if (!stabilizeCamerasTimer.hasElapsed(2)) {
+        return;
+      }
+      if (stabilizeCamerasTimer.hasElapsed(15)) {
+        stabilizeCamerasTimer.stop();
+        stabilizeCamerasTimer.reset();
+      }
+    }
+
     // Optionally switch the thread to high priority to improve loop
     // timing (see the template project documentation for details).
     // Don't do this when there are issues causing the CPU to be maxed out for any reason.
@@ -494,4 +507,8 @@ public class Robot extends LoggedRobot {
   /** This function is called periodically whilst in simulation. */
   @Override
   public void simulationPeriodic() {}
+
+  public static void stabilize() {
+    stabilizeCamerasTimer.start();
+  }
 }
