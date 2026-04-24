@@ -39,6 +39,7 @@ import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.constants.Constants;
 import frc.robot.constants.Constants.SubsystemMode;
+import frc.robot.util.AverageStat;
 import java.util.Queue;
 
 /**
@@ -96,6 +97,10 @@ public class ModuleIOTalonFX implements ModuleIO {
       new Debouncer(0.5, Debouncer.DebounceType.kFalling);
   private final Debouncer turnEncoderConnectedDebounce =
       new Debouncer(0.5, Debouncer.DebounceType.kFalling);
+
+  // Average stat buffers
+  private AverageStat driveSupplyAmpsAvgStat = new AverageStat(50);
+  private AverageStat turnSupplyAmpsAvgStat = new AverageStat(50);
 
   public ModuleIOTalonFX(
       SwerveModuleConstants<TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration>
@@ -251,8 +256,10 @@ public class ModuleIOTalonFX implements ModuleIO {
     inputs.drivePositionRad = Units.rotationsToRadians(drivePosition.getValueAsDouble());
     inputs.driveVelocityRadPerSec = Units.rotationsToRadians(driveVelocity.getValueAsDouble());
     inputs.driveAppliedVolts = driveAppliedVolts.getValueAsDouble();
-    inputs.driveStatorCurrent = driveStatorCurrent.getValueAsDouble();
-    inputs.driveSupplyCurrentAbs = Math.abs(driveSupplyCurrent.getValueAsDouble());
+    inputs.driveStatorAmps = driveStatorCurrent.getValueAsDouble();
+    inputs.driveSupplyAmpsAbs = Math.abs(driveSupplyCurrent.getValueAsDouble());
+    driveSupplyAmpsAvgStat.addSample(inputs.driveSupplyAmpsAbs);
+    inputs.driveSupplyAmpsAbsAvg = driveSupplyAmpsAvgStat.getAverage();
     inputs.driveTempCelcius = driveTemp.getValueAsDouble();
 
     // Update turn inputs
@@ -262,8 +269,10 @@ public class ModuleIOTalonFX implements ModuleIO {
     inputs.turnPosition = Rotation2d.fromRotations(turnPosition.getValueAsDouble());
     inputs.turnVelocityRadPerSec = Units.rotationsToRadians(turnVelocity.getValueAsDouble());
     inputs.turnAppliedVolts = turnAppliedVolts.getValueAsDouble();
-    inputs.turnStatorCurrent = turnStatorCurrent.getValueAsDouble();
-    inputs.turnSupplyCurrentAbs = Math.abs(turnSupplyCurrent.getValueAsDouble());
+    inputs.turnStatorAmps = turnStatorCurrent.getValueAsDouble();
+    inputs.turnSupplyAmpsAbs = Math.abs(turnSupplyCurrent.getValueAsDouble());
+    turnSupplyAmpsAvgStat.addSample(inputs.turnSupplyAmpsAbs);
+    inputs.turnSupplyAmpsAbsAvg = turnSupplyAmpsAvgStat.getAverage();
 
     // Update odometry inputs
     inputs.odometryTimestamps =
