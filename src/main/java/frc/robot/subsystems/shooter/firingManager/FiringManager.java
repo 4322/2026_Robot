@@ -1,5 +1,6 @@
 package frc.robot.subsystems.shooter.firingManager;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.Robot;
@@ -18,7 +19,7 @@ public class FiringManager {
     NEUTRAL_RIGHT
   }
 
-  public static Translation2d getShootingTarget(Translation2d robotPosition) {
+  public static Translation2d getShootingTarget(Pose2d robotPosition) {
     Zone zone = AreaManager.getZoneOfPosition(robotPosition);
 
     if (Robot.alliance == Alliance.Blue) {
@@ -27,12 +28,12 @@ public class FiringManager {
         case ALLIANCE_ZONE:
           Logger.recordOutput("FiringManager/targetZone", "Hub");
           return Constants.FiringTargetTranslations.Blue.hubTranslation;
-        case RIGHT_NEUTRAL:
-          Logger.recordOutput("FiringManager/targetZone", "Alliance Right");
-          return Constants.FiringTargetTranslations.Blue.allianceRightTranslation;
-        case LEFT_NEUTRAL:
+        case PASS_RIGHT:
           Logger.recordOutput("FiringManager/targetZone", "Alliance Left");
           return Constants.FiringTargetTranslations.Blue.allianceLeftTranslation;
+        case PASS_LEFT:
+          Logger.recordOutput("FiringManager/targetZone", "Alliance Right");
+          return Constants.FiringTargetTranslations.Blue.allianceRightTranslation;
         case RIGHT_OPPOSITION:
           if (Constants.FiringManager.alwaysTargetAllianceZone) {
             Logger.recordOutput("FiringManager/targetZone", "Alliance Right");
@@ -58,10 +59,10 @@ public class FiringManager {
         case ALLIANCE_ZONE:
           Logger.recordOutput("FiringManager/targetZone", "Hub");
           return Constants.FiringTargetTranslations.Red.hubTranslation;
-        case RIGHT_NEUTRAL:
+        case PASS_RIGHT:
           Logger.recordOutput("FiringManager/targetZone", "Alliance Right");
           return Constants.FiringTargetTranslations.Red.allianceRightTranslation;
-        case LEFT_NEUTRAL:
+        case PASS_LEFT:
           Logger.recordOutput("FiringManager/targetZone", "Alliance Left");
           return Constants.FiringTargetTranslations.Red.allianceLeftTranslation;
         case RIGHT_OPPOSITION:

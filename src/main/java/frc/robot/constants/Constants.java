@@ -93,7 +93,7 @@ public final class Constants {
   // only enable this if testing zone areas in sim
   // NEVER enable during practice or competition due to NT overhead from publishing
   // all the zone information and updating robot pose constantly
-  public static final boolean debugZoneAreas = false;
+  public static final boolean debugZoneAreas = true;
 
   // Only used for LEDs as of right now
   public static final boolean hubShiftUtilenabled = true;
@@ -139,7 +139,7 @@ public final class Constants {
     public static final double motorToMechanismRatio = 36 / 12.0 * (90 / 35.0); // 10 inch wheel
     // Normally 7 RPS for shooting
     public static final double unjamRPS = -4.0;
-    public static final double shootRPS = 11.0;
+    public static final double shootRPS = 9.0;
   }
 
   public static class Tunnel {
@@ -159,7 +159,7 @@ public final class Constants {
     public static final double minPercentVelocity = 0.95;
     // Normally 37 RPS for shooting
     public static final double unjamRPS = -25.0;
-    public static final double shootRPS = 55;
+    public static final double shootRPS = 45;
   }
 
   public static class Flywheel {
@@ -234,8 +234,8 @@ public final class Constants {
     // 7. Remove lock bolt
     //    CANCoderOne = Encoder 9
     //    CANCoderTwo = Encoder 4.73
-    public static final double CANCoderOneOffsetRot = 0.25 - 0.0781;
-    public static final double CANCoderTwoOffsetRot = 0.8157 - 0.8732;
+    public static final double CANCoderOneOffsetRot = 0.25 - 0.0828;
+    public static final double CANCoderTwoOffsetRot = 0.8157 - 0.1478;
 
     // Derivation of above values:
     // 290 degrees * 90/10 = encoder 1 should have rotated 7.25 rotations ->
