@@ -27,12 +27,11 @@ public class Shoot extends Command {
   @Override
   public void execute() {
     Logger.recordOutput(
-        "Shooter/currentZone",
-        AreaManager.getZoneOfPosition(drive.getTurretTranslation()).toString());
-    if ((!AreaManager.isShootingArea(drive.getTurretTranslation())) && !ignoreArea) {
+        "Shooter/currentZone", AreaManager.getZoneOfPosition(drive.getTurretPose()).toString());
+    if ((!AreaManager.isShootingArea(drive.getTurretPose())) && !ignoreArea) {
       shooter.requestIdle(null, null, null);
     } else {
-      if (AreaManager.getZoneOfPosition(drive.getTurretTranslation()) == Zone.ALLIANCE_ZONE) {
+      if (AreaManager.getZoneOfPosition(drive.getTurretPose()) == Zone.ALLIANCE_ZONE) {
         shooter.requestShoot(false, true);
       } else {
         shooter.requestShoot(false, false);

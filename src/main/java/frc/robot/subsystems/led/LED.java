@@ -55,7 +55,7 @@ public class LED extends SubsystemBase {
       setLEDState(LEDState.AUTO_FUEL_PICKUP);
     } else if (turretUnwinding) {
       setLEDState(LEDState.TURRET_UNWINDING);
-    } else if (AreaManager.isShootingArea(drive.getRobotPose().getTranslation())) {
+    } else if (AreaManager.isShootingArea(drive.getRobotPose())) {
       if (HubShiftUtil.getShiftedShiftInfo().active()) {
         setLEDState(LEDState.SHOOTING_AREA_ACTIVE);
       } else {
