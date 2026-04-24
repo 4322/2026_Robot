@@ -415,15 +415,15 @@ public class Robot extends LoggedRobot {
         burstTimer.start();
         lastBurst = burstDisable.get();
       }
-      if (burstTimer.hasElapsed(5)) {
+      if (burstTimer.hasElapsed(2)) {
         burstTimer.stop();
         burstTimer.reset();
       }
       if (!burstTimer.isRunning()) {
         CommandScheduler.getInstance().run();
         // RobotContainer.visionGlobalPose.periodic();
-        // RobotContainer.shooter.outputsPeriodic();
-        // RobotContainer.intake.periodicOutputs();
+        RobotContainer.shooter.outputsPeriodic();
+        RobotContainer.intake.periodicOutputs();
       }
     }
 
