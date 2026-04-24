@@ -267,13 +267,6 @@ public final class Constants {
     public static final double motionMagicAcceleration = 5.0;
   }
 
-  public static class Control {
-    public static final int toggle1ButtonNumber = 1;
-    public static final int toggle4ButtonNumber = 4;
-    public static final int button3ButtonNumber = 5;
-    public static final int toggle3ButtonNumber = 3;
-  }
-
   public class Rollers {
     public static final double voltageIntake = 8.0;
     public static final double voltageEject = -6;
