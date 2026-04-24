@@ -348,6 +348,12 @@ public class Robot extends LoggedRobot {
   }
 
   private static final LoggedTunableNumber workload = new LoggedTunableNumber("Workload", 0);
+  private static final LoggedTunableNumber periodicDisable =
+      new LoggedTunableNumber("Periodic Disable", 0);
+  private static final LoggedTunableNumber burstDisable =
+      new LoggedTunableNumber("Burst Disable", 0);
+  private final Timer burstTimer = new Timer();
+  private double lastBurst = 0;
 
   /** This function is called periodically during all modes. */
   @Override
@@ -403,12 +409,23 @@ public class Robot extends LoggedRobot {
     // finished or interrupted commands, and running subsystem periodic() methods.
     // This must be called from the robot's periodic block in order for anything in
     // the Command-based framework to work.
-    // CommandScheduler.getInstance().run();
-    RobotContainer.visionGlobalPose.periodic();
 
-    // RobotContainer.shooter.outputsPeriodic();
-
-    // RobotContainer.intake.periodicOutputs();
+    if (periodicDisable.get() == 0) {
+      if (burstDisable.get() != lastBurst) {
+        burstTimer.start();
+        lastBurst = burstDisable.get();
+      }
+      if (burstTimer.hasElapsed(1)) {
+        burstTimer.stop();
+        burstTimer.reset();
+      }
+      if (!burstTimer.isRunning()) {
+        CommandScheduler.getInstance().run();
+        // RobotContainer.visionGlobalPose.periodic();
+        // RobotContainer.shooter.outputsPeriodic();
+        // RobotContainer.intake.periodicOutputs();
+      }
+    }
 
     // Return to non-RT thread priority (do not modify the first argument)
     if (Constants.realTimeCommandScheduler) {

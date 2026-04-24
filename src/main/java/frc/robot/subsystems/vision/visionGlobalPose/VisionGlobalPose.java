@@ -30,6 +30,8 @@ public class VisionGlobalPose extends SubsystemBase {
   private static final LoggedTunableNumber maxAvgTagDistance =
       new LoggedTunableNumber(
           "GlobalPose/maxAvgTagDistance", Constants.VisionGlobalPose.maxAvgTagDistance);
+  private static final LoggedTunableNumber visionDisable =
+      new LoggedTunableNumber("Vision Disable", 0);
 
   public VisionGlobalPose(Drive drive, VisionGlobalPoseIO... io) {
     this.drive = drive;
@@ -62,6 +64,10 @@ public class VisionGlobalPose extends SubsystemBase {
 
   @Override
   public void periodic() {
+    if (visionDisable.get() != 0) {
+      return;
+    }
+
     for (int i = 0; i < io.length; i++) {
       io[i].updateInputs(inputs[i]);
       Logger.processInputs("Vision/Camera" + Integer.toString(i), inputs[i]);
