@@ -47,7 +47,7 @@
   "reversed": false,
   "folder": "R_2056",
   "idealStartingState": {
-    "velocity": 4.0,
+    "velocity": 2.0,
     "rotation": -153.435
   },
   "useDefaultConstraints": true

@@ -9,8 +9,9 @@ public interface TunnelIO {
     public boolean motorConnected = false;
     public double voltage = 0.0;
     public double mechanismRPS = 0.0;
-    public double supplyCurrentAmps = 0.0;
-    public double statorCurrentAmps = 0.0;
+    public double supplyAmps = 0.0;
+    public double supplyAmpsAbsAvg = 0.0;
+    public double statorAmps = 0.0;
     public double motorTempC = 0.0;
   }
 
