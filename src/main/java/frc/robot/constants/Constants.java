@@ -93,7 +93,7 @@ public final class Constants {
   // only enable this if testing zone areas in sim
   // NEVER enable during practice or competition due to NT overhead from publishing
   // all the zone information and updating robot pose constantly
-  public static final boolean debugZoneAreas = false;
+  public static final boolean debugZoneAreas = true;
 
   public static class Drive {
     public static final int gyroID = 0;
@@ -132,7 +132,7 @@ public final class Constants {
     public static final double motorToMechanismRatio = 36 / 12.0 * (90 / 35.0); // 10 inch wheel
     // Normally 7 RPS for shooting
     public static final double unjamRPS = -4.0;
-    public static final double shootRPS = 11.0;
+    public static final double shootRPS = 9.0;
   }
 
   public static class Tunnel {
@@ -152,7 +152,7 @@ public final class Constants {
     public static final double minPercentVelocity = 0.95;
     // Normally 37 RPS for shooting
     public static final double unjamRPS = -25.0;
-    public static final double shootRPS = 55;
+    public static final double shootRPS = 45;
   }
 
   public static class Flywheel {
@@ -265,13 +265,6 @@ public final class Constants {
     public static final double kG = 0.24;
     public static final double motionMagicCruiseVelocity = 1.3;
     public static final double motionMagicAcceleration = 5.0;
-  }
-
-  public static class Control {
-    public static final int toggle1ButtonNumber = 1;
-    public static final int toggle4ButtonNumber = 4;
-    public static final int button3ButtonNumber = 5;
-    public static final int toggle3ButtonNumber = 3;
   }
 
   public class Rollers {
