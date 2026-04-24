@@ -124,6 +124,7 @@ public class Turret {
       }
     }
     this.isScoring = isScoring;
+    updateAtGoalTimer();
   }
 
   private double getTargetAngleInMidpoint() {
@@ -201,6 +202,7 @@ public class Turret {
     }
     this.needsToUnwind = needsUnwindFinish;
     prevDeg = desiredDeg;
+    updateAtGoalTimer();
     Logger.recordOutput("Shooter/Turret/unwindDesiredDeg", prevDeg);
   }
 
@@ -252,6 +254,7 @@ public class Turret {
         MathUtil.clamp(
             targetAngle, Constants.Turret.minUnwindLimitDeg, Constants.Turret.maxUnwindLimitDeg);
     this.ffRadPerrSec = 0;
+    updateAtGoalTimer();
   }
 
   private static double crtToTurretRotations(double crtRotations) {

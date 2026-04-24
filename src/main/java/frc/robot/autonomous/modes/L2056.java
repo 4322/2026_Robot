@@ -14,11 +14,10 @@ import frc.robot.commands.ShooterCommands;
 import frc.robot.constants.Constants;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.intake.Intake;
-import frc.robot.subsystems.led.LED;
 import frc.robot.subsystems.shooter.Shooter;
 
 public class L2056 extends SequentialCommandGroup {
-  public L2056(Drive drive, LED led, Intake intake, Shooter shooter) {
+  public L2056(Drive drive, Intake intake, Shooter shooter) {
     PathPlannerPath path = Robot.L_2056_A;
     Pose2d startPoseBlue = path.getStartingHolonomicPose().get();
     Pose2d startPoseRed = path.flipPath().getStartingHolonomicPose().get();

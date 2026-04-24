@@ -6,12 +6,21 @@ public interface SpindexerIO {
 
   @AutoLog
   public static class SpindexerIOInputs {
-    public boolean motorConnected = false;
-    public double voltage = 0.0;
-    public double mechanismRPS = 0.0;
-    public double supplyCurrentAmps = 0.0;
-    public double statorCurrentAmps = 0.0;
-    public double motorTempC = 0.0;
+    public boolean leaderMotorConnected = false;
+    public double leaderVoltage = 0.0;
+    public double leaderMechanismRPS = 0.0;
+    public double leaderSupplyAmps = 0.0;
+    public double leaderStatorAmps = 0.0;
+    public double leaderMotorTempC = 0.0;
+
+    public boolean followerMotorConnected = false;
+    public double followerVoltage = 0.0;
+    public double followerMechanismRPS = 0.0;
+    public double followerSupplyAmps = 0.0;
+    public double followerStatorAmps = 0.0;
+    public double followerMotorTempC = 0.0;
+
+    public double supplyAmpsAvg = 0.0;
   }
 
   public default void updateInputs(SpindexerIOInputs inputs) {}

@@ -8,7 +8,6 @@ import frc.robot.Robot;
 import frc.robot.constants.Constants;
 import frc.robot.constants.Constants.ShotCalculatorParameters;
 import frc.robot.subsystems.drive.Drive;
-import frc.robot.subsystems.led.LED;
 import frc.robot.subsystems.shooter.firingManager.FiringManager;
 import frc.robot.subsystems.shooter.flywheel.Flywheel;
 import frc.robot.subsystems.shooter.hood.Hood;
@@ -16,6 +15,7 @@ import frc.robot.subsystems.shooter.spindexer.Spindexer;
 import frc.robot.subsystems.shooter.tunnel.Tunnel;
 import frc.robot.subsystems.shooter.turret.Turret;
 import frc.robot.subsystems.vision.visionGlobalPose.VisionGlobalPose;
+import frc.robot.util.LoggedTunableNumber;
 import frc.robot.util.firecontrol.ShotCalculator;
 import frc.robot.util.firecontrol.ShotLUT;
 import org.littletonrobotics.junction.Logger;
@@ -35,13 +35,21 @@ public class Shooter extends SubsystemBase {
   private ShooterState state = ShooterState.STARTING_CONFIG;
   private ShooterState requestedState = ShooterState.STARTING_CONFIG;
 
+  private static final LoggedTunableNumber tunableFlywheelSpeedRPS =
+      new LoggedTunableNumber("FiringManager/flywheelSpeedRPS", 0.0);
+  private static final LoggedTunableNumber tunableHoodAngle =
+      new LoggedTunableNumber("FiringManager/hoodAngle", 0.0);
+  private static final LoggedTunableNumber tunableTunnelSpeedRPS =
+      new LoggedTunableNumber("FiringManager/tunnelSpeedRPS", 0.0);
+  private static final LoggedTunableNumber tunableIndexerSpeedRPS =
+      new LoggedTunableNumber("FiringManager/indexerSpeedRPS", 0.0);
+
   private Flywheel flywheel;
   private Hood hood;
   private Spindexer spindexer;
   private Tunnel tunnel;
   private Turret turret;
   private Drive drive;
-  private LED led;
   private Double hoodOverrideDeg = null;
   private Double flywheelOverrideRPS = null;
   private Double turretOverrideDeg = null;
@@ -69,14 +77,12 @@ public class Shooter extends SubsystemBase {
       Tunnel tunnel,
       Turret turret,
       VisionGlobalPose visionGlobalPose,
-      Drive drive,
-      LED led) {
+      Drive drive) {
     this.flywheel = flywheel;
     this.hood = hood;
     this.spindexer = spindexer;
     this.tunnel = tunnel;
     this.turret = turret;
-    this.led = led;
     this.drive = drive;
 
     ShotCalculator.Config config = new ShotCalculator.Config();
@@ -303,8 +309,8 @@ public class Shooter extends SubsystemBase {
     if (fixedPositionShooting) {
       targetHoodAngleDeg = Constants.fixedSolutionBlue.hoodAngle;
       targetFlywheelSpeedRPS = Constants.fixedSolutionBlue.flywheelSpeedRPS;
-      targetTunnelSpeedRPS = Constants.fixedSolutionBlue.tunnelSpeedRPS;
-      targetSpindexerSpeedRPS = Constants.fixedSolutionBlue.indexerSpeedRPS;
+      targetTunnelSpeedRPS = Constants.Tunnel.shootRPS;
+      targetSpindexerSpeedRPS = Constants.Spindexer.shootRPS;
       targetFFRadPerSec = 0;
       if (Robot.alliance == DriverStation.Alliance.Blue) {
         targetTurretAngleDeg = Constants.fixedSolutionBlue.turretAngleDeg;
@@ -359,7 +365,14 @@ public class Shooter extends SubsystemBase {
         shot = passCalc.calculate(inputs);
       }
 
-      if (shot.isValid()) {
+      if (Constants.firingManagerMode == Constants.SubsystemMode.TUNING) {
+        targetHoodAngleDeg = tunableHoodAngle.get();
+        targetFlywheelSpeedRPS = tunableFlywheelSpeedRPS.get();
+        targetFFRadPerSec = shot.turretAngularVelocityRadPerSec();
+        targetTunnelSpeedRPS = tunableTunnelSpeedRPS.get();
+        targetSpindexerSpeedRPS = tunableIndexerSpeedRPS.get();
+        targetTurretAngleDeg = shot.turretAngle().getDegrees();
+      } else if (shot.isValid()) {
         targetHoodAngleDeg = shot.hoodAngle();
         targetFlywheelSpeedRPS = shot.rpm() / 60.0;
         targetTurretAngleDeg = shot.turretAngle().getDegrees();
