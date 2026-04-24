@@ -151,7 +151,7 @@ public class Module {
     return inputs.turnConnected;
   }
 
-  public double getTurnVelocity() {
+  public double getTurnVelocityRadPerSec() {
     return inputs.turnVelocityRadPerSec;
   }
 }

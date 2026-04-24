@@ -15,6 +15,7 @@ import edu.wpi.first.units.measure.Temperature;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.constants.Constants;
+import frc.robot.util.AverageStat;
 
 public class TunnelIOTalonFx implements TunnelIO {
   private TalonFX motor;
@@ -31,6 +32,8 @@ public class TunnelIOTalonFx implements TunnelIO {
 
   private final Debouncer motorConnectedDebounce =
       new Debouncer(0.5, Debouncer.DebounceType.kFalling);
+
+  private AverageStat supplyAmpsAvgStat = new AverageStat(50);
 
   public TunnelIOTalonFx() {
     motor = new TalonFX(Constants.Tunnel.tunnelMotorId, Constants.CANivore.CANBus);
@@ -87,9 +90,12 @@ public class TunnelIOTalonFx implements TunnelIO {
     inputs.motorConnected = motorConnectedDebounce.calculate(motorStatus.isOK());
     inputs.voltage = appliedVolts.getValueAsDouble();
     inputs.mechanismRPS = velocity.getValueAsDouble();
-    inputs.supplyCurrentAmps = supplyCurrent.getValueAsDouble();
-    inputs.statorCurrentAmps = statorCurrent.getValueAsDouble();
+    inputs.supplyAmps = supplyCurrent.getValueAsDouble();
+    inputs.statorAmps = statorCurrent.getValueAsDouble();
     inputs.motorTempC = temp.getValueAsDouble();
+
+    supplyAmpsAvgStat.addSample(Math.abs(inputs.supplyAmps));
+    inputs.supplyAmpsAbsAvg = supplyAmpsAvgStat.getAverage();
   }
 
   @Override

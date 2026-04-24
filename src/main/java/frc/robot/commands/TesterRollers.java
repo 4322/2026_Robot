@@ -5,7 +5,6 @@ import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.constants.Constants;
 import frc.robot.subsystems.intake.rollers.Rollers;
-import org.littletonrobotics.junction.Logger;
 
 public class TesterRollers extends Command {
   private Rollers rollers;
@@ -28,7 +27,7 @@ public class TesterRollers extends Command {
     followerStatus = "";
     setColorStatus();
     setTextStatus();
-    Logger.recordOutput("Tester/Rollers", testName);
+    SmartDashboard.putString("Tester/Rollers", testName);
   }
 
   @Override
@@ -37,12 +36,14 @@ public class TesterRollers extends Command {
     leaderStatus = " ";
     if (!rollers.leaderRollerConnected()) {
       leaderColorStatus = Constants.NetworkTables.red;
-      leaderStatus = " Not Connected";
+      leaderStatus = "Not Connected";
     } else if (!rollers.leaderRollerAtGoal()) {
       leaderColorStatus = Constants.NetworkTables.orange;
       leaderStatus =
-          "Not Spinning at Goal by"
-              + +(100 - ((rollers.getLeaderRollerSpeed() / rollers.getRequestedSetpoint()) * 100))
+          "Slow by"
+              + String.format(
+                  "%.1f",
+                  100 - rollers.getLeaderRollerSpeed() / rollers.getRequestedSetpoint() * 100)
               + "%";
     } else {
       leaderColorStatus = Constants.NetworkTables.green;
@@ -51,12 +52,14 @@ public class TesterRollers extends Command {
 
     if (!rollers.followerRollerConnected()) {
       followerColorStatus = Constants.NetworkTables.red;
-      followerStatus = " Not Connected";
+      followerStatus = "Not Connected";
     } else if (!rollers.followerRollerAtGoal()) {
       followerColorStatus = Constants.NetworkTables.orange;
       followerStatus =
-          "Not Spinning at Goal by"
-              + +(100 - ((rollers.getFollowerRollerSpeed() / rollers.getRequestedSetpoint()) * 100))
+          "Slow by"
+              + String.format(
+                  "%.1f",
+                  100 - rollers.getFollowerRollerSpeed() / rollers.getRequestedSetpoint() * 100)
               + "%";
       ;
     } else {
@@ -65,37 +68,35 @@ public class TesterRollers extends Command {
     }
 
     if (!rollers.rollersSpinningTogether()) {
-      leaderStatus = " Rollers Not Spinning Together";
-      followerStatus = " Rollers Not Spinning Together";
-      leaderStatus =
-          leaderStatus
-              + " Leader at "
-              + rollers.getLeaderRollerSpeed()
-              + " RPS, Follower at "
-              + rollers.getFollowerRollerSpeed()
+      leaderStatus = "Rollers Not Spinning Together";
+      followerStatus = "Rollers Not Spinning Together";
+      leaderStatus +=
+          "\nLeader at "
+              + String.format("%.1f", rollers.getLeaderRollerSpeed())
+              + " RPS\nFollower at "
+              + String.format("%.1f", rollers.getFollowerRollerSpeed())
               + " RPS";
-      followerStatus =
-          followerStatus
-              + " Leader at "
-              + rollers.getLeaderRollerSpeed()
-              + " RPS, Follower at "
-              + rollers.getFollowerRollerSpeed()
+      followerStatus +=
+          "\nLeader at "
+              + String.format("%.1f", rollers.getLeaderRollerSpeed())
+              + " RPS\nFollower at "
+              + String.format("%.1f", rollers.getFollowerRollerSpeed())
               + " RPS";
-      leaderStatus =
-          leaderStatus
-              + "Diffrence of "
-              + (rollers.getLeaderRollerSpeed() - rollers.getFollowerRollerSpeed())
+      leaderStatus +=
+          "\nDiffrence of "
+              + String.format(
+                  "%.1f", rollers.getLeaderRollerSpeed() - rollers.getFollowerRollerSpeed())
               + " RPS";
-      followerStatus =
-          followerStatus
-              + "Diffrence of "
-              + (rollers.getFollowerRollerSpeed() - rollers.getLeaderRollerSpeed())
+      followerStatus +=
+          "Diffrence of "
+              + String.format(
+                  "%.1f", rollers.getFollowerRollerSpeed() - rollers.getLeaderRollerSpeed())
               + " RPS";
     } else {
       followerColorStatus = Constants.NetworkTables.green;
       leaderColorStatus = Constants.NetworkTables.green;
-      leaderStatus = leaderStatus + " Rollers Spinning Together";
-      followerStatus = followerStatus + " Rollers Spinning Together";
+      leaderStatus += "\nRollers Spinning Together";
+      followerStatus += "\nRollers Spinning Together";
     }
 
     setColorStatus();
@@ -109,13 +110,13 @@ public class TesterRollers extends Command {
 
   private void setColorStatus() {
     SmartDashboard.putString(
-        Constants.Tester.RollerColorKeyLeader, leaderColorStatus.toHexString());
+        Constants.Tester.rollerColorKeyLeader, leaderColorStatus.toHexString());
     SmartDashboard.putString(
-        Constants.Tester.RollerColorKeyFollower, followerColorStatus.toHexString());
+        Constants.Tester.rollerColorKeyFollower, followerColorStatus.toHexString());
   }
 
   private void setTextStatus() {
-    SmartDashboard.putString(Constants.Tester.RollerKeyFollower, followerStatus);
-    SmartDashboard.putString(Constants.Tester.RollerKeyLeader, leaderStatus);
+    SmartDashboard.putString(Constants.Tester.rollerKeyFollower, followerStatus);
+    SmartDashboard.putString(Constants.Tester.rollerKeyLeader, leaderStatus);
   }
 }

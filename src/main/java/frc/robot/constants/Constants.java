@@ -136,35 +136,38 @@ public final class Constants {
   }
 
   public static class Tester {
-    public static final String DriveKeyFL = "Drive/Drive Front Left Status";
-    public static final String DriveKeyFR = "Drive/Drive Front Right Status";
-    public static final String DriveKeyBL = "Drive/Drive Back Left Status";
-    public static final String DriveKeyBR = "Drive/Drive Back Right Status";
+    public static final String driveKeyFL = "Drive/Drive Front Left Status";
+    public static final String driveKeyFR = "Drive/Drive Front Right Status";
+    public static final String driveKeyBL = "Drive/Drive Back Left Status";
+    public static final String driveKeyBR = "Drive/Drive Back Right Status";
 
-    public static final String DriveColorKeyFL = "Drive/Drive Front Left Color";
-    public static final String DriveColorKeyFR = "Drive/Drive Front Right Color";
-    public static final String DriveColorKeyBL = "Drive/Drive Back Left Color";
-    public static final String DriveColorKeyBR = "Drive/Drive Back Right Color";
+    public static final String driveColorKeyFL = "Drive/Drive Front Left Color";
+    public static final String driveColorKeyFR = "Drive/Drive Front Right Color";
+    public static final String driveColorKeyBL = "Drive/Drive Back Left Color";
+    public static final String driveColorKeyBR = "Drive/Drive Back Right Color";
 
-    public static final String TurnKeyFL = "Turn/Turn Front Left Status";
-    public static final String TurnKeyFR = "Turn/Turn Front Right Status";
-    public static final String TurnKeyBL = "Turn/Turn Back Left Status";
-    public static final String TurnKeyBR = "Turn/Turn Back Right Status";
+    public static final String turnKeyFL = "Turn/Turn Front Left Status";
+    public static final String turnKeyFR = "Turn/Turn Front Right Status";
+    public static final String turnKeyBL = "Turn/Turn Back Left Status";
+    public static final String turnKeyBR = "Turn/Turn Back Right Status";
 
-    public static final String TurnColorKeyFL = "Turn/Turn Front Left Color";
-    public static final String TurnColorKeyFR = "Turn/Turn Front Right Color";
-    public static final String TurnColorKeyBL = "Turn/Turn Back Left Color";
-    public static final String TurnColorKeyBR = "Turn/Turn Back Right Color";
+    public static final String turnColorKeyFL = "Turn/Turn Front Left Color";
+    public static final String turnColorKeyFR = "Turn/Turn Front Right Color";
+    public static final String turnColorKeyBL = "Turn/Turn Back Left Color";
+    public static final String turnColorKeyBR = "Turn/Turn Back Right Color";
 
-    public static final String RollerKeyLeader = "Rollers/Roller Leader Status";
-    public static final String RollerKeyFollower = "Rollers/Roller Follower Status";
-    public static final String RollerColorKeyLeader = "Rollers/Roller Leader Color";
-    public static final String RollerColorKeyFollower = "Rollers/Roller Follower Color";
+    public static final String rollerKeyLeader = "Rollers/Roller Leader Status";
+    public static final String rollerKeyFollower = "Rollers/Roller Follower Status";
+    public static final String rollerColorKeyLeader = "Rollers/Roller Leader Color";
+    public static final String rollerColorKeyFollower = "Rollers/Roller Follower Color";
 
-    public static final String FlywheelKeyLeader = "Flywheel/Flywheel Leader Status";
-    public static final String FlywheelKeyFollower = "Flywheel/Flywheel Follower Status";
-    public static final String FlywheelColorKeyLeader = "Flywheel/Flywheel Leader Color";
-    public static final String FlywheelColorKeyFollower = "Flywheel/Flywheel Follower Color";
+    public static final String flywheelKeyLeader = "Flywheel/ Flywheel Leader Status";
+    public static final String flywheelKeyFollower = "Flywheel/Flywheel Follower Status";
+    public static final String flywheelColorKeyLeader = "Flywheel/Flywheel Leader Color";
+    public static final String flywheelColorKeyFollower = "Flywheel/Flywheel Follower Color";
+
+    public static final double driveToleranceMetersPerSec = 0.2;
+    public static final double turnToleranceRadPerSec = 0.5;
   }
 
   public static class Tunnel {
@@ -490,9 +493,9 @@ public final class Constants {
   public static final double fixedSolutionBlueDeg = 0;
   // Trench structure - distance 2.90
   public static final FiringSolution fixedSolutionBlue =
-      new FiringSolution(53, 10, fixedSolutionBlueDeg, 35, 7);
+      new FiringSolution(50.649, 16.099, fixedSolutionBlueDeg, 55, 11);
   public static final FiringSolution fixedSolutionRed =
-      new FiringSolution(50, 15, fixedSolutionBlueDeg + 180, 35, 7);
+      new FiringSolution(50.649, 16.099, fixedSolutionBlueDeg + 180, 55, 11);
 
   public static class FiringTargetTranslations {
     // Right/left are determined as view from blue alliance driver station

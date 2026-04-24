@@ -20,6 +20,7 @@ import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.util.Color;
 import frc.robot.constants.Constants;
+import frc.robot.util.AverageStat;
 
 public class FlywheelIOTalonFx implements FlywheelIO {
 
@@ -48,6 +49,8 @@ public class FlywheelIOTalonFx implements FlywheelIO {
       new Debouncer(0.5, Debouncer.DebounceType.kFalling);
   private final Debouncer followerConnectedDebounce =
       new Debouncer(0.5, Debouncer.DebounceType.kFalling);
+
+  private AverageStat supplyAmpsAvgStat = new AverageStat(50);
 
   public FlywheelIOTalonFx() {
     leaderMotor = new TalonFX(Constants.Flywheel.motorId);
@@ -181,15 +184,18 @@ public class FlywheelIOTalonFx implements FlywheelIO {
     inputs.leaderMechanismRPS = leaderVelocity.getValueAsDouble();
     inputs.leaderAppliedVolts = leaderAppliedVolts.getValueAsDouble();
     inputs.leaderTempCelsius = leaderTemp.getValueAsDouble();
-    inputs.leaderStatorCurrentAmps = leaderStatorCurrent.getValueAsDouble();
-    inputs.leaderSupplyCurrentAmps = leaderSupplyCurrent.getValueAsDouble();
+    inputs.leaderStatorAmps = leaderStatorCurrent.getValueAsDouble();
+    inputs.leaderSupplyAmps = leaderSupplyCurrent.getValueAsDouble();
 
     inputs.followerMotorConnected = followerConnectedDebounce.calculate(followerMotorStatus.isOK());
     inputs.followerMechanismRPS = followerVelocity.getValueAsDouble();
     inputs.followerAppliedVolts = followerAppliedVolts.getValueAsDouble();
     inputs.followerTempCelsius = followerTemp.getValueAsDouble();
-    inputs.followerStatorCurrentAmps = followerStatorCurrent.getValueAsDouble();
-    inputs.followerSupplyCurrentAmps = followerSupplyCurrent.getValueAsDouble();
+    inputs.followerStatorAmps = followerStatorCurrent.getValueAsDouble();
+    inputs.followerSupplyAmps = followerSupplyCurrent.getValueAsDouble();
+
+    supplyAmpsAvgStat.addSample(inputs.leaderSupplyAmps + inputs.followerSupplyAmps);
+    inputs.supplyAmpsAvg = supplyAmpsAvgStat.getAverage();
 
     if (Constants.Flywheel.canAndColorEnabled) {
       inputs.color = new Color(canandcolor.getRed(), canandcolor.getGreen(), canandcolor.getBlue());
