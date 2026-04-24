@@ -7,6 +7,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -69,6 +70,7 @@ import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetection;
 import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetectionIO;
 import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetectionIOPhoton;
 
+
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -99,6 +101,8 @@ public class RobotContainer {
   public static AutonomousSelector autonomousSelector;
 
   private static Field2d field;
+
+  public static FollowPath.Builder pathbuilder;
 
   // Controller
   public static final CommandXboxController controller = new CommandXboxController(0);
@@ -330,6 +334,18 @@ public class RobotContainer {
         intake = new Intake(deployer, rollers);
       }
     }
+
+    FollowPath.Builder pathBuilder = new FollowPath.Builder(
+    drive,                     // Subsystem requirement
+    drive::getPose,            // Supplier<Pose2d>
+    drive::getChassisSpeeds,   // Supplier<ChassisSpeeds> (robot-relative)
+    drive::drive,              // Consumer<ChassisSpeeds>  (robot-relative)
+    new PIDController(5.0, 0.0, 0.0),   // translation — minimizes remaining distance
+    new PIDController(3.0, 0.0, 0.0),   // rotation    — minimizes heading error
+    new PIDController(2.0, 0.0, 0.0)    // cross-track — minimizes perpendicular deviation
+)
+.withDefaultShouldFlip()                // auto-flip when on the red alliance
+.withPoseReset(drive::resetPose); // reset odometry at each path's start pose
 
     // Configure the button bindings
     configureButtonBindings();
