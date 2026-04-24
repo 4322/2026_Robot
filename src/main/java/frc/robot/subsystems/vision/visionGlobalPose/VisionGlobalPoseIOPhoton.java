@@ -3,6 +3,7 @@ package frc.robot.subsystems.vision.visionGlobalPose;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.wpilibj.Timer;
 import frc.robot.constants.FieldConstants;
 import java.util.LinkedList;
 import java.util.List;
@@ -14,6 +15,7 @@ public class VisionGlobalPoseIOPhoton implements VisionGlobalPoseIO {
 
   protected final PhotonCamera camera;
   protected final Transform3d robotToCamera;
+  private Timer connectedTime = new Timer();
 
   /**
    * Creates a new VisionIOPhotonVision.
@@ -28,7 +30,10 @@ public class VisionGlobalPoseIOPhoton implements VisionGlobalPoseIO {
 
   @Override
   public void updateInputs(VisionGlobalPoseIOInputs inputs) {
-    inputs.connected = camera.isConnected();
+    boolean isConnected = camera.isConnected();
+    inputs.connected = isConnected;
+    inputs.unstable = false;
+    connectedTime.start();
 
     // Read new camera observations
     List<GlobalPoseObservation> globalPoseObservations = new LinkedList<>();
