@@ -415,7 +415,7 @@ public class Robot extends LoggedRobot {
         burstTimer.start();
         lastBurst = burstDisable.get();
       }
-      if (burstTimer.hasElapsed(1)) {
+      if (burstTimer.hasElapsed(5)) {
         burstTimer.stop();
         burstTimer.reset();
       }
