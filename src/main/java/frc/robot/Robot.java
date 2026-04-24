@@ -389,6 +389,7 @@ public class Robot extends LoggedRobot {
     if (stabilizeCamerasTimer.isRunning()) {
       if (!stabilizeCamerasTimer.hasElapsed(2)) {
         RobotContainer.drive.stop();
+        Logger.recordOutput("Robot/Paused", "Yes");
         return;
       }
       if (stabilizeCamerasTimer.hasElapsed(15)) {
@@ -396,6 +397,7 @@ public class Robot extends LoggedRobot {
         stabilizeCamerasTimer.reset();
       }
     }
+    Logger.recordOutput("Robot/Paused", "No");
 
     // Optionally switch the thread to high priority to improve loop
     // timing (see the template project documentation for details).
