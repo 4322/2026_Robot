@@ -388,6 +388,7 @@ public class Robot extends LoggedRobot {
     // Activate for 2 seconds, but not more often than every 15 seconds.
     if (stabilizeCamerasTimer.isRunning()) {
       if (!stabilizeCamerasTimer.hasElapsed(2)) {
+        RobotContainer.drive.stop();
         return;
       }
       if (stabilizeCamerasTimer.hasElapsed(15)) {
