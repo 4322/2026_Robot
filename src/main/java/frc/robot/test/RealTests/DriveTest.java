@@ -74,10 +74,7 @@ public class DriveTest extends SequentialCommandGroup {
                     () -> {
                       drive.runVelocity(
                           ChassisSpeeds.fromFieldRelativeSpeeds(
-                              0,
-                              0,
-                              0,
-                              Rotation2d.fromDegrees(90)));
+                              0, 0, 0, Rotation2d.fromDegrees(90)));
                     },
                     drive),
                 DriveCommands.TurnTesting(drive, "Turn"))
@@ -87,10 +84,7 @@ public class DriveTest extends SequentialCommandGroup {
                     () -> {
                       drive.runVelocity(
                           ChassisSpeeds.fromFieldRelativeSpeeds(
-                              0,
-                              0,
-                              0,
-                              Rotation2d.fromDegrees(180)));
+                              0, 0, 0, Rotation2d.fromDegrees(180)));
                     },
                     drive),
                 DriveCommands.TurnTesting(drive, "Turn"))

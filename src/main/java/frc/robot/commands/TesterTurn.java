@@ -54,15 +54,22 @@ public class TesterTurn extends Command {
     } else if (!drive.isCorrectAngleSpeed(0)) {
       FLColorStatus = Constants.NetworkTables.orange;
       if (!drive.isCorrectAngle(0)) {
-        FLStatus =  " Incorrect Angle by " + String.format(
-                  "%.1f", (Math.abs(drive.getModuleAngle(0)) - Math.abs(drive.angleRequested))) + "Degrees";
-      } 
+        FLStatus =
+            " Incorrect Angle by "
+                + String.format(
+                    "%.1f", (Math.abs(drive.getModuleAngle(0)) - Math.abs(drive.angleRequested)))
+                + "Degrees";
+      }
       if (!drive.isCorrectAngleSpeed(0)) {
         FLStatus =
             FLStatus
                 + "Angle Speed off by "
                 + String.format(
-                  "%.1f", 100 - Math.abs(drive.getModuleTurnVelocity(0)) / Math.abs(drive.radPerSecondRequested) * 100)
+                    "%.1f",
+                    100
+                        - Math.abs(drive.getModuleTurnVelocity(0))
+                            / Math.abs(drive.radPerSecondRequested)
+                            * 100)
                 + "%";
       }
     } else {
@@ -76,15 +83,22 @@ public class TesterTurn extends Command {
     } else if (!drive.isCorrectAngleSpeed(1) || !drive.isCorrectAngle(1)) {
       FRColorStatus = Constants.NetworkTables.orange;
       if (!drive.isCorrectAngle(1)) {
-        FRStatus = " Incorrect Angle by " +  String.format(
-                  "%.1f", (Math.abs(drive.getModuleAngle(1)) - Math.abs(drive.angleRequested))) + "Degrees";
-      } 
+        FRStatus =
+            " Incorrect Angle by "
+                + String.format(
+                    "%.1f", (Math.abs(drive.getModuleAngle(1)) - Math.abs(drive.angleRequested)))
+                + "Degrees";
+      }
       if (!drive.isCorrectAngleSpeed(1)) {
         FRStatus =
             FRStatus
                 + "Angle Speed off by "
                 + String.format(
-                  "%.1f", 100 - Math.abs(drive.getModuleTurnVelocity(1)) / Math.abs(drive.radPerSecondRequested) * 100)
+                    "%.1f",
+                    100
+                        - Math.abs(drive.getModuleTurnVelocity(1))
+                            / Math.abs(drive.radPerSecondRequested)
+                            * 100)
                 + "%";
       }
     } else {
@@ -97,16 +111,23 @@ public class TesterTurn extends Command {
       BLStatus = turnConnectionMessage;
     } else if (!drive.isCorrectAngleSpeed(2) || !drive.isCorrectAngle(2)) {
       BLColorStatus = Constants.NetworkTables.orange;
-       if (!drive.isCorrectAngle(2)) {
-        BLStatus = " Incorrect Angle by " +  String.format(
-                  "%.1f",(Math.abs(drive.getModuleAngle(2)) - Math.abs(drive.angleRequested))) + "Degrees";
-      } 
+      if (!drive.isCorrectAngle(2)) {
+        BLStatus =
+            " Incorrect Angle by "
+                + String.format(
+                    "%.1f", (Math.abs(drive.getModuleAngle(2)) - Math.abs(drive.angleRequested)))
+                + "Degrees";
+      }
       if (!drive.isCorrectAngleSpeed(2)) {
         BLStatus =
             BLStatus
                 + "Angle Speed off by "
                 + String.format(
-                  "%.1f", 100 - Math.abs(drive.getModuleTurnVelocity(2)) / Math.abs(drive.radPerSecondRequested) * 100)
+                    "%.1f",
+                    100
+                        - Math.abs(drive.getModuleTurnVelocity(2))
+                            / Math.abs(drive.radPerSecondRequested)
+                            * 100)
                 + "%";
       }
 
@@ -121,15 +142,22 @@ public class TesterTurn extends Command {
     } else if (!drive.isCorrectAngleSpeed(3) || !drive.isCorrectAngle(3)) {
       BRColorStatus = Constants.NetworkTables.orange;
       if (!drive.isCorrectAngle(3)) {
-        BRStatus = " Incorrect Angle by " +  String.format(
-                  "%.1f", (Math.abs(drive.getModuleAngle(3)) - Math.abs(drive.angleRequested))) + "Degrees";
-      } 
+        BRStatus =
+            " Incorrect Angle by "
+                + String.format(
+                    "%.1f", (Math.abs(drive.getModuleAngle(3)) - Math.abs(drive.angleRequested)))
+                + "Degrees";
+      }
       if (!drive.isCorrectAngleSpeed(3)) {
         BRStatus =
             BRStatus
                 + "Angle Speed off by "
                 + String.format(
-                  "%.1f", 100 - (Math.abs(drive.getModuleTurnVelocity(3)) / Math.abs(drive.radPerSecondRequested) * 100))
+                    "%.1f",
+                    100
+                        - (Math.abs(drive.getModuleTurnVelocity(3))
+                            / Math.abs(drive.radPerSecondRequested)
+                            * 100))
                 + "%";
       }
     } else {

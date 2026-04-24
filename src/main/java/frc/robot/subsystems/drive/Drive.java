@@ -409,7 +409,8 @@ public class Drive extends SubsystemBase {
   }
 
   public boolean isCorrectAngle(int module) {
-    return MathUtil.isNear(Math.abs(angleRequested), Math.abs(modules[module].getAngle().getDegrees()), 0.5);
+    return MathUtil.isNear(
+        Math.abs(angleRequested), Math.abs(modules[module].getAngle().getDegrees()), 0.5);
   }
 
   /** Adds a new timestamped vision measurement. */
