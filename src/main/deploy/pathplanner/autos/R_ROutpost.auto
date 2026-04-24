@@ -7,25 +7,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "R_StartR_To_NeutralR_Intake"
+            "pathName": "R_ROutpost_A"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 4.0
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "R_NeutralR_Intake_Full"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "R_NeutralR_Intake_Full_Flip"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "R_Neutral_Mid_To_ShootR"
+            "pathName": "R_ROutpost_B"
           }
         }
       ]

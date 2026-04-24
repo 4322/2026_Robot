@@ -7,31 +7,43 @@
         {
           "type": "path",
           "data": {
-            "pathName": "R_StartR_To_NeutralR_Intake"
+            "pathName": "R_2Sweep_A"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "R_NeutralR_Intake_Full"
+            "pathName": "R_2Sweep_B"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "R_NeutralR_Intake_Full_Flip"
+            "pathName": "R_2Sweep_CG"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "R_Neutral_Mid_To_ShootR"
+            "pathName": "R_2Sweep_DE"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "R_2Sweep_F"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "L_2Sweep_Depot"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "R",
+  "folder": "L",
   "choreoAuto": false
 }
