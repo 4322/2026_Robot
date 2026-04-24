@@ -57,7 +57,6 @@ public final class Constants {
   public static final SubsystemMode visionObjectDetection = SubsystemMode.DISABLED;
   public static final SubsystemMode firingManagerMode = SubsystemMode.NORMAL;
   public static final boolean turretLocked = false;
-  public static boolean shootOnTheMoveEnabled = false;
   public static final boolean frontRightCameraEnable = true;
   public static final boolean frontLeftCameraEnable = true;
   public static final boolean backRightCameraEnable = true;
@@ -72,9 +71,6 @@ public final class Constants {
   public static final double passingDoubleToleranceTime = 0.25;
 
   { // set dependent operational modes
-    if (firingManagerMode == SubsystemMode.TUNING) {
-      shootOnTheMoveEnabled = false;
-    }
     if (turretLocked) {
       turretMode = SubsystemMode.DISABLED;
     }
@@ -116,24 +112,27 @@ public final class Constants {
   }
 
   public static class Spindexer {
-    public static final int spindexerMotorId = 4;
+    public static final int leaderMotorId = 4;
+    public static final int followerMotorId = 6;
+
     public static final double supplyCurrentLimit = 60;
     public static final double supplyCurrentLowerLimit = 40;
     public static final double supplyCurrentLowerTime = 0.5; // fast start
     public static final double statorCurrentLimit = 120;
-    public static final InvertedValue motorInvert = InvertedValue.CounterClockwise_Positive;
+    public static final InvertedValue leaderMotorInvert = InvertedValue.Clockwise_Positive;
     public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
-    public static final double kS = 0.34;
-    public static final double kV = 1.47;
-    public static final double kP = 5.0;
+    public static final double kS = 0.29;
+    public static final double kV = 0.9;
+    public static final double kP = 5.0; // TODO
     public static final double kI = 0;
     public static final double kD = 0;
-    public static final double stoppedMechanismRotationsPerSec = 0.1; // TODO
+    public static final double stoppedMechanismRotationsPerSec = 0.1;
+    public static final double stopTreshold = 0.75;
 
-    public static final double motorToMechanismRatio = 12.0; // 10 inch wheel
+    public static final double motorToMechanismRatio = 36 / 12.0 * (90 / 35.0); // 10 inch wheel
     // Normally 7 RPS for shooting
     public static final double unjamRPS = -4.0;
-    public static final double shootRPS = 7.0;
+    public static final double shootRPS = 11.0;
   }
 
   public static class Tunnel {
@@ -153,7 +152,7 @@ public final class Constants {
     public static final double minPercentVelocity = 0.95;
     // Normally 37 RPS for shooting
     public static final double unjamRPS = -25.0;
-    public static final double shootRPS = 35;
+    public static final double shootRPS = 55;
   }
 
   public static class Flywheel {
@@ -167,13 +166,13 @@ public final class Constants {
     // max RPS for a burst is 75 due to drop in battery voltage
     public static final double kS = 0.32;
     public static final double kV = 0.123;
-    public static final double kP = 0.5;
+    public static final double kP = 0.75;
     public static final double kI = 0;
     public static final double kD = 0;
 
     public static final double motorToMechanismRatio = 1;
-    public static final double largeToleranceRPS = 4.0;
-    public static final double smallToleranceRPS = 2.0;
+    public static final double largeToleranceRPS = 6.0;
+    public static final double smallToleranceRPS = 4.0;
     public static final int idleRPS = 15;
     public static final int idleTimeout = 5;
 
@@ -223,10 +222,13 @@ public final class Constants {
     // 2. Set magnetic offsets to 0 on both encoders in Phoenix Tuner
     // 3. Set CANCoderOneOffsetRot = 0.25 - (PhoenixTuner AbsolutePosition)
     // 4. Set CANCoderTwoOffsetRot = 0.8157 - (PhoenixTuner AbsolutePosition)
+    // 5. Deploy
+    // 6. Verify correct turret degrees
+    // 7. Remove lock bolt
     //    CANCoderOne = Encoder 9
     //    CANCoderTwo = Encoder 4.73
-    public static final double CANCoderOneOffsetRot = 0.25 - 0.0793;
-    public static final double CANCoderTwoOffsetRot = 0.8157 - 0.8806;
+    public static final double CANCoderOneOffsetRot = 0.25 - 0.0781;
+    public static final double CANCoderTwoOffsetRot = 0.8157 - 0.8732;
 
     // Derivation of above values:
     // 290 degrees * 90/10 = encoder 1 should have rotated 7.25 rotations ->
@@ -236,61 +238,33 @@ public final class Constants {
   }
 
   public static class Hood {
-    public static final int servoChannel = 3;
-    public static final int encoderId = 3;
+    public static final int motorId = 7;
+    public static final int statorCurrentLimit = 60;
+    public static final int supplyCurrentLimit = 15;
+    public static final InvertedValue motorInvert = InvertedValue.Clockwise_Positive;
+    public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
     public static final double encoderToHoodGearRatio = 164 / 11.0;
-    public static final double servoToEncoderGearRatio = 45 / 32.0;
+    public static final double motorToEncoderGearRatio = 5.0;
     public static final double safeAngleDeg = 0;
-    public static final double homingVelocityThresholdRPS = 0.02;
-    public static final double minHomingSec = 0.4; // allow for servo latency + enable overhead
-    public static final double smallToleranceDeg = 0.4;
-    public static final double largeToleranceDeg = 2.0;
+    public static final double homingDegrees =
+        -0.35; // eliminate current draw and squeal when hood is down
+    public static final double homingVoltage = -1.5;
+    public static final double homingVelocityThresholdRPS = 0.01;
+    public static final double minHomingSec = 0.150;
+    public static final double smallToleranceDeg = 2.0; // shoot early, the hood will get there
+    public static final double largeToleranceDeg = 3.0;
     public static final int idleTimeout = 0;
+    public static final double minPhysicalLimitDeg = 0.0;
+    public static final double maxPhysicalLimitDeg =
+        37.0; // physical max 37.4 - don't overrun the stop
 
-    // Calibrate hood after replacing servo, shaft gears or sector gear
-    // 1. Remove encoder shaft gear
-    // 2. Connect programmer to servo
-    // 3. Set switch to S position
-    // 4. Press P once to program position mode
-    // 5. Press S twice one second apart to enter test mode
-    // 6. Verify servo operation using L and R buttons (minimum 4 turns)
-    // 7. Press L to place servo in lowest position
-    // 8. Remove power from the servo
-    // 9. Rotate servo gear 90 degrees clockwise
-    // 10. Lower hood all the way to the turret plate
-    // 11. Install encoder shaft gear
-    // 12. Connect programmer to servo
-    // 13. Press S twice one second apart to enter test mode
-    // 14. Verify that hood raises fully when R is pressed and lowers fully when L is pressed
-    // 15. Reconnect servo to normal PWN cable to servo hub
-    // 16. Turn on the robot
-    // 17. Deploy code with hood tuning mode enabled
-    // 18. Open Elastic and add field for tuningPulseWidth
-    // 19. Enable the robot
-    // 20. Find the highest value of tuningPulseWidth that makes the hood go all the way down
-    //     Start with 700 and work down
-    //     For each trial, go up to 800 and then down to the position being tested
-    //     If 500 doesn't lower the hood fully, repeat the above steps properly
-    // 21. Set homePulseWidth below to the found value + 5 to reduce servo current
-    // 22. Set servoPositionScaleFactor below to 1.0
-    // 23. Redeploy
-    // 24. Enable the robot
-    // 25. Set tuningGoalDegree to 10
-    // 26. Observe reported HoodDegrees on AdvantageScope
-    // 27. Set servoLowPositionScaleFactor = 10 / HoodDegrees
-    // 28. Set tuningGoalDegree to 38
-    // 29. Observe reported HoodDegrees on AdvantageScope
-    // 30. Set servoLowPositionScaleFactor = 38 / HoodDegrees
-    // 31. Redeploy
-    // 32. Move hood to different positions using tuningGoalDegree and observe correct angle in
-    // AdvantageScope
-    // 33. Deploy code with hood in normal mode
-
-    public static final int homePulseWidth = 610; // min 500
-    public static final double servoLowPositionScaleFactor = 1.0526; // variations in potentiometer
-    public static final double servoHighPositionScaleFactor = 1.0243; // variations in potentiometer
-    public static final double lowCalibrationDeg = 10;
-    public static final double highCalibrationDeg = 38;
+    public static final double kV = 0;
+    public static final double kP = 3000; // motion magic prevents oscillations
+    public static final double kD = 0;
+    public static final double kI = 0;
+    public static final double kG = 0.24;
+    public static final double motionMagicCruiseVelocity = 1.3;
+    public static final double motionMagicAcceleration = 5.0;
   }
 
   public static class Control {
@@ -463,40 +437,17 @@ public final class Constants {
       // Meters is center of turret to 3 inches behind center from hub
 
       // Shooting
-      putFiringMapEntryScoring(1.09, new FiringParameters(46.2, 0.12, 1.2, 35, 7));
-      putFiringMapEntryScoring(1.59, new FiringParameters(40.9, 6.5, 1.0, 35, 7));
-      putFiringMapEntryScoring(2.10, new FiringParameters(40.0, 10.9, 1, 35, 7));
-      putFiringMapEntryScoring(2.7, new FiringParameters(43.1, 16.4, 0.9, 35, 7));
-      putFiringMapEntryScoring(3.2, new FiringParameters(46.8, 18.0, 1.09, 35, 7));
-      putFiringMapEntryScoring(4.07, new FiringParameters(50.6, 23.1, 1.15, 35, 7));
-      putFiringMapEntryScoring(4.699, new FiringParameters(53.2, 25.8, 1.05, 35, 7));
-      putFiringMapEntryScoring(5.137, new FiringParameters(54.9, 26.5, 1.1, 35, 7));
-      putFiringMapEntryScoring(5.817, new FiringParameters(59.67, 25.6, 1.3, 35, 7));
-
-      /* Tuned shots with fresh kicker wheels
-      putFiringMapEntryScoring(1.111, new FiringParameters(45, 3.5, 1, 35, 7));
-      putFiringMapEntryScoring(2.129, new FiringParameters(44.7, 5, 1, 35, 7));
-      putFiringMapEntryScoring(2.741, new FiringParameters(45, 10, 1, 35, 7));
-      putFiringMapEntryScoring(3.546, new FiringParameters(52, 10, 1, 35, 7));
-      putFiringMapEntryScoring(4.538, new FiringParameters(53, 15, 1, 35, 7));
-      putFiringMapEntryScoring(4.734, new FiringParameters(56, 18, 1, 35, 7));
-      putFiringMapEntryScoring(5.133, new FiringParameters(56, 20, 1, 35, 7));
-      putFiringMapEntryScoring(5.59, new FiringParameters(58, 22, 1, 35, 7));
-       */
+      putFiringMapEntryScoring(1.560, new FiringParameters(46, 7, 1.3, 45, 9));
+      putFiringMapEntryScoring(2.4, new FiringParameters(46, 13, 1.15, 45, 9));
+      putFiringMapEntryScoring(3.427, new FiringParameters(52, 17, 1.25, 45, 9));
+      putFiringMapEntryScoring(4.6, new FiringParameters(56.5, 22.5, 1.2, 45, 9));
+      putFiringMapEntryScoring(5.13, new FiringParameters(60.5, 21, 1.35, 45, 9));
+      putFiringMapEntryScoring(5.817, new FiringParameters(63, 28, 1.35, 45, 9));
 
       // Passing
-      // need to be 112 inches past the blue line to clear the net
-      putFiringMapEntryPassing(3.46, new FiringParameters(38, 30, 1.1, 35, 7));
-      putFiringMapEntryPassing(3.87, new FiringParameters(40, 30, 1.2, 35, 7));
-      putFiringMapEntryPassing(4.38, new FiringParameters(43, 30, 1.05, 35, 7));
-      putFiringMapEntryPassing(4.82, new FiringParameters(46, 30, 1.1, 35, 7));
-      putFiringMapEntryPassing(5.27, new FiringParameters(48.2, 30, 1.12, 35, 7));
-      putFiringMapEntryPassing(5.8, new FiringParameters(50, 30, 1.14, 35, 7));
-      putFiringMapEntryPassing(6.28, new FiringParameters(53, 30, 1.26, 35, 7));
-      putFiringMapEntryPassing(6.90, new FiringParameters(56, 30, 1.32, 35, 7));
-      putFiringMapEntryPassing(7.4, new FiringParameters(59, 37, 1.25, 35, 7));
-      putFiringMapEntryPassing(8.1, new FiringParameters(62, 37, 1.5, 35, 7));
-      putFiringMapEntryPassing(9.1, new FiringParameters(67, 36, 1.52, 35, 7));
+      putFiringMapEntryPassing(4.60, new FiringParameters(43, 30, 1.5, 45, 7));
+      putFiringMapEntryPassing(7.349, new FiringParameters(62, 34, 1.4, 45, 7));
+      putFiringMapEntryPassing(10.31, new FiringParameters(80, 38, 1.4, 45, 7));
     }
 
     // can't maintain burst for full field passes due to battery voltage drop
@@ -506,25 +457,25 @@ public final class Constants {
   public static final double fixedSolutionBlueDeg = 0;
   // Trench structure - distance 2.90
   public static final FiringSolution fixedSolutionBlue =
-      new FiringSolution(53, 10, fixedSolutionBlueDeg, 35, 7);
+      new FiringSolution(50.649, 16.099, fixedSolutionBlueDeg, 55, 11);
   public static final FiringSolution fixedSolutionRed =
-      new FiringSolution(50, 15, fixedSolutionBlueDeg + 180, 35, 7);
+      new FiringSolution(50.649, 16.099, fixedSolutionBlueDeg + 180, 55, 11);
 
   public static class FiringTargetTranslations {
     // Right/left are determined as view from blue alliance driver station
     // TODO get exact values
     public static class Red {
       public static final Translation2d hubTranslation = FieldConstants.Red.hubTranslation;
-      public static final Translation2d allianceRightTranslation = new Translation2d(14.5, 1.75);
-      public static final Translation2d allianceLeftTranslation = new Translation2d(14.5, 6.25);
+      public static final Translation2d allianceRightTranslation = new Translation2d(15.5, 1);
+      public static final Translation2d allianceLeftTranslation = new Translation2d(15.5, 7);
       public static final Translation2d neutralRightTranslation = new Translation2d(8.25, 1.75);
       public static final Translation2d neutralLeftTranslation = new Translation2d(8.25, 6.25);
     }
 
     public static class Blue {
       public static final Translation2d hubTranslation = FieldConstants.Blue.hubTranslation;
-      public static final Translation2d allianceRightTranslation = new Translation2d(2, 1.75);
-      public static final Translation2d allianceLeftTranslation = new Translation2d(2, 6.25);
+      public static final Translation2d allianceRightTranslation = new Translation2d(1, 1);
+      public static final Translation2d allianceLeftTranslation = new Translation2d(1, 7);
       public static final Translation2d neutralRightTranslation = new Translation2d(8.25, 1.75);
       public static final Translation2d neutralLeftTranslation = new Translation2d(8.25, 6.25);
     }
@@ -546,7 +497,7 @@ public final class Constants {
     public static final double tunnelRate = 2;
     public static final double spindexerRate = 0.2;
     public static final double flywheelRate = 2;
-    public static final double servoRate = 0.2;
+    public static final double hoodRate = 2;
   }
 
   public static final class VisionGlobalPose {

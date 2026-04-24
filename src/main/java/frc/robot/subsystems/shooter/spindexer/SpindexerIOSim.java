@@ -8,9 +8,11 @@ public class SpindexerIOSim implements SpindexerIO {
 
   @Override
   public void updateInputs(SpindexerIOInputs inputs) {
-    inputs.motorConnected = true;
+    inputs.leaderMotorConnected = true;
+    inputs.followerMotorConnected = true;
     simVelocity();
-    inputs.mechanismRPS = mechanismRotationsPerSec;
+    inputs.leaderMechanismRPS = mechanismRotationsPerSec;
+    inputs.followerMechanismRPS = mechanismRotationsPerSec;
   }
 
   @Override
