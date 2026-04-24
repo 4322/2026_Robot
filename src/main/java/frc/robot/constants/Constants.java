@@ -95,6 +95,20 @@ public final class Constants {
   // all the zone information and updating robot pose constantly
   public static final boolean debugZoneAreas = true;
 
+  public static class bLine {
+    public static final double translationKp = 5.0;
+    public static final double translationKi = 0.0;
+    public static final double translationKd = 0.0;
+
+    public static final double rotationKp = 3.0;
+    public static final double rotationKi = 0.0;
+    public static final double rotationKd = 0.0;
+
+    public static final double crossTrackKp = 2.0;
+    public static final double crossTrackKi = 0.0;
+    public static final double crossTrackKd = 0.0;
+  }
+
   public static class Drive {
     public static final int gyroID = 0;
     public static boolean zeroTurnEncoders = false; // for initial swerve homing only

@@ -7,7 +7,6 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -69,7 +68,7 @@ import frc.robot.subsystems.vision.visionGlobalPose.VisionGlobalPoseIOSim;
 import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetection;
 import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetectionIO;
 import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetectionIOPhoton;
-
+import frc.robot.lib.BLine.*;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -334,19 +333,30 @@ public class RobotContainer {
         intake = new Intake(deployer, rollers);
       }
     }
+    /*
 
-    FollowPath.Builder pathBuilder = new FollowPath.Builder(
-    drive,                     // Subsystem requirement
-    drive::getPose,            // Supplier<Pose2d>
-    drive::getChassisSpeeds,   // Supplier<ChassisSpeeds> (robot-relative)
-    drive::drive,              // Consumer<ChassisSpeeds>  (robot-relative)
-    new PIDController(5.0, 0.0, 0.0),   // translation — minimizes remaining distance
-    new PIDController(3.0, 0.0, 0.0),   // rotation    — minimizes heading error
-    new PIDController(2.0, 0.0, 0.0)    // cross-track — minimizes perpendicular deviation
-)
-.withDefaultShouldFlip()                // auto-flip when on the red alliance
-.withPoseReset(drive::resetPose); // reset odometry at each path's start pose
-
+        FollowPath.Builder pathBuilder =
+            new FollowPath.Builder(
+                    drive, // Subsystem requirement
+                    drive::getPose, // Supplier<Pose2d>
+                    drive::getChassisSpeeds, // Supplier<ChassisSpeeds> (robot-relative)
+                    drive::drive, // Consumer<ChassisSpeeds>  (robot-relative)
+                    new PIDController(
+                        Constants.bLine.translationKp,
+                        Constants.bLine.translationKi,
+                        Constants.bLine.translationKd), // translation — minimizes remaining distance
+                    new PIDController(
+                        Constants.bLine.rotationKp,
+                        Constants.bLine.rotationKi,
+                        Constants.bLine.rotationKd), // rotation    — minimizes heading error
+                    new PIDController(
+                        Constants.bLine.crossTrackKp,
+                        Constants.bLine.crossTrackKi,
+                        Constants.bLine.crossTrackKd) // cross-track — minimizes perpendicular deviation
+                    )
+                .withDefaultShouldFlip() // auto-flip when on the red alliance
+                .withPoseReset(drive::resetPose); // reset odometry at each path's start pose
+    */
     // Configure the button bindings
     configureButtonBindings();
 
