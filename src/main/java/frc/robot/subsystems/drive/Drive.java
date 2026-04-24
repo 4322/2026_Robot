@@ -58,6 +58,7 @@ public class Drive extends SubsystemBase {
   static final double ODOMETRY_FREQUENCY = Constants.CANivore.CANBus.isNetworkFD() ? 250.0 : 100.0;
   public double requestedSpeed;
   public double anglePerSecondRequested;
+  public double angleRequested;
   private ArrayList<Double> currentPriority = new ArrayList<>();
 
   public static final double DRIVE_BASE_RADIUS =
@@ -244,6 +245,7 @@ public class Drive extends SubsystemBase {
       for (int i = 0; i < 4; i++) {
         modules[i].runSetpoint(setpointStates[i]);
         this.requestedSpeed = setpointStates[i].speedMetersPerSecond;
+        this.angleRequested = setpointStates[i].angle.getDegrees();
       }
     }
 
@@ -398,7 +400,11 @@ public class Drive extends SubsystemBase {
   }
 
   public boolean isCorrectAngleSpeed(int module) {
-    return MathUtil.isNear(anglePerSecondRequested, modules[module].getTurnVelocity(), 1.0);
+    return MathUtil.isNear(Math.abs(anglePerSecondRequested), Math.abs(modules[module].getTurnVelocity()), 1.0);
+  }
+
+  public boolean isCorrectAngle(int module) {
+    return MathUtil.isNear(Math.abs(angleRequested), Math.abs(modules[module].getAngle().getDegrees()), 0.5);
   }
 
   /** Adds a new timestamped vision measurement. */

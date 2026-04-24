@@ -54,10 +54,16 @@ public class TesterTurn extends Command {
       FLColorStatus = Constants.NetworkTables.red;
     } else if (!drive.isCorrectAngleSpeed(0)) {
       FLColorStatus = Constants.NetworkTables.orange;
-      FLStatus =
-          " Incorrect Angle Speed by "
-              + (100 - ((drive.getModuleTurnVelocity(0) / drive.anglePerSecondRequested) * 100))
-              + "%";
+      if (!drive.isCorrectAngle(0)) {
+        FLStatus = " Incorrect Angle by " + (Math.abs(drive.getModuleAngle(0)) / Math.abs(drive.angleRequested)) + "Degrees";
+      } 
+      if (!drive.isCorrectAngleSpeed(0)) {
+        FLStatus =
+            FLStatus
+                + " Incorrect Angle Speed by "
+                + (100 - ((Math.abs(drive.getModuleTurnVelocity(0)) / Math.abs(drive.anglePerSecondRequested)) * 100))
+                + "%";
+      }
     } else {
       FLColorStatus = Constants.NetworkTables.green;
       FLStatus = "Up To Speed";
@@ -66,13 +72,18 @@ public class TesterTurn extends Command {
     if (!drive.isTurnConnected(1)) {
       FRColorStatus = Constants.NetworkTables.red;
       FRStatus = turnConnectionMessage;
-    } else if (!drive.isCorrectAngleSpeed(1)) {
+    } else if (!drive.isCorrectAngleSpeed(1) || !drive.isCorrectAngle(1)) {
       FRColorStatus = Constants.NetworkTables.orange;
-      FRStatus =
-          FRStatus
-              + " Incorrect Angle Speed by "
-              + (100 - ((drive.getModuleTurnVelocity(1) / drive.anglePerSecondRequested) * 100))
-              + "%";
+      if (!drive.isCorrectAngle(1)) {
+        FRStatus = " Incorrect Angle by " + (Math.abs(drive.getModuleAngle(1)) / Math.abs(drive.angleRequested)) + "Degrees";
+      } 
+      if (!drive.isCorrectAngleSpeed(1)) {
+        FRStatus =
+            FRStatus
+                + " Incorrect Angle Speed by "
+                + (100 - ((Math.abs(drive.getModuleTurnVelocity(1)) / Math.abs(drive.anglePerSecondRequested)) * 100))
+                + "%";
+      }
     } else {
       FRColorStatus = Constants.NetworkTables.green;
       FRStatus = "Up To Speed";
@@ -81,13 +92,18 @@ public class TesterTurn extends Command {
     if (!drive.isTurnConnected(2)) {
       BLColorStatus = Constants.NetworkTables.red;
       BLStatus = turnConnectionMessage;
-    } else if (!drive.isCorrectAngleSpeed(2)) {
+    } else if (!drive.isCorrectAngleSpeed(2) || !drive.isCorrectAngle(2)) {
       BLColorStatus = Constants.NetworkTables.orange;
-      BLStatus =
-          BLStatus
-              + " Incorrect Angle Speed by "
-              + (100 - ((drive.getModuleTurnVelocity(2) / drive.anglePerSecondRequested) * 100))
-              + "%";
+       if (!drive.isCorrectAngle(2)) {
+        BLStatus = " Incorrect Angle by " + (Math.abs(drive.getModuleAngle(2)) / Math.abs(drive.angleRequested)) + "Degrees";
+      } 
+      if (!drive.isCorrectAngleSpeed(2)) {
+        BLStatus =
+            BLStatus
+                + " Incorrect Angle Speed by "
+                + (100 - ((Math.abs(drive.getModuleTurnVelocity(2)) / Math.abs(drive.anglePerSecondRequested)) * 100))
+                + "%";
+      }
 
     } else {
       BLColorStatus = Constants.NetworkTables.green;
@@ -97,13 +113,18 @@ public class TesterTurn extends Command {
     if (!drive.isTurnConnected(3)) {
       BRColorStatus = Constants.NetworkTables.red;
       BRStatus = turnConnectionMessage;
-    } else if (!drive.isCorrectAngleSpeed(3)) {
+    } else if (!drive.isCorrectAngleSpeed(3) || !drive.isCorrectAngle(3)) {
       BRColorStatus = Constants.NetworkTables.orange;
-      BRStatus =
-          BRStatus
-              + " Incorrect Angle Speed by "
-              + (100 - ((drive.getModuleTurnVelocity(3) / drive.anglePerSecondRequested) * 100))
-              + "%";
+      if (!drive.isCorrectAngle(3)) {
+        BRStatus = " Incorrect Angle by " + (Math.abs(drive.getModuleAngle(3)) / Math.abs(drive.angleRequested)) + "Degrees";
+      } 
+      if (!drive.isCorrectAngleSpeed(3)) {
+        BRStatus =
+            BRStatus
+                + " Incorrect Angle Speed by "
+                + (100 - ((Math.abs(drive.getModuleTurnVelocity(3)) / Math.abs(drive.anglePerSecondRequested)) * 100))
+                + "%";
+      }
     } else {
       BRColorStatus = Constants.NetworkTables.green;
       BRStatus = "Up To Speed";
@@ -121,6 +142,10 @@ public class TesterTurn extends Command {
     SmartDashboard.putString(Constants.Tester.TurnKeyFR, FRStatus);
     SmartDashboard.putString(Constants.Tester.TurnKeyBL, BLStatus);
     SmartDashboard.putString(Constants.Tester.TurnKeyBR, BRStatus);
+    FLStatus = "";
+    FRStatus = "";
+    BLStatus = "";
+    BRStatus = "";
   }
 
   private void setColorStatus() {

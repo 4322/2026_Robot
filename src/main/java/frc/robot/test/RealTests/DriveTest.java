@@ -76,11 +76,11 @@ public class DriveTest extends SequentialCommandGroup {
                           ChassisSpeeds.fromFieldRelativeSpeeds(
                               0,
                               0,
-                              drive.getMaxAngularSpeedRadPerSec(),
-                              Rotation2d.fromDegrees(0)));
+                              0,
+                              Rotation2d.fromDegrees(90)));
                     },
                     drive),
-                DriveCommands.TurnTesting(drive, "Turn Right"))
+                DriveCommands.TurnTesting(drive, "Turn"))
             .withTimeout(5),
         new ParallelCommandGroup(
                 Commands.run(
@@ -89,11 +89,11 @@ public class DriveTest extends SequentialCommandGroup {
                           ChassisSpeeds.fromFieldRelativeSpeeds(
                               0,
                               0,
-                              -drive.getMaxAngularSpeedRadPerSec(),
-                              Rotation2d.fromDegrees(0)));
+                              0,
+                              Rotation2d.fromDegrees(180)));
                     },
                     drive),
-                DriveCommands.TurnTesting(drive, "Turn Left"))
+                DriveCommands.TurnTesting(drive, "Turn"))
             .withTimeout(5));
   }
 }

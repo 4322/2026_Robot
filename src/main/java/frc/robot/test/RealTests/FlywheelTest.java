@@ -20,8 +20,8 @@ public class FlywheelTest extends SequentialCommandGroup {
 
     addCommands(
         new InstantCommand(() -> Logger.recordOutput("Tester/testStarted", true)),
-        new InstantCommand(() -> IntakeCommands.intake(intake)),
-        new InstantCommand(() -> IntakeCommands.idle(intake)),
+        IntakeCommands.intake(intake),
+        IntakeCommands.idle(intake),
         new ParallelCommandGroup(
             Commands.run(
                 () -> {
