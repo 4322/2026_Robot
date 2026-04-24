@@ -2,15 +2,12 @@ package frc.robot.constants;
 
 import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Quaternion;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
-import frc.robot.RobotContainer;
-import frc.robot.util.FieldRectangle2d;
+import frc.robot.util.Region2d;
 import java.util.List;
 
 public class FieldConstants {
@@ -18,12 +15,14 @@ public class FieldConstants {
   // Point B should be top left
   // All are relative to the blue alliance station
   // Using Wpilib coordinates
-  public static double trenchScaleFactor = 1.3;
+  public static double stopShootingZoneScale = 1.3;
 
   public static double fieldLength = Units.inchesToMeters(651.22);
   public static double fieldWidth = Units.inchesToMeters(317.69);
   public static double edgeOfHubNeutral = 47.00;
   public static double trenchZoneArea = 22.20;
+
+  public static double bumpLength = Units.inchesToMeters(73.00);
 
   // Very small tolerance to cover the actual trench bar
   public static double stopShootingZoneBuffer = Units.inchesToMeters(2.0);
@@ -41,264 +40,264 @@ public class FieldConstants {
   public static final double fieldEdgeTolerance =
       Units.inchesToMeters(
           48); // Entire length of side of hub to towards the driverstation to the neutral zone
-  // Added to still detect robot with minor odom or vision discrepancy
+  // Added to still detect robot with minor odometry or vision discrepancy
 
   // All left/right designations are relative to blue alliance station
   public static class Blue {
     public static Translation2d hubTranslation =
         new Translation2d(blueLineX + hubOffset, centerLineY); // Middle of the hub
-    public static FieldRectangle2d allianceZone =
-        new FieldRectangle2d(
+    public static Region2d allianceZone =
+        new Region2d(
             new Translation2d(-fieldEdgeTolerance, -fieldEdgeTolerance),
-            new Translation2d(blueLineX + hubOffset, fieldWidth + fieldEdgeTolerance));
-    public static FieldRectangle2d rightAllianceZone =
-        new FieldRectangle2d(
+            new Translation2d(blueLineX + hubOffset, fieldWidth + fieldEdgeTolerance),
+            "blue/allianceZone");
+    public static Region2d rightAllianceZone =
+        new Region2d(
             new Translation2d(-fieldEdgeTolerance, -fieldEdgeTolerance),
-            new Translation2d(blueLineX + hubOffset, centerLineY));
-    public static FieldRectangle2d leftAllianceZone =
-        new FieldRectangle2d(
+            new Translation2d(blueLineX + hubOffset, centerLineY),
+            "blue/rightAllianceZone");
+    public static Region2d leftAllianceZone =
+        new Region2d(
             new Translation2d(-fieldEdgeTolerance, centerLineY),
-            new Translation2d(blueLineX + hubOffset, fieldWidth + fieldEdgeTolerance));
-    public static FieldRectangle2d trenchLeft =
-        new FieldRectangle2d(
-            new Translation2d(
-                blueLineX - trenchScaleFactor * Units.inchesToMeters(22.20),
-                centerLineY + Units.inchesToMeters(133.47 - (24.97 + 12.00))),
-            new Translation2d(
-                blueLineX
-                    + trenchScaleFactor * Units.inchesToMeters(trenchZoneArea + edgeOfHubNeutral),
-                fieldWidth + fieldEdgeTolerance));
-    public static FieldRectangle2d trenchRight =
-        new FieldRectangle2d(
-            new Translation2d(
-                blueLineX - trenchScaleFactor * Units.inchesToMeters(22.20), -fieldEdgeTolerance),
-            new Translation2d(
-                blueLineX
-                    + trenchScaleFactor * Units.inchesToMeters(trenchZoneArea + edgeOfHubNeutral),
-                Units.inchesToMeters(50.59)));
+            new Translation2d(blueLineX + hubOffset, fieldWidth + fieldEdgeTolerance),
+            "blue/leftAllianceZone");
 
     // Covers left blue trench (only neutral zone side)
     // For use when we are blue alliance and want to be able to shoot in the trench
-    public static FieldRectangle2d stopShootLeftNeutral =
-        new FieldRectangle2d(
+    public static Region2d stopShootLeftNeutral =
+        new Region2d(
             new Translation2d(
                 blueLineX + hubOffset - stopShootingZoneBuffer,
                 centerLineY + Units.inchesToMeters(133.47 - 24.97)),
             new Translation2d(
-                blueLineX + hubOffset + trenchScaleFactor * Units.inchesToMeters(22.20 + 6),
-                fieldWidth + fieldEdgeTolerance));
+                blueLineX + hubOffset + stopShootingZoneScale * Units.inchesToMeters(22.20 + 6),
+                fieldWidth + fieldEdgeTolerance),
+            "blue/stopShootLeftNeutral");
 
     // Covers right blue trench (only neutral zone side)
     // For use when we are blue alliance and want to be able to shoot in the trench
-    public static FieldRectangle2d stopShootRightNeutral =
-        new FieldRectangle2d(
+    public static Region2d stopShootRightNeutral =
+        new Region2d(
             new Translation2d(blueLineX + hubOffset - stopShootingZoneBuffer, -fieldEdgeTolerance),
             new Translation2d(
-                blueLineX + hubOffset + trenchScaleFactor * Units.inchesToMeters(22.20 + 6),
-                Units.inchesToMeters(50.59)));
+                blueLineX + hubOffset + stopShootingZoneScale * Units.inchesToMeters(22.20 + 6),
+                Units.inchesToMeters(50.59)),
+            "blue/stopShootRightNeutral");
 
     // Covers the left blue trench (both neutral and alliance zone sides)
     // For use when we are red alliance and want to stop shooting anywhere near the trench
-    public static FieldRectangle2d stopShootLeftFull =
-        new FieldRectangle2d(
+    public static Region2d stopShootLeftFull =
+        new Region2d(
             new Translation2d(
-                blueLineX + hubOffset - trenchScaleFactor * Units.inchesToMeters(22.20 + 6),
+                blueLineX + hubOffset - stopShootingZoneScale * Units.inchesToMeters(22.20 + 6),
                 centerLineY + Units.inchesToMeters(133.47 - 24.97)),
             new Translation2d(
-                blueLineX + hubOffset + trenchScaleFactor * Units.inchesToMeters(22.20 + 6),
-                fieldWidth + fieldEdgeTolerance));
+                blueLineX + hubOffset + stopShootingZoneScale * Units.inchesToMeters(22.20 + 6),
+                fieldWidth + fieldEdgeTolerance),
+            "blue/stopShootLeftFull");
 
     // Covers the right blue trench (both neutral and alliance zone sides)
     // For use when we are red alliance and want to stop shooting anywhere near the trench
-    public static FieldRectangle2d stopShootRightFull =
-        new FieldRectangle2d(
+    public static Region2d stopShootRightFull =
+        new Region2d(
             new Translation2d(
-                blueLineX + hubOffset - trenchScaleFactor * Units.inchesToMeters(22.20 + 6),
+                blueLineX + hubOffset - stopShootingZoneScale * Units.inchesToMeters(22.20 + 6),
                 -fieldEdgeTolerance),
             new Translation2d(
-                blueLineX + hubOffset + trenchScaleFactor * Units.inchesToMeters(22.20 + 6),
-                Units.inchesToMeters(50.59)));
+                blueLineX + hubOffset + stopShootingZoneScale * Units.inchesToMeters(22.20 + 6),
+                Units.inchesToMeters(50.59)),
+            "blue/stopShootRightFull");
 
-    public static FieldRectangle2d frontOfHub =
-        new FieldRectangle2d(
+    public static Region2d frontOfHub =
+        new Region2d(
             new Translation2d(
                 blueLineX - Units.inchesToMeters(22.20 + 40),
                 centerLineY - Units.inchesToMeters(58.41 / 2)),
             new Translation2d(
                 blueLineX - Units.inchesToMeters(22.20),
-                centerLineY + Units.inchesToMeters(58.41 / 2)));
+                centerLineY + Units.inchesToMeters(58.41 / 2)),
+            "blue/frontOfHub");
 
-    public static FieldRectangle2d towerZone =
-        new FieldRectangle2d(
-            new Translation2d(
-                -fieldEdgeTolerance,
-                centerLineY - Units.inchesToMeters(11.38) - Units.inchesToMeters(47.00 / 2)),
-            new Translation2d(
-                blueLineX - Units.inchesToMeters(115.05 + (47.00 / 2)),
-                centerLineY - Units.inchesToMeters(11.38) + Units.inchesToMeters(47.00 / 2)));
+    // These zones are based on which side they're passing to, facing the blue driver station
+    // Only cover neutral zone
+
+    // Area to pass to right side of alliance zone, from perspective of blue alliance station
+    public static Region2d passLeftZone =
+        new Region2d(
+            new Translation2d[] {
+              new Translation2d(
+                  redLineX - hubOffset,
+                  centerLineY + Units.inchesToMeters(47.00 / 2) + bumpLength / 2),
+              new Translation2d(
+                  blueLineX + hubOffset, centerLineY - Units.inchesToMeters(47.00 / 2)),
+              new Translation2d(blueLineX + hubOffset, -fieldEdgeTolerance),
+              new Translation2d(redLineX - hubOffset, -fieldEdgeTolerance)
+            },
+            "blue/passLeftZone");
+
+    // Area to pass to left side of alliance zone, from perspective of blue alliance station
+    public static Region2d passRightZone =
+        new Region2d(
+            new Translation2d[] {
+              new Translation2d(
+                  redLineX - hubOffset,
+                  centerLineY + Units.inchesToMeters(47.00 / 2) + bumpLength / 2),
+              new Translation2d(
+                  blueLineX + hubOffset, centerLineY - Units.inchesToMeters(47.00 / 2)),
+              new Translation2d(blueLineX + hubOffset, fieldWidth + fieldEdgeTolerance),
+              new Translation2d(redLineX - hubOffset, fieldWidth + fieldEdgeTolerance)
+            },
+            "blue/passRightZone");
   }
 
   public static class Red {
     public static Translation2d hubTranslation =
         new Translation2d(redLineX - hubOffset, centerLineY);
-    public static FieldRectangle2d allianceZone =
-        new FieldRectangle2d(
+    public static Region2d allianceZone =
+        new Region2d(
             new Translation2d(redLineX - hubOffset, -fieldEdgeTolerance),
-            new Translation2d(fieldLength + fieldEdgeTolerance, fieldWidth + fieldEdgeTolerance));
+            new Translation2d(fieldLength + fieldEdgeTolerance, fieldWidth + fieldEdgeTolerance),
+            "red/allianceZone");
 
-    public static FieldRectangle2d rightAllianceZone =
-        new FieldRectangle2d(
+    public static Region2d rightAllianceZone =
+        new Region2d(
             new Translation2d(redLineX - hubOffset, -fieldEdgeTolerance),
-            new Translation2d(fieldLength + fieldEdgeTolerance, centerLineY));
-    public static FieldRectangle2d leftAllianceZone =
-        new FieldRectangle2d(
+            new Translation2d(fieldLength + fieldEdgeTolerance, centerLineY),
+            "red/rightAllianceZone");
+    public static Region2d leftAllianceZone =
+        new Region2d(
             new Translation2d(redLineX - hubOffset, centerLineY),
-            new Translation2d(fieldLength + fieldEdgeTolerance, fieldWidth + fieldEdgeTolerance));
-
-    public static FieldRectangle2d trenchLeft =
-        new FieldRectangle2d(
-            new Translation2d(
-                redLineX - trenchScaleFactor * Units.inchesToMeters(22.20),
-                centerLineY + Units.inchesToMeters(133.47 - (24.97 + 12.00))),
-            new Translation2d(
-                redLineX
-                    + trenchScaleFactor * Units.inchesToMeters(trenchZoneArea + edgeOfHubNeutral),
-                fieldWidth + fieldEdgeTolerance));
-    public static FieldRectangle2d trenchRight =
-        new FieldRectangle2d(
-            new Translation2d(
-                redLineX - trenchScaleFactor * Units.inchesToMeters(22.20), -fieldEdgeTolerance),
-            new Translation2d(
-                redLineX
-                    + trenchScaleFactor * Units.inchesToMeters(trenchZoneArea + edgeOfHubNeutral),
-                Units.inchesToMeters(50.59)));
+            new Translation2d(fieldLength + fieldEdgeTolerance, fieldWidth + fieldEdgeTolerance),
+            "red/leftAllianceZone");
 
     // Covers left red trench (only neutral zone side)
     // For use when we are red alliance and want to be able to shoot in the trench
-    public static FieldRectangle2d stopShootLeftNeutral =
-        new FieldRectangle2d(
+    public static Region2d stopShootLeftNeutral =
+        new Region2d(
             new Translation2d(
-                redLineX - hubOffset - trenchScaleFactor * Units.inchesToMeters(22.20 + 6),
+                redLineX - hubOffset - stopShootingZoneScale * Units.inchesToMeters(22.20 + 6),
                 centerLineY + Units.inchesToMeters(133.47 - 24.97)),
             new Translation2d(
-                redLineX - hubOffset + stopShootingZoneBuffer, fieldWidth + fieldEdgeTolerance));
+                redLineX - hubOffset + stopShootingZoneBuffer, fieldWidth + fieldEdgeTolerance),
+            "red/stopShootLeftNeutral");
 
     // Covers right red trench (only neutral zone side)
     // For use when we are red alliance and want to be able to shoot in the trench
-    public static FieldRectangle2d stopShootRightNeutral =
-        new FieldRectangle2d(
+    public static Region2d stopShootRightNeutral =
+        new Region2d(
             new Translation2d(
-                redLineX - hubOffset - trenchScaleFactor * Units.inchesToMeters(22.20 + 6),
+                redLineX - hubOffset - stopShootingZoneScale * Units.inchesToMeters(22.20 + 6),
                 -fieldEdgeTolerance),
             new Translation2d(
-                redLineX - hubOffset + stopShootingZoneBuffer, Units.inchesToMeters(50.59)));
+                redLineX - hubOffset + stopShootingZoneBuffer, Units.inchesToMeters(50.59)),
+            "red/stopShootRightNeutral");
 
     // Covers the left red trench (both neutral and alliance zone sides)
     // For use when we are blue alliance and want to stop shooting anywhere near the trench
-    public static FieldRectangle2d stopShootLeftFull =
-        new FieldRectangle2d(
+    public static Region2d stopShootLeftFull =
+        new Region2d(
             new Translation2d(
-                redLineX - hubOffset - trenchScaleFactor * Units.inchesToMeters(22.20 + 6),
+                redLineX - hubOffset - stopShootingZoneScale * Units.inchesToMeters(22.20 + 6),
                 centerLineY + Units.inchesToMeters(133.47 - 24.97)),
             new Translation2d(
-                redLineX - hubOffset + trenchScaleFactor * Units.inchesToMeters(22.20 + 6),
-                fieldWidth + fieldEdgeTolerance));
+                redLineX - hubOffset + stopShootingZoneScale * Units.inchesToMeters(22.20 + 6),
+                fieldWidth + fieldEdgeTolerance),
+            "red/stopShootLeftFull");
 
     // Covers the right red trench (both neutral and alliance zone sides)
     // For use when we are blue alliance and want to stop shooting anywhere near the trench
-    public static FieldRectangle2d stopShootRightFull =
-        new FieldRectangle2d(
+    public static Region2d stopShootRightFull =
+        new Region2d(
             new Translation2d(
-                redLineX - hubOffset - trenchScaleFactor * Units.inchesToMeters(22.20 + 6),
+                redLineX - hubOffset - stopShootingZoneScale * Units.inchesToMeters(22.20 + 6),
                 -fieldEdgeTolerance),
             new Translation2d(
-                redLineX - hubOffset + trenchScaleFactor * Units.inchesToMeters(22.20 + 6),
-                Units.inchesToMeters(50.59)));
+                redLineX - hubOffset + stopShootingZoneScale * Units.inchesToMeters(22.20 + 6),
+                Units.inchesToMeters(50.59)),
+            "red/stopShootRightFull");
 
-    public static FieldRectangle2d frontOfHub =
-        new FieldRectangle2d(
+    public static Region2d frontOfHub =
+        new Region2d(
             new Translation2d(
                 redLineX + Units.inchesToMeters(22.20),
                 centerLineY - Units.inchesToMeters(58.41 / 2)),
             new Translation2d(
                 redLineX + Units.inchesToMeters(22.20 + 40),
-                centerLineY + Units.inchesToMeters(58.41 / 2)));
-    public static FieldRectangle2d towerZone =
-        new FieldRectangle2d(
-            new Translation2d(
-                fieldLength,
-                centerLineY + Units.inchesToMeters(11.38) - Units.inchesToMeters(47.00 / 2)),
-            new Translation2d(
-                redLineX + Units.inchesToMeters(115.05 + (47.00 / 2)),
-                centerLineY + Units.inchesToMeters(11.38) + Units.inchesToMeters(47.00 / 2)));
+                centerLineY + Units.inchesToMeters(58.41 / 2)),
+            "red/frontOfHub");
+
+    // These zones are based on which side they're passing to, facing the blue driver station
+    // Only cover neutral zone
+
+    // Area to pass to left side of alliance zone, from perspective of red alliance station
+    public static Region2d passLeftZone =
+        new Region2d(
+            new Translation2d[] {
+              new Translation2d(
+                  redLineX - hubOffset, centerLineY + Units.inchesToMeters(47.00 / 2)),
+              new Translation2d(
+                  blueLineX + hubOffset,
+                  centerLineY - Units.inchesToMeters(47.00 / 2) - bumpLength / 2),
+              new Translation2d(blueLineX + hubOffset, fieldWidth + fieldEdgeTolerance),
+              new Translation2d(redLineX - hubOffset, fieldWidth + fieldEdgeTolerance)
+            },
+            "red/passRightZone");
+
+    // Area to pass to right side of alliance zone, from perspective of red alliance station
+    public static Region2d passRightZone =
+        new Region2d(
+            new Translation2d[] {
+              new Translation2d(
+                  redLineX - hubOffset, centerLineY + Units.inchesToMeters(47.00 / 2)),
+              new Translation2d(
+                  blueLineX + hubOffset,
+                  centerLineY - Units.inchesToMeters(47.00 / 2) - bumpLength / 2),
+              new Translation2d(blueLineX + hubOffset, -fieldEdgeTolerance),
+              new Translation2d(redLineX - hubOffset, -fieldEdgeTolerance)
+            },
+            "red/passLeftZone");
   }
 
   public static class Neutral {
-    public static FieldRectangle2d rightNeutral =
-        new FieldRectangle2d(
-            new Translation2d(blueLineX, -fieldEdgeTolerance),
-            new Translation2d(redLineX, centerLineY));
-    public static FieldRectangle2d leftNeutral =
-        new FieldRectangle2d(
-            new Translation2d(blueLineX, centerLineY),
-            new Translation2d(redLineX, fieldWidth + fieldEdgeTolerance));
+    public static Region2d rightNeutral =
+        new Region2d(
+            new Translation2d(blueLineX + hubOffset, -fieldEdgeTolerance),
+            new Translation2d(redLineX - hubOffset, centerLineY),
+            "neutral/rightNeutral");
+    public static Region2d leftNeutral =
+        new Region2d(
+            new Translation2d(blueLineX + hubOffset, centerLineY),
+            new Translation2d(redLineX - hubOffset, fieldWidth + fieldEdgeTolerance),
+            "neutral/leftNeutral");
   }
 
   public static void plotZones() {
-    RobotContainer.getField()
-        .getObject("Blue.allianceZone")
-        .setPoses(Blue.allianceZone.getCornerPoses());
+    Blue.allianceZone.logPoints();
+    Blue.rightAllianceZone.logPoints();
+    Blue.leftAllianceZone.logPoints();
+    Blue.stopShootLeftNeutral.logPoints();
+    Blue.stopShootRightNeutral.logPoints();
+    Blue.stopShootLeftFull.logPoints();
+    Blue.stopShootRightFull.logPoints();
+    Blue.frontOfHub.logPoints();
 
-    RobotContainer.getField()
-        .getObject("Blue.frontOfHub")
-        .setPoses(Blue.frontOfHub.getCornerPoses());
+    Red.allianceZone.logPoints();
+    Red.rightAllianceZone.logPoints();
+    Red.leftAllianceZone.logPoints();
+    Red.stopShootLeftNeutral.logPoints();
+    Red.stopShootRightNeutral.logPoints();
+    Red.stopShootLeftFull.logPoints();
+    Red.stopShootRightFull.logPoints();
+    Red.frontOfHub.logPoints();
 
-    RobotContainer.getField()
-        .getObject("Red.allianceZone")
-        .setPoses(Red.allianceZone.getCornerPoses());
-    RobotContainer.getField().getObject("Red.frontOfHub").setPoses(Red.frontOfHub.getCornerPoses());
+    Neutral.rightNeutral.logPoints();
+    Neutral.leftNeutral.logPoints();
 
-    RobotContainer.getField()
-        .getObject("Red.hubTranslation")
-        .setPose(new Pose2d(Red.hubTranslation, Rotation2d.kZero));
-    RobotContainer.getField()
-        .getObject("Blue.hubTranslation")
-        .setPose(new Pose2d(Blue.hubTranslation, Rotation2d.kZero));
+    Blue.passRightZone.logPoints();
+    Blue.passLeftZone.logPoints();
 
-    RobotContainer.getField()
-        .getObject("Neutral.rightNeutral")
-        .setPoses(Neutral.rightNeutral.getCornerPoses());
-    RobotContainer.getField()
-        .getObject("Neutral.leftNeutral")
-        .setPoses(Neutral.leftNeutral.getCornerPoses());
-
-    RobotContainer.getField().getObject("Red.towerZone").setPoses(Red.towerZone.getCornerPoses());
-    RobotContainer.getField().getObject("Blue.towerZone").setPoses(Blue.towerZone.getCornerPoses());
-
-    RobotContainer.getField()
-        .getObject("Red.stopShootLeftNeutral")
-        .setPoses(Red.stopShootLeftNeutral.getCornerPoses());
-    RobotContainer.getField()
-        .getObject("Red.stopShootRightNeutral")
-        .setPoses(Red.stopShootRightNeutral.getCornerPoses());
-    RobotContainer.getField()
-        .getObject("Red.stopShootLeftFull")
-        .setPoses(Red.stopShootLeftFull.getCornerPoses());
-    RobotContainer.getField()
-        .getObject("Red.stopShootRightFull")
-        .setPoses(Red.stopShootRightFull.getCornerPoses());
-    RobotContainer.getField()
-        .getObject("Blue.stopShootLeftNeutral")
-        .setPoses(Blue.stopShootLeftNeutral.getCornerPoses());
-    RobotContainer.getField()
-        .getObject("Blue.stopShootRightNeutral")
-        .setPoses(Blue.stopShootRightNeutral.getCornerPoses());
-    RobotContainer.getField()
-        .getObject("Blue.stopShootLeftFull")
-        .setPoses(Blue.stopShootLeftFull.getCornerPoses());
-    RobotContainer.getField()
-        .getObject("Blue.stopShootRightFull")
-        .setPoses(Blue.stopShootRightFull.getCornerPoses());
+    Red.passRightZone.logPoints();
+    Red.passLeftZone.logPoints();
   }
 
   public static final double aprilTagWidth = Units.inchesToMeters(6.50);

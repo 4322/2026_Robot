@@ -64,7 +64,7 @@ public class VisionObjectDetection extends SubsystemBase {
       if (currentObjectDifference < bestObjectDifference
           && (!sameZone
               || AreaManager.isSameCompleteZone(
-                  currentObjectTranslation, drive.getRobotPose().getTranslation()))) {
+                  new Pose2d(currentObjectTranslation, Rotation2d.kZero), drive.getRobotPose()))) {
         bestObjectTranslation = currentObjectTranslation;
       }
     }
@@ -135,7 +135,7 @@ public class VisionObjectDetection extends SubsystemBase {
     for (Translation2d objectPosition : objectPositions) {
       if (sameZone
           && !AreaManager.isSameCompleteZone(
-              objectPosition, drive.getRobotPose().getTranslation())) {
+              new Pose2d(objectPosition, Rotation2d.kZero), drive.getRobotPose())) {
         continue;
       }
       sumX += objectPosition.getX();
@@ -148,7 +148,8 @@ public class VisionObjectDetection extends SubsystemBase {
     Translation2d centroid = new Translation2d(sumX / count, sumY / count);
     Logger.recordOutput(
         "VisionObjectDetection/TargetCentroid", new Pose2d(centroid, Rotation2d.kZero));
-    if ((!AreaManager.isSameCompleteZone(centroid, drive.getRobotPose().getTranslation()))
+    if ((!AreaManager.isSameCompleteZone(
+            new Pose2d(centroid, Rotation2d.kZero), drive.getRobotPose()))
         && sameZone) {
       return null;
     } else {

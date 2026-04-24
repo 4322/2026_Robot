@@ -39,6 +39,7 @@ public class Flywheel {
       case NORMAL -> {
         io.setTargetMechanismRPS(velocity);
         requestedSetpoint = velocity;
+        updateAtGoalTimer();
       }
       case DISABLED -> {}
     }
