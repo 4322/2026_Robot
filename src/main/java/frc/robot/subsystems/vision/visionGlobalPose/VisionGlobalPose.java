@@ -74,11 +74,11 @@ public class VisionGlobalPose extends SubsystemBase {
     }
 
     if (unstableCameras >= 2) {
-      SmartDashboard.putString("Vision/VisionStable", Constants.NetworkTables.red.toHexString());
+      SmartDashboard.putString("Vision/Vision Stable", Constants.NetworkTables.red.toHexString());
       Logger.recordOutput("Vision/Stable", "No");
       Robot.stabilize();
     } else {
-      SmartDashboard.putString("Vision/VisionStable", Constants.NetworkTables.green.toHexString());
+      SmartDashboard.putString("Vision/Vision Stable", Constants.NetworkTables.green.toHexString());
       Logger.recordOutput("Vision/Stable", "Yes");
     }
 
