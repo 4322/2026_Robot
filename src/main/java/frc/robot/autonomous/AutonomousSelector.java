@@ -8,8 +8,10 @@ import frc.robot.autonomous.modes.CenterStartToDepot;
 import frc.robot.autonomous.modes.DoNothing;
 import frc.robot.autonomous.modes.L2Sweep;
 import frc.robot.autonomous.modes.LSecondShallow;
+import frc.robot.autonomous.modes.LSingleSweep;
 import frc.robot.autonomous.modes.R2Sweep;
 import frc.robot.autonomous.modes.RSecondShallow;
+import frc.robot.autonomous.modes.RSingleSweep;
 import frc.robot.commands.DriveCommands;
 import frc.robot.constants.Constants;
 import frc.robot.constants.Constants.Mode;
@@ -39,9 +41,8 @@ public class AutonomousSelector {
     R_2_SWEEP,
     L_2_SWEEP,
     L_2_DEPOT,
-
-    R_2056,
-    L_2056,
+    L_SINGLE_SWEEP,
+    R_SINGLE_SWEEP,
 
     C_START_TO_DEPOT,
     C_PRELOAD,
@@ -130,7 +131,13 @@ public class AutonomousSelector {
                   new RSecondShallow(drive, intake, shooter, autoStartDelay)),
               new Auto(
                   AutoName.L_SECOND_SHALLOW,
-                  new LSecondShallow(drive, intake, shooter, autoStartDelay)));
+                  new LSecondShallow(drive, intake, shooter, autoStartDelay)),
+              new Auto(
+                  AutoName.R_SINGLE_SWEEP,
+                  new RSingleSweep(drive, intake, shooter, autoStartDelay)),
+              new Auto(
+                  AutoName.L_SINGLE_SWEEP,
+                  new LSingleSweep(drive, intake, shooter, autoStartDelay)));
     }
 
     for (Auto nextAuto : autos) {

@@ -77,23 +77,17 @@ public class Robot extends LoggedRobot {
 
   public static PathPlannerPath L_2056_A_OUT;
 
-  public static PathPlannerPath R_SECOND_DEEP_A;
-  public static PathPlannerPath R_SECOND_DEEP_A_OUT;
-  public static PathPlannerPath R_SECOND_DEEP_B_SCORE;
-  public static PathPlannerPath R_SECOND_DEEP_B_PASS;
-  public static PathPlannerPath R_SECOND_DEEP_C;
-
-  public static PathPlannerPath L_SECOND_DEEP_A;
-  public static PathPlannerPath L_SECOND_DEEP_A_OUT;
-  public static PathPlannerPath L_SECOND_DEEP_B_SCORE;
-  public static PathPlannerPath L_SECOND_DEEP_B_PASS;
-  public static PathPlannerPath L_SECOND_DEEP_C;
-
   public static PathPlannerPath R_SECOND_SHALLOW_A;
   public static PathPlannerPath R_SECOND_SHALLOW_B;
 
   public static PathPlannerPath L_SECOND_SHALLOW_A;
   public static PathPlannerPath L_SECOND_SHALLOW_B;
+
+  public static PathPlannerPath R_SINGLE_SWEEP_A;
+  public static PathPlannerPath R_SINGLE_SWEEP_B;
+
+  public static PathPlannerPath L_SINGLE_SWEEP_A;
+  public static PathPlannerPath L_SINGLE_SWEEP_B;
 
   public Robot() {
     Logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME); // Set a metadata value
@@ -243,6 +237,9 @@ public class Robot extends LoggedRobot {
       R_SECOND_SHALLOW_A = PathPlannerPath.fromPathFile("R_SecondShallow_A");
       R_SECOND_SHALLOW_B = PathPlannerPath.fromPathFile("R_SecondShallow_B");
 
+      R_SINGLE_SWEEP_A = PathPlannerPath.fromPathFile("R_SingleSweep_A");
+      R_SINGLE_SWEEP_B = PathPlannerPath.fromPathFile("R_SingleSweep_B");
+
       L_2SWEEP_A = R_2SWEEP_A.mirrorPath();
       L_2SWEEP_B = R_2SWEEP_B.mirrorPath();
       L_2SWEEP_CG = R_2SWEEP_CG.mirrorPath();
@@ -263,6 +260,9 @@ public class Robot extends LoggedRobot {
 
       L_SECOND_SHALLOW_A = R_SECOND_SHALLOW_A.mirrorPath();
       L_SECOND_SHALLOW_B = R_SECOND_SHALLOW_B.mirrorPath();
+
+      L_SINGLE_SWEEP_A = R_SINGLE_SWEEP_A.mirrorPath();
+      L_SINGLE_SWEEP_B = R_SINGLE_SWEEP_B.mirrorPath();
     } catch (Exception e) {
       DriverStation.reportError("Failed to load PathPlanner path - " + e.getMessage(), true);
       System.exit(1);
