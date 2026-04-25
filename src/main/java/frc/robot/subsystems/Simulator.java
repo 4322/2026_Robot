@@ -246,8 +246,7 @@ public class Simulator {
           new RegressionTest("Auto Rotate", TeleopScenario.AUTO_ROTATE, Alliance.Blue));
       case TURRET -> List.of(
           new RegressionTest("Turret Test", TeleopScenario.TURRET, Alliance.Blue));
-      case ALL_AUTOS -> List.of(
-          );
+      case ALL_AUTOS -> List.of();
       case ZONES -> List.of(
           new RegressionTest("Zones Blue", TeleopScenario.ZONES, Alliance.Blue),
           new RegressionTest("Zones Red", TeleopScenario.ZONES, Alliance.Red));
