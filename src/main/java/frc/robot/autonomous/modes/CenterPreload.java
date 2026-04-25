@@ -1,5 +1,6 @@
 package frc.robot.autonomous.modes;
 
+import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -34,6 +35,7 @@ public class CenterPreload extends SequentialCommandGroup {
             }),
         new UtilityCommands.WaitSupplierCommand(autoStartDelay),
         IntakeCommands.intake(intake),
+        AutoBuilder.followPath(Robot.C_PRELOAD),
         new ParallelCommandGroup(
             ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake).withTimeout(10.0),
             IntakeCommands.autoSmoosh(intake, 3, 0.5)));

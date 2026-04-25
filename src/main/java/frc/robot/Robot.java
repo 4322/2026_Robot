@@ -42,6 +42,8 @@ public class Robot extends LoggedRobot {
 
   public static PathPlannerPath C_To_Depot;
 
+  public static PathPlannerPath C_PRELOAD;
+
   public static PathPlannerPath R_2SWEEP_A;
   public static PathPlannerPath R_2SWEEP_B;
   public static PathPlannerPath R_2SWEEP_CG;
@@ -233,6 +235,7 @@ public class Robot extends LoggedRobot {
       R_2056_A_OUT = PathPlannerPath.fromPathFile("R_2056_A_Out");
 
       C_To_Depot = PathPlannerPath.fromPathFile("Start_To_Depot");
+      C_PRELOAD = PathPlannerPath.fromPathFile("C_Preload");
 
       R_SECOND_SHALLOW_A = PathPlannerPath.fromPathFile("R_SecondShallow_A");
       R_SECOND_SHALLOW_B = PathPlannerPath.fromPathFile("R_SecondShallow_B");
