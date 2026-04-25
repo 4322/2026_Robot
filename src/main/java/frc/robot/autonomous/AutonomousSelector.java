@@ -6,9 +6,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.autonomous.modes.CenterStartToDepot;
 import frc.robot.autonomous.modes.DoNothing;
 import frc.robot.autonomous.modes.L2Sweep;
-import frc.robot.autonomous.modes.L2SweepDepot;
 import frc.robot.autonomous.modes.LSecondShallow;
-import frc.robot.autonomous.modes.R2056;
 import frc.robot.autonomous.modes.R2Sweep;
 import frc.robot.autonomous.modes.RSecondShallow;
 import frc.robot.commands.DriveCommands;
@@ -120,9 +118,15 @@ public class AutonomousSelector {
               new Auto(AutoName.DO_NOTHING, new DoNothing(hood)),
               new Auto(AutoName.R_2_SWEEP, new R2Sweep(drive, intake, shooter, autoStartDelay)),
               new Auto(AutoName.L_2_SWEEP, new L2Sweep(drive, intake, shooter, autoStartDelay)),
-              new Auto(AutoName.C_START_TO_DEPOT, new CenterStartToDepot(drive, intake, shooter, autoStartDelay)),
-              new Auto(AutoName.R_SECOND_SHALLOW, new RSecondShallow(drive, intake, shooter, autoStartDelay)),
-              new Auto(AutoName.L_SECOND_SHALLOW, new LSecondShallow(drive, intake, shooter, autoStartDelay)));
+              new Auto(
+                  AutoName.C_START_TO_DEPOT,
+                  new CenterStartToDepot(drive, intake, shooter, autoStartDelay)),
+              new Auto(
+                  AutoName.R_SECOND_SHALLOW,
+                  new RSecondShallow(drive, intake, shooter, autoStartDelay)),
+              new Auto(
+                  AutoName.L_SECOND_SHALLOW,
+                  new LSecondShallow(drive, intake, shooter, autoStartDelay)));
     }
 
     for (Auto nextAuto : autos) {

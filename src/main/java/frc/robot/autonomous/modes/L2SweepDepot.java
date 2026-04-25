@@ -22,7 +22,8 @@ import frc.robot.util.LoggedTunableNumber;
 public class L2SweepDepot extends SequentialCommandGroup {
   private PathPlannerPath firstPath;
 
-  public L2SweepDepot(Drive drive, Intake intake, Shooter shooter, LoggedTunableNumber autoStartDelay) {
+  public L2SweepDepot(
+      Drive drive, Intake intake, Shooter shooter, LoggedTunableNumber autoStartDelay) {
     firstPath = Robot.L_2SWEEP_A;
     Pose2d startPoseBlue = firstPath.getStartingHolonomicPose().get();
     Pose2d startPoseRed = firstPath.flipPath().getStartingHolonomicPose().get();
@@ -62,10 +63,7 @@ public class L2SweepDepot extends SequentialCommandGroup {
             AutoBuilder.followPath(Robot.L_2SWEEP_DEPOT),
             ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake),
             IntakeCommands.autoSmoosh(
-                intake,
-                0,
-                Constants.Autonomous.twoSweepShootTimeFirstPass / 6)
-                    .andThen(IntakeCommands.intake(intake)))
-        );
+                    intake, 0, Constants.Autonomous.twoSweepShootTimeFirstPass / 6)
+                .andThen(IntakeCommands.intake(intake))));
   }
 }
