@@ -37,6 +37,7 @@ public class CenterStartToDepot extends SequentialCommandGroup {
                 drive.setPose(startPoseRed);
               }
             }),
+        new WaitCommand(autoStartDelay.get()),
         IntakeCommands.intake(intake),
         new WaitUntilCommand(() -> intake.hasExtended()),
         new ParallelDeadlineGroup(
