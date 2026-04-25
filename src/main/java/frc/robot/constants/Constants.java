@@ -61,6 +61,7 @@ public final class Constants {
   public static final boolean frontLeftCameraEnable = true;
   public static final boolean backRightCameraEnable = true;
   public static final boolean backLeftCameraEnable = true;
+  public static final boolean enableCharacterizationAutos = false;
   public static final boolean tuningWithLoggableNumbers =
       (driveMode == SubsystemMode.TUNING
           || firingManagerMode == SubsystemMode.TUNING
@@ -272,13 +273,6 @@ public final class Constants {
     public static final double kG = 0.24;
     public static final double motionMagicCruiseVelocity = 1.3;
     public static final double motionMagicAcceleration = 5.0;
-  }
-
-  public static class Control {
-    public static final int toggle1ButtonNumber = 1;
-    public static final int toggle4ButtonNumber = 4;
-    public static final int button3ButtonNumber = 5;
-    public static final int toggle3ButtonNumber = 3;
   }
 
   public class Rollers {

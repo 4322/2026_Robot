@@ -33,6 +33,18 @@
           "data": {
             "pathName": "R_2Sweep_F"
           }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "R_2056_C"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "R_2056_G"
+          }
         }
       ]
     }
