@@ -160,8 +160,7 @@ public class AutonomousSelector {
                   new RSingleSweep(drive, intake, shooter, autoStartDelay)),
               new Auto(
                   AutoName.L_SINGLE_SWEEP,
-                  new LSingleSweep(drive, intake, shooter, autoStartDelay))
-              );
+                  new LSingleSweep(drive, intake, shooter, autoStartDelay)));
     }
 
     for (Auto nextAuto : autos) {
