@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 5.759900142653351,
-        "y": 2.6570328102710414
+        "x": 3.615,
+        "y": 4.177
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.759900142653351,
-        "y": 2.6570328102710414
+        "x": 2.615,
+        "y": 4.177
       },
       "isLocked": false,
-      "linkedName": "R.2056.A"
+      "linkedName": "C.Hub.Start"
     },
     {
       "anchor": {
-        "x": 2.8616405135520675,
-        "y": 2.6570328102710414
+        "x": 2.0,
+        "y": 4.177
       },
       "prevControl": {
-        "x": 3.8326405135520685,
-        "y": 2.6570328102710414
+        "x": 3.0,
+        "y": 4.177
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "R.2056.B"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
@@ -41,14 +41,14 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0.0,
-    "rotation": -153.435
+    "velocity": 0,
+    "rotation": 0.0
   },
   "reversed": false,
-  "folder": "R_2056",
+  "folder": "C_Preload",
   "idealStartingState": {
-    "velocity": 2.0,
-    "rotation": -153.435
+    "velocity": 0,
+    "rotation": 180.0
   },
   "useDefaultConstraints": true
 }

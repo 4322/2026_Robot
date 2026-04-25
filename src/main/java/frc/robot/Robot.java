@@ -38,53 +38,13 @@ public class Robot extends LoggedRobot {
   private Timer allianceUpdateTimer = new Timer();
   private DigitalInput coastButton = new DigitalInput(Constants.dioCoastButton);
   private Timer coastButtonTimer = new Timer();
+  private static Timer stabilizeCamerasTimer = new Timer();
 
   public static Alliance alliance = DriverStation.Alliance.Blue;
 
-  public static PathPlannerPath R_NeutralR_Intake_Mid_Flip;
-  public static PathPlannerPath R_NeutralRMid_To_ShootR;
-  public static PathPlannerPath R_NeutralR_Intake_To_Mid;
-  public static PathPlannerPath R_Neutral_Mid_To_ShootR;
-  public static PathPlannerPath R_NeutralR_Intake_Full_Flip;
-  public static PathPlannerPath R_NeutralR_Intake_Full;
-  public static PathPlannerPath R_StartR_To_NeutralR_Intake;
-  public static PathPlannerPath R_NeutralR_Intake_Full_Midline;
-  public static PathPlannerPath R_NeutralR_Intake_Full_Midline_Flip;
-  public static PathPlannerPath R_StartR_To_NeutralR_Intake_Midline;
-  public static PathPlannerPath R_StartR_To_NeutralR_Intake_Disrupt;
-  public static PathPlannerPath R_NeutralR_Intake_Full_Disrupt;
-  public static PathPlannerPath R_NeutralR_Intake_Full_Disrupt_Flip;
-
-  public static PathPlannerPath L_NeutralL_Intake_Mid_Flip;
-  public static PathPlannerPath L_NeutralLMid_To_ShootL;
-  public static PathPlannerPath L_NeutralL_Intake_To_Mid;
-  public static PathPlannerPath L_Neutral_Mid_To_ShootL;
-  public static PathPlannerPath L_NeutralL_Intake_Full_Flip;
-  public static PathPlannerPath L_NeutralL_Intake_Full;
-  public static PathPlannerPath L_StartL_To_NeutralL_Intake;
-  public static PathPlannerPath L_NeutralL_Intake_Full_Midline;
-  public static PathPlannerPath L_NeutralL_Intake_Full_Midline_Flip;
-  public static PathPlannerPath L_StartL_To_NeutralL_Intake_Midline;
-  public static PathPlannerPath L_StartL_To_NeutralL_Intake_Disrupt;
-  public static PathPlannerPath L_NeutralL_Intake_Full_Disrupt;
-  public static PathPlannerPath L_NeutralL_Intake_Full_Disrupt_Flip;
-
-  public static PathPlannerPath L_NeutralLMid_To_ShootL_LT;
-  public static PathPlannerPath L_Neutral_Mid_To_ShootL_LT;
-
-  public static PathPlannerPath R_NeutralRMid_To_ShootR_LT;
-  public static PathPlannerPath R_Neutral_Mid_To_ShootR_LT;
-
-  public static PathPlannerPath C_Depot_To_Outpost;
-  public static PathPlannerPath C_Start_To_Depot;
-
   public static PathPlannerPath C_To_Depot;
 
-  public static PathPlannerPath R_Half_SuperSweep_B;
-  public static PathPlannerPath R_Half_SuperSweep_C;
-  public static PathPlannerPath R_Half_SuperSweep_D;
-  public static PathPlannerPath R_Half_SuperSweep_E;
-  public static PathPlannerPath R_Half_SuperSweep_F;
+  public static PathPlannerPath C_PRELOAD;
 
   public static PathPlannerPath R_2SWEEP_A;
   public static PathPlannerPath R_2SWEEP_B;
@@ -93,6 +53,8 @@ public class Robot extends LoggedRobot {
   public static PathPlannerPath R_2SWEEP_F;
   public static PathPlannerPath R_2SWEEP_H;
 
+  public static PathPlannerPath R_2SWEEP_A_OUT;
+
   public static PathPlannerPath L_2SWEEP_A;
   public static PathPlannerPath L_2SWEEP_B;
   public static PathPlannerPath L_2SWEEP_CG;
@@ -100,8 +62,8 @@ public class Robot extends LoggedRobot {
   public static PathPlannerPath L_2SWEEP_F;
   public static PathPlannerPath L_2SWEEP_H;
 
-  public static PathPlannerPath R_ROutpost_A;
-  public static PathPlannerPath R_ROutpost_B;
+  public static PathPlannerPath L_2SWEEP_A_OUT;
+  public static PathPlannerPath L_2SWEEP_DEPOT;
 
   public static PathPlannerPath R_2056_A;
   public static PathPlannerPath R_2056_B;
@@ -109,11 +71,34 @@ public class Robot extends LoggedRobot {
   public static PathPlannerPath R_2056_D;
   public static PathPlannerPath R_2056_G;
 
+  public static PathPlannerPath R_2056_A_OUT;
+
   public static PathPlannerPath L_2056_A;
   public static PathPlannerPath L_2056_B;
   public static PathPlannerPath L_2056_C;
   public static PathPlannerPath L_2056_D;
   public static PathPlannerPath L_2056_G;
+
+  public static PathPlannerPath L_2056_A_OUT;
+
+  public static PathPlannerPath R_SECOND_SHALLOW_BUMP_A;
+  public static PathPlannerPath R_SECOND_SHALLOW_BUMP_B;
+  public static PathPlannerPath R_SECOND_SHALLOW_BUMP_B_DEPOT;
+  public static PathPlannerPath R_SECOND_SHALLOW_TRENCH_DEPOT_A;
+  public static PathPlannerPath R_SECOND_SHALLOW_TRENCH_DEPOT_B;
+  public static PathPlannerPath R_SECOND_SHALLOW_TRENCH;
+
+  public static PathPlannerPath L_SECOND_SHALLOW_BUMP_A;
+  public static PathPlannerPath L_SECOND_SHALLOW_BUMP_B;
+  public static PathPlannerPath L_SECOND_SHALLOW_TRENCH;
+
+  public static PathPlannerPath R_SINGLE_SWEEP_A;
+  public static PathPlannerPath R_SINGLE_SWEEP_B;
+
+  public static PathPlannerPath L_SINGLE_SWEEP_A;
+  public static PathPlannerPath L_SINGLE_SWEEP_B;
+
+  public static PathPlannerPath L_SINGLE_SWEEP_B_DEPOT;
 
   public Robot() {
     Logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME); // Set a metadata value
@@ -241,39 +226,6 @@ public class Robot extends LoggedRobot {
     Logger.disableConsoleCapture();
 
     try {
-      C_Depot_To_Outpost = PathPlannerPath.fromPathFile("C_Depot_To_Outpost");
-      C_Start_To_Depot = PathPlannerPath.fromPathFile("C_Start_To_Depot");
-
-      R_NeutralR_Intake_Mid_Flip = PathPlannerPath.fromPathFile("R_NeutralR_Intake_Mid_Flip");
-      R_NeutralRMid_To_ShootR = PathPlannerPath.fromPathFile("R_NeutralRMid_To_ShootR");
-      R_NeutralR_Intake_To_Mid = PathPlannerPath.fromPathFile("R_NeutralR_Intake_To_Mid");
-      R_Neutral_Mid_To_ShootR = PathPlannerPath.fromPathFile("R_Neutral_Mid_To_ShootR");
-      R_NeutralR_Intake_Full_Flip = PathPlannerPath.fromPathFile("R_NeutralR_Intake_Full_Flip");
-      R_NeutralR_Intake_Full = PathPlannerPath.fromPathFile("R_NeutralR_Intake_Full");
-      R_StartR_To_NeutralR_Intake = PathPlannerPath.fromPathFile("R_StartR_To_NeutralR_Intake");
-
-      R_NeutralR_Intake_Full_Midline =
-          PathPlannerPath.fromPathFile("R_NeutralR_Intake_Full_Midline");
-      R_NeutralR_Intake_Full_Midline_Flip =
-          PathPlannerPath.fromPathFile("R_NeutralR_Intake_Full_Midline_Flip");
-      R_StartR_To_NeutralR_Intake_Midline =
-          PathPlannerPath.fromPathFile("R_StartR_To_NeutralR_Intake_Midline");
-      R_StartR_To_NeutralR_Intake_Disrupt =
-          PathPlannerPath.fromPathFile("R_StartR_To_NeutralR_Intake_Disrupt");
-      R_NeutralR_Intake_Full_Disrupt =
-          PathPlannerPath.fromPathFile("R_NeutralR_Intake_Full_Disrupt");
-      R_NeutralR_Intake_Full_Disrupt_Flip =
-          PathPlannerPath.fromPathFile("R_NeutralR_Intake_Full_Disrupt_Flip");
-
-      R_NeutralRMid_To_ShootR_LT = PathPlannerPath.fromPathFile("R_NeutralRMid_To_ShootR_LT");
-      R_Neutral_Mid_To_ShootR_LT = PathPlannerPath.fromPathFile("R_Neutral_Mid_To_ShootR_LT");
-
-      R_Half_SuperSweep_B = PathPlannerPath.fromPathFile("R_Half_SuperSweep_B");
-      R_Half_SuperSweep_C = PathPlannerPath.fromPathFile("R_Half_SuperSweep_C");
-      R_Half_SuperSweep_D = PathPlannerPath.fromPathFile("R_Half_SuperSweep_D");
-      R_Half_SuperSweep_E = PathPlannerPath.fromPathFile("R_Half_SuperSweep_E");
-      R_Half_SuperSweep_F = PathPlannerPath.fromPathFile("R_Half_SuperSweep_F");
-
       R_2SWEEP_A = PathPlannerPath.fromPathFile("R_2Sweep_A");
       R_2SWEEP_B = PathPlannerPath.fromPathFile("R_2Sweep_B");
       R_2SWEEP_CG = PathPlannerPath.fromPathFile("R_2Sweep_CG");
@@ -281,8 +233,7 @@ public class Robot extends LoggedRobot {
       R_2SWEEP_F = PathPlannerPath.fromPathFile("R_2Sweep_F");
       R_2SWEEP_H = PathPlannerPath.fromPathFile("R_2Sweep_H");
 
-      R_ROutpost_A = PathPlannerPath.fromPathFile("R_ROutpost_A");
-      R_ROutpost_B = PathPlannerPath.fromPathFile("R_ROutpost_B");
+      R_2SWEEP_A_OUT = PathPlannerPath.fromPathFile("R_2Sweep_A_Out");
 
       R_2056_A = PathPlannerPath.fromPathFile("R_2056_A");
       R_2056_B = PathPlannerPath.fromPathFile("R_2056_B");
@@ -290,24 +241,26 @@ public class Robot extends LoggedRobot {
       R_2056_D = PathPlannerPath.fromPathFile("R_2056_D");
       R_2056_G = PathPlannerPath.fromPathFile("R_2056_G");
 
+      R_2056_A_OUT = PathPlannerPath.fromPathFile("R_2056_A_Out");
+
       C_To_Depot = PathPlannerPath.fromPathFile("Start_To_Depot");
+      C_PRELOAD = PathPlannerPath.fromPathFile("C_Preload");
 
-      L_NeutralL_Intake_Mid_Flip = R_NeutralR_Intake_Mid_Flip.mirrorPath();
-      L_NeutralLMid_To_ShootL = R_NeutralRMid_To_ShootR.mirrorPath();
-      L_NeutralL_Intake_To_Mid = R_NeutralR_Intake_To_Mid.mirrorPath();
-      L_Neutral_Mid_To_ShootL = R_Neutral_Mid_To_ShootR.mirrorPath();
-      L_NeutralL_Intake_Full_Flip = R_NeutralR_Intake_Full_Flip.mirrorPath();
-      L_NeutralL_Intake_Full = R_NeutralR_Intake_Full.mirrorPath();
-      L_StartL_To_NeutralL_Intake = R_StartR_To_NeutralR_Intake.mirrorPath();
-      L_NeutralL_Intake_Full_Midline = R_NeutralR_Intake_Full_Midline.mirrorPath();
-      L_NeutralL_Intake_Full_Midline_Flip = R_NeutralR_Intake_Full_Midline_Flip.mirrorPath();
-      L_StartL_To_NeutralL_Intake_Midline = R_StartR_To_NeutralR_Intake_Midline.mirrorPath();
-      L_StartL_To_NeutralL_Intake_Disrupt = R_StartR_To_NeutralR_Intake_Disrupt.mirrorPath();
-      L_NeutralL_Intake_Full_Disrupt = R_NeutralR_Intake_Full_Disrupt.mirrorPath();
-      L_NeutralL_Intake_Full_Disrupt_Flip = R_NeutralR_Intake_Full_Disrupt_Flip.mirrorPath();
+      R_SECOND_SHALLOW_BUMP_A = PathPlannerPath.fromPathFile("R_SecondShallowBump_A");
+      R_SECOND_SHALLOW_BUMP_B = PathPlannerPath.fromPathFile("R_SecondShallowBump_B");
+      R_SECOND_SHALLOW_BUMP_B_DEPOT = PathPlannerPath.fromPathFile("R_SecondShallowBump_B_Depot");
+      R_SECOND_SHALLOW_TRENCH = PathPlannerPath.fromPathFile("R_SecondShallowTrench");
+      R_SECOND_SHALLOW_TRENCH_DEPOT_A =
+          PathPlannerPath.fromPathFile("R_SecondShallowTrench_Depot_A");
+      R_SECOND_SHALLOW_TRENCH_DEPOT_B =
+          PathPlannerPath.fromPathFile("R_SecondShallowTrench_Depot_B");
 
-      L_NeutralLMid_To_ShootL_LT = R_NeutralRMid_To_ShootR_LT.mirrorPath();
-      L_Neutral_Mid_To_ShootL_LT = R_Neutral_Mid_To_ShootR_LT.mirrorPath();
+      L_SECOND_SHALLOW_BUMP_A = R_SECOND_SHALLOW_BUMP_A.mirrorPath();
+      L_SECOND_SHALLOW_BUMP_B = R_SECOND_SHALLOW_BUMP_B.mirrorPath();
+      L_SECOND_SHALLOW_TRENCH = R_SECOND_SHALLOW_TRENCH.mirrorPath();
+
+      R_SINGLE_SWEEP_A = PathPlannerPath.fromPathFile("R_SingleSweep_A");
+      R_SINGLE_SWEEP_B = PathPlannerPath.fromPathFile("R_SingleSweep_B");
 
       L_2SWEEP_A = R_2SWEEP_A.mirrorPath();
       L_2SWEEP_B = R_2SWEEP_B.mirrorPath();
@@ -316,12 +269,21 @@ public class Robot extends LoggedRobot {
       L_2SWEEP_F = R_2SWEEP_F.mirrorPath();
       L_2SWEEP_H = R_2SWEEP_H.mirrorPath();
 
+      L_2SWEEP_A_OUT = R_2SWEEP_A_OUT.mirrorPath();
+      L_2SWEEP_DEPOT = PathPlannerPath.fromPathFile("R_2Sweep_Depot").mirrorPath();
+
       L_2056_A = R_2056_A.mirrorPath();
       L_2056_B = R_2056_B.mirrorPath();
       L_2056_C = R_2056_C.mirrorPath();
       L_2056_D = R_2056_D.mirrorPath();
       L_2056_G = R_2056_G.mirrorPath();
 
+      L_2056_A_OUT = R_2056_A_OUT.mirrorPath();
+
+      L_SINGLE_SWEEP_A = R_SINGLE_SWEEP_A.mirrorPath();
+      L_SINGLE_SWEEP_B = R_SINGLE_SWEEP_B.mirrorPath();
+
+      L_SINGLE_SWEEP_B_DEPOT = PathPlannerPath.fromPathFile("R_SingleSweep_B_Depot").mirrorPath();
     } catch (Exception e) {
       DriverStation.reportError("Failed to load PathPlanner path - " + e.getMessage(), true);
       System.exit(1);
@@ -384,6 +346,21 @@ public class Robot extends LoggedRobot {
       chmod a+x /usr/local/natinst/etc/init.d/systemWebServer; sync
       power cycle the RIO
     */
+
+    // Reduce CPU usage to stop camera reconnect thrashing after an upset.
+    // Activate for 2 seconds, but not more often than every 15 seconds.
+    if (stabilizeCamerasTimer.isRunning()) {
+      if (!stabilizeCamerasTimer.hasElapsed(2)) {
+        RobotContainer.drive.stop();
+        Logger.recordOutput("Robot/Paused", "Yes");
+        return;
+      }
+      if (stabilizeCamerasTimer.hasElapsed(15)) {
+        stabilizeCamerasTimer.stop();
+        stabilizeCamerasTimer.reset();
+      }
+    }
+    Logger.recordOutput("Robot/Paused", "No");
 
     // Optionally switch the thread to high priority to improve loop
     // timing (see the template project documentation for details).
@@ -501,4 +478,8 @@ public class Robot extends LoggedRobot {
   /** This function is called periodically whilst in simulation. */
   @Override
   public void simulationPeriodic() {}
+
+  public static void stabilize() {
+    stabilizeCamerasTimer.start();
+  }
 }

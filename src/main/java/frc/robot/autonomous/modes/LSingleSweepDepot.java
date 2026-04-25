@@ -6,9 +6,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Robot;
 import frc.robot.commands.IntakeCommands;
 import frc.robot.commands.ShooterCommands;
@@ -17,18 +15,19 @@ import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.util.LoggedTunableNumber;
-import org.littletonrobotics.junction.Logger;
 
-public class CenterStartToDepot extends SequentialCommandGroup {
-  public CenterStartToDepot(
+public class LSingleSweepDepot extends SequentialCommandGroup {
+  PathPlannerPath firstPath;
+
+  public LSingleSweepDepot(
       Drive drive, Intake intake, Shooter shooter, LoggedTunableNumber autoStartDelay) {
-    PathPlannerPath path = Robot.C_To_Depot;
-    Pose2d startPoseBlue = path.getStartingHolonomicPose().get();
-    Pose2d startPoseRed = path.flipPath().getStartingHolonomicPose().get();
-    setName("C_Start_To_DEPOT");
+    firstPath = Robot.L_SINGLE_SWEEP_A;
+    Pose2d startPoseBlue = firstPath.getStartingHolonomicPose().get();
+    Pose2d startPoseRed = firstPath.flipPath().getStartingHolonomicPose().get();
+
+    setName("L_SINGLE_SWEEP_DEPOT");
 
     addCommands(
-        new InstantCommand(() -> Logger.recordOutput("Autonomous/autoStarted", true)),
         new InstantCommand(
             () -> {
               if (Robot.alliance == Alliance.Blue) {
@@ -39,13 +38,9 @@ public class CenterStartToDepot extends SequentialCommandGroup {
             }),
         new UtilityCommands.WaitSupplierCommand(autoStartDelay),
         IntakeCommands.intake(intake),
-        new WaitUntilCommand(() -> intake.hasExtended()),
-        new ParallelDeadlineGroup(
-            AutoBuilder.followPath(Robot.C_To_Depot),
-            new SequentialCommandGroup(
-                new WaitCommand(1), ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake))),
+        AutoBuilder.followPath(firstPath),
         new ParallelCommandGroup(
-            IntakeCommands.autoSmoosh(intake, 0, 5),
+            AutoBuilder.followPath(Robot.L_SINGLE_SWEEP_B_DEPOT),
             ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake)));
   }
 }

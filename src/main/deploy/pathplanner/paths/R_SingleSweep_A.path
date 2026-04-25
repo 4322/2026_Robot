@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.535954922894425,
-        "y": 0.6404744958481603
+        "x": 3.5,
+        "y": 0.65
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.398505338078292,
-        "y": 0.6297153024964803
+        "x": 7.325477888730385,
+        "y": 0.3151355206847371
       },
       "isLocked": false,
-      "linkedName": "R.2Sweep_D"
+      "linkedName": "R.Trench.Start.Out"
     },
     {
       "anchor": {
@@ -32,22 +32,22 @@
     },
     {
       "anchor": {
-        "x": 6.161198102016608,
-        "y": 3.029015421115065
+        "x": 6.109243937232525,
+        "y": 2.6829101283880177
       },
       "prevControl": {
-        "x": 6.171957295373665,
-        "y": 3.986583629893241
+        "x": 6.1200031305895815,
+        "y": 3.640478337166194
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "R.2Sweep_Mid"
+      "linkedName": "R_SingleSweep_A"
     }
   ],
   "rotationTargets": [
     {
       "waypointRelativePos": 0.25222024866785375,
-      "rotationDegrees": 0.0
+      "rotationDegrees": 90.0
     },
     {
       "waypointRelativePos": 0.7849117174959881,
@@ -59,11 +59,11 @@
     },
     {
       "waypointRelativePos": 1.6149377593360954,
-      "rotationDegrees": -90.0
+      "rotationDegrees": -121.96355863711871
     },
     {
       "waypointRelativePos": 2,
-      "rotationDegrees": -90.0
+      "rotationDegrees": -126.2538377374448
     },
     {
       "waypointRelativePos": 2,
@@ -96,14 +96,14 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 2.0,
-    "rotation": -90.0
+    "velocity": 1.0,
+    "rotation": -119.99999999999999
   },
   "reversed": false,
-  "folder": "R_2Sweep",
+  "folder": "R_SingleSweep",
   "idealStartingState": {
     "velocity": 0.0,
-    "rotation": 0.0
+    "rotation": 90.0
   },
   "useDefaultConstraints": false
 }

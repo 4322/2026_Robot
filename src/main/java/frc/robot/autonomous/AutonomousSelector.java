@@ -3,12 +3,21 @@ package frc.robot.autonomous;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.autonomous.modes.CenterPreload;
 import frc.robot.autonomous.modes.CenterStartToDepot;
 import frc.robot.autonomous.modes.DoNothing;
-import frc.robot.autonomous.modes.L2056;
 import frc.robot.autonomous.modes.L2Sweep;
-import frc.robot.autonomous.modes.R2056;
+import frc.robot.autonomous.modes.L2SweepDepot;
+import frc.robot.autonomous.modes.LSingleSweep;
+import frc.robot.autonomous.modes.LSingleSweepDepot;
 import frc.robot.autonomous.modes.R2Sweep;
+import frc.robot.autonomous.modes.RSingleSweep;
+import frc.robot.autonomous.modes.secondShallow.LSecondShallowBump;
+import frc.robot.autonomous.modes.secondShallow.LSecondShallowTrench;
+import frc.robot.autonomous.modes.secondShallow.RSecondShallowBump;
+import frc.robot.autonomous.modes.secondShallow.RSecondShallowBumpDepot;
+import frc.robot.autonomous.modes.secondShallow.RSecondShallowTrench;
+import frc.robot.autonomous.modes.secondShallow.RSecondShallowTrenchDepot;
 import frc.robot.commands.DriveCommands;
 import frc.robot.constants.Constants;
 import frc.robot.constants.Constants.Mode;
@@ -19,6 +28,7 @@ import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.shooter.hood.Hood;
 import frc.robot.subsystems.shooter.turret.Turret;
 import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetection;
+import frc.robot.util.LoggedTunableNumber;
 import java.util.List;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
@@ -28,24 +38,26 @@ public class AutonomousSelector {
   private LoggedDashboardChooser<SequentialCommandGroup> autonomousSelector =
       new LoggedDashboardChooser<SequentialCommandGroup>("Autonomous");
 
+  private static LoggedTunableNumber autoStartDelay =
+      new LoggedTunableNumber("Auto Start Delay", 0, true);
+
   public enum AutoName {
     DO_NOTHING,
-    C_DEPOT_OUTPOST,
-    R_FULL_SWEEP_SHOOT,
-    R_HALF_SWEEP_SHOOT,
-    R_DISRUPT_SWEEP_SHOOT,
-    R_HALF_SUPER_SWEEP_SHOOT,
-    L_HALF_SWEEP_SHOOT,
-
     R_2_SWEEP,
     L_2_SWEEP,
-    R_SWEEP_BUMP,
-    L_SWEEP_BUMP,
-    R_ROUTPOST,
-    R_2056,
-    L_2056,
+    L_2_SWEEP_DEPOT,
+    L_SINGLE_SWEEP,
+    R_SINGLE_SWEEP,
 
     C_START_TO_DEPOT,
+    C_PRELOAD,
+
+    R_SECOND_SHALLOW_BUMP,
+    R_SECOND_SHALLOW_TRENCH,
+    R_SECOND_SHALLOW_BUMP_DEPOT,
+    R_SECOND_SHALLOW_TRENCH_DEPOT,
+    L_SECOND_SHALLOW_BUMP,
+    L_SECOND_SHALLOW_TRENCH,
 
     DRIVE_WHEEL_RADIUS_CHARACTERIZATION,
     DRIVE_SIMPLE_FF_CHARACTERIZATION,
@@ -75,47 +87,83 @@ public class AutonomousSelector {
       Shooter shooter,
       VisionObjectDetection visionObjectDetection,
       Intake intake) {
-    autos =
-        List.of(
-            new Auto(AutoName.DO_NOTHING, new DoNothing(hood)),
-            new Auto(AutoName.R_2_SWEEP, new R2Sweep(drive, intake, shooter)),
-            new Auto(AutoName.L_2_SWEEP, new L2Sweep(drive, intake, shooter)),
-            new Auto(AutoName.R_2056, new R2056(drive, intake, shooter)),
-            new Auto(AutoName.L_2056, new L2056(drive, intake, shooter)),
-            new Auto(AutoName.C_START_TO_DEPOT, new CenterStartToDepot(drive, intake, shooter)),
-            new Auto(
-                AutoName.DRIVE_WHEEL_RADIUS_CHARACTERIZATION,
-                new SequentialCommandGroup(
-                    Commands.race(
-                        DriveCommands.wheelRadiusCharacterization(drive),
-                        Commands.waitSeconds(60)))),
-            new Auto(
-                AutoName.DRIVE_SIMPLE_FF_CHARACTERIZATION,
-                new SequentialCommandGroup(DriveCommands.feedforwardCharacterization(drive))),
-            new Auto(
-                AutoName.DRIVE_SYS_ID_QUASISTATIC_FORWARD,
-                new SequentialCommandGroup(
-                    Commands.race(
-                        drive.sysIdQuasistatic(SysIdRoutine.Direction.kForward),
-                        Commands.waitSeconds(6)))),
-            new Auto(
-                AutoName.DRIVE_SYS_ID_QUASISTATIC_REVERSE,
-                new SequentialCommandGroup(
-                    Commands.race(
-                        drive.sysIdQuasistatic(SysIdRoutine.Direction.kReverse),
-                        Commands.waitSeconds(6)))),
-            new Auto(
-                AutoName.DRIVE_SYS_ID_DYNAMIC_FORWARD,
-                new SequentialCommandGroup(
-                    Commands.race(
-                        drive.sysIdDynamic(SysIdRoutine.Direction.kForward),
-                        Commands.waitSeconds(6)))),
-            new Auto(
-                AutoName.DRIVE_SYS_ID_DYNAMIC_REVERSE,
-                new SequentialCommandGroup(
-                    Commands.race(
-                        drive.sysIdDynamic(SysIdRoutine.Direction.kReverse),
-                        Commands.waitSeconds(6)))));
+    if (Constants.enableCharacterizationAutos) {
+      autos =
+          List.of(
+              new Auto(AutoName.DO_NOTHING, new DoNothing(hood)),
+              new Auto(
+                  AutoName.DRIVE_WHEEL_RADIUS_CHARACTERIZATION,
+                  new SequentialCommandGroup(
+                      Commands.race(
+                          DriveCommands.wheelRadiusCharacterization(drive),
+                          Commands.waitSeconds(60)))),
+              new Auto(
+                  AutoName.DRIVE_SIMPLE_FF_CHARACTERIZATION,
+                  new SequentialCommandGroup(DriveCommands.feedforwardCharacterization(drive))),
+              new Auto(
+                  AutoName.DRIVE_SYS_ID_QUASISTATIC_FORWARD,
+                  new SequentialCommandGroup(
+                      Commands.race(
+                          drive.sysIdQuasistatic(SysIdRoutine.Direction.kForward),
+                          Commands.waitSeconds(6)))),
+              new Auto(
+                  AutoName.DRIVE_SYS_ID_QUASISTATIC_REVERSE,
+                  new SequentialCommandGroup(
+                      Commands.race(
+                          drive.sysIdQuasistatic(SysIdRoutine.Direction.kReverse),
+                          Commands.waitSeconds(6)))),
+              new Auto(
+                  AutoName.DRIVE_SYS_ID_DYNAMIC_FORWARD,
+                  new SequentialCommandGroup(
+                      Commands.race(
+                          drive.sysIdDynamic(SysIdRoutine.Direction.kForward),
+                          Commands.waitSeconds(6)))),
+              new Auto(
+                  AutoName.DRIVE_SYS_ID_DYNAMIC_REVERSE,
+                  new SequentialCommandGroup(
+                      Commands.race(
+                          drive.sysIdDynamic(SysIdRoutine.Direction.kReverse),
+                          Commands.waitSeconds(6)))));
+    } else {
+      autos =
+          List.of(
+              new Auto(AutoName.DO_NOTHING, new DoNothing(hood)),
+              new Auto(AutoName.R_2_SWEEP, new R2Sweep(drive, intake, shooter, autoStartDelay)),
+              new Auto(AutoName.L_2_SWEEP, new L2Sweep(drive, intake, shooter, autoStartDelay)),
+              new Auto(
+                  AutoName.L_2_SWEEP_DEPOT,
+                  new L2SweepDepot(drive, intake, shooter, autoStartDelay)),
+              new Auto(
+                  AutoName.C_START_TO_DEPOT,
+                  new CenterStartToDepot(drive, intake, shooter, autoStartDelay)),
+              new Auto(
+                  AutoName.C_PRELOAD, new CenterPreload(drive, intake, shooter, autoStartDelay)),
+              new Auto(
+                  AutoName.R_SECOND_SHALLOW_BUMP,
+                  new RSecondShallowBump(drive, intake, shooter, autoStartDelay)),
+              new Auto(
+                  AutoName.R_SECOND_SHALLOW_BUMP_DEPOT,
+                  new RSecondShallowBumpDepot(drive, intake, shooter, autoStartDelay)),
+              new Auto(
+                  AutoName.R_SECOND_SHALLOW_TRENCH,
+                  new RSecondShallowTrench(drive, intake, shooter, autoStartDelay)),
+              new Auto(
+                  AutoName.R_SECOND_SHALLOW_TRENCH_DEPOT,
+                  new RSecondShallowTrenchDepot(drive, intake, shooter, autoStartDelay)),
+              new Auto(
+                  AutoName.L_SECOND_SHALLOW_BUMP,
+                  new LSecondShallowBump(drive, intake, shooter, autoStartDelay)),
+              new Auto(
+                  AutoName.L_SECOND_SHALLOW_TRENCH,
+                  new LSecondShallowTrench(drive, intake, shooter, autoStartDelay)),
+              new Auto(
+                  AutoName.R_SINGLE_SWEEP,
+                  new RSingleSweep(drive, intake, shooter, autoStartDelay)),
+              new Auto(
+                  AutoName.L_SINGLE_SWEEP,
+                  new LSingleSweep(drive, intake, shooter, autoStartDelay))
+              );
+    }
 
     for (Auto nextAuto : autos) {
       if (nextAuto.name == defaultAuto) {

@@ -3,44 +3,39 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 6.161198102016608,
-        "y": 3.029015421115065
-      },
-      "prevControl": null,
-      "nextControl": {
-        "x": 6.1289205219454335,
-        "y": 2.1790391459074727
-      },
-      "isLocked": false,
-      "linkedName": "R.2Sweep_Mid"
-    },
-    {
-      "anchor": {
         "x": 2.732253922967189,
         "y": 2.566462196861627
       },
+      "prevControl": null,
+      "nextControl": {
+        "x": 0.6620684736091293,
+        "y": 2.3853209700427964
+      },
+      "isLocked": false,
+      "linkedName": "R_2SweepB_End"
+    },
+    {
+      "anchor": {
+        "x": 0.7785164051355205,
+        "y": 1.4666761768901564
+      },
       "prevControl": {
-        "x": 5.085278766310796,
-        "y": 2.5018149466192163
+        "x": 0.8043937232524964,
+        "y": 2.320627674750357
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "R_2SweepB_End"
+      "linkedName": null
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 0.2877442273534615,
-      "rotationDegrees": -135.0
-    }
-  ],
+  "rotationTargets": [],
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.2735381565906774,
-      "maxWaypointRelativePos": 0.8899900891972246,
+      "minWaypointRelativePos": 0.0,
+      "maxWaypointRelativePos": 0.31870357866307153,
       "constraints": {
-        "maxVelocity": 4.0,
+        "maxVelocity": 0.4,
         "maxAcceleration": 3.0,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
@@ -52,22 +47,22 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 4.0,
-    "maxAcceleration": 4.0,
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0.0,
+    "velocity": 0,
     "rotation": -135.0
   },
   "reversed": false,
   "folder": "R_2Sweep",
   "idealStartingState": {
-    "velocity": 2.0,
-    "rotation": -90.0
+    "velocity": 0,
+    "rotation": -135.0
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }

@@ -1,34 +1,33 @@
-package frc.robot.autonomous.modes;
+package frc.robot.autonomous.modes.secondShallow;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Robot;
 import frc.robot.commands.IntakeCommands;
 import frc.robot.commands.ShooterCommands;
 import frc.robot.commands.UtilityCommands;
+import frc.robot.constants.Constants;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.util.LoggedTunableNumber;
-import org.littletonrobotics.junction.Logger;
 
-public class CenterStartToDepot extends SequentialCommandGroup {
-  public CenterStartToDepot(
+public class RSecondShallowBump extends SequentialCommandGroup {
+  private PathPlannerPath firstPath;
+
+  public RSecondShallowBump(
       Drive drive, Intake intake, Shooter shooter, LoggedTunableNumber autoStartDelay) {
-    PathPlannerPath path = Robot.C_To_Depot;
-    Pose2d startPoseBlue = path.getStartingHolonomicPose().get();
-    Pose2d startPoseRed = path.flipPath().getStartingHolonomicPose().get();
-    setName("C_Start_To_DEPOT");
+    firstPath = Robot.R_SECOND_SHALLOW_BUMP_A;
+    Pose2d startPoseBlue = firstPath.getStartingHolonomicPose().get();
+    Pose2d startPoseRed = firstPath.flipPath().getStartingHolonomicPose().get();
 
+    setName("R_SECOND_SHALLOW_BUMP");
     addCommands(
-        new InstantCommand(() -> Logger.recordOutput("Autonomous/autoStarted", true)),
         new InstantCommand(
             () -> {
               if (Robot.alliance == Alliance.Blue) {
@@ -39,13 +38,11 @@ public class CenterStartToDepot extends SequentialCommandGroup {
             }),
         new UtilityCommands.WaitSupplierCommand(autoStartDelay),
         IntakeCommands.intake(intake),
-        new WaitUntilCommand(() -> intake.hasExtended()),
+        AutoBuilder.followPath(firstPath),
         new ParallelDeadlineGroup(
-            AutoBuilder.followPath(Robot.C_To_Depot),
-            new SequentialCommandGroup(
-                new WaitCommand(1), ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake))),
-        new ParallelCommandGroup(
-            IntakeCommands.autoSmoosh(intake, 0, 5),
-            ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake)));
+            AutoBuilder.followPath(Robot.R_SECOND_SHALLOW_BUMP_B),
+            ShooterCommands.idle(shooter, intake, 15.0, 40.0, null),
+            ShooterCommands.autoUnjam(shooter, Constants.Autonomous.unjamTimeSec)),
+        ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake));
   }
 }

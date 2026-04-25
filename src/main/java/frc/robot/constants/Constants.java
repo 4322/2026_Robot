@@ -61,6 +61,7 @@ public final class Constants {
   public static final boolean frontLeftCameraEnable = true;
   public static final boolean backRightCameraEnable = true;
   public static final boolean backLeftCameraEnable = true;
+  public static final boolean enableCharacterizationAutos = false;
   public static final boolean tuningWithLoggableNumbers =
       (driveMode == SubsystemMode.TUNING
           || firingManagerMode == SubsystemMode.TUNING
@@ -90,10 +91,9 @@ public final class Constants {
   // to avoid starvation of critical processes
   public static final boolean realTimeCommandScheduler = false;
 
-  // only enable this if testing zone areas in sim
-  // NEVER enable during practice or competition due to NT overhead from publishing
-  // all the zone information and updating robot pose constantly
-  public static final boolean debugZoneAreas = true;
+  public static final boolean debugZoneAreas = false;
+
+  public static final boolean enableElasticOdometry = false;
 
   public static class Drive {
     public static final int gyroID = 0;
@@ -233,8 +233,8 @@ public final class Constants {
     public static final double supplyCurrentLimit = 40; // set limits
     public static final InvertedValue motorInvert = InvertedValue.CounterClockwise_Positive;
     public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
-    public static final double smallToleranceDeg = 2.0;
-    public static final double largeToleranceDeg = 4.0;
+    public static final double smallToleranceDeg = 3.0;
+    public static final double largeToleranceDeg = 6.0;
     public static final double goalToleranceLockedDeg = 2.0;
     public static final double CANCoderOneRatio = 90.0 / 10.0;
     public static final double CANCoderTwoRatio = 90.0 / 19.0;
@@ -301,13 +301,6 @@ public final class Constants {
     public static final double kG = 0.24;
     public static final double motionMagicCruiseVelocity = 1.3;
     public static final double motionMagicAcceleration = 5.0;
-  }
-
-  public static class Control {
-    public static final int toggle1ButtonNumber = 1;
-    public static final int toggle4ButtonNumber = 4;
-    public static final int button3ButtonNumber = 5;
-    public static final int toggle3ButtonNumber = 3;
   }
 
   public class Rollers {

@@ -337,15 +337,17 @@ public class RobotContainer {
     // Configure the button bindings
     configureButtonBindings();
 
-    if (Constants.debugZoneAreas) {
+    if (Constants.enableElasticOdometry) {
       field = new Field2d();
       SmartDashboard.putData("Field", field);
+    }
+    if (Constants.debugZoneAreas) {
       FieldConstants.plotZones();
     }
   }
 
   public static Field2d getField() {
-    return Constants.debugZoneAreas ? field : new Field2d();
+    return Constants.enableElasticOdometry ? field : new Field2d();
   }
 
   /**
