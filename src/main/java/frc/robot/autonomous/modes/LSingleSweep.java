@@ -41,7 +41,6 @@ public class LSingleSweep extends SequentialCommandGroup {
         AutoBuilder.followPath(firstPath),
         AutoBuilder.followPath(Robot.L_SINGLE_SWEEP_B),
         ShooterCommands.autoUnjam(shooter, Constants.Autonomous.unjamTimeSec),
-        ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake)
-        );
+        ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake));
   }
 }
