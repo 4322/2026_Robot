@@ -37,7 +37,7 @@ public class RSecondShallow extends SequentialCommandGroup {
                 drive.setPose(startPoseRed);
               }
             }),
-        UtilityCommands.waitSupplier(autoStartDelay),
+        new UtilityCommands.WaitSupplierCommand(autoStartDelay),
         IntakeCommands.intake(intake),
         AutoBuilder.followPath(firstPath),
         new ParallelDeadlineGroup(
