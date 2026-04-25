@@ -9,7 +9,6 @@ import frc.robot.autonomous.modes.DoNothing;
 import frc.robot.autonomous.modes.L2Sweep;
 import frc.robot.autonomous.modes.L2SweepDepot;
 import frc.robot.autonomous.modes.LSingleSweep;
-import frc.robot.autonomous.modes.LSingleSweepDepot;
 import frc.robot.autonomous.modes.R2Sweep;
 import frc.robot.autonomous.modes.RSingleSweep;
 import frc.robot.autonomous.modes.secondShallow.LSecondShallowBump;
