@@ -40,7 +40,7 @@ public class LSecondShallowTrench extends SequentialCommandGroup {
         IntakeCommands.intake(intake),
         new ParallelDeadlineGroup(
             AutoBuilder.followPath(firstPath),
-            ShooterCommands.idle(shooter, intake, 15.0, 40.0, null),
+            ShooterCommands.idle(shooter, intake, 0.0, 40.0, null),
             ShooterCommands.autoUnjam(shooter, Constants.Autonomous.unjamTimeSec)),
         ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake));
   }

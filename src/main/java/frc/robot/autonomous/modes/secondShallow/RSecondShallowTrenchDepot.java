@@ -40,7 +40,7 @@ public class RSecondShallowTrenchDepot extends SequentialCommandGroup {
         IntakeCommands.intake(intake),
         new ParallelDeadlineGroup(
             AutoBuilder.followPath(firstPath),
-            ShooterCommands.idle(shooter, intake, 15.0, 40.0, null)),
+            ShooterCommands.idle(shooter, intake, 0.0, 40.0, null)),
         new ParallelDeadlineGroup(
             AutoBuilder.followPath(Robot.R_SECOND_SHALLOW_TRENCH_DEPOT_B),
             ShooterCommands.autoUnjam(shooter, Constants.Autonomous.unjamTimeSec / 2)

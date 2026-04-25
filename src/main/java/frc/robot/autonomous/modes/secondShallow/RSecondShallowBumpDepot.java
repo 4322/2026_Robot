@@ -45,7 +45,7 @@ public class RSecondShallowBumpDepot extends SequentialCommandGroup {
             ShooterCommands.idle(shooter, intake, 15.0, 40.0, null),
             new SequentialCommandGroup(
                 ShooterCommands.autoUnjam(shooter, Constants.Autonomous.unjamTimeSec),
-                new WaitCommand(2),
+                new WaitCommand(0.5),
                 ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake))),
         ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake));
   }

@@ -242,8 +242,8 @@ public class Robot extends LoggedRobot {
       C_To_Depot = PathPlannerPath.fromPathFile("Start_To_Depot");
       C_PRELOAD = PathPlannerPath.fromPathFile("C_Preload");
 
-      R_SECOND_SHALLOW_BUMP_A = PathPlannerPath.fromPathFile("R_SecondShallow_Bump_A");
-      R_SECOND_SHALLOW_BUMP_B = PathPlannerPath.fromPathFile("R_SecondShallow_Bump_B");
+      R_SECOND_SHALLOW_BUMP_A = PathPlannerPath.fromPathFile("R_SecondShallowBump_A");
+      R_SECOND_SHALLOW_BUMP_B = PathPlannerPath.fromPathFile("R_SecondShallowBump_B");
       R_SECOND_SHALLOW_BUMP_B_DEPOT = PathPlannerPath.fromPathFile("R_SecondShallowBump_B_Depot");
       R_SECOND_SHALLOW_TRENCH = PathPlannerPath.fromPathFile("R_SecondShallowTrench");
       R_SECOND_SHALLOW_TRENCH_DEPOT_A =
