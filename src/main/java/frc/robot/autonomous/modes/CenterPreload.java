@@ -4,8 +4,10 @@ import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Robot;
+import frc.robot.commands.IntakeCommands;
 import frc.robot.commands.ShooterCommands;
 import frc.robot.commands.UtilityCommands;
 import frc.robot.subsystems.drive.Drive;
@@ -31,6 +33,9 @@ public class CenterPreload extends SequentialCommandGroup {
               }
             }),
         new UtilityCommands.WaitSupplierCommand(autoStartDelay),
-        ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake).withTimeout(10.0));
+        IntakeCommands.intake(intake),
+        new ParallelCommandGroup(
+            ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake).withTimeout(10.0),
+            IntakeCommands.autoSmoosh(intake, 3, 0.5)));
   }
 }
