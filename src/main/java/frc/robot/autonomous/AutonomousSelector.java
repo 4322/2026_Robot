@@ -3,6 +3,7 @@ package frc.robot.autonomous;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.autonomous.modes.CenterPreload;
 import frc.robot.autonomous.modes.CenterStartToDepot;
 import frc.robot.autonomous.modes.DoNothing;
 import frc.robot.autonomous.modes.L2Sweep;
@@ -43,6 +44,7 @@ public class AutonomousSelector {
     L_2056,
 
     C_START_TO_DEPOT,
+    C_PRELOAD,
 
     R_SECOND_SHALLOW,
     L_SECOND_SHALLOW,
@@ -121,6 +123,8 @@ public class AutonomousSelector {
               new Auto(
                   AutoName.C_START_TO_DEPOT,
                   new CenterStartToDepot(drive, intake, shooter, autoStartDelay)),
+              new Auto(
+                  AutoName.C_PRELOAD, new CenterPreload(drive, intake, shooter, autoStartDelay)),
               new Auto(
                   AutoName.R_SECOND_SHALLOW,
                   new RSecondShallow(drive, intake, shooter, autoStartDelay)),
