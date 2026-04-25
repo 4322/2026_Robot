@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.732253922967189,
-        "y": 2.566462196861627
+        "x": 3.4956348074179737,
+        "y": 4.028530670470756
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.740578313253012,
-        "y": 1.9150240963855412
+        "x": 2.495634807417975,
+        "y": 4.028530670470756
       },
       "isLocked": false,
-      "linkedName": "R_2SweepB_End"
+      "linkedName": "C.LeftBump.Start"
     },
     {
       "anchor": {
-        "x": 0.642,
-        "y": 2.04
+        "x": 0.6643132530120479,
+        "y": 5.094987951807229
       },
       "prevControl": {
-        "x": 1.6915180722891563,
-        "y": 2.013373493975904
+        "x": 1.6643132530120475,
+        "y": 5.094987951807229
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "C.Depot"
     }
   ],
   "rotationTargets": [
@@ -38,7 +38,7 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 0.8,
+    "maxVelocity": 3.0,
     "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
@@ -47,13 +47,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": -135.0
   },
   "reversed": false,
   "folder": "R_2Sweep",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -135.0
+    "rotation": 90.0
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }

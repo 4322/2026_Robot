@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.5,
-        "y": 0.65
+        "x": 3.535954922894425,
+        "y": 0.6404744958481603
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.5,
-        "y": 0.6500000000000004
+        "x": 4.543903765257965,
+        "y": 0.6404744958481603
       },
       "isLocked": false,
-      "linkedName": "R.Trench.Start.Out"
+      "linkedName": "R.2Sweep_D"
     },
     {
       "anchor": {
-        "x": 8.2,
-        "y": 2.7
+        "x": 6.782054208273894,
+        "y": 0.5350927246790309
       },
       "prevControl": {
-        "x": 8.316447931526389,
-        "y": -0.0688730385164047
+        "x": 5.782054208273894,
+        "y": 0.535092724679031
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "R.2Sweep_B"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
@@ -41,14 +41,14 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 1.0,
+    "velocity": 0,
     "rotation": 90.0
   },
   "reversed": false,
   "folder": "R_2Sweep",
   "idealStartingState": {
-    "velocity": 0,
-    "rotation": 90.0
+    "velocity": 0.0,
+    "rotation": 0.0
   },
   "useDefaultConstraints": false
 }

@@ -5,6 +5,8 @@ import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
@@ -35,10 +37,14 @@ public class CenterStartToDepot extends SequentialCommandGroup {
                 drive.setPose(startPoseRed);
               }
             }),
-        new WaitCommand(autoStartDelay.get()),
         IntakeCommands.intake(intake),
         new WaitUntilCommand(() -> intake.hasExtended()),
-        AutoBuilder.followPath(path),
-        ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake));
+        new ParallelDeadlineGroup(
+            AutoBuilder.followPath(Robot.C_To_Depot),
+            new SequentialCommandGroup(
+                new WaitCommand(1), ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake))),
+        new ParallelCommandGroup(
+            IntakeCommands.autoSmoosh(intake, 0, 5),
+            ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake)));
   }
 }
