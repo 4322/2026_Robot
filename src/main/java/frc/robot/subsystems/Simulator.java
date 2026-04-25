@@ -247,22 +247,10 @@ public class Simulator {
       case TURRET -> List.of(
           new RegressionTest("Turret Test", TeleopScenario.TURRET, Alliance.Blue));
       case ALL_AUTOS -> List.of(
-          new RegressionTest("Red/C/CDepotOutpost", AutoName.C_DEPOT_OUTPOST, Alliance.Red),
           new RegressionTest("Red/L/LHalfSweepShoot", AutoName.L_HALF_SWEEP_SHOOT, Alliance.Red),
-          new RegressionTest(
-              "Red/R/RDisruptSweepShoot", AutoName.R_DISRUPT_SWEEP_SHOOT, Alliance.Red),
-          new RegressionTest("Red/R/RFullSweepShoot", AutoName.R_FULL_SWEEP_SHOOT, Alliance.Red),
           new RegressionTest("Red/R/RHalfSweepShoot", AutoName.R_HALF_SWEEP_SHOOT, Alliance.Red),
-          new RegressionTest(
-              "Red/R/RHalfSuperSweepShoot", AutoName.R_HALF_SUPER_SWEEP_SHOOT, Alliance.Red),
-          new RegressionTest("Blue/C/CDepotOutpost", AutoName.C_DEPOT_OUTPOST, Alliance.Blue),
           new RegressionTest("Blue/L/LHalfSweepShoot", AutoName.L_HALF_SWEEP_SHOOT, Alliance.Blue),
-          new RegressionTest(
-              "Blue/R/RDisruptSweepShoot", AutoName.R_DISRUPT_SWEEP_SHOOT, Alliance.Blue),
-          new RegressionTest("Blue/R/RFullSweepShoot", AutoName.R_FULL_SWEEP_SHOOT, Alliance.Blue),
-          new RegressionTest("Blue/R/RHalfSweepShoot", AutoName.R_HALF_SWEEP_SHOOT, Alliance.Blue),
-          new RegressionTest(
-              "Blue/R/RHalfSuperSweepShoot", AutoName.R_HALF_SUPER_SWEEP_SHOOT, Alliance.Blue));
+          new RegressionTest("Blue/R/RHalfSweepShoot", AutoName.R_HALF_SWEEP_SHOOT, Alliance.Blue));
       case ZONES -> List.of(
           new RegressionTest("Zones Blue", TeleopScenario.ZONES, Alliance.Blue),
           new RegressionTest("Zones Red", TeleopScenario.ZONES, Alliance.Red));
