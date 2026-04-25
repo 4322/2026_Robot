@@ -240,12 +240,6 @@ public class Robot extends LoggedRobot {
 
       C_To_Depot = PathPlannerPath.fromPathFile("Start_To_Depot");
 
-      R_SECOND_DEEP_A = PathPlannerPath.fromPathFile("R_SecondDeep_A");
-      R_SECOND_DEEP_B_SCORE = PathPlannerPath.fromPathFile("R_SecondDeep_B_Score");
-      R_SECOND_DEEP_B_PASS = PathPlannerPath.fromPathFile("R_SecondDeep_B_Pass");
-      R_SECOND_DEEP_C = PathPlannerPath.fromPathFile("R_SecondDeep_C");
-      R_SECOND_DEEP_A_OUT = PathPlannerPath.fromPathFile("R_SecondDeep_A_Out");
-
       R_SECOND_SHALLOW_A = PathPlannerPath.fromPathFile("R_SecondShallow_A");
       R_SECOND_SHALLOW_B = PathPlannerPath.fromPathFile("R_SecondShallow_B");
 
@@ -266,12 +260,6 @@ public class Robot extends LoggedRobot {
       L_2056_G = R_2056_G.mirrorPath();
 
       L_2056_A_OUT = R_2056_A_OUT.mirrorPath();
-
-      L_SECOND_DEEP_A = R_SECOND_DEEP_A.mirrorPath();
-      L_SECOND_DEEP_B_SCORE = R_SECOND_DEEP_B_SCORE.mirrorPath();
-      L_SECOND_DEEP_B_PASS = R_SECOND_DEEP_B_PASS.mirrorPath();
-      L_SECOND_DEEP_C = R_SECOND_DEEP_C.mirrorPath();
-      L_SECOND_DEEP_A_OUT = R_SECOND_DEEP_A_OUT.mirrorPath();
 
       L_SECOND_SHALLOW_A = R_SECOND_SHALLOW_A.mirrorPath();
       L_SECOND_SHALLOW_B = R_SECOND_SHALLOW_B.mirrorPath();
