@@ -7,13 +7,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "R_SecondShallow_A"
+            "pathName": "R_SecondShallowBump_A"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "R_SecondShallow_B"
+            "pathName": "R_SecondShallowBump_B"
           }
         }
       ]

@@ -7,11 +7,15 @@ import frc.robot.autonomous.modes.CenterPreload;
 import frc.robot.autonomous.modes.CenterStartToDepot;
 import frc.robot.autonomous.modes.DoNothing;
 import frc.robot.autonomous.modes.L2Sweep;
-import frc.robot.autonomous.modes.LSecondShallow;
 import frc.robot.autonomous.modes.LSingleSweep;
 import frc.robot.autonomous.modes.R2Sweep;
-import frc.robot.autonomous.modes.RSecondShallow;
 import frc.robot.autonomous.modes.RSingleSweep;
+import frc.robot.autonomous.modes.secondShallow.LSecondShallowBump;
+import frc.robot.autonomous.modes.secondShallow.LSecondShallowTrench;
+import frc.robot.autonomous.modes.secondShallow.RSecondShallowBump;
+import frc.robot.autonomous.modes.secondShallow.RSecondShallowBumpDepot;
+import frc.robot.autonomous.modes.secondShallow.RSecondShallowTrench;
+import frc.robot.autonomous.modes.secondShallow.RSecondShallowTrenchDepot;
 import frc.robot.commands.DriveCommands;
 import frc.robot.constants.Constants;
 import frc.robot.constants.Constants.Mode;
@@ -45,8 +49,12 @@ public class AutonomousSelector {
     C_START_TO_DEPOT,
     C_PRELOAD,
 
-    R_SECOND_SHALLOW,
-    L_SECOND_SHALLOW,
+    R_SECOND_SHALLOW_BUMP,
+    R_SECOND_SHALLOW_TRENCH,
+    R_SECOND_SHALLOW_BUMP_DEPOT,
+    R_SECOND_SHALLOW_TRENCH_DEPOT,
+    L_SECOND_SHALLOW_BUMP,
+    L_SECOND_SHALLOW_TRENCH,
 
     DRIVE_WHEEL_RADIUS_CHARACTERIZATION,
     DRIVE_SIMPLE_FF_CHARACTERIZATION,
@@ -125,11 +133,23 @@ public class AutonomousSelector {
               new Auto(
                   AutoName.C_PRELOAD, new CenterPreload(drive, intake, shooter, autoStartDelay)),
               new Auto(
-                  AutoName.R_SECOND_SHALLOW,
-                  new RSecondShallow(drive, intake, shooter, autoStartDelay)),
+                  AutoName.R_SECOND_SHALLOW_BUMP,
+                  new RSecondShallowBump(drive, intake, shooter, autoStartDelay)),
               new Auto(
-                  AutoName.L_SECOND_SHALLOW,
-                  new LSecondShallow(drive, intake, shooter, autoStartDelay)),
+                  AutoName.R_SECOND_SHALLOW_BUMP_DEPOT,
+                  new RSecondShallowBumpDepot(drive, intake, shooter, autoStartDelay)),
+              new Auto(
+                  AutoName.R_SECOND_SHALLOW_TRENCH,
+                  new RSecondShallowTrench(drive, intake, shooter, autoStartDelay)),
+              new Auto(
+                  AutoName.R_SECOND_SHALLOW_TRENCH_DEPOT,
+                  new RSecondShallowTrenchDepot(drive, intake, shooter, autoStartDelay)),
+              new Auto(
+                  AutoName.L_SECOND_SHALLOW_BUMP,
+                  new LSecondShallowBump(drive, intake, shooter, autoStartDelay)),
+              new Auto(
+                  AutoName.L_SECOND_SHALLOW_TRENCH,
+                  new LSecondShallowTrench(drive, intake, shooter, autoStartDelay)),
               new Auto(
                   AutoName.R_SINGLE_SWEEP,
                   new RSingleSweep(drive, intake, shooter, autoStartDelay)),

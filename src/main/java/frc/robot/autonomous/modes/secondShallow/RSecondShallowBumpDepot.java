@@ -1,4 +1,4 @@
-package frc.robot.autonomous.modes;
+package frc.robot.autonomous.modes.secondShallow;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathPlannerPath;
@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Robot;
 import frc.robot.commands.IntakeCommands;
 import frc.robot.commands.ShooterCommands;
@@ -17,16 +18,16 @@ import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.util.LoggedTunableNumber;
 
-public class LSecondShallow extends SequentialCommandGroup {
+public class RSecondShallowBumpDepot extends SequentialCommandGroup {
   private PathPlannerPath firstPath;
 
-  public LSecondShallow(
+  public RSecondShallowBumpDepot(
       Drive drive, Intake intake, Shooter shooter, LoggedTunableNumber autoStartDelay) {
-    firstPath = Robot.L_SECOND_SHALLOW_A;
+    firstPath = Robot.R_SECOND_SHALLOW_BUMP_A;
     Pose2d startPoseBlue = firstPath.getStartingHolonomicPose().get();
     Pose2d startPoseRed = firstPath.flipPath().getStartingHolonomicPose().get();
 
-    setName("L_SECOND_SHALLOW");
+    setName("R_SECOND_SHALLOW_BUMP_DEPOT");
     addCommands(
         new InstantCommand(
             () -> {
@@ -40,9 +41,12 @@ public class LSecondShallow extends SequentialCommandGroup {
         IntakeCommands.intake(intake),
         AutoBuilder.followPath(firstPath),
         new ParallelDeadlineGroup(
-            AutoBuilder.followPath(Robot.L_SECOND_SHALLOW_B),
+            AutoBuilder.followPath(Robot.R_SECOND_SHALLOW_BUMP_B_DEPOT),
             ShooterCommands.idle(shooter, intake, 15.0, 40.0, null),
-            ShooterCommands.autoUnjam(shooter, Constants.Autonomous.unjamTimeSec)),
+            new SequentialCommandGroup(
+                ShooterCommands.autoUnjam(shooter, Constants.Autonomous.unjamTimeSec),
+                new WaitCommand(2),
+                ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake))),
         ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake));
   }
 }
