@@ -344,7 +344,7 @@ public class RobotContainer {
   }
 
   public static Field2d getField() {
-    return Constants.debugZoneAreas ? field : new Field2d();
+    return Constants.enableElasticOdometry ? field : new Field2d();
   }
 
   /**
