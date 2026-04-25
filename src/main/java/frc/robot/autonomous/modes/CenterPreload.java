@@ -31,6 +31,6 @@ public class CenterPreload extends SequentialCommandGroup {
               }
             }),
         new UtilityCommands.WaitSupplierCommand(autoStartDelay),
-        ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake));
+        ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake).withTimeout(10.0));
   }
 }
