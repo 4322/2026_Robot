@@ -91,10 +91,9 @@ public final class Constants {
   // to avoid starvation of critical processes
   public static final boolean realTimeCommandScheduler = false;
 
-  // only enable this if testing zone areas in sim
-  // NEVER enable during practice or competition due to NT overhead from publishing
-  // all the zone information and updating robot pose constantly
-  public static final boolean debugZoneAreas = true;
+  public static final boolean debugZoneAreas = false;
+
+  public static final boolean enableElasticOdometry = false;
 
   public static class Drive {
     public static final int gyroID = 0;
