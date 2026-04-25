@@ -7,13 +7,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "R_2Sweep_A"
+            "pathName": "R_SingleSweep_A"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "R_2Sweep_B"
+            "pathName": "R_SingleSweep_B"
           }
         }
       ]
