@@ -4,8 +4,6 @@
   "holonomicMode": true,
   "pathFolders": [
     "C_Depot",
-    "C_DepotOutpost",
-    "LT",
     "R_2056",
     "R_2Sweep",
     "R_Half_SuperSweep",
