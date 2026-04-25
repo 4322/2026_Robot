@@ -96,6 +96,8 @@ public class Robot extends LoggedRobot {
   public static PathPlannerPath L_SINGLE_SWEEP_A;
   public static PathPlannerPath L_SINGLE_SWEEP_B;
 
+  public static PathPlannerPath L_SINGLE_SWEEP_B_DEPOT;
+
   public Robot() {
     Logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME); // Set a metadata value
     Logger.recordMetadata("BuildDate", BuildConstants.BUILD_DATE);
@@ -266,7 +268,7 @@ public class Robot extends LoggedRobot {
       L_2SWEEP_H = R_2SWEEP_H.mirrorPath();
 
       L_2SWEEP_A_OUT = R_2SWEEP_A_OUT.mirrorPath();
-      L_2SWEEP_DEPOT = PathPlannerPath.fromPathFile("L_2Sweep_Depot").mirrorPath();
+      L_2SWEEP_DEPOT = PathPlannerPath.fromPathFile("R_2Sweep_Depot").mirrorPath();
 
       L_2056_A = R_2056_A.mirrorPath();
       L_2056_B = R_2056_B.mirrorPath();
@@ -278,6 +280,8 @@ public class Robot extends LoggedRobot {
 
       L_SINGLE_SWEEP_A = R_SINGLE_SWEEP_A.mirrorPath();
       L_SINGLE_SWEEP_B = R_SINGLE_SWEEP_B.mirrorPath();
+
+      L_SINGLE_SWEEP_B_DEPOT = PathPlannerPath.fromPathFile("R_SingleSweep_B_Depot").mirrorPath();
     } catch (Exception e) {
       DriverStation.reportError("Failed to load PathPlanner path - " + e.getMessage(), true);
       System.exit(1);
