@@ -32,12 +32,11 @@ public class AutonomousSelector {
   private LoggedDashboardChooser<SequentialCommandGroup> autonomousSelector =
       new LoggedDashboardChooser<SequentialCommandGroup>("Autonomous");
 
-  private static LoggedTunableNumber autoStartDelay = new LoggedTunableNumber("Auto Start Delay");
+  private static LoggedTunableNumber autoStartDelay =
+      new LoggedTunableNumber("Auto Start Delay", 0, true);
 
   public enum AutoName {
     DO_NOTHING,
-    R_HALF_SWEEP_SHOOT,
-    L_HALF_SWEEP_SHOOT,
     R_2_SWEEP,
     L_2_SWEEP,
     L_2_DEPOT,
