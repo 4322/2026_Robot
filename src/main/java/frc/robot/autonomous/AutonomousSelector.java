@@ -39,7 +39,6 @@ public class AutonomousSelector {
     DO_NOTHING,
     R_2_SWEEP,
     L_2_SWEEP,
-    L_2_DEPOT,
     L_SINGLE_SWEEP,
     R_SINGLE_SWEEP,
 
