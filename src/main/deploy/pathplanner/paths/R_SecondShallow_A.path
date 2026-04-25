@@ -21,7 +21,7 @@
       },
       "prevControl": {
         "x": 7.744256925986199,
-        "y": 0.6702487685765758
+        "y": 0.6702487685765757
       },
       "nextControl": {
         "x": 7.789180722891565,
@@ -86,7 +86,7 @@
     "rotation": -135.0
   },
   "reversed": false,
-  "folder": null,
+  "folder": "R_SecondShallow",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 90.0

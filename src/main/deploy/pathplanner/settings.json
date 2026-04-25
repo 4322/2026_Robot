@@ -4,15 +4,9 @@
   "holonomicMode": true,
   "pathFolders": [
     "C_Depot",
+    "R_SecondShallow",
     "R_2056",
-    "R_2Sweep",
-    "R_Half_SuperSweep",
-    "R_NeutralGeneral",
-    "R_NeutralRMid",
-    "R_NeutralR_Disrupt",
-    "R_NeutralR_Full",
-    "R_NeutralR_Midline",
-    "R_ROutpost"
+    "R_2Sweep"
   ],
   "autoFolders": [
     "C",
