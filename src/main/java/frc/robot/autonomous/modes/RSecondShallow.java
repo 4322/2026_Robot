@@ -8,10 +8,10 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Robot;
 import frc.robot.commands.IntakeCommands;
 import frc.robot.commands.ShooterCommands;
+import frc.robot.commands.UtilityCommands;
 import frc.robot.constants.Constants;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.intake.Intake;
@@ -37,7 +37,7 @@ public class RSecondShallow extends SequentialCommandGroup {
                 drive.setPose(startPoseRed);
               }
             }),
-        new WaitCommand(autoStartDelay.get()),
+        UtilityCommands.waitSupplier(autoStartDelay),
         IntakeCommands.intake(intake),
         AutoBuilder.followPath(firstPath),
         new ParallelDeadlineGroup(
