@@ -36,7 +36,8 @@ public class AutonomousSelector {
 
   public enum AutoName {
     DO_NOTHING,
-
+    R_HALF_SWEEP_SHOOT,
+    L_HALF_SWEEP_SHOOT,
     R_2_SWEEP,
     L_2_SWEEP,
     L_2_DEPOT,
@@ -120,8 +121,6 @@ public class AutonomousSelector {
               new Auto(AutoName.DO_NOTHING, new DoNothing(hood)),
               new Auto(AutoName.R_2_SWEEP, new R2Sweep(drive, intake, shooter)),
               new Auto(AutoName.L_2_SWEEP, new L2Sweep(drive, intake, shooter)),
-              new Auto(AutoName.R_2056, new R2056(drive, intake, shooter)),
-              new Auto(AutoName.L_2056, new L2056(drive, intake, shooter)),
               new Auto(AutoName.C_START_TO_DEPOT, new CenterStartToDepot(drive, intake, shooter)));
     }
 
