@@ -4,12 +4,12 @@
     {
       "anchor": {
         "x": 5.772838801711839,
-        "y": 5.684679029957205
+        "y": 5.490599144079885
       },
       "prevControl": null,
       "nextControl": {
         "x": 0.8561483594864479,
-        "y": 5.619985734664764
+        "y": 5.425905848787445
       },
       "isLocked": false,
       "linkedName": "R.SecondShallow_A"
@@ -31,7 +31,7 @@
   "rotationTargets": [
     {
       "waypointRelativePos": 0.2564315352697092,
-      "rotationDegrees": -135.0
+      "rotationDegrees": 135.0
     }
   ],
   "constraintZones": [],
@@ -53,7 +53,7 @@
   "folder": "R_SecondShallow",
   "idealStartingState": {
     "velocity": 4.0,
-    "rotation": -135.0
+    "rotation": 135.0
   },
   "useDefaultConstraints": true
 }
