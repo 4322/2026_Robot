@@ -7,7 +7,9 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Robot;
 import frc.robot.constants.Constants;
 import frc.robot.constants.FieldConstants;
 import frc.robot.subsystems.drive.Drive;
@@ -62,9 +64,22 @@ public class VisionGlobalPose extends SubsystemBase {
 
   @Override
   public void periodic() {
+    int unstableCameras = 0;
     for (int i = 0; i < io.length; i++) {
       io[i].updateInputs(inputs[i]);
       Logger.processInputs("Vision/Camera" + Integer.toString(i), inputs[i]);
+      if (inputs[i].unstable) {
+        unstableCameras++;
+      }
+    }
+
+    if (unstableCameras >= 2) {
+      SmartDashboard.putString("Vision/Vision Stable", Constants.NetworkTables.red.toHexString());
+      Logger.recordOutput("Vision/Stable", "No");
+      Robot.stabilize();
+    } else {
+      SmartDashboard.putString("Vision/Vision Stable", Constants.NetworkTables.green.toHexString());
+      Logger.recordOutput("Vision/Stable", "Yes");
     }
 
     // Initialize logging values
