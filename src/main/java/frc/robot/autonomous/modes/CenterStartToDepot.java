@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Robot;
 import frc.robot.commands.IntakeCommands;
 import frc.robot.commands.ShooterCommands;
+import frc.robot.commands.UtilityCommands;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.shooter.Shooter;
@@ -37,7 +38,7 @@ public class CenterStartToDepot extends SequentialCommandGroup {
                 drive.setPose(startPoseRed);
               }
             }),
-        new WaitCommand(autoStartDelay.get()),
+        new UtilityCommands.WaitSupplierCommand(autoStartDelay),
         IntakeCommands.intake(intake),
         new WaitUntilCommand(() -> intake.hasExtended()),
         new ParallelDeadlineGroup(
