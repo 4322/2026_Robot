@@ -61,6 +61,7 @@ public final class Constants {
   public static final boolean frontLeftCameraEnable = true;
   public static final boolean backRightCameraEnable = true;
   public static final boolean backLeftCameraEnable = true;
+  public static final boolean enableCharacterizationAutos = false;
   public static final boolean tuningWithLoggableNumbers =
       (driveMode == SubsystemMode.TUNING
           || firingManagerMode == SubsystemMode.TUNING
@@ -197,8 +198,8 @@ public final class Constants {
     public static final double supplyCurrentLimit = 40; // set limits
     public static final InvertedValue motorInvert = InvertedValue.CounterClockwise_Positive;
     public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
-    public static final double smallToleranceDeg = 2.0;
-    public static final double largeToleranceDeg = 4.0;
+    public static final double smallToleranceDeg = 3.0;
+    public static final double largeToleranceDeg = 6.0;
     public static final double goalToleranceLockedDeg = 2.0;
     public static final double CANCoderOneRatio = 90.0 / 10.0;
     public static final double CANCoderTwoRatio = 90.0 / 19.0;

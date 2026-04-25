@@ -6,13 +6,13 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Robot;
 import frc.robot.commands.IntakeCommands;
 import frc.robot.commands.ShooterCommands;
-import frc.robot.constants.Constants;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.shooter.Shooter;
@@ -35,25 +35,14 @@ public class CenterStartToDepot extends SequentialCommandGroup {
                 drive.setPose(startPoseRed);
               }
             }),
-        new ParallelCommandGroup(
+        IntakeCommands.intake(intake),
+        new WaitUntilCommand(() -> intake.hasExtended()),
+        new ParallelDeadlineGroup(
+            AutoBuilder.followPath(Robot.C_To_Depot),
             new SequentialCommandGroup(
-                IntakeCommands.intake(intake),
-                new WaitUntilCommand(() -> intake.hasExtended()),
-                new ParallelCommandGroup(
-                        ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake),
-                        IntakeCommands.autoSmoosh(
-                            intake,
-                            Constants.Autonomous.twoSweepSmooshDelayFirstPass,
-                            Constants.Autonomous.twoSweepShootTimeFirstPass))
-                    .withTimeout(5),
-                new WaitCommand(3),
-                new ParallelCommandGroup(
-                    AutoBuilder.followPath(Robot.C_To_Depot),
-                    ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake)),
-                new WaitCommand(3),
-                IntakeCommands.autoSmoosh(
-                    intake,
-                    Constants.Autonomous.twoSweepSmooshDelayFirstPass,
-                    Constants.Autonomous.twoSweepShootTimeFirstPass))));
+                new WaitCommand(1), ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake))),
+        new ParallelCommandGroup(
+            IntakeCommands.autoSmoosh(intake, 0, 5),
+            ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake)));
   }
 }

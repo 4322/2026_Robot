@@ -18,6 +18,7 @@ public class LoggedTunableNumber implements DoubleSupplier {
   private final String key;
   private boolean hasDefault = false;
   private double defaultValue;
+  private boolean forceDisplay = false;
   private LoggedNetworkNumber dashboardNumber;
   private Map<Integer, Double> lastHasChangedValues = new HashMap<>();
 
@@ -41,6 +42,12 @@ public class LoggedTunableNumber implements DoubleSupplier {
     initDefault(defaultValue);
   }
 
+  public LoggedTunableNumber(String dashboardKey, double defaultValue, boolean forceDisplay) {
+    this(dashboardKey);
+    this.forceDisplay = forceDisplay;
+    initDefault(defaultValue);
+  }
+
   /**
    * Set the default value of the number. The default value can only be set once.
    *
@@ -50,7 +57,7 @@ public class LoggedTunableNumber implements DoubleSupplier {
     if (!hasDefault) {
       hasDefault = true;
       this.defaultValue = defaultValue;
-      if (Constants.tuningWithLoggableNumbers) {
+      if (Constants.tuningWithLoggableNumbers || forceDisplay) {
         dashboardNumber = new LoggedNetworkNumber(key, defaultValue);
       }
     }
@@ -65,7 +72,9 @@ public class LoggedTunableNumber implements DoubleSupplier {
     if (!hasDefault) {
       return 0.0;
     } else {
-      return Constants.tuningWithLoggableNumbers ? dashboardNumber.get() : defaultValue;
+      return Constants.tuningWithLoggableNumbers || forceDisplay
+          ? dashboardNumber.get()
+          : defaultValue;
     }
   }
 
