@@ -5,7 +5,6 @@ import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Robot;
 import frc.robot.commands.IntakeCommands;
@@ -36,8 +35,6 @@ public class CenterPreload extends SequentialCommandGroup {
         new UtilityCommands.WaitSupplierCommand(autoStartDelay),
         IntakeCommands.intake(intake),
         AutoBuilder.followPath(Robot.C_PRELOAD),
-        new ParallelCommandGroup(
-            ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake).withTimeout(10.0),
-            IntakeCommands.autoSmoosh(intake, 3, 0.5)));
+        ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake).withTimeout(10.0));
   }
 }
