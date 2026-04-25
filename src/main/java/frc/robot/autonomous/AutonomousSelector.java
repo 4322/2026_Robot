@@ -119,9 +119,11 @@ public class AutonomousSelector {
       autos =
           List.of(
               new Auto(AutoName.DO_NOTHING, new DoNothing(hood)),
-              new Auto(AutoName.R_2_SWEEP, new R2Sweep(drive, intake, shooter)),
-              new Auto(AutoName.L_2_SWEEP, new L2Sweep(drive, intake, shooter)),
-              new Auto(AutoName.C_START_TO_DEPOT, new CenterStartToDepot(drive, intake, shooter)));
+              new Auto(AutoName.R_2_SWEEP, new R2Sweep(drive, intake, shooter, autoStartDelay)),
+              new Auto(AutoName.L_2_SWEEP, new L2Sweep(drive, intake, shooter, autoStartDelay)),
+              new Auto(AutoName.C_START_TO_DEPOT, new CenterStartToDepot(drive, intake, shooter, autoStartDelay)),
+              new Auto(AutoName.R_SECOND_SHALLOW, new RSecondShallow(drive, intake, shooter, autoStartDelay)),
+              new Auto(AutoName.L_SECOND_SHALLOW, new LSecondShallow(drive, intake, shooter, autoStartDelay)));
     }
 
     for (Auto nextAuto : autos) {
