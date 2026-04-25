@@ -10,6 +10,7 @@ import frc.robot.Robot;
 import frc.robot.commands.IntakeCommands;
 import frc.robot.commands.ShooterCommands;
 import frc.robot.commands.UtilityCommands;
+import frc.robot.constants.Constants;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.shooter.Shooter;
@@ -39,8 +40,7 @@ public class RSingleSweep extends SequentialCommandGroup {
         IntakeCommands.intake(intake),
         AutoBuilder.followPath(firstPath),
         AutoBuilder.followPath(Robot.R_SINGLE_SWEEP_B),
-        new SequentialCommandGroup(
-            ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake),
-            IntakeCommands.autoSmoosh(intake, 2, 5)));
+        ShooterCommands.autoUnjam(shooter, Constants.Autonomous.unjamTimeSec),
+        ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake));
   }
 }

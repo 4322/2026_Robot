@@ -44,8 +44,6 @@ public class RSecondShallow extends SequentialCommandGroup {
             AutoBuilder.followPath(Robot.R_SECOND_SHALLOW_B),
             ShooterCommands.idle(shooter, intake, 15.0, 40.0, null),
             ShooterCommands.autoUnjam(shooter, Constants.Autonomous.unjamTimeSec)),
-        new ParallelCommandGroup(
-            ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake),
-            IntakeCommands.autoSmoosh(intake, 2, 5)));
+        ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake));
   }
 }
