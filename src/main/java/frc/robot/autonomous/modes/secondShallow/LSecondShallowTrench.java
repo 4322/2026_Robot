@@ -5,8 +5,10 @@ import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Robot;
 import frc.robot.commands.IntakeCommands;
 import frc.robot.commands.ShooterCommands;
@@ -36,8 +38,11 @@ public class LSecondShallowTrench extends SequentialCommandGroup {
                 drive.setPose(startPoseRed);
               }
             }),
-        new UtilityCommands.WaitSupplierCommand(autoStartDelay),
-        IntakeCommands.intake(intake),
+        new ParallelDeadlineGroup(
+            new UtilityCommands.WaitSupplierCommand(autoStartDelay),
+            ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake)),
+        new ParallelCommandGroup(
+            IntakeCommands.intake(intake), new WaitUntilCommand(() -> shooter.isHoodLowered())),
         new ParallelDeadlineGroup(
             AutoBuilder.followPath(firstPath),
             ShooterCommands.idle(shooter, intake, 0.0, 40.0, null),

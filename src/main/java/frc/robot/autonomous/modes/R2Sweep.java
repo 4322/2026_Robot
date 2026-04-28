@@ -5,6 +5,7 @@ import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
@@ -37,8 +38,11 @@ public class R2Sweep extends SequentialCommandGroup {
                 drive.setPose(startPoseRed);
               }
             }),
-        new UtilityCommands.WaitSupplierCommand(autoStartDelay),
-        IntakeCommands.intake(intake),
+        new ParallelDeadlineGroup(
+            new UtilityCommands.WaitSupplierCommand(autoStartDelay),
+            ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake)),
+        new ParallelCommandGroup(
+            IntakeCommands.intake(intake), new WaitUntilCommand(() -> shooter.isHoodLowered())),
         AutoBuilder.followPath(firstPath),
         new ParallelDeadlineGroup(
             AutoBuilder.followPath(Robot.R_2SWEEP_B),

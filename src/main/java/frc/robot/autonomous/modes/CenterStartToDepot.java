@@ -38,8 +38,11 @@ public class CenterStartToDepot extends SequentialCommandGroup {
                 drive.setPose(startPoseRed);
               }
             }),
-        new UtilityCommands.WaitSupplierCommand(autoStartDelay),
-        IntakeCommands.intake(intake),
+        new ParallelDeadlineGroup(
+            new UtilityCommands.WaitSupplierCommand(autoStartDelay),
+            ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake)),
+        new ParallelCommandGroup(
+            IntakeCommands.intake(intake), new WaitUntilCommand(() -> shooter.isHoodLowered())),
         new WaitUntilCommand(() -> intake.hasExtended()),
         new ParallelDeadlineGroup(
             AutoBuilder.followPath(Robot.C_To_Depot),
