@@ -4,19 +4,20 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.constants.Constants;
-import frc.robot.subsystems.intake.rollers.Rollers;
+import frc.robot.subsystems.shooter.flywheel.Flywheel;
+import frc.robot.subsystems.shooter.spindexer.Spindexer;
 
-public class TesterRollers extends Command {
-  private Rollers rollers;
-  private String testName;
+public class TesterSpindexer extends Command {
+  private Spindexer spindexer;
+  private String test;
   private Color leaderColorStatus;
   private Color followerColorStatus;
   private String leaderStatus;
   private String followerStatus;
 
-  public TesterRollers(Rollers rollers, String testName) {
-    this.rollers = rollers;
-    this.testName = testName;
+  public TesterSpindexer(Spindexer spindexer, String testName) {
+    this.spindexer = spindexer;
+    this.test = testName;
   }
 
   @Override
@@ -27,39 +28,37 @@ public class TesterRollers extends Command {
     followerStatus = "";
     setColorStatus();
     setTextStatus();
-    SmartDashboard.putString("Tester/Rollers", testName);
+    SmartDashboard.putString("Tester/Flywheel", test);
   }
 
   @Override
   public void execute() {
-    followerStatus = " ";
-    leaderStatus = " ";
-    if (!rollers.leaderRollerConnected()) {
+    if (!spindexer.leaderConnected()) {
       leaderColorStatus = Constants.NetworkTables.red;
       leaderStatus = "Not Connected";
-    } else if (!rollers.leaderRollerAtGoal()) {
+    } else if (!spindexer.leaderAtGoal()) {
       leaderColorStatus = Constants.NetworkTables.orange;
       leaderStatus =
           "Slow by"
               + String.format(
                   "%.1f",
-                  100 - rollers.getLeaderRollerSpeed() / rollers.getRequestedSetpoint() * 100)
+                  100 - spindexer.getLeaderSpeed() / spindexer.getRequestedSetpoint() * 100)
               + "%";
     } else {
       leaderColorStatus = Constants.NetworkTables.green;
       leaderStatus = "Up To Speed";
     }
 
-    if (!rollers.followerRollerConnected()) {
+    if (!spindexer.followerConnected()) {
       followerColorStatus = Constants.NetworkTables.red;
       followerStatus = "Not Connected";
-    } else if (!rollers.followerRollerAtGoal()) {
+    } else if (!spindexer.followerAtGoal()) {
       followerColorStatus = Constants.NetworkTables.orange;
       followerStatus =
           "Slow by"
               + String.format(
                   "%.1f",
-                  100 - rollers.getFollowerRollerSpeed() / rollers.getRequestedSetpoint() * 100)
+                  100 - spindexer.getFollowerSpeed() / spindexer.getRequestedSetpoint() * 100)
               + "%";
       ;
     } else {
@@ -67,36 +66,36 @@ public class TesterRollers extends Command {
       followerStatus = "Up To Speed";
     }
 
-    if (!rollers.rollersSpinningTogether()) {
-      leaderStatus = "Rollers Not Spinning Together";
-      followerStatus = "Rollers Not Spinning Together";
+    if (!spindexer.spinningTogether()) {
+      leaderStatus = "Not Spinning Together";
+      followerStatus = "Not Spinning Together";
       leaderStatus +=
           "\nLeader at "
-              + String.format("%.1f", rollers.getLeaderRollerSpeed())
+              + String.format("%.1f", spindexer.getLeaderSpeed())
               + " RPS\nFollower at "
-              + String.format("%.1f", rollers.getFollowerRollerSpeed())
+              + String.format("%.1f", spindexer.getFollowerSpeed())
               + " RPS";
       followerStatus +=
           "\nLeader at "
-              + String.format("%.1f", rollers.getLeaderRollerSpeed())
+              + String.format("%.1f", spindexer.getLeaderSpeed())
               + " RPS\nFollower at "
-              + String.format("%.1f", rollers.getFollowerRollerSpeed())
+              + String.format("%.1f", spindexer.getFollowerSpeed())
               + " RPS";
       leaderStatus +=
           "\nDiffrence of "
               + String.format(
-                  "%.1f", rollers.getLeaderRollerSpeed() - rollers.getFollowerRollerSpeed())
+                  "%.1f", spindexer.getLeaderSpeed() - spindexer.getFollowerSpeed())
               + " RPS";
       followerStatus +=
-          "Diffrence of "
+          "\nDiffrence of "
               + String.format(
-                  "%.1f", rollers.getFollowerRollerSpeed() - rollers.getLeaderRollerSpeed())
+                  "%.1f", spindexer.getFollowerSpeed() - spindexer.getLeaderSpeed())
               + " RPS";
     } else {
       followerColorStatus = Constants.NetworkTables.green;
       leaderColorStatus = Constants.NetworkTables.green;
-      leaderStatus += "\nRollers Spinning Together";
-      followerStatus += "\nRollers Spinning Together";
+      leaderStatus += "\nFlywheel Spinning Together";
+      followerStatus += "\nFlywheel Spinning Together";
     }
 
     setColorStatus();
@@ -110,14 +109,14 @@ public class TesterRollers extends Command {
 
   private void setColorStatus() {
     SmartDashboard.putString(
-        Constants.Tester.rollerColorKeyLeader, leaderColorStatus.toHexString());
+        Constants.Tester.flywheelColorKeyLeader, leaderColorStatus.toHexString());
     SmartDashboard.putString(
-        Constants.Tester.rollerColorKeyFollower, followerColorStatus.toHexString());
+        Constants.Tester.flywheelColorKeyFollower, followerColorStatus.toHexString());
   }
 
   private void setTextStatus() {
-    SmartDashboard.putString(Constants.Tester.rollerKeyFollower, followerStatus);
-    SmartDashboard.putString(Constants.Tester.rollerKeyLeader, leaderStatus);
+    SmartDashboard.putString(Constants.Tester.flywheelKeyFollower, followerStatus);
+    SmartDashboard.putString(Constants.Tester.flywheelKeyLeader, leaderStatus);
     leaderStatus = "";
     followerStatus = "";
   }

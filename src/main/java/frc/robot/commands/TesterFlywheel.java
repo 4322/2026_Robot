@@ -116,5 +116,7 @@ public class TesterFlywheel extends Command {
   private void setTextStatus() {
     SmartDashboard.putString(Constants.Tester.flywheelKeyFollower, followerStatus);
     SmartDashboard.putString(Constants.Tester.flywheelKeyLeader, leaderStatus);
+    leaderStatus = "";
+    followerStatus = "";
   }
 }

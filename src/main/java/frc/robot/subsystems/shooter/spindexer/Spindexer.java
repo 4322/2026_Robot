@@ -1,5 +1,6 @@
 package frc.robot.subsystems.shooter.spindexer;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.constants.Constants;
 import org.littletonrobotics.junction.Logger;
@@ -107,4 +108,39 @@ public class Spindexer {
   public double getVelocity() {
     return inputs.leaderMechanismRPS;
   }
+
+  public boolean leaderConnected() {
+    return inputs.leaderMotorConnected;
+  }
+
+    public boolean followerConnected() {
+    return inputs.followerMotorConnected;
+  } 
+
+  public double getRequestedSetpoint() {
+    return requestedSpeed;
+  }
+
+   public boolean leaderAtGoal() {
+    return Math.abs(inputs.leaderMechanismRPS - requestedSpeed)
+        < Constants.Flywheel.smallToleranceRPS;
+  }
+
+  public boolean followerAtGoal() {
+    return Math.abs(inputs.followerMechanismRPS - requestedSpeed)
+        < Constants.Flywheel.smallToleranceRPS;
+  }
+
+  public boolean spinningTogether() {
+    return Math.abs(inputs.leaderMechanismRPS - inputs.followerMechanismRPS)
+        < Constants.Flywheel.rollerTogetherToleranceRPS;
+  }
+
+    public double getFollowerSpeed(){
+      return inputs.followerMechanismRPS;
+    }
+
+    public double getLeaderSpeed(){
+      return inputs.leaderMechanismRPS;
+    }
 }

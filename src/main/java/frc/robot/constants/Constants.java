@@ -133,6 +133,7 @@ public final class Constants {
     // Normally 7 RPS for shooting
     public static final double unjamRPS = -4.0;
     public static final double shootRPS = 9.0;
+    public static final double atGoalToleranceRPS = 0.5;
   }
 
   public static class Tester {

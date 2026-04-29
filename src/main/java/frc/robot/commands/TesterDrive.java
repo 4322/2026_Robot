@@ -148,5 +148,9 @@ public class TesterDrive extends Command {
     SmartDashboard.putString(Constants.Tester.driveKeyFR, FRStatus);
     SmartDashboard.putString(Constants.Tester.driveKeyBL, BLStatus);
     SmartDashboard.putString(Constants.Tester.driveKeyBR, BRStatus);
+    FLStatus = "";
+    FRStatus = "";
+    BLStatus = "";
+    BRStatus = "";
   }
 }
