@@ -5,10 +5,12 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.RobotContainer;
 import frc.robot.constants.Constants;
+
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.shooter.flywheel.Flywheel;
+import frc.robot.subsystems.shooter.spindexer.Spindexer;
 
 public class ShooterCommands {
 
@@ -108,4 +110,8 @@ public class ShooterCommands {
   public static Command flywheelTesting(Flywheel flywheel, String test) {
     return new TesterFlywheel(flywheel, test);
   }
+
+  public static Command spindexerTesting(Spindexer spindexer, String test) {
+    return new TesterSpindexer(spindexer, test);
+}
 }

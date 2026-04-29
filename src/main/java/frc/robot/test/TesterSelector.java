@@ -11,11 +11,14 @@ import frc.robot.subsystems.led.LED;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.shooter.flywheel.Flywheel;
 import frc.robot.subsystems.shooter.hood.Hood;
+import frc.robot.subsystems.shooter.spindexer.Spindexer;
 import frc.robot.subsystems.shooter.turret.Turret;
 import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetection;
 import frc.robot.test.RealTests.DriveTest;
 import frc.robot.test.RealTests.FlywheelTest;
 import frc.robot.test.RealTests.RollerTest;
+import frc.robot.test.RealTests.SpindexerTest;
+
 import java.util.List;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
@@ -30,6 +33,7 @@ public class TesterSelector {
     DRIVE_TEST,
     ROLLER_TEST,
     FLYWHEEL_TEST,
+    SPINDEXER_TEST
   }
 
   private class Test {
@@ -54,13 +58,15 @@ public class TesterSelector {
       VisionObjectDetection visionObjectDetection,
       LED led,
       Intake intake,
-      Rollers rollers) {
+      Rollers rollers, 
+      Spindexer spindexer) {
     test =
         List.of(
             new Test(TestName.DO_NOTHING, new SequentialCommandGroup()),
             new Test(TestName.DRIVE_TEST, new DriveTest(drive)),
             new Test(TestName.ROLLER_TEST, new RollerTest(intake, rollers)),
-            new Test(TestName.FLYWHEEL_TEST, new FlywheelTest(flywheel, intake, shooter, drive)));
+            new Test(TestName.FLYWHEEL_TEST, new FlywheelTest(flywheel, intake, shooter, drive)),
+            new Test(TestName.SPINDEXER_TEST, new SpindexerTest(spindexer, intake, shooter, drive)));
     for (Test nextAuto : test) {
       if (nextAuto.name == defaultTestName) {
         testerSelector.addDefaultOption(nextAuto.name.toString(), nextAuto.command);
