@@ -51,7 +51,7 @@ public class TesterTurn extends Command {
     if (!drive.isTurnConnected(0)) {
       FLStatus = turnConnectionMessage;
       FLColorStatus = Constants.NetworkTables.red;
-    } else if (!drive.isCorrectAngleSpeed(0)) {
+    } else if (!drive.isCorrectAngleSpeed(0) || !drive.isCorrectAngle(0)) {
       FLColorStatus = Constants.NetworkTables.orange;
       if (!drive.isCorrectAngle(0)) {
         FLStatus =
