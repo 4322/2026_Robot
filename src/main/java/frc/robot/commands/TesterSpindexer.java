@@ -40,7 +40,7 @@ public class TesterSpindexer extends Command {
       leaderStatus =
           "Slow by"
               + String.format(
-                  "%.1f", 100 - spindexer.getLeaderSpeed() / spindexer.getRequestedSetpoint() * 100)
+                  "%.1f", 100 - Math.abs(spindexer.getLeaderSpeed()) / Math.abs(spindexer.getRequestedSetpoint()) * 100)
               + "%";
     } else {
       leaderColorStatus = Constants.NetworkTables.green;
@@ -56,7 +56,7 @@ public class TesterSpindexer extends Command {
           "Slow by"
               + String.format(
                   "%.1f",
-                  100 - spindexer.getFollowerSpeed() / spindexer.getRequestedSetpoint() * 100)
+                  100 - Math.abs(spindexer.getFollowerSpeed()) / Math.abs(spindexer.getRequestedSetpoint()) * 100)
               + "%";
       ;
     } else {
@@ -105,14 +105,14 @@ public class TesterSpindexer extends Command {
 
   private void setColorStatus() {
     SmartDashboard.putString(
-        Constants.Tester.flywheelColorKeyLeader, leaderColorStatus.toHexString());
+        Constants.Tester.spindexerColorKeyLeader, leaderColorStatus.toHexString());
     SmartDashboard.putString(
-        Constants.Tester.flywheelColorKeyFollower, followerColorStatus.toHexString());
+        Constants.Tester.spindexerColorKeyFollower, followerColorStatus.toHexString());
   }
 
   private void setTextStatus() {
-    SmartDashboard.putString(Constants.Tester.flywheelKeyFollower, followerStatus);
-    SmartDashboard.putString(Constants.Tester.flywheelKeyLeader, leaderStatus);
+    SmartDashboard.putString(Constants.Tester.spindexerKeyFollower, followerStatus);
+    SmartDashboard.putString(Constants.Tester.spindexerKeyLeader, leaderStatus);
     leaderStatus = "";
     followerStatus = "";
   }

@@ -41,7 +41,7 @@ public class TesterFlywheel extends Command {
           "Slow by"
               + String.format(
                   "%.1f",
-                  100 - flywheel.getLeaderRollerSpeed() / flywheel.getRequestedSetpoint() * 100)
+                  100 - Math.abs(flywheel.getLeaderRollerSpeed()) / Math.abs(flywheel.getRequestedSetpoint()) * 100)
               + "%";
     } else {
       leaderColorStatus = Constants.NetworkTables.green;
@@ -57,7 +57,7 @@ public class TesterFlywheel extends Command {
           "Slow by"
               + String.format(
                   "%.1f",
-                  100 - flywheel.getFollowerRollerSpeed() / flywheel.getRequestedSetpoint() * 100)
+                  100 - Math.abs(flywheel.getFollowerRollerSpeed()) / Math.abs(flywheel.getRequestedSetpoint()) * 100)
               + "%";
       ;
     } else {

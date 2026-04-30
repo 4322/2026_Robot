@@ -167,6 +167,11 @@ public final class Constants {
     public static final String flywheelColorKeyLeader = "Flywheel/Flywheel Leader Color";
     public static final String flywheelColorKeyFollower = "Flywheel/Flywheel Follower Color";
 
+    public static final String spindexerKeyLeader = "Spindexer/Spindexer Leader Status";
+    public static final String spindexerKeyFollower = "Spindexer/Spindexer Follower Status";
+    public static final String spindexerColorKeyLeader = "Spindexer/Spindexer Leader Color";
+    public static final String spindexerColorKeyFollower = "Spindexer/Spindexer Follower Color";
+
     public static final double driveToleranceMetersPerSec = 0.2;
     public static final double turnToleranceRadPerSec = 0.5;
   }
