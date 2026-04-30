@@ -107,7 +107,7 @@ public class TesterSpindexer extends Command {
 
   @Override
   public boolean isFinished() {
-    return true;
+    return false;
   }
 
   private void setColorStatus() {
