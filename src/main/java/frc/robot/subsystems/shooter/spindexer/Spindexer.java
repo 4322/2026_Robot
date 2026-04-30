@@ -131,7 +131,7 @@ public class Spindexer {
 
   public boolean spinningTogether() {
     return Math.abs(inputs.leaderMechanismRPS - inputs.followerMechanismRPS)
-        < Constants.Flywheel.rollerTogetherToleranceRPS;
+        < Constants.Flywheel.consistentCurrentToleranceAmps;
   }
 
   public double getFollowerSpeed() {

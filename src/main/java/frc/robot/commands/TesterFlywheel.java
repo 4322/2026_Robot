@@ -71,7 +71,9 @@ public class TesterFlywheel extends Command {
       followerStatus = "Up To Speed";
     }
 
-    if (!flywheel.rollersSpinningTogether()) {
+    if (!flywheel.isCurrentConsistent()) {
+      followerColorStatus = Constants.NetworkTables.orange;
+      leaderColorStatus = Constants.NetworkTables.orange;
       leaderStatus = "Not Spinning Together";
       followerStatus = "Not Spinning Together";
       leaderStatus +=
@@ -96,11 +98,6 @@ public class TesterFlywheel extends Command {
               + String.format(
                   "%.1f", flywheel.getFollowerRollerSpeed() - flywheel.getLeaderRollerSpeed())
               + " RPS";
-    } else {
-      followerColorStatus = Constants.NetworkTables.green;
-      leaderColorStatus = Constants.NetworkTables.green;
-      leaderStatus += "\nFlywheel Spinning Together";
-      followerStatus += "\nFlywheel Spinning Together";
     }
 
     setColorStatus();
@@ -109,7 +106,7 @@ public class TesterFlywheel extends Command {
 
   @Override
   public boolean isFinished() {
-    return true;
+    return false;
   }
 
   private void setColorStatus() {

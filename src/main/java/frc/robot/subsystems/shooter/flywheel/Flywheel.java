@@ -111,8 +111,8 @@ public class Flywheel {
         < Constants.Flywheel.smallToleranceRPS;
   }
 
-  public boolean rollersSpinningTogether() {
-    return Math.abs(inputs.leaderMechanismRPS - inputs.followerMechanismRPS)
-        < Constants.Flywheel.rollerTogetherToleranceRPS;
+  public boolean isCurrentConsistent() {
+    return Math.abs(inputs.leaderSupplyAmps - inputs.followerSupplyAmps)
+        < Constants.Flywheel.consistentCurrentToleranceAmps;
   }
 }
