@@ -4,7 +4,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.constants.Constants;
-import frc.robot.subsystems.shooter.flywheel.Flywheel;
 import frc.robot.subsystems.shooter.spindexer.Spindexer;
 
 public class TesterSpindexer extends Command {
@@ -41,8 +40,7 @@ public class TesterSpindexer extends Command {
       leaderStatus =
           "Slow by"
               + String.format(
-                  "%.1f",
-                  100 - spindexer.getLeaderSpeed() / spindexer.getRequestedSetpoint() * 100)
+                  "%.1f", 100 - spindexer.getLeaderSpeed() / spindexer.getRequestedSetpoint() * 100)
               + "%";
     } else {
       leaderColorStatus = Constants.NetworkTables.green;
@@ -83,13 +81,11 @@ public class TesterSpindexer extends Command {
               + " RPS";
       leaderStatus +=
           "\nDiffrence of "
-              + String.format(
-                  "%.1f", spindexer.getLeaderSpeed() - spindexer.getFollowerSpeed())
+              + String.format("%.1f", spindexer.getLeaderSpeed() - spindexer.getFollowerSpeed())
               + " RPS";
       followerStatus +=
           "\nDiffrence of "
-              + String.format(
-                  "%.1f", spindexer.getFollowerSpeed() - spindexer.getLeaderSpeed())
+              + String.format("%.1f", spindexer.getFollowerSpeed() - spindexer.getLeaderSpeed())
               + " RPS";
     } else {
       followerColorStatus = Constants.NetworkTables.green;

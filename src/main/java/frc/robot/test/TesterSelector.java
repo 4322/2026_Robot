@@ -18,7 +18,6 @@ import frc.robot.test.RealTests.DriveTest;
 import frc.robot.test.RealTests.FlywheelTest;
 import frc.robot.test.RealTests.RollerTest;
 import frc.robot.test.RealTests.SpindexerTest;
-
 import java.util.List;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
@@ -58,7 +57,7 @@ public class TesterSelector {
       VisionObjectDetection visionObjectDetection,
       LED led,
       Intake intake,
-      Rollers rollers, 
+      Rollers rollers,
       Spindexer spindexer) {
     test =
         List.of(
@@ -66,7 +65,8 @@ public class TesterSelector {
             new Test(TestName.DRIVE_TEST, new DriveTest(drive)),
             new Test(TestName.ROLLER_TEST, new RollerTest(intake, rollers)),
             new Test(TestName.FLYWHEEL_TEST, new FlywheelTest(flywheel, intake, shooter, drive)),
-            new Test(TestName.SPINDEXER_TEST, new SpindexerTest(spindexer, intake, shooter, drive)));
+            new Test(
+                TestName.SPINDEXER_TEST, new SpindexerTest(spindexer, intake, shooter, drive)));
     for (Test nextAuto : test) {
       if (nextAuto.name == defaultTestName) {
         testerSelector.addDefaultOption(nextAuto.name.toString(), nextAuto.command);
