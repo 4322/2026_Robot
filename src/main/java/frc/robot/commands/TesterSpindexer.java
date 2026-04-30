@@ -105,10 +105,6 @@ public class TesterSpindexer extends Command {
     setTextStatus();
   }
 
-  @Override
-  public boolean isFinished() {
-    return false;
-  }
 
   private void setColorStatus() {
     SmartDashboard.putString(
