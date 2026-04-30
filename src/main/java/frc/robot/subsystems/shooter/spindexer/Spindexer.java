@@ -1,5 +1,6 @@
 package frc.robot.subsystems.shooter.spindexer;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.constants.Constants;
 import org.littletonrobotics.junction.Logger;
@@ -121,13 +122,11 @@ public class Spindexer {
   }
 
   public boolean leaderAtGoal() {
-    return Math.abs(inputs.leaderMechanismRPS - requestedSpeed)
-        < Constants.Flywheel.smallToleranceRPS;
+    return MathUtil.isNear(Math.abs(inputs.leaderMechanismRPS), Math.abs(requestedSpeed), 6);
   }
 
   public boolean followerAtGoal() {
-    return Math.abs(inputs.followerMechanismRPS - requestedSpeed)
-        < Constants.Flywheel.smallToleranceRPS;
+    return MathUtil.isNear(Math.abs(inputs.followerMechanismRPS), Math.abs(requestedSpeed), 6);
   }
 
   public boolean spinningTogether() {
