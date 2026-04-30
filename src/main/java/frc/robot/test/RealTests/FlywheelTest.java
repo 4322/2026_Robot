@@ -23,14 +23,15 @@ public class FlywheelTest extends SequentialCommandGroup {
         IntakeCommands.intake(intake),
         IntakeCommands.idle(intake),
         new ParallelCommandGroup(
-            Commands.run(
-                () -> {
-                  flywheel.requestGoal(Constants.Flywheel.idleRPS, true);
-                }),
-            ShooterCommands.flywheelTesting(flywheel, "Idle Flywheel")).withTimeout(10),
-             Commands.run(
-                () -> {
-                  flywheel.requestGoal(0, true);
-                }));
+                Commands.run(
+                    () -> {
+                      flywheel.requestGoal(Constants.Flywheel.idleRPS, true);
+                    }),
+                ShooterCommands.flywheelTesting(flywheel, "Idle Flywheel"))
+            .withTimeout(10),
+        Commands.run(
+            () -> {
+              flywheel.requestGoal(0, true);
+            }));
   }
 }

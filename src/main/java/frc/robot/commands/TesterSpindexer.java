@@ -40,7 +40,11 @@ public class TesterSpindexer extends Command {
       leaderStatus =
           "Slow by"
               + String.format(
-                  "%.1f", 100 - Math.abs(spindexer.getLeaderSpeed()) / Math.abs(spindexer.getRequestedSetpoint()) * 100)
+                  "%.1f",
+                  100
+                      - Math.abs(spindexer.getLeaderSpeed())
+                          / Math.abs(spindexer.getRequestedSetpoint())
+                          * 100)
               + "%";
     } else {
       leaderColorStatus = Constants.NetworkTables.green;
@@ -56,7 +60,10 @@ public class TesterSpindexer extends Command {
           "Slow by"
               + String.format(
                   "%.1f",
-                  100 - Math.abs(spindexer.getFollowerSpeed()) / Math.abs(spindexer.getRequestedSetpoint()) * 100)
+                  100
+                      - Math.abs(spindexer.getFollowerSpeed())
+                          / Math.abs(spindexer.getRequestedSetpoint())
+                          * 100)
               + "%";
       ;
     } else {
