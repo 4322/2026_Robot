@@ -417,7 +417,7 @@ public class RobotContainer {
   public void configureTesterSelector() {
     testerSelector =
         new TesterSelector(
-            drive, hood, turret, shooter, flywheel, visionObjectDetection, led, intake, rollers);
+            drive, hood, turret, shooter, flywheel, visionObjectDetection, led, intake, rollers, spindexer);
   }
 
   public void setBrakeMode(boolean brake) {
