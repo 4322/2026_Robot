@@ -63,11 +63,11 @@ public class Rollers {
     }
   }
 
-  public double getFollowerRollerSpeed() {
+  public double getFollowerSpeed() {
     return inputs.followerRotationsPerSec;
   }
 
-  public double getLeaderRollerSpeed() {
+  public double getLeaderSpeed() {
     return inputs.leaderRotationsPerSec;
   }
 
@@ -75,11 +75,11 @@ public class Rollers {
     return requestedSetpoint;
   }
 
-  public boolean leaderRollerAtGoal() {
+  public boolean leaderAtGoal() {
     return Math.abs(inputs.leaderRotationsPerSec - requestedSetpoint) < 0.1;
   }
 
-  public boolean followerRollerAtGoal() {
+  public boolean followerAtGoal() {
     return Math.abs(inputs.followerRotationsPerSec - requestedSetpoint) < 0.1;
   }
 
@@ -87,11 +87,25 @@ public class Rollers {
     return MathUtil.isNear(inputs.leaderRotationsPerSec, inputs.followerRotationsPerSec, 0.01);
   }
 
-  public boolean leaderRollerConnected() {
+  public boolean leaderConnected() {
     return inputs.leaderConnected;
   }
 
-  public boolean followerRollerConnected() {
+  public boolean followerConnected() {
     return inputs.followerConnected;
+  }
+
+  
+  public boolean isCurrentConsistent() {
+    return Math.abs(inputs.leaderSupplyCurrentAmps- inputs.followerSupplyCurrentAmps)
+        < Constants.Flywheel.consistentCurrentToleranceAmps;
+  }
+
+  public double getFollowerCurrent(){
+    return inputs.followerSupplyCurrentAmps;
+  }
+
+    public double getLeaderCurrent(){
+    return inputs.leaderSupplyCurrentAmps;
   }
 }

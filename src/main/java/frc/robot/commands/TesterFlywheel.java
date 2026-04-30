@@ -74,34 +74,19 @@ public class TesterFlywheel extends Command {
     if (!flywheel.isCurrentConsistent()) {
       followerColorStatus = Constants.NetworkTables.orange;
       leaderColorStatus = Constants.NetworkTables.orange;
-      leaderStatus = "Not Spinning Together";
-      followerStatus = "Not Spinning Together";
-      leaderStatus +=
-          "\nLeader at "
-              + String.format("%.1f", flywheel.getLeaderRollerSpeed())
-              + " RPS\nFollower at "
-              + String.format("%.1f", flywheel.getFollowerRollerSpeed())
-              + " RPS";
-      followerStatus +=
-          "\nLeader at "
-              + String.format("%.1f", flywheel.getLeaderRollerSpeed())
-              + " RPS\nFollower at "
-              + String.format("%.1f", flywheel.getFollowerRollerSpeed())
-              + " RPS";
-      leaderStatus +=
-          "\nDiffrence of "
-              + String.format(
-                  "%.1f", flywheel.getLeaderRollerSpeed() - flywheel.getFollowerRollerSpeed())
-              + " RPS";
-      followerStatus +=
-          "\nDiffrence of "
-              + String.format(
-                  "%.1f", flywheel.getFollowerRollerSpeed() - flywheel.getLeaderRollerSpeed())
-              + " RPS";
+      followerStatus = "Current Inconsistent" + String.format(
+                  "%.1f",flywheel.getFollowerCurrent());
+      leaderStatus = "Current Inconsistent" + String.format(
+                  "%.1f",flywheel.getLeaderCurrent());
     }
 
     setColorStatus();
     setTextStatus();
+  }
+
+   @Override
+  public void end(boolean interrupted) {
+    flywheel.requestGoal(0, false);
   }
 
 

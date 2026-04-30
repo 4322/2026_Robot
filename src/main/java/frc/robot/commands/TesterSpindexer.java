@@ -32,7 +32,7 @@ public class TesterSpindexer extends Command {
 
   @Override
   public void execute() {
-    if (!spindexer.leaderConnected()) {
+ if (!spindexer.leaderConnected()) {
       leaderColorStatus = Constants.NetworkTables.red;
       leaderStatus = "Not Connected";
     } else if (!spindexer.leaderAtGoal()) {
@@ -71,34 +71,13 @@ public class TesterSpindexer extends Command {
       followerStatus = "Up To Speed";
     }
 
-    if (!spindexer.spinningTogether()) {
-      leaderStatus = "Not Spinning Together";
-      followerStatus = "Not Spinning Together";
-      leaderStatus +=
-          "\nLeader at "
-              + String.format("%.1f", spindexer.getLeaderSpeed())
-              + " RPS\nFollower at "
-              + String.format("%.1f", spindexer.getFollowerSpeed())
-              + " RPS";
-      followerStatus +=
-          "\nLeader at "
-              + String.format("%.1f", spindexer.getLeaderSpeed())
-              + " RPS\nFollower at "
-              + String.format("%.1f", spindexer.getFollowerSpeed())
-              + " RPS";
-      leaderStatus +=
-          "\nDiffrence of "
-              + String.format("%.1f", spindexer.getLeaderSpeed() - spindexer.getFollowerSpeed())
-              + " RPS";
-      followerStatus +=
-          "\nDiffrence of "
-              + String.format("%.1f", spindexer.getFollowerSpeed() - spindexer.getLeaderSpeed())
-              + " RPS";
-    } else {
-      followerColorStatus = Constants.NetworkTables.green;
-      leaderColorStatus = Constants.NetworkTables.green;
-      leaderStatus += "\nFlywheel Spinning Together";
-      followerStatus += "\nFlywheel Spinning Together";
+    if (!spindexer.isCurrentConsistent()) {
+      followerColorStatus = Constants.NetworkTables.orange;
+      leaderColorStatus = Constants.NetworkTables.orange;
+      followerStatus = "Current Inconsistent" + String.format(
+                  "%.1f",spindexer.getFollowerCurrent());
+      leaderStatus = "Current Inconsistent" + String.format(
+                  "%.1f",spindexer.getLeaderCurrent());
     }
 
     setColorStatus();

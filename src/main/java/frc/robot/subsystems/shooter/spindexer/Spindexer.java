@@ -141,4 +141,17 @@ public class Spindexer {
   public double getLeaderSpeed() {
     return inputs.leaderMechanismRPS;
   }
+
+  public boolean isCurrentConsistent() {
+    return Math.abs(inputs.leaderSupplyAmps - inputs.followerSupplyAmps)
+        < Constants.Flywheel.consistentCurrentToleranceAmps;
+  }
+
+  public double getLeaderCurrent(){
+    return inputs.leaderSupplyAmps;
+  }
+
+  public double getFollowerCurrent(){
+    return inputs.followerSupplyAmps;
+  }
 }
