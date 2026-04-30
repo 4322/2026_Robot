@@ -169,8 +169,6 @@ public class TesterTurn extends Command {
     setColorStatus();
   }
 
-
-
   private void setTextStatus() {
     SmartDashboard.putString(Constants.Tester.turnKeyFL, FLStatus);
     SmartDashboard.putString(Constants.Tester.turnKeyFR, FRStatus);

@@ -95,17 +95,16 @@ public class Rollers {
     return inputs.followerConnected;
   }
 
-  
   public boolean isCurrentConsistent() {
-    return Math.abs(inputs.leaderSupplyCurrentAmps- inputs.followerSupplyCurrentAmps)
+    return Math.abs(inputs.leaderSupplyCurrentAmps - inputs.followerSupplyCurrentAmps)
         < Constants.Flywheel.consistentCurrentToleranceAmps;
   }
 
-  public double getFollowerCurrent(){
+  public double getFollowerCurrent() {
     return inputs.followerSupplyCurrentAmps;
   }
 
-    public double getLeaderCurrent(){
+  public double getLeaderCurrent() {
     return inputs.leaderSupplyCurrentAmps;
   }
 }

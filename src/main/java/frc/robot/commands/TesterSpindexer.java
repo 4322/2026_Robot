@@ -32,7 +32,7 @@ public class TesterSpindexer extends Command {
 
   @Override
   public void execute() {
- if (!spindexer.leaderConnected()) {
+    if (!spindexer.leaderConnected()) {
       leaderColorStatus = Constants.NetworkTables.red;
       leaderStatus = "Not Connected";
     } else if (!spindexer.leaderAtGoal()) {
@@ -74,16 +74,14 @@ public class TesterSpindexer extends Command {
     if (!spindexer.isCurrentConsistent()) {
       followerColorStatus = Constants.NetworkTables.orange;
       leaderColorStatus = Constants.NetworkTables.orange;
-      followerStatus = "Current Inconsistent" + String.format(
-                  "%.1f",spindexer.getFollowerCurrent());
-      leaderStatus = "Current Inconsistent" + String.format(
-                  "%.1f",spindexer.getLeaderCurrent());
+      followerStatus =
+          "Current Inconsistent" + String.format("%.1f", spindexer.getFollowerCurrent());
+      leaderStatus = "Current Inconsistent" + String.format("%.1f", spindexer.getLeaderCurrent());
     }
 
     setColorStatus();
     setTextStatus();
   }
-
 
   private void setColorStatus() {
     SmartDashboard.putString(

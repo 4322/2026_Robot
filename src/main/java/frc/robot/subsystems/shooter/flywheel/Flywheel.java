@@ -116,11 +116,11 @@ public class Flywheel {
         < Constants.Flywheel.consistentCurrentToleranceAmps;
   }
 
-  public double getLeaderCurrent(){
+  public double getLeaderCurrent() {
     return inputs.leaderSupplyAmps;
   }
 
-  public double getFollowerCurrent(){
+  public double getFollowerCurrent() {
     return inputs.followerSupplyAmps;
   }
 }

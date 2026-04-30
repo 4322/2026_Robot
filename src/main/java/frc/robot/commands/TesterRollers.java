@@ -74,16 +74,13 @@ public class TesterRollers extends Command {
     if (!rollers.isCurrentConsistent()) {
       followerColorStatus = Constants.NetworkTables.orange;
       leaderColorStatus = Constants.NetworkTables.orange;
-      followerStatus = "Current Inconsistent" + String.format(
-                  "%.1f",rollers.getFollowerCurrent());
-      leaderStatus = "Current Inconsistent" + String.format(
-                  "%.1f",rollers.getLeaderCurrent());
+      followerStatus = "Current Inconsistent" + String.format("%.1f", rollers.getFollowerCurrent());
+      leaderStatus = "Current Inconsistent" + String.format("%.1f", rollers.getLeaderCurrent());
     }
 
     setColorStatus();
     setTextStatus();
   }
-
 
   private void setColorStatus() {
     SmartDashboard.putString(

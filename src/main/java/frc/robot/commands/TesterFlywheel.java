@@ -74,21 +74,19 @@ public class TesterFlywheel extends Command {
     if (!flywheel.isCurrentConsistent()) {
       followerColorStatus = Constants.NetworkTables.orange;
       leaderColorStatus = Constants.NetworkTables.orange;
-      followerStatus = "Current Inconsistent" + String.format(
-                  "%.1f",flywheel.getFollowerCurrent());
-      leaderStatus = "Current Inconsistent" + String.format(
-                  "%.1f",flywheel.getLeaderCurrent());
+      followerStatus =
+          "Current Inconsistent" + String.format("%.1f", flywheel.getFollowerCurrent());
+      leaderStatus = "Current Inconsistent" + String.format("%.1f", flywheel.getLeaderCurrent());
     }
 
     setColorStatus();
     setTextStatus();
   }
 
-   @Override
+  @Override
   public void end(boolean interrupted) {
     flywheel.requestGoal(0, false);
   }
-
 
   private void setColorStatus() {
     SmartDashboard.putString(
