@@ -93,7 +93,7 @@ public final class Constants {
 
   public static final boolean debugZoneAreas = false;
 
-  public static final boolean enableElasticOdometry = false;
+  public static final boolean enableElasticOdometry = true;
 
   public static class Drive {
     public static final int gyroID = 0;
