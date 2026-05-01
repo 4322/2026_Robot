@@ -353,7 +353,7 @@ public class Robot extends LoggedRobot {
         Logger.recordOutput("Robot/Paused", "Yes");
         return;
       }
-      if (stabilizeCamerasTimer.hasElapsed(15)) {
+      if (stabilizeCamerasTimer.hasElapsed(8)) {
         stabilizeCamerasTimer.stop();
         stabilizeCamerasTimer.reset();
       }

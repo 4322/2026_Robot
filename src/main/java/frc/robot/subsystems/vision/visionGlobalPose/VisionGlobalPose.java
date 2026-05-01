@@ -7,6 +7,8 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
@@ -24,6 +26,8 @@ public class VisionGlobalPose extends SubsystemBase {
   private final VisionGlobalPoseIO[] io;
   private final VisionGlobalPoseIOInputsAutoLogged[] inputs;
   private final Drive drive;
+  private Timer camsDownTimer = new Timer();
+  private double pvDownTime;
   private static final LoggedTunableNumber baseStdDev =
       new LoggedTunableNumber("GlobalPose/baseStdDev", Constants.VisionGlobalPose.stdDevBaseline);
   private static final LoggedTunableNumber singleTagStdDev =
@@ -64,16 +68,30 @@ public class VisionGlobalPose extends SubsystemBase {
 
   @Override
   public void periodic() {
+    int connectedCameras = 0;
     int unstableCameras = 0;
     for (int i = 0; i < io.length; i++) {
       io[i].updateInputs(inputs[i]);
       Logger.processInputs("Vision/Camera" + Integer.toString(i), inputs[i]);
+      if (inputs[i].connected) {
+        connectedCameras++;
+      }
       if (inputs[i].unstable) {
         unstableCameras++;
       }
     }
 
-    if (unstableCameras >= 2) {
+    if (connectedCameras == 0) {
+      camsDownTimer.start();
+      if (camsDownTimer.hasElapsed(2)) {
+        pvDownTime = RobotController.getTime() / 1e6;
+      }
+    } else {
+      camsDownTimer.stop();
+      camsDownTimer.reset();
+    }
+
+    if (unstableCameras >= 2 && RobotController.getTime() / 1e6 - pvDownTime > 3) {
       SmartDashboard.putString("Vision/Vision Stable", Constants.NetworkTables.red.toHexString());
       Logger.recordOutput("Vision/Stable", "No");
       Robot.stabilize();
