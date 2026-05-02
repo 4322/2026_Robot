@@ -156,7 +156,7 @@ public class RollersIOTalonFX implements RollersIO {
   public void setVoltage(double voltage) {
     if ((previousRequestedVoltage == null) || (previousRequestedVoltage != voltage)) {
       previousRequestedVoltage = voltage;
-      leaderMotor.setControl(new VoltageOut(voltage).withEnableFOC(true));
+      leaderMotor.setControl(new VoltageOut(voltage));
     }
   }
 
