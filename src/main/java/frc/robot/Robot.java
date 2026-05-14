@@ -230,7 +230,6 @@ public class Robot extends LoggedRobot {
       R_2SWEEP_CG = PathPlannerPath.fromPathFile("R_2Sweep_CG");
       R_2SWEEP_DE = PathPlannerPath.fromPathFile("R_2Sweep_DE");
       R_2SWEEP_F = PathPlannerPath.fromPathFile("R_2Sweep_F");
-      R_2SWEEP_H = PathPlannerPath.fromPathFile("R_2Sweep_H");
 
       R_2SWEEP_A_OUT = PathPlannerPath.fromPathFile("R_2Sweep_A_Out");
 
@@ -266,7 +265,6 @@ public class Robot extends LoggedRobot {
       L_2SWEEP_CG = R_2SWEEP_CG.mirrorPath();
       L_2SWEEP_DE = R_2SWEEP_DE.mirrorPath();
       L_2SWEEP_F = R_2SWEEP_F.mirrorPath();
-      L_2SWEEP_H = R_2SWEEP_H.mirrorPath();
 
       L_2SWEEP_A_OUT = R_2SWEEP_A_OUT.mirrorPath();
       L_2SWEEP_DEPOT = PathPlannerPath.fromPathFile("R_2Sweep_Depot").mirrorPath();

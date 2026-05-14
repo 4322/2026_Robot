@@ -303,6 +303,7 @@ public class Shooter extends SubsystemBase {
     Logger.recordOutput("Shooter/TargetTurretAngleDeg", targetTurretAngleDeg);
     Logger.recordOutput("Shooter/TargetTunnelSpeedRPS", targetTunnelSpeedRPS);
     Logger.recordOutput("Shooter/TargetIndexerSpeedRPS", targetSpindexerSpeedRPS);
+    Logger.recordOutput("Shooter/Turret/poseRotated", drive.getTurretPose(turret.getAngle()));
   }
 
   private void calculateFiringSolution() {
