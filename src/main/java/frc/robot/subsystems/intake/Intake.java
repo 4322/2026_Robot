@@ -2,6 +2,7 @@ package frc.robot.subsystems.intake;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.constants.Constants;
 import frc.robot.subsystems.intake.deployer.Deployer;
 import frc.robot.subsystems.intake.deployer.Deployer.DeployerState;
 import frc.robot.subsystems.intake.rollers.Rollers;
@@ -14,6 +15,8 @@ public class Intake extends SubsystemBase {
   private IntakeState state = IntakeState.STARING_CONFIG;
   private IntakeState prevState = IntakeState.STARING_CONFIG;
   private boolean hasExtended = false;
+
+  private static int storedFuel = 0;
 
   public Intake(Deployer deployer, Rollers rollers) {
     this.deployer = deployer;
@@ -79,6 +82,7 @@ public class Intake extends SubsystemBase {
 
     Logger.recordOutput("Intake/CurrentState", state);
     Logger.recordOutput("Intake/hasExtended", hasExtended);
+    Logger.recordOutput("Intake/Fuel", storedFuel);
   }
 
   public IntakeState getState() {
@@ -111,5 +115,25 @@ public class Intake extends SubsystemBase {
   // Has extended from deployment; hasn't gotten stuck in net
   public boolean hasExtended() {
     return hasExtended;
+  }
+
+  public boolean isIntakingSim() {
+    return state == IntakeState.INTAKING && storedFuel <= Constants.Robot.simHopperCapacity;
+  }
+
+  public static void setFuel(int fuel) {
+    storedFuel = fuel;
+  }
+
+  public static void addFuel() {
+    storedFuel += 1;
+  }
+
+  public static void removeFuel() {
+    storedFuel -= 1;
+  }
+
+  public static int getFuel() {
+    return storedFuel;
   }
 }

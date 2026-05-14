@@ -25,7 +25,7 @@ import java.util.ArrayList;
  * (log replay from a file).
  */
 public final class Constants {
-  public static final Mode currentMode = RobotBase.isReal() ? Mode.REAL : Mode.SIM;
+  public static final Mode currentMode = RobotBase.isReal() ? Mode.REAL : Mode.REPLAY;
 
   public static enum Mode {
     /** Running on a real robot. */
@@ -94,6 +94,18 @@ public final class Constants {
   public static final boolean debugZoneAreas = false;
 
   public static final boolean enableElasticOdometry = true;
+
+  public static final class Robot {
+    // In meters
+    public static final double width = 0.908;
+    public static final double length = 0.811;
+    public static final double bumperHeight = 0.11846;
+
+    public static final double intakeWidth = 0.626745;
+    public static final double intakeExtension = 0.179471; // Edge of bumper to edge of intake
+
+    public static final double simHopperCapacity = 43;
+  }
 
   public static class Drive {
     public static final int gyroID = 0;
@@ -179,6 +191,8 @@ public final class Constants {
     public static final int canandcolorId = 0;
     public static final boolean canAndColorEnabled = false;
     public static final double minFuelDetectionProximity = 0.2;
+
+    public static final double wheelDiameterM = 0.101600;
   }
 
   public static class Turret {
@@ -491,6 +505,8 @@ public final class Constants {
     public static final double spindexerRate = 0.2;
     public static final double flywheelRate = 2;
     public static final double hoodRate = 2;
+
+    public static final double shotCooldown = 0.1;
   }
 
   public static final class VisionGlobalPose {

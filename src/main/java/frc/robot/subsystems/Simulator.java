@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.simulation.DriverStationSim;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.RobotContainer;
 import frc.robot.autonomous.AutonomousSelector.AutoName;
+import frc.robot.subsystems.intake.Intake;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -20,7 +21,7 @@ import java.util.Map;
 import org.littletonrobotics.junction.Logger;
 
 public class Simulator {
-  private static final RegressTests regressTest = RegressTests.DO_NOTHING;
+  private static final RegressTests regressTest = RegressTests.AUTO;
   public static AutoName autoScenario;
   private TeleopScenario teleopScenario;
   private List<TeleAnomaly> teleAnomalies;
@@ -912,6 +913,12 @@ public class Simulator {
     Logger.recordOutput("Sim/Scenario", "Disabled");
     Logger.recordOutput("Sim/EventName", "Disabled");
     Logger.recordOutput("Sim/EventType", "Disabled");
+
+    RobotContainer.fuelSim.stop();
+    RobotContainer.fuelSim.clearFuel();
+    RobotContainer.fuelSim.spawnStartingFuel();
+    RobotContainer.fuelSim.start();
+    Intake.setFuel(8);
 
     DriverStationSim.setAutonomous(events == autoEvents);
     if (currentAlliance == Alliance.Red) {

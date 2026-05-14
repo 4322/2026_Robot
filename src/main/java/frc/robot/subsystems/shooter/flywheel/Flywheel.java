@@ -80,4 +80,8 @@ public class Flywheel {
           "Flywheel/FlywheelAtGoal", Constants.NetworkTables.red.toHexString());
     }
   }
+
+  public double getVelocityRPS() {
+    return inputs.leaderMechanismRPS;
+  }
 }

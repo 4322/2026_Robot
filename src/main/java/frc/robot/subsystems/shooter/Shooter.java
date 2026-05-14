@@ -1,10 +1,16 @@
 package frc.robot.subsystems.shooter;
 
+import static edu.wpi.first.units.Units.MetersPerSecond;
+
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.units.Units;
+import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
+import frc.robot.RobotContainer;
 import frc.robot.constants.Constants;
 import frc.robot.constants.Constants.ShotCalculatorParameters;
 import frc.robot.subsystems.drive.Drive;
@@ -70,6 +76,8 @@ public class Shooter extends SubsystemBase {
   private ShotCalculator scoreCalc;
   private ShotCalculator passCalc;
 
+  private Timer simShootTimer = new Timer();
+
   public Shooter(
       Flywheel flywheel,
       Hood hood,
@@ -131,6 +139,9 @@ public class Shooter extends SubsystemBase {
           params.timeOfFlightSec());
     }
     passCalc.loadShotLUT(passLUT);
+
+    simShootTimer.reset();
+    simShootTimer.stop();
   }
 
   public double getTargetTurretAngleDeg() {
@@ -185,6 +196,11 @@ public class Shooter extends SubsystemBase {
     // no state request is made, goes back to previous state
     if (turret.needsToUnwind() || turret.isUnwinding()) {
       state = ShooterState.UNWIND;
+    }
+
+    if (state != ShooterState.SHOOT) {
+      simShootTimer.reset();
+      simShootTimer.stop();
     }
 
     switch (state) {
@@ -285,6 +301,27 @@ public class Shooter extends SubsystemBase {
         turret.requestAngle(targetTurretAngleDeg, isScoring, targetFFRadPerSec);
         tunnel.requestGoal(targetTunnelSpeedRPS);
         spindexer.requestGoal(targetSpindexerSpeedRPS);
+
+        if (Constants.currentMode == Constants.Mode.SIM
+            || Constants.currentMode == Constants.Mode.REPLAY) {
+          if (!simShootTimer.isRunning()) {
+            simShootTimer.start();
+          }
+          if (simShootTimer.hasElapsed(Constants.Sim.shotCooldown)) {
+            simShootTimer.reset();
+
+            if (
+            /*RobotContainer.getFuel() > 0*/ true) {
+              RobotContainer.removeFuel();
+              RobotContainer.fuelSim.launchFuel(
+                  MetersPerSecond.of(
+                      flywheel.getVelocityRPS() * Math.PI * Constants.Flywheel.wheelDiameterM),
+                  Angle.ofBaseUnits(turret.getAngle(), Units.Degrees),
+                  Angle.ofBaseUnits(hood.getPositionDegrees(), Units.Degrees),
+                  Distance.ofBaseUnits(1, Units.Inches));
+            }
+          }
+        }
       }
     }
 

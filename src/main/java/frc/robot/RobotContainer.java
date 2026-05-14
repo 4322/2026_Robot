@@ -68,6 +68,7 @@ import frc.robot.subsystems.vision.visionGlobalPose.VisionGlobalPoseIOSim;
 import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetection;
 import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetectionIO;
 import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetectionIOPhoton;
+import frc.robot.util.FuelSim;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -99,6 +100,8 @@ public class RobotContainer {
   public static AutonomousSelector autonomousSelector;
 
   private static Field2d field;
+
+  public static FuelSim fuelSim;
 
   // Controller
   public static final CommandXboxController controller = new CommandXboxController(0);
@@ -341,6 +344,26 @@ public class RobotContainer {
     if (Constants.debugZoneAreas) {
       FieldConstants.plotZones();
     }
+
+    fuelSim = new FuelSim();
+    fuelSim.spawnStartingFuel();
+
+    fuelSim.registerRobot(
+        Constants.Robot.width,
+        Constants.Robot.length,
+        Constants.Robot.bumperHeight,
+        drive::getRobotPose,
+        drive::getFieldRelativeVelocity);
+
+    fuelSim.registerIntake(
+        Constants.Robot.length / 2.0,
+        Constants.Robot.length / 2.0 + Constants.Robot.intakeExtension,
+        -Constants.Robot.intakeWidth / 2.0,
+        Constants.Robot.intakeWidth / 2.0,
+        intake::isIntakingSim,
+        () -> Intake.addFuel());
+
+    fuelSim.start();
   }
 
   public static Field2d getField() {
@@ -409,5 +432,13 @@ public class RobotContainer {
     turret.setBrakeMode(brake);
     deployer.setBrakeMode(brake);
     hood.setBrakeMode(brake);
+  }
+
+  public static int getFuel() {
+    return Intake.getFuel();
+  }
+
+  public static void removeFuel() {
+    Intake.removeFuel();
   }
 }

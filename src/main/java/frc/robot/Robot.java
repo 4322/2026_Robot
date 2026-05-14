@@ -393,6 +393,11 @@ public class Robot extends LoggedRobot {
       }
       allianceUpdateTimer.restart();
     }
+
+    if (Constants.currentMode == Constants.Mode.SIM
+        || Constants.currentMode == Constants.Mode.REPLAY) {
+      RobotContainer.fuelSim.updateSim();
+    }
   }
 
   /** This function is called once when the robot is disabled. */
