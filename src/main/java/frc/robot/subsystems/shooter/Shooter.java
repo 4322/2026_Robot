@@ -315,9 +315,9 @@ public class Shooter extends SubsystemBase {
               RobotContainer.removeFuel();
               RobotContainer.fuelSim.launchFuel(
                   MetersPerSecond.of(
-                      flywheel.getVelocityRPS() * Math.PI * Constants.Flywheel.wheelDiameterM),
+                      flywheel.getVelocityRPS() * Math.PI * Constants.Flywheel.wheelDiameterM / 2),
                   Angle.ofBaseUnits(turret.getAngle(), Units.Degrees),
-                  Angle.ofBaseUnits(hood.getPositionDegrees(), Units.Degrees),
+                  Angle.ofBaseUnits(90 - hood.getPositionDegrees(), Units.Degrees),
                   Distance.ofBaseUnits(1, Units.Inches));
             }
           }

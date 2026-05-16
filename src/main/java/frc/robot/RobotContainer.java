@@ -357,7 +357,7 @@ public class RobotContainer {
 
     fuelSim.registerIntake(
         Constants.Robot.length / 2.0,
-        Constants.Robot.length / 2.0 + Constants.Robot.intakeExtension,
+        Constants.Robot.length / 2.0 + Constants.Robot.intakeExtension + 0.05,
         -Constants.Robot.intakeWidth / 2.0,
         Constants.Robot.intakeWidth / 2.0,
         intake::isIntakingSim,

@@ -25,7 +25,7 @@ import java.util.ArrayList;
  * (log replay from a file).
  */
 public final class Constants {
-  public static final Mode currentMode = RobotBase.isReal() ? Mode.REAL : Mode.REPLAY;
+  public static final Mode currentMode = RobotBase.isReal() ? Mode.REAL : Mode.SIM;
 
   public static enum Mode {
     /** Running on a real robot. */
