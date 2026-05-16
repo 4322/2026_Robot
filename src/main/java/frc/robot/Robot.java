@@ -413,9 +413,11 @@ public class Robot extends LoggedRobot {
         RobotContainer.drive.setPose(new Pose2d(new Translation2d(3.6, 4), Rotation2d.k180deg));
       }
       if (coastButtonTimer.hasElapsed(0.1)) {
+        RobotContainer.drive.setPose(new Pose2d(new Translation2d(3.6, 4), Rotation2d.k180deg));
         robotContainer.setBrakeMode(false);
       }
       if (coastButtonTimer.hasElapsed(10)) {
+        RobotContainer.drive.setPose(new Pose2d(new Translation2d(3.6, 4), Rotation2d.k180deg));
         DriverStation.reportWarning("Activating Brake Mode", false);
         robotContainer.setBrakeMode(true);
         coastButtonTimer.stop();
