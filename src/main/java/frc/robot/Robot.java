@@ -4,6 +4,9 @@ import com.ctre.phoenix6.SignalLogger;
 import com.pathplanner.lib.commands.FollowPathCommand;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.revrobotics.util.StatusLogger;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -407,6 +410,7 @@ public class Robot extends LoggedRobot {
         // button is pressed in
         DriverStation.reportWarning("Activating Coast Mode", false);
         coastButtonTimer.start();
+        RobotContainer.drive.setPose(new Pose2d(new Translation2d(3.6, 4), Rotation2d.k180deg));
       }
       if (coastButtonTimer.hasElapsed(0.1)) {
         robotContainer.setBrakeMode(false);
