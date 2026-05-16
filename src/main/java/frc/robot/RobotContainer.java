@@ -393,7 +393,11 @@ public class RobotContainer {
     controller.rightBumper().onTrue(ShooterCommands.turretUnjamOverride(shooter, true));
     controller.rightBumper().onFalse(ShooterCommands.turretUnjamOverride(shooter, false));
 
-    controller.povLeft().onTrue(new InstantCommand(() -> drive.setPose(new Pose2d(new Translation2d(3.6, 4), Rotation2d.k180deg))));
+    controller
+        .povLeft()
+        .onTrue(
+            new InstantCommand(
+                () -> drive.setPose(new Pose2d(new Translation2d(3.6, 4), Rotation2d.k180deg))));
   }
 
   /**
