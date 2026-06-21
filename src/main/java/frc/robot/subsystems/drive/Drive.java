@@ -151,6 +151,8 @@ public class Drive extends SubsystemBase {
                 (state) -> Logger.recordOutput("Drive/SysIdState", state.toString())),
             new SysIdRoutine.Mechanism(
                 (voltage) -> runCharacterization(voltage.in(Volts)), null, this));
+
+    Logger.recordOutput("Drive/ZeroPose", new Pose2d());
   }
 
   @Override
@@ -342,12 +344,10 @@ public class Drive extends SubsystemBase {
 
   /** Returns the current turret pose with a rotation */
   public Pose2d getTurretPose(double rotationDeg) {
-    return new Pose2d(
-        poseEstimator
-            .getEstimatedPosition()
-            .transformBy(new Transform2d(Constants.Turret.originToTurret, Rotation2d.kZero))
-            .getTranslation(),
-        Rotation2d.fromDegrees(rotationDeg));
+    return poseEstimator
+        .getEstimatedPosition()
+        .transformBy(
+            new Transform2d(Constants.Turret.originToTurret, Rotation2d.fromDegrees(rotationDeg)));
   }
 
   /** Returns the current odometry rotation. */
