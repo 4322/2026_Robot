@@ -407,7 +407,7 @@ public class Shooter extends SubsystemBase {
 
     if (state != ShooterState.SHOOT) {
       if (state == ShooterState.PRESHOOT) {
-        if (hood.isAtGoal() && flywheel.isAtGoal() && turret.isAtGoal()) {
+        if (hood.isAtGoal() && turret.isAtGoal()) {
           state = ShooterState.SHOOT;
         }
       } else {
