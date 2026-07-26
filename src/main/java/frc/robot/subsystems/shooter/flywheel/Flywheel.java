@@ -37,7 +37,7 @@ public class Flywheel {
     switch (Constants.flywheelMode) {
       case TUNING -> {}
       case NORMAL -> {
-        io.setTargetMechanismRPS(velocity);
+        io.setTargetMechanismRPS(velocity > 20 ? 20 : velocity);
         requestedSetpoint = velocity;
         updateAtGoalTimer();
       }
