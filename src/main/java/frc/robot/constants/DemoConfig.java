@@ -13,7 +13,6 @@ import java.util.List;
 
 // Todo list for Ryan before Saturday
 /*
-- Custom field sizes
 - Custom scoring locations with tags, automatic targeting
 - Low powered shallow shooting
 - disable passing
