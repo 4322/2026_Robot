@@ -7,6 +7,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -18,6 +20,7 @@ import frc.robot.commands.DriveCommands;
 import frc.robot.commands.IntakeCommands;
 import frc.robot.commands.ShooterCommands;
 import frc.robot.constants.Constants;
+import frc.robot.constants.DemoConfig;
 import frc.robot.constants.FieldConstants;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Simulator;
@@ -409,5 +412,9 @@ public class RobotContainer {
     turret.setBrakeMode(brake);
     deployer.setBrakeMode(brake);
     hood.setBrakeMode(brake);
+  }
+
+  public void zeroPose() {
+    drive.setPose(new Pose2d(DemoConfig.robotLength / 2, DemoConfig.robotMaxWidth / 2, new Rotation2d()));
   }
 }

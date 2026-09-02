@@ -27,7 +27,7 @@ public class DemoConfig {
   public static final LinearVelocity maxDriveSpeed = MetersPerSecond.of(1);
 
   public static final boolean useGeofence = true;
-  public static final boolean manualZero = true;
+  public static final boolean manualZero = true; // Allows for the coast mode button to zero the robot, where it is placed against the field border at 0,0 (bottom left corner), intake facing positive X
 
   // Field layout settings (in meters)
   // Layout guide at https://miro.com/app/board/uXjVHsdpnVk=/?share_link_id=345613555076 (requires
@@ -46,6 +46,7 @@ public class DemoConfig {
 
   // Stuff that shouldn't change in between demos
   public static double robotMaxLength = 0; // TODO; measure with intake out
+  public static double robotLength = 0; // just robot, no intake
   public static double robotMaxWidth = 0;
   public static double robotMaxSide = Math.max(robotMaxLength, robotMaxWidth);
 

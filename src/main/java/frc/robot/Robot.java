@@ -13,6 +13,8 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.constants.Constants;
+import frc.robot.constants.DemoConfig;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -412,6 +414,10 @@ public class Robot extends LoggedRobot {
       }
       if (coastButtonTimer.hasElapsed(0.1)) {
         robotContainer.setBrakeMode(false);
+        if (DemoConfig.manualZero) {
+          DriverStation.reportWarning("Zeroing robot", false);
+          robotContainer.zeroPose();
+        }
       }
       if (coastButtonTimer.hasElapsed(10)) {
         DriverStation.reportWarning("Activating Brake Mode", false);
