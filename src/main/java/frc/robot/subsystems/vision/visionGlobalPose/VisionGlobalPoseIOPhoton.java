@@ -4,6 +4,7 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.wpilibj.Timer;
+import frc.robot.constants.DemoConfig;
 import frc.robot.constants.FieldConstants;
 import java.util.LinkedList;
 import java.util.List;
@@ -96,7 +97,7 @@ public class VisionGlobalPoseIOPhoton implements VisionGlobalPoseIO {
         var target = result.targets.get(0);
 
         // Calculate robot pose
-        var tagPose = FieldConstants.aprilTagFieldLayout.getTagPose(target.fiducialId);
+        var tagPose = DemoConfig.useCustomField ? DemoConfig.DemoFields.aprilTagFieldLayout.getTagPose(target.fiducialId) : FieldConstants.aprilTagFieldLayout.getTagPose(target.fiducialId);
         if (tagPose.isPresent()) {
           Transform3d fieldToTarget =
               new Transform3d(tagPose.get().getTranslation(), tagPose.get().getRotation());

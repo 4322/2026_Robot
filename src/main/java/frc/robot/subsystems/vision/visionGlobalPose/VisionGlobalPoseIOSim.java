@@ -2,6 +2,7 @@ package frc.robot.subsystems.vision.visionGlobalPose;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Transform3d;
+import frc.robot.constants.DemoConfig;
 import frc.robot.constants.FieldConstants;
 import java.util.function.Supplier;
 import org.photonvision.simulation.PhotonCameraSim;
@@ -29,12 +30,12 @@ public class VisionGlobalPoseIOSim extends VisionGlobalPoseIOPhoton {
     // Initialize vision sim
     if (visionSim == null) {
       visionSim = new VisionSystemSim("main");
-      visionSim.addAprilTags(FieldConstants.aprilTagFieldLayout);
+      visionSim.addAprilTags(DemoConfig.useCustomField ? DemoConfig.DemoFields.aprilTagFieldLayout : FieldConstants.aprilTagFieldLayout);
     }
 
     // Add sim camera
     var cameraProperties = new SimCameraProperties();
-    cameraSim = new PhotonCameraSim(camera, cameraProperties, FieldConstants.aprilTagFieldLayout);
+    cameraSim = new PhotonCameraSim(camera, cameraProperties, DemoConfig.useCustomField ? DemoConfig.DemoFields.aprilTagFieldLayout : FieldConstants.aprilTagFieldLayout);
     visionSim.addCamera(cameraSim, robotToCamera);
   }
 

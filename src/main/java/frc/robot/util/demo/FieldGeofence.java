@@ -14,28 +14,28 @@ public class FieldGeofence {
 
         // Basically uses exponential function to reduce speed as robot approaches border
         if (vx < 0) {
-            vx *= easeSpeed(x - DemoConfig.Geofence.minX);
+            vx *= easeSpeed(x - DemoConfig.DemoFields.minX);
         }
         if (vx > 0) {
-            vx *= easeSpeed(DemoConfig.Geofence.maxX - x);
+            vx *= easeSpeed(DemoConfig.DemoFields.maxX - x);
         }
         if (vy < 0) {
-            vy *= easeSpeed(y - DemoConfig.Geofence.minY);
+            vy *= easeSpeed(y - DemoConfig.DemoFields.minY);
         }
         if (vy > 0) {
-            vy *= easeSpeed(DemoConfig.Geofence.maxY - y);
+            vy *= easeSpeed(DemoConfig.DemoFields.maxY - y);
         }
         return new ChassisSpeeds(vx, vy, fieldSpeeds.omegaRadiansPerSecond); // We leave rotation unchanged
     }
     
     private static double easeSpeed(double distanceToWall) {
-        if (distanceToWall >= DemoConfig.Geofence.margin) {
+        if (distanceToWall >= DemoConfig.DemoFields.margin) {
             return 1.0;
         }
         if (distanceToWall <= 0) {
             return 0.0;
         }
-        double x = distanceToWall / DemoConfig.Geofence.margin;
+        double x = distanceToWall / DemoConfig.DemoFields.margin;
         return 1.0 - Math.pow(1.0 - x, 2); // TODO Need to check to see if this works okay
     }
 
