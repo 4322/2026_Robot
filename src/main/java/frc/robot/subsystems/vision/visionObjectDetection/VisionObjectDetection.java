@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
 import frc.robot.constants.Constants.VisionObjectDetection.ObjectDetectionTarget;
 import frc.robot.subsystems.drive.Drive;
-import frc.robot.subsystems.shooter.areaManager.AreaManager;
 import org.littletonrobotics.junction.Logger;
 
 public class VisionObjectDetection extends SubsystemBase {
@@ -143,7 +142,7 @@ public class VisionObjectDetection extends SubsystemBase {
     Translation2d centroid = new Translation2d(sumX / count, sumY / count);
     Logger.recordOutput(
         "VisionObjectDetection/TargetCentroid", new Pose2d(centroid, Rotation2d.kZero));
-    if ( sameZone) {
+    if (sameZone) {
       return null;
     } else {
       return centroid;

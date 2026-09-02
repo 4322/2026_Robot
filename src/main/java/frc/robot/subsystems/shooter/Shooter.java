@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 import frc.robot.constants.Constants;
 import frc.robot.constants.Constants.ShotCalculatorParameters;
+import frc.robot.constants.DemoConfig;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.shooter.firingManager.FiringManager;
 import frc.robot.subsystems.shooter.flywheel.Flywheel;
@@ -378,8 +379,12 @@ public class Shooter extends SubsystemBase {
         targetFlywheelSpeedRPS = shot.rpm() / 60.0;
         targetTurretAngleDeg = shot.turretAngle().getDegrees();
         targetFFRadPerSec = shot.turretAngularVelocityRadPerSec();
-        targetTunnelSpeedRPS = Constants.Tunnel.shootRPS;
-        targetSpindexerSpeedRPS = Constants.Spindexer.shootRPS;
+        targetTunnelSpeedRPS =
+            DemoConfig.overrideShootingParams ? DemoConfig.tunnelRPS : Constants.Tunnel.shootRPS;
+        targetSpindexerSpeedRPS =
+            DemoConfig.overrideShootingParams
+                ? DemoConfig.spindexerRPS
+                : Constants.Spindexer.shootRPS;
       }
     }
   }

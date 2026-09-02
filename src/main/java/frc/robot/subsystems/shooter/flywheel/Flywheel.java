@@ -3,6 +3,7 @@ package frc.robot.subsystems.shooter.flywheel;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.constants.Constants;
+import frc.robot.constants.DemoConfig;
 import org.littletonrobotics.junction.Logger;
 
 public class Flywheel {
@@ -37,6 +38,9 @@ public class Flywheel {
     switch (Constants.flywheelMode) {
       case TUNING -> {}
       case NORMAL -> {
+        if (DemoConfig.useManualFlywheelLimit) {
+          velocity = Math.min(velocity, DemoConfig.flywheelLimitRPS);
+        }
         io.setTargetMechanismRPS(velocity);
         requestedSetpoint = velocity;
         updateAtGoalTimer();

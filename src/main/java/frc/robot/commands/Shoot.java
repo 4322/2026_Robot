@@ -4,7 +4,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.shooter.areaManager.AreaManager;
-import frc.robot.subsystems.shooter.areaManager.AreaManager.Zone;
 import org.littletonrobotics.junction.Logger;
 
 public class Shoot extends Command {

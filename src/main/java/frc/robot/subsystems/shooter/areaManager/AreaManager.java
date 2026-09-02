@@ -1,10 +1,7 @@
 package frc.robot.subsystems.shooter.areaManager;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import frc.robot.Robot;
 import frc.robot.constants.DemoConfig;
-import frc.robot.constants.FieldConstants;
 
 public class AreaManager {
 

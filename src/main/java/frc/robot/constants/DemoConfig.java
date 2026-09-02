@@ -11,13 +11,7 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.LinearVelocity;
 import frc.robot.util.Region2d;
-
 import java.util.List;
-
-// Todo list for Ryan before Saturday
-/*
-- Low powered shallow shooting
-*/
 
 public class DemoConfig {
   // All units in meters
@@ -27,7 +21,15 @@ public class DemoConfig {
   public static final LinearVelocity maxDriveSpeed = MetersPerSecond.of(1);
 
   public static final boolean useGeofence = true;
-  public static final boolean manualZero = true; // Allows for the coast mode button to zero the robot, where it is placed against the field border at 0,0 (bottom left corner), intake facing positive X
+  public static final boolean manualZero =
+      true; // Allows for the coast mode button to zero the robot, where it is placed against the
+  // field border at 0,0 (bottom left corner), intake facing positive X
+
+  public static boolean overrideShootingParams = true; // Does not apply to flywheel
+  public static double tunnelRPS = 45 * 0.5;
+  public static double spindexerRPS = 9 * 0.5;
+  public static boolean useManualFlywheelLimit = false; // Likely cause robot to undershoot
+  public static double flywheelLimitRPS = 20;
 
   // Field layout settings (in meters)
   // Layout guide at https://miro.com/app/board/uXjVHsdpnVk=/?share_link_id=345613555076 (requires
@@ -40,7 +42,8 @@ public class DemoConfig {
   public static double demoFieldWidth =
       Units.feetToMeters(10); // Shorter side, should be side with an AprilTag
 
-    public static double shootingTargetOffset = Units.feetToMeters(1); // Positive is inside field, negative is outside field
+  public static double shootingTargetOffset =
+      Units.feetToMeters(1); // Positive is inside field, negative is outside field
 
   public static double aprilTagHorizontalOffset =
       Units.inchesToMeters(24); // Offset from the long side of the field
@@ -87,12 +90,24 @@ public class DemoConfig {
                         new Rotation3d(Units.degreesToRadians(90), 0, 0)))),
             fieldLength,
             fieldWidth);
-    
-    public static final Translation2d leftTarget = new Translation2d(shootingTargetOffset, aprilTagHorizontalOffset);
-    public static final Translation2d rightTarget = new Translation2d(fieldLength - shootingTargetOffset, fieldWidth - aprilTagHorizontalOffset);
-    public static final Translation2d centerTarget = new Translation2d(fieldLength / 2, fieldWidth / 2);
 
-    public static final Region2d leftZone = new Region2d(new Translation2d(-tolerance,-tolerance), new Translation2d(fieldLength / 2, fieldWidth), "leftZone");
-    public static final Region2d rightZone = new Region2d(new Translation2d(fieldLength / 2, 0), new Translation2d(fieldLength + tolerance, fieldWidth + tolerance), "rightZone");
+    public static final Translation2d leftTarget =
+        new Translation2d(shootingTargetOffset, aprilTagHorizontalOffset);
+    public static final Translation2d rightTarget =
+        new Translation2d(
+            fieldLength - shootingTargetOffset, fieldWidth - aprilTagHorizontalOffset);
+    public static final Translation2d centerTarget =
+        new Translation2d(fieldLength / 2, fieldWidth / 2);
+
+    public static final Region2d leftZone =
+        new Region2d(
+            new Translation2d(-tolerance, -tolerance),
+            new Translation2d(fieldLength / 2, fieldWidth),
+            "leftZone");
+    public static final Region2d rightZone =
+        new Region2d(
+            new Translation2d(fieldLength / 2, 0),
+            new Translation2d(fieldLength + tolerance, fieldWidth + tolerance),
+            "rightZone");
   }
 }

@@ -383,7 +383,7 @@ public class RobotContainer {
       controller.rightTrigger().whileTrue(ShooterCommands.aimAndShoot(shooter, drive, intake));
     } else {
       controller.rightTrigger().whileTrue(ShooterCommands.autoShoot(shooter, drive, intake));
-      //controller.a().whileTrue(ShooterCommands.fixedShoot(shooter, drive, intake));
+      // controller.a().whileTrue(ShooterCommands.fixedShoot(shooter, drive, intake));
     }
 
     controller.leftBumper().onTrue(IntakeCommands.toggleIntake(intake, controller));
@@ -415,6 +415,7 @@ public class RobotContainer {
   }
 
   public void zeroPose() {
-    drive.setPose(new Pose2d(DemoConfig.robotLength / 2, DemoConfig.robotMaxWidth / 2, new Rotation2d()));
+    drive.setPose(
+        new Pose2d(DemoConfig.robotLength / 2, DemoConfig.robotMaxWidth / 2, new Rotation2d()));
   }
 }
