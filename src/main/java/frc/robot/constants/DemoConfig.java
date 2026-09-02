@@ -21,13 +21,13 @@ import java.util.List;
 
 public class DemoConfig {
   // All units in meters
-  public static final boolean demoEnabled = true;
 
   public static final boolean maxDriveSpeedOverride =
-      true && demoEnabled; // Set to true to override the normal speed (4.775 m/s)
+      true; // Set to true to override the normal speed (4.775 m/s)
   public static final LinearVelocity maxDriveSpeed = MetersPerSecond.of(1);
 
-  public static final boolean useGeofence = true && demoEnabled;
+  public static final boolean useGeofence = true;
+  public static final boolean manualZero = true;
 
   // Field layout settings (in meters)
   // Layout guide at https://miro.com/app/board/uXjVHsdpnVk=/?share_link_id=345613555076 (requires
@@ -35,7 +35,7 @@ public class DemoConfig {
   public static int aprilTagAID = 1;
   public static int aprilTagBID = 2;
 
-  public static boolean useCustomField = true && demoEnabled;
+  public static boolean useCustomField = true;
   public static double demoFieldLength = Units.feetToMeters(20); // Long side,
   public static double demoFieldWidth =
       Units.feetToMeters(10); // Shorter side, should be side with an AprilTag
