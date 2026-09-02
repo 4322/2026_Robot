@@ -30,12 +30,21 @@ public class VisionGlobalPoseIOSim extends VisionGlobalPoseIOPhoton {
     // Initialize vision sim
     if (visionSim == null) {
       visionSim = new VisionSystemSim("main");
-      visionSim.addAprilTags(DemoConfig.useCustomField ? DemoConfig.DemoFields.aprilTagFieldLayout : FieldConstants.aprilTagFieldLayout);
+      visionSim.addAprilTags(
+          DemoConfig.useCustomField
+              ? DemoConfig.DemoFields.aprilTagFieldLayout
+              : FieldConstants.aprilTagFieldLayout);
     }
 
     // Add sim camera
     var cameraProperties = new SimCameraProperties();
-    cameraSim = new PhotonCameraSim(camera, cameraProperties, DemoConfig.useCustomField ? DemoConfig.DemoFields.aprilTagFieldLayout : FieldConstants.aprilTagFieldLayout);
+    cameraSim =
+        new PhotonCameraSim(
+            camera,
+            cameraProperties,
+            DemoConfig.useCustomField
+                ? DemoConfig.DemoFields.aprilTagFieldLayout
+                : FieldConstants.aprilTagFieldLayout);
     visionSim.addCamera(cameraSim, robotToCamera);
   }
 

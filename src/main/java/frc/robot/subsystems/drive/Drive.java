@@ -42,9 +42,9 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.RobotContainer;
 import frc.robot.constants.Constants;
-import frc.robot.constants.DemoConfig;
 import frc.robot.constants.Constants.Mode;
 import frc.robot.constants.Constants.SubsystemMode;
+import frc.robot.constants.DemoConfig;
 import frc.robot.generated.TunerConstants;
 import frc.robot.util.LocalADStarAK;
 import java.util.concurrent.locks.Lock;
@@ -74,7 +74,9 @@ public class Drive extends SubsystemBase {
           ROBOT_MOI,
           new ModuleConfig(
               TunerConstants.FrontLeft.WheelRadius,
-              DemoConfig.maxDriveSpeedOverride ? DemoConfig.maxDriveSpeed.in(MetersPerSecond) : TunerConstants.kSpeedAt12Volts.in(MetersPerSecond),
+              DemoConfig.maxDriveSpeedOverride
+                  ? DemoConfig.maxDriveSpeed.in(MetersPerSecond)
+                  : TunerConstants.kSpeedAt12Volts.in(MetersPerSecond),
               WHEEL_COF,
               DCMotor.getKrakenX60Foc(1)
                   .withReduction(TunerConstants.FrontLeft.DriveMotorGearRatio),
@@ -228,7 +230,11 @@ public class Drive extends SubsystemBase {
     // Calculate module setpoints
     ChassisSpeeds discreteSpeeds = ChassisSpeeds.discretize(speeds, 0.02);
     SwerveModuleState[] setpointStates = kinematics.toSwerveModuleStates(discreteSpeeds);
-    SwerveDriveKinematics.desaturateWheelSpeeds(setpointStates, DemoConfig.maxDriveSpeedOverride ? DemoConfig.maxDriveSpeed: TunerConstants.kSpeedAt12Volts);
+    SwerveDriveKinematics.desaturateWheelSpeeds(
+        setpointStates,
+        DemoConfig.maxDriveSpeedOverride
+            ? DemoConfig.maxDriveSpeed
+            : TunerConstants.kSpeedAt12Volts);
 
     // Log unoptimized setpoints and setpoint speeds
     Logger.recordOutput("Drive/SwerveStates/Setpoints", setpointStates);
@@ -375,7 +381,9 @@ public class Drive extends SubsystemBase {
 
   /** Returns the maximum linear speed in meters per sec. */
   public double getMaxLinearSpeedMetersPerSec() {
-    return DemoConfig.maxDriveSpeedOverride ? DemoConfig.maxDriveSpeed.in(MetersPerSecond) : TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
+    return DemoConfig.maxDriveSpeedOverride
+        ? DemoConfig.maxDriveSpeed.in(MetersPerSecond)
+        : TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
   }
 
   /** Returns the maximum angular speed in radians per sec. */

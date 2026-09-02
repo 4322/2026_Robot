@@ -97,7 +97,10 @@ public class VisionGlobalPoseIOPhoton implements VisionGlobalPoseIO {
         var target = result.targets.get(0);
 
         // Calculate robot pose
-        var tagPose = DemoConfig.useCustomField ? DemoConfig.DemoFields.aprilTagFieldLayout.getTagPose(target.fiducialId) : FieldConstants.aprilTagFieldLayout.getTagPose(target.fiducialId);
+        var tagPose =
+            DemoConfig.useCustomField
+                ? DemoConfig.DemoFields.aprilTagFieldLayout.getTagPose(target.fiducialId)
+                : FieldConstants.aprilTagFieldLayout.getTagPose(target.fiducialId);
         if (tagPose.isPresent()) {
           Transform3d fieldToTarget =
               new Transform3d(tagPose.get().getTranslation(), tagPose.get().getRotation());
