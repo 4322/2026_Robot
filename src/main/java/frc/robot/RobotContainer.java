@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.autonomous.AutonomousSelector;
 import frc.robot.commands.DriveCommands;
@@ -391,6 +392,9 @@ public class RobotContainer {
     controller.y().onTrue(IntakeCommands.smoosh(intake)).onFalse(IntakeCommands.toggleOff(intake));
     controller.rightBumper().onTrue(ShooterCommands.turretUnjamOverride(shooter, true));
     controller.rightBumper().onFalse(ShooterCommands.turretUnjamOverride(shooter, false));
+    if (DemoConfig.manualZero) {
+      controller.povLeft().onTrue(new InstantCommand(() -> zeroPose()));
+    }
   }
 
   /**
