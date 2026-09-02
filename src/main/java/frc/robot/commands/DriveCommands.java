@@ -25,6 +25,8 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.constants.Constants;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.util.LoggedTunableNumber;
+import frc.robot.util.demo.FieldGeofence;
+
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.LinkedList;
@@ -96,7 +98,7 @@ public class DriveCommands {
                   && DriverStation.getAlliance().get() == Alliance.Red;
           drive.runVelocity(
               ChassisSpeeds.fromFieldRelativeSpeeds(
-                  speeds,
+                  FieldGeofence.applyGeofence(speeds, drive.getRobotPose()),
                   isFlipped
                       ? drive.getRotation().plus(new Rotation2d(Math.PI))
                       : drive.getRotation()));
@@ -144,7 +146,7 @@ public class DriveCommands {
                   && DriverStation.getAlliance().get() == Alliance.Red;
           drive.runVelocity(
               ChassisSpeeds.fromFieldRelativeSpeeds(
-                  speeds,
+                  FieldGeofence.applyGeofence(speeds, drive.getRobotPose()),
                   isFlipped
                       ? drive.getRotation().plus(new Rotation2d(Math.PI))
                       : drive.getRotation()));
