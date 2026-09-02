@@ -6,16 +6,17 @@ import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.LinearVelocity;
+import frc.robot.util.Region2d;
+
 import java.util.List;
 
 // Todo list for Ryan before Saturday
 /*
-- Custom scoring locations with tags, automatic targeting
 - Low powered shallow shooting
-- disable passing
 */
 
 public class DemoConfig {
@@ -39,6 +40,8 @@ public class DemoConfig {
   public static double demoFieldWidth =
       Units.feetToMeters(10); // Shorter side, should be side with an AprilTag
 
+    public static double shootingTargetOffset = Units.feetToMeters(1); // Positive is inside field, negative is outside field
+
   public static double aprilTagHorizontalOffset =
       Units.inchesToMeters(24); // Offset from the long side of the field
   public static double aprilTagVerticalOffset = Units.inchesToMeters(24); // Offset from ground
@@ -54,6 +57,8 @@ public class DemoConfig {
   public class DemoFields {
     public static final double fieldLength = demoFieldLength;
     public static final double fieldWidth = demoFieldWidth;
+
+    public static final double tolerance = 10.0;
 
     // Used for geofencing
     public static final double margin = 0.8; // TODO tune this
@@ -82,5 +87,12 @@ public class DemoConfig {
                         new Rotation3d(Units.degreesToRadians(90), 0, 0)))),
             fieldLength,
             fieldWidth);
+    
+    public static final Translation2d leftTarget = new Translation2d(shootingTargetOffset, aprilTagHorizontalOffset);
+    public static final Translation2d rightTarget = new Translation2d(fieldLength - shootingTargetOffset, fieldWidth - aprilTagHorizontalOffset);
+    public static final Translation2d centerTarget = new Translation2d(fieldLength / 2, fieldWidth / 2);
+
+    public static final Region2d leftZone = new Region2d(new Translation2d(-tolerance,-tolerance), new Translation2d(fieldLength / 2, fieldWidth), "leftZone");
+    public static final Region2d rightZone = new Region2d(new Translation2d(fieldLength / 2, 0), new Translation2d(fieldLength + tolerance, fieldWidth + tolerance), "rightZone");
   }
 }

@@ -31,11 +31,7 @@ public class Shoot extends Command {
     if ((!AreaManager.isShootingArea(drive.getTurretPose())) && !ignoreArea) {
       shooter.requestIdle(null, null, null);
     } else {
-      if (AreaManager.getZoneOfPosition(drive.getTurretPose()) == Zone.ALLIANCE_ZONE) {
-        shooter.requestShoot(false, true);
-      } else {
-        shooter.requestShoot(false, false);
-      }
+      shooter.requestShoot(false, true);
     }
   }
 
