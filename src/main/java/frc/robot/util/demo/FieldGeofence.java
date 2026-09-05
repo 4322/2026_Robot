@@ -3,6 +3,7 @@ package frc.robot.util.demo;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc.robot.constants.DemoConfig;
+import org.littletonrobotics.junction.Logger;
 
 public class FieldGeofence {
 
@@ -11,6 +12,8 @@ public class FieldGeofence {
     double y = pose.getY();
     double vx = fieldSpeeds.vxMetersPerSecond;
     double vy = fieldSpeeds.vyMetersPerSecond;
+    Logger.recordOutput("FieldGeofence/prevVX", vx);
+    Logger.recordOutput("FieldGeofence/prevVY", vy);
 
     // Basically uses exponential function to reduce speed as robot approaches border
     if (vx < 0) {
@@ -25,6 +28,8 @@ public class FieldGeofence {
     if (vy > 0) {
       vy *= easeSpeed(DemoConfig.DemoFields.maxY - y);
     }
+    Logger.recordOutput("FieldGeofence/postVX", vx);
+    Logger.recordOutput("FieldGeofence/postVY", vy);
     return new ChassisSpeeds(
         vx, vy, fieldSpeeds.omegaRadiansPerSecond); // We leave rotation unchanged
   }
