@@ -405,6 +405,7 @@ public class Robot extends LoggedRobot {
   /** This function is called periodically when disabled. */
   @Override
   public void disabledPeriodic() {
+    DemoConfig.DemoFields.log();
     if (Constants.currentMode != Constants.Mode.SIM) {
       if (!coastButton.get()) {
         // button is pressed in
