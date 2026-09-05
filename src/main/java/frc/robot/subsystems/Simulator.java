@@ -711,7 +711,8 @@ public class Simulator {
               "Set pose",
               EventType.SET_POSE,
               new FieldPose2d(0.5, 0.5, Rotation2d.kZero)),
-          new SimEvent(t += 0.1, "Start shooting", EventType.HOLD_RIGHT_TRIGGER),
+          new SimEvent(t += 0.1, "Deploy Intake", EventType.PRESS_LEFT_BUMPER),
+          new SimEvent(t += 2, "Start shooting", EventType.HOLD_RIGHT_TRIGGER),
           new SimEvent(
               t += 0.1,
               "Move right",
@@ -726,7 +727,8 @@ public class Simulator {
               t += 10,
               "Move up right",
               EventType.MOVE_JOYSTICK_DRIVE,
-              new Pose2d(1, 1, Rotation2d.kZero)));
+              new Pose2d(1, 1, Rotation2d.kZero)),
+          new SimEvent(t += 10, "End", EventType.END_OF_SCENARIO));
       default -> List.of();
     };
   }

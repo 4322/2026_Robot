@@ -9,6 +9,7 @@ import frc.robot.constants.Constants;
 import frc.robot.constants.Constants.ShotCalculatorParameters;
 import frc.robot.constants.DemoConfig;
 import frc.robot.subsystems.drive.Drive;
+import frc.robot.subsystems.shooter.areaManager.AreaManager;
 import frc.robot.subsystems.shooter.firingManager.FiringManager;
 import frc.robot.subsystems.shooter.flywheel.Flywheel;
 import frc.robot.subsystems.shooter.hood.Hood;
@@ -324,18 +325,12 @@ public class Shooter extends SubsystemBase {
       Translation2d shootForward;
       ShotCalculator.ShotInputs inputs;
 
-      if (isScoring) {
-        if (Robot.alliance == DriverStation.Alliance.Red) {
-          shootForward = new Translation2d(-1, 0);
-        } else {
-          shootForward = new Translation2d(1, 0);
-        }
+      if (AreaManager.getZoneOfPosition(drive.getTurretPose()) == AreaManager.Zone.LEFT) {
+        shootForward = new Translation2d(-1, 0);
+      } else if (AreaManager.getZoneOfPosition(drive.getTurretPose()) == AreaManager.Zone.RIGHT) {
+        shootForward = new Translation2d(1, 0);
       } else {
-        if (Robot.alliance == DriverStation.Alliance.Red) {
-          shootForward = new Translation2d(1, 0);
-        } else {
-          shootForward = new Translation2d(-1, 0);
-        }
+        shootForward = new Translation2d(1, 0);
       }
 
       inputs =
@@ -375,6 +370,7 @@ public class Shooter extends SubsystemBase {
         targetSpindexerSpeedRPS = tunableIndexerSpeedRPS.get();
         targetTurretAngleDeg = shot.turretAngle().getDegrees();
       } else if (shot.isValid()) {
+        Logger.recordOutput("Shooter/ShotCalculator/HoodAngle", shot.hoodAngle());
         targetHoodAngleDeg = shot.hoodAngle();
         targetFlywheelSpeedRPS = shot.rpm() / 60.0;
         targetTurretAngleDeg = shot.turretAngle().getDegrees();

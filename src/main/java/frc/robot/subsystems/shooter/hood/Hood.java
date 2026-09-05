@@ -99,6 +99,7 @@ public class Hood {
   }
 
   public void requestGoal(double degrees, boolean isScoring) {
+    Logger.recordOutput("Shooter/Hood/RequestedGoal", degrees);
     this.isScoring = isScoring;
     if (Constants.hoodMode == SubsystemMode.NORMAL && !trenchOverride) {
       setGoal(degrees);
@@ -111,6 +112,7 @@ public class Hood {
   }
 
   public void trenchOverride(boolean override) {
+    Logger.recordOutput("Shooter/Hood/TrenchOverride", override);
     setGoal(Constants.Hood.safeAngleDeg);
     trenchOverride = override;
   }
