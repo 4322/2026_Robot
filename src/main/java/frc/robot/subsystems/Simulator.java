@@ -20,7 +20,7 @@ import java.util.Map;
 import org.littletonrobotics.junction.Logger;
 
 public class Simulator {
-  private static final RegressTests regressTest = RegressTests.DO_NOTHING;
+  private static final RegressTests regressTest = RegressTests.DEMO;
   public static AutoName autoScenario;
   private TeleopScenario teleopScenario;
   private List<TeleAnomaly> teleAnomalies;
@@ -44,7 +44,8 @@ public class Simulator {
     ZONES,
     INTAKE_TEST,
     DRIVE_WHILE_SHOOTING,
-    TRENCHES
+    TRENCHES,
+    DEMO
   }
 
   private enum TeleAnomaly {
@@ -67,7 +68,8 @@ public class Simulator {
     Slowly_Up_down,
     ZONES,
     INTAKE_TEST,
-    TRENCHES
+    TRENCHES,
+    DEMO
   }
 
   private enum EventType {
@@ -258,6 +260,7 @@ public class Simulator {
       case TRENCHES -> List.of(
           new RegressionTest("Trenches", TeleopScenario.TRENCHES, Alliance.Blue),
           new RegressionTest("Trenches", TeleopScenario.TRENCHES, Alliance.Red));
+      case DEMO -> List.of(new RegressionTest("Demo", TeleopScenario.DEMO, Alliance.Blue));
       default -> List.of();
     };
   }
@@ -702,6 +705,28 @@ public class Simulator {
               EventType.MOVE_JOYSTICK_DRIVE,
               new Pose2d(1, 0, Rotation2d.kZero)),
           new SimEvent(t += 5, "End", EventType.END_OF_SCENARIO));
+      case DEMO -> List.of(
+          new SimEvent(
+              t += 0.1,
+              "Set pose",
+              EventType.SET_POSE,
+              new FieldPose2d(0.5, 0.5, Rotation2d.kZero)),
+          new SimEvent(t += 0.1, "Start shooting", EventType.HOLD_RIGHT_TRIGGER),
+          new SimEvent(
+              t += 0.1,
+              "Move right",
+              EventType.MOVE_JOYSTICK_DRIVE,
+              new Pose2d(1, 0, Rotation2d.kZero)),
+          new SimEvent(
+              t += 10,
+              "Move left",
+              EventType.MOVE_JOYSTICK_DRIVE,
+              new Pose2d(-1, 0, Rotation2d.kZero)),
+          new SimEvent(
+              t += 10,
+              "Move up right",
+              EventType.MOVE_JOYSTICK_DRIVE,
+              new Pose2d(1, 1, Rotation2d.kZero)));
       default -> List.of();
     };
   }

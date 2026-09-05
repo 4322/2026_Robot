@@ -61,7 +61,7 @@ public class DemoConfig {
     public static final double fieldLength = demoFieldLength;
     public static final double fieldWidth = demoFieldWidth;
 
-    public static final double tolerance = 10.0;
+    public static final double tolerance = 0.0;
 
     // Used for geofencing
     public static final double margin = 0.8; // TODO tune this
@@ -102,12 +102,17 @@ public class DemoConfig {
     public static final Region2d leftZone =
         new Region2d(
             new Translation2d(-tolerance, -tolerance),
-            new Translation2d(fieldLength / 2, fieldWidth),
+            new Translation2d(fieldLength / 2, fieldWidth + tolerance),
             "leftZone");
     public static final Region2d rightZone =
         new Region2d(
-            new Translation2d(fieldLength / 2, 0),
+            new Translation2d(fieldLength / 2, -tolerance),
             new Translation2d(fieldLength + tolerance, fieldWidth + tolerance),
             "rightZone");
+
+    public static void log() {
+      leftZone.logPoints();
+      rightZone.logPoints();
+    }
   }
 }
