@@ -42,6 +42,7 @@ public class DemoConfig {
   public static double demoFieldWidth =
       Units.feetToMeters(10); // Shorter side, should be side with an AprilTag
 
+  public static boolean shootToOppositeSide = true;
   public static double shootingTargetOffset =
       Units.feetToMeters(1); // Positive is inside field, negative is outside field
 

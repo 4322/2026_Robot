@@ -325,12 +325,20 @@ public class Shooter extends SubsystemBase {
       Translation2d shootForward;
       ShotCalculator.ShotInputs inputs;
 
-      if (AreaManager.getZoneOfPosition(drive.getTurretPose()) == AreaManager.Zone.LEFT) {
-        shootForward = new Translation2d(-1, 0);
-      } else if (AreaManager.getZoneOfPosition(drive.getTurretPose()) == AreaManager.Zone.RIGHT) {
-        shootForward = new Translation2d(1, 0);
+      if (DemoConfig.shootToOppositeSide) {
+        if (drive.getTurretPose().getX() < DemoConfig.demoFieldWidth / 2) {
+          shootForward = new Translation2d(1, 0);
+        } else {
+          shootForward = new Translation2d(-1, 0);
+        }
       } else {
-        shootForward = new Translation2d(1, 0);
+        if (AreaManager.getZoneOfPosition(drive.getTurretPose()) == AreaManager.Zone.LEFT) {
+          shootForward = new Translation2d(-1, 0);
+        } else if (AreaManager.getZoneOfPosition(drive.getTurretPose()) == AreaManager.Zone.RIGHT) {
+          shootForward = new Translation2d(1, 0);
+        } else {
+          shootForward = new Translation2d(1, 0);
+        }
       }
 
       inputs =

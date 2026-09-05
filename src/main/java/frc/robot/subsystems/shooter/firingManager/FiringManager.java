@@ -19,22 +19,43 @@ public class FiringManager {
 
   public static Translation2d getShootingTarget(Pose2d robotPosition) {
     Zone zone = AreaManager.getZoneOfPosition(robotPosition);
-    switch (zone) {
-      case LEFT -> {
-        Logger.recordOutput("FiringManager/targetZone", "Left");
-        return DemoConfig.DemoFields.leftTarget;
+    if (DemoConfig.shootToOppositeSide) {
+      switch (zone) {
+        case LEFT -> {
+          Logger.recordOutput("FiringManager/targetZone", "Left");
+          return DemoConfig.DemoFields.rightTarget;
+        }
+        case RIGHT -> {
+          Logger.recordOutput("FiringManager/targetZone", "Right");
+          return DemoConfig.DemoFields.leftTarget;
+        }
+        case UNKNOWN -> {
+          Logger.recordOutput("FiringManager/targetZone", "Unknown, targeting center of field");
+          return DemoConfig.DemoFields.centerTarget;
+        }
+        default -> {
+          Logger.recordOutput("FiringManager/targetZone", "Default, targeting center of field");
+          return DemoConfig.DemoFields.centerTarget;
+        }
       }
-      case RIGHT -> {
-        Logger.recordOutput("FiringManager/targetZone", "Right");
-        return DemoConfig.DemoFields.rightTarget;
-      }
-      case UNKNOWN -> {
-        Logger.recordOutput("FiringManager/targetZone", "Unknown, targeting center of field");
-        return DemoConfig.DemoFields.centerTarget;
-      }
-      default -> {
-        Logger.recordOutput("FiringManager/targetZone", "Default, targeting center of field");
-        return DemoConfig.DemoFields.centerTarget;
+    } else {
+      switch (zone) {
+        case LEFT -> {
+          Logger.recordOutput("FiringManager/targetZone", "Left");
+          return DemoConfig.DemoFields.leftTarget;
+        }
+        case RIGHT -> {
+          Logger.recordOutput("FiringManager/targetZone", "Right");
+          return DemoConfig.DemoFields.rightTarget;
+        }
+        case UNKNOWN -> {
+          Logger.recordOutput("FiringManager/targetZone", "Unknown, targeting center of field");
+          return DemoConfig.DemoFields.centerTarget;
+        }
+        default -> {
+          Logger.recordOutput("FiringManager/targetZone", "Default, targeting center of field");
+          return DemoConfig.DemoFields.centerTarget;
+        }
       }
     }
   }
