@@ -100,6 +100,7 @@ public class DemoConfig {
     public static final Translation2d centerTarget =
         new Translation2d(fieldLength / 2, fieldWidth / 2);
 
+    public static final Region2d field = new Region2d(new Translation2d(0, 0), new Translation2d(fieldLength, fieldWidth), "field");
     public static final Region2d leftZone =
         new Region2d(
             new Translation2d(-tolerance, -tolerance),
@@ -114,6 +115,7 @@ public class DemoConfig {
     public static void log() {
       leftZone.logPoints();
       rightZone.logPoints();
+      field.logPoints();
     }
   }
 }
