@@ -34,8 +34,8 @@ public class DemoConfig {
   // Field layout settings (in meters)
   // Layout guide at https://miro.com/app/board/uXjVHsdpnVk=/?share_link_id=345613555076 (requires
   // Clockwork login)
-  public static int aprilTagAID = 1;
-  public static int aprilTagBID = 2;
+  public static int aprilTagAID = 21;
+  public static int aprilTagBID = 22;
 
   public static boolean useCustomField = true;
   public static double demoFieldLength = Units.feetToMeters(20); // Long side,
@@ -47,12 +47,12 @@ public class DemoConfig {
 
   public static double aprilTagHorizontalOffset =
       Units.inchesToMeters(24); // Offset from the long side of the field
-  public static double aprilTagVerticalOffset = Units.inchesToMeters(24); // Offset from ground
+  public static double aprilTagVerticalOffset = 0.43; // Offset from ground
 
   // Stuff that shouldn't change in between demos
-  public static double robotMaxLength = 0; // TODO; measure with intake out
-  public static double robotLength = 0; // just robot, no intake
-  public static double robotMaxWidth = 0;
+  public static double robotMaxLength = 1.002129;
+  public static double robotLength = 0.810666; // just robot, no intake
+  public static double robotMaxWidth = 0.912241;
   public static double robotMaxSide = Math.max(robotMaxLength, robotMaxWidth);
 
   // Other classes/utils
