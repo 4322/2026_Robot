@@ -1,5 +1,7 @@
 package frc.robot.subsystems.shooter;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
@@ -321,20 +323,21 @@ public class Shooter extends SubsystemBase {
         targetTurretAngleDeg = Constants.fixedSolutionRed.turretAngleDeg;
       }
     } else {
-      Translation2d shootTarget = FiringManager.getShootingTarget(drive.getTurretPose());
+      Translation2d shootTarget = FiringManager.getShootingTarget(drive.getRobotPose());
+      Logger.recordOutput("Shooter/ShootTarget", new Pose2d(shootTarget, Rotation2d.kZero));
       Translation2d shootForward;
       ShotCalculator.ShotInputs inputs;
 
       if (DemoConfig.shootToOppositeSide) {
-        if (drive.getTurretPose().getX() < DemoConfig.demoFieldWidth / 2) {
+        if (drive.getRobotPose().getX() < DemoConfig.demoFieldWidth / 2) {
           shootForward = new Translation2d(1, 0);
         } else {
           shootForward = new Translation2d(-1, 0);
         }
       } else {
-        if (AreaManager.getZoneOfPosition(drive.getTurretPose()) == AreaManager.Zone.LEFT) {
+        if (AreaManager.getZoneOfPosition(drive.getRobotPose()) == AreaManager.Zone.LEFT) {
           shootForward = new Translation2d(-1, 0);
-        } else if (AreaManager.getZoneOfPosition(drive.getTurretPose()) == AreaManager.Zone.RIGHT) {
+        } else if (AreaManager.getZoneOfPosition(drive.getRobotPose()) == AreaManager.Zone.RIGHT) {
           shootForward = new Translation2d(1, 0);
         } else {
           shootForward = new Translation2d(1, 0);

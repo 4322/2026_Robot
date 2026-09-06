@@ -9,14 +9,6 @@ import org.littletonrobotics.junction.Logger;
 
 public class FiringManager {
 
-  public enum FiringTargets {
-    HUB,
-    ALLIANCE_RIGHT,
-    ALLIANCE_LEFT,
-    NEUTRAL_LEFT,
-    NEUTRAL_RIGHT
-  }
-
   public static Translation2d getShootingTarget(Pose2d robotPosition) {
     Zone zone = AreaManager.getZoneOfPosition(robotPosition);
     if (DemoConfig.shootToOppositeSide) {
