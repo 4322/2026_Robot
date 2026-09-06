@@ -18,7 +18,7 @@ public class DemoConfig {
 
   public static final boolean maxDriveSpeedOverride =
       true; // Set to true to override the normal speed (4.775 m/s)
-  public static final LinearVelocity maxDriveSpeed = MetersPerSecond.of(1);
+  public static final LinearVelocity maxDriveSpeed = MetersPerSecond.of(4.775);
 
   public static final boolean useGeofence = true;
   public static final boolean manualZero =
@@ -65,7 +65,8 @@ public class DemoConfig {
     public static final double tolerance = 0.0;
 
     // Used for geofencing
-    public static final double margin = 0.8; // TODO tune this
+    public static final double margin =
+        0.3; // Distance from border to start slowing down; TODO tune this
 
     public static final double minX = robotMaxSide / 2;
     public static final double maxX = fieldLength - robotMaxSide / 2;
@@ -100,7 +101,8 @@ public class DemoConfig {
     public static final Translation2d centerTarget =
         new Translation2d(fieldLength / 2, fieldWidth / 2);
 
-    public static final Region2d field = new Region2d(new Translation2d(0, 0), new Translation2d(fieldLength, fieldWidth), "field");
+    public static final Region2d field =
+        new Region2d(new Translation2d(0, 0), new Translation2d(fieldLength, fieldWidth), "field");
     public static final Region2d leftZone =
         new Region2d(
             new Translation2d(-tolerance, -tolerance),
@@ -111,11 +113,20 @@ public class DemoConfig {
             new Translation2d(fieldLength / 2, -tolerance),
             new Translation2d(fieldLength + tolerance, fieldWidth + tolerance),
             "rightZone");
+    public static final Region2d allowedArea =
+        new Region2d(new Translation2d(minX, minY), new Translation2d(maxX, maxY), "allowedArea");
+    public static final Region2d marginArea =
+        new Region2d(
+            new Translation2d(minX + margin, minY + margin),
+            new Translation2d(maxX - margin, maxY - margin),
+            "marginArea");
 
     public static void log() {
       leftZone.logPoints();
       rightZone.logPoints();
       field.logPoints();
+      allowedArea.logPoints();
+      marginArea.logPoints();
     }
   }
 }

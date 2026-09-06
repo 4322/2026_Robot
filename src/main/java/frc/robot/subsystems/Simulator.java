@@ -707,27 +707,39 @@ public class Simulator {
           new SimEvent(t += 5, "End", EventType.END_OF_SCENARIO));
       case DEMO -> List.of(
           new SimEvent(
-              t += 0.1,
-              "Set pose",
-              EventType.SET_POSE,
-              new FieldPose2d(0.5, 0.5, Rotation2d.kZero)),
+              t += 0.1, "Set pose", EventType.SET_POSE, new FieldPose2d(1, 1, Rotation2d.kZero)),
           new SimEvent(t += 0.1, "Deploy Intake", EventType.PRESS_LEFT_BUMPER),
           new SimEvent(t += 2, "Start shooting", EventType.HOLD_RIGHT_TRIGGER),
           new SimEvent(
               t += 0.1,
+              "Move left",
+              EventType.MOVE_JOYSTICK_DRIVE,
+              new Pose2d(0, 1, Rotation2d.kZero)),
+          new SimEvent(
+              t += 2,
               "Move right",
+              EventType.MOVE_JOYSTICK_DRIVE,
+              new Pose2d(0, -1, Rotation2d.kZero)),
+          new SimEvent(
+              t += 10,
+              "Move left",
+              EventType.MOVE_JOYSTICK_DRIVE,
+              new Pose2d(0, 1, Rotation2d.kZero)),
+          new SimEvent(
+              t += 10,
+              "Move up",
               EventType.MOVE_JOYSTICK_DRIVE,
               new Pose2d(1, 0, Rotation2d.kZero)),
           new SimEvent(
               t += 10,
-              "Move left",
+              "Move down",
               EventType.MOVE_JOYSTICK_DRIVE,
               new Pose2d(-1, 0, Rotation2d.kZero)),
           new SimEvent(
               t += 10,
               "Move up right",
               EventType.MOVE_JOYSTICK_DRIVE,
-              new Pose2d(1, 1, Rotation2d.kZero)),
+              new Pose2d(1, -1, Rotation2d.kZero)),
           new SimEvent(t += 10, "End", EventType.END_OF_SCENARIO));
       default -> List.of();
     };

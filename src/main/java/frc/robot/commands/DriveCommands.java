@@ -66,7 +66,6 @@ public class DriveCommands {
         .getTranslation();
   }
 
-
   /**
    * Field relative drive command using two joysticks (controlling linear and angular velocities).
    */
@@ -96,7 +95,7 @@ public class DriveCommands {
           drive.runVelocity(
               ChassisSpeeds.fromFieldRelativeSpeeds(
                   FieldGeofence.applyGeofence(speeds, drive.getRobotPose()),
-                      drive.getRotation().plus(new Rotation2d(Math.PI / 4))));
+                  drive.getRotation().minus(new Rotation2d(Math.PI / 2))));
         },
         drive);
   }
@@ -139,7 +138,7 @@ public class DriveCommands {
           drive.runVelocity(
               ChassisSpeeds.fromFieldRelativeSpeeds(
                   FieldGeofence.applyGeofence(speeds, drive.getRobotPose()),
-                      drive.getRotation().plus(new Rotation2d(Math.PI / 4))));
+                  drive.getRotation().minus(new Rotation2d(Math.PI / 2))));
         },
         drive);
   }
