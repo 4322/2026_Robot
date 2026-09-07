@@ -46,7 +46,7 @@ public class DemoConfig {
 
   public static boolean shootToOppositeSide = true;
   public static double shootingTargetOffset =
-      Units.feetToMeters(1); // Positive is inside field, negative is outside field
+      Units.feetToMeters(-0.7); // Positive is inside field, negative is outside field
 
   public static double aprilTagHorizontalOffset =
       Units.inchesToMeters(24); // Offset from the long side of the field
@@ -96,10 +96,10 @@ public class DemoConfig {
             fieldWidth);
 
     public static final Translation2d leftTarget =
-        new Translation2d(shootingTargetOffset, aprilTagHorizontalOffset);
+        new Translation2d(shootingTargetOffset, fieldWidth / 2);
     public static final Translation2d rightTarget =
         new Translation2d(
-            fieldLength - shootingTargetOffset, fieldWidth - aprilTagHorizontalOffset);
+            fieldLength - shootingTargetOffset, fieldWidth / 2);
     public static final Translation2d centerTarget =
         new Translation2d(fieldLength / 2, fieldWidth / 2);
 
