@@ -173,7 +173,7 @@ public final class Constants {
     public static final double motorToMechanismRatio = 1;
     public static final double largeToleranceRPS = 6.0;
     public static final double smallToleranceRPS = 4.0;
-    public static final int idleRPS = 15;
+    public static final int idleRPS = 0;
     public static final int idleTimeout = 5;
 
     public static final int canandcolorId = 0;
@@ -253,7 +253,7 @@ public final class Constants {
     public static final double minHomingSec = 0.150;
     public static final double smallToleranceDeg = 2.0; // shoot early, the hood will get there
     public static final double largeToleranceDeg = 3.0;
-    public static final int idleTimeout = 0;
+    public static final int idleTimeout = 5;
     public static final double minPhysicalLimitDeg = 0.0;
     public static final double maxPhysicalLimitDeg =
         37.0; // physical max 37.4 - don't overrun the stop
@@ -430,13 +430,19 @@ public final class Constants {
       // Meters is center of turret to 3 inches behind center from hub
 
       // Shooting
-      putFiringMapEntryScoring(Units.inchesToMeters(242), new FiringParameters(56.5, 37, 0.7, 35, 2));  
-      putFiringMapEntryScoring(Units.inchesToMeters(15*12+7), new FiringParameters(44, 37, 0.5, 35, 2));
-      putFiringMapEntryScoring(Units.inchesToMeters(11*12+4), new FiringParameters(36.5, 37, 0.5, 35, 2));
-      putFiringMapEntryScoring(Units.inchesToMeters(8*12+1), new FiringParameters(31 ,30, 0.2, 35, 2));
-      putFiringMapEntryScoring(Units.inchesToMeters(5*12+1), new FiringParameters(24, 25, 0.2, 35, 2));
-      putFiringMapEntryScoring(Units.inchesToMeters(3*12+1), new FiringParameters(19, 20, 0.1, 35, 2));
-    } 
+      putFiringMapEntryScoring(
+          Units.inchesToMeters(242), new FiringParameters(56.5, 37, 0.7, 35, 2));
+      putFiringMapEntryScoring(
+          Units.inchesToMeters(15 * 12 + 7), new FiringParameters(44, 37, 0.5, 35, 2));
+      putFiringMapEntryScoring(
+          Units.inchesToMeters(11 * 12 + 4), new FiringParameters(36.5, 37, 0.5, 35, 2));
+      putFiringMapEntryScoring(
+          Units.inchesToMeters(8 * 12 + 1), new FiringParameters(31, 30, 0.2, 35, 2));
+      putFiringMapEntryScoring(
+          Units.inchesToMeters(5 * 12 + 1), new FiringParameters(24, 25, 0.2, 35, 2));
+      putFiringMapEntryScoring(
+          Units.inchesToMeters(3 * 12 + 1), new FiringParameters(19, 20, 0.1, 35, 2));
+    }
 
     // can't maintain burst for full field passes due to battery voltage drop
     public static final boolean alwaysTargetAllianceZone = false;

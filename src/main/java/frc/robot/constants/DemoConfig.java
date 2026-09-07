@@ -19,8 +19,8 @@ public class DemoConfig {
 
   public static final boolean maxDriveSpeedOverride =
       true; // Set to true to override the normal speed (4.775 m/s)
-  public static final LinearVelocity maxDriveSpeed = MetersPerSecond.of(0.5);
-  public static final double rotationSpeedMultiplier = 1;
+  public static final LinearVelocity maxDriveSpeed = MetersPerSecond.of(0.7);
+  public static final double rotationSpeedMultiplier = 1.5;
 
   public static final boolean useGeofence = true;
   public static final boolean manualZero =
@@ -46,7 +46,7 @@ public class DemoConfig {
 
   public static boolean shootToOppositeSide = true;
   public static double shootingTargetOffset =
-      Units.feetToMeters(-0.7); // Positive is inside field, negative is outside field
+      Units.inchesToMeters(-14); // Positive is inside field, negative is outside field
 
   public static double aprilTagHorizontalOffset =
       Units.inchesToMeters(24); // Offset from the long side of the field
@@ -98,8 +98,7 @@ public class DemoConfig {
     public static final Translation2d leftTarget =
         new Translation2d(shootingTargetOffset, fieldWidth / 2);
     public static final Translation2d rightTarget =
-        new Translation2d(
-            fieldLength - shootingTargetOffset, fieldWidth / 2);
+        new Translation2d(fieldLength - shootingTargetOffset, fieldWidth / 2);
     public static final Translation2d centerTarget =
         new Translation2d(fieldLength / 2, fieldWidth / 2);
 
