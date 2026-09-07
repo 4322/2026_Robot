@@ -300,7 +300,7 @@ public class ShotCalculator {
         || Double.isNaN(poseY)
         || Double.isInfinite(poseX)
         || Double.isInfinite(poseY)) {
-      Logger.recordOutput(logPath + "error", "None");
+      Logger.recordOutput(logPath + "error", "Null or infinite pose");
       return LaunchParameters.INVALID;
     }
 
@@ -338,17 +338,11 @@ public class ShotCalculator {
     double hubX = hubCenter.getX();
     double hubY = hubCenter.getY();
 
-    // Behind-hub detection: dot product with hub forward vector
-    Translation2d hubForward = inputs.hubForward();
-    double dot = (hubX - robotX) * hubForward.getX() + (hubY - robotY) * hubForward.getY();
-    if (dot < 0) {
-      return LaunchParameters.INVALID;
-    }
-
     // Tilt gate. Bumps and ramps knock the launcher off-axis, so
     // suppress firing when the chassis is tilted beyond the threshold.
     if (Math.abs(inputs.pitchDeg()) > config.maxTiltDeg
         || Math.abs(inputs.rollDeg()) > config.maxTiltDeg) {
+      Logger.recordOutput(logPath + "error", "Tilted");
       return LaunchParameters.INVALID;
     }
 

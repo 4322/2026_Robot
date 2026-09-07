@@ -346,14 +346,14 @@ public class Shooter extends SubsystemBase {
               );
 
       ShotCalculator.LaunchParameters shot;
-        if (!hasBeenScoring) {
-          // Reset stale accel/tof values in calculator upon switching to scoring
-          scoreCalc.resetWarmStart();
-          hasBeenScoring = true;
-        }
-        shot = scoreCalc.calculate(inputs);
-      
+      if (!hasBeenScoring) {
+        // Reset stale accel/tof values in calculator upon switching to scoring
+        scoreCalc.resetWarmStart();
+        hasBeenScoring = true;
+      }
+      shot = scoreCalc.calculate(inputs);
 
+      Logger.recordOutput("Shooter/ShotCalculator/isValid", shot.isValid());
       if (Constants.firingManagerMode == Constants.SubsystemMode.TUNING) {
         targetHoodAngleDeg = tunableHoodAngle.get();
         targetFlywheelSpeedRPS = tunableFlywheelSpeedRPS.get();
