@@ -12,13 +12,14 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.LinearVelocity;
 import frc.robot.util.Region2d;
 import java.util.List;
+import org.littletonrobotics.junction.Logger;
 
 public class DemoConfig {
   // All units in meters
 
   public static final boolean maxDriveSpeedOverride =
       true; // Set to true to override the normal speed (4.775 m/s)
-  public static final LinearVelocity maxDriveSpeed = MetersPerSecond.of(1);
+  public static final LinearVelocity maxDriveSpeed = MetersPerSecond.of(4.775);
 
   public static final boolean useGeofence = true;
   public static final boolean manualZero =
@@ -65,7 +66,8 @@ public class DemoConfig {
     public static final double tolerance = 0.0;
 
     // Used for geofencing
-    public static final double margin = 0.8; // TODO tune this
+    public static final double margin =
+        0.3; // Distance from border to start slowing down; TODO tune this
 
     public static final double minX = robotMaxSide / 2;
     public static final double maxX = fieldLength - robotMaxSide / 2;
@@ -79,16 +81,16 @@ public class DemoConfig {
                 new AprilTag(
                     aprilTagAID,
                     new Pose3d(
-                        new Translation3d(aprilTagHorizontalOffset, 0, aprilTagVerticalOffset),
-                        new Rotation3d(Units.degreesToRadians(-90), 0, 0))),
+                        new Translation3d(0, aprilTagHorizontalOffset, aprilTagVerticalOffset),
+                        new Rotation3d(0, 0, 0))),
                 new AprilTag(
                     aprilTagBID,
                     new Pose3d(
                         new Translation3d(
-                            fieldWidth - aprilTagHorizontalOffset,
                             fieldLength,
+                            fieldWidth - aprilTagHorizontalOffset,
                             aprilTagVerticalOffset),
-                        new Rotation3d(Units.degreesToRadians(90), 0, 0)))),
+                        new Rotation3d(0, 0, Math.PI)))),
             fieldLength,
             fieldWidth);
 
@@ -112,11 +114,24 @@ public class DemoConfig {
             new Translation2d(fieldLength / 2, -tolerance),
             new Translation2d(fieldLength + tolerance, fieldWidth + tolerance),
             "rightZone");
+    public static final Region2d allowedArea =
+        new Region2d(new Translation2d(minX, minY), new Translation2d(maxX, maxY), "allowedArea");
+    public static final Region2d marginArea =
+        new Region2d(
+            new Translation2d(minX + margin, minY + margin),
+            new Translation2d(maxX - margin, maxY - margin),
+            "marginArea");
 
     public static void log() {
       leftZone.logPoints();
       rightZone.logPoints();
       field.logPoints();
+      allowedArea.logPoints();
+      marginArea.logPoints();
+      Logger.recordOutput(
+          "DemoFields/aprilTagA", aprilTagFieldLayout.getTagPose(aprilTagAID).orElse(null));
+      Logger.recordOutput(
+          "DemoFields/aprilTagB", aprilTagFieldLayout.getTagPose(aprilTagBID).orElse(null));
     }
   }
 }

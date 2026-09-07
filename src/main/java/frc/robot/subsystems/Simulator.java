@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.simulation.DriverStationSim;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.RobotContainer;
 import frc.robot.autonomous.AutonomousSelector.AutoName;
+import frc.robot.constants.DemoConfig;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -710,24 +711,40 @@ public class Simulator {
               t += 0.1,
               "Set pose",
               EventType.SET_POSE,
-              new FieldPose2d(0.5, 0.5, Rotation2d.kZero)),
+              new FieldPose2d(
+                  DemoConfig.DemoFields.minX, DemoConfig.DemoFields.minY, Rotation2d.kCCW_90deg)),
           new SimEvent(t += 0.1, "Deploy Intake", EventType.PRESS_LEFT_BUMPER),
           new SimEvent(t += 2, "Start shooting", EventType.HOLD_RIGHT_TRIGGER),
           new SimEvent(
               t += 0.1,
+              "Move left",
+              EventType.MOVE_JOYSTICK_DRIVE,
+              new Pose2d(0, 1, Rotation2d.kZero)),
+          new SimEvent(
+              t += 2,
               "Move right",
+              EventType.MOVE_JOYSTICK_DRIVE,
+              new Pose2d(0, -1, Rotation2d.kZero)),
+          new SimEvent(
+              t += 10,
+              "Move left",
+              EventType.MOVE_JOYSTICK_DRIVE,
+              new Pose2d(0, 1, Rotation2d.kZero)),
+          new SimEvent(
+              t += 10,
+              "Move up",
               EventType.MOVE_JOYSTICK_DRIVE,
               new Pose2d(1, 0, Rotation2d.kZero)),
           new SimEvent(
               t += 10,
-              "Move left",
+              "Move down",
               EventType.MOVE_JOYSTICK_DRIVE,
               new Pose2d(-1, 0, Rotation2d.kZero)),
           new SimEvent(
               t += 10,
               "Move up right",
               EventType.MOVE_JOYSTICK_DRIVE,
-              new Pose2d(1, 1, Rotation2d.kZero)),
+              new Pose2d(1, -1, Rotation2d.kZero)),
           new SimEvent(t += 10, "End", EventType.END_OF_SCENARIO));
       default -> List.of();
     };
