@@ -53,7 +53,7 @@ public final class Constants {
   public static final SubsystemMode deployerMode = SubsystemMode.NORMAL;
   public static final SubsystemMode rollerMode = SubsystemMode.NORMAL;
   public static final SubsystemMode ledMode = SubsystemMode.DISABLED;
-  public static final SubsystemMode visionGlobalPose = SubsystemMode.NORMAL;
+  public static final SubsystemMode visionGlobalPose = SubsystemMode.DISABLED;
   public static final SubsystemMode visionObjectDetection = SubsystemMode.DISABLED;
   public static final SubsystemMode firingManagerMode = SubsystemMode.NORMAL;
   public static final boolean turretLocked = false;
@@ -132,7 +132,7 @@ public final class Constants {
     public static final double motorToMechanismRatio = 36 / 12.0 * (90 / 35.0); // 10 inch wheel
     // Normally 7 RPS for shooting
     public static final double unjamRPS = -4.0;
-    public static final double shootRPS = 9.0;
+    public static final double shootRPS = 5;
   }
 
   public static class Tunnel {
@@ -152,7 +152,7 @@ public final class Constants {
     public static final double minPercentVelocity = 0.95;
     // Normally 37 RPS for shooting
     public static final double unjamRPS = -25.0;
-    public static final double shootRPS = 45;
+    public static final double shootRPS = 25;
   }
 
   public static class Flywheel {
@@ -430,18 +430,13 @@ public final class Constants {
       // Meters is center of turret to 3 inches behind center from hub
 
       // Shooting
-      putFiringMapEntryScoring(1.560, new FiringParameters(46, 7, 1.3, 45, 9));
-      putFiringMapEntryScoring(2.4, new FiringParameters(46, 13, 1.15, 45, 9));
-      putFiringMapEntryScoring(3.427, new FiringParameters(52, 17, 1.25, 45, 9));
-      putFiringMapEntryScoring(4.6, new FiringParameters(56.5, 22.5, 1.2, 45, 9));
-      putFiringMapEntryScoring(5.13, new FiringParameters(60.5, 21, 1.35, 45, 9));
-      putFiringMapEntryScoring(5.817, new FiringParameters(63, 28, 1.35, 45, 9));
-
-      // Passing
-      putFiringMapEntryPassing(4.60, new FiringParameters(43, 30, 1.5, 45, 7));
-      putFiringMapEntryPassing(7.349, new FiringParameters(62, 34, 1.4, 45, 7));
-      putFiringMapEntryPassing(10.31, new FiringParameters(80, 38, 1.4, 45, 7));
-    }
+      putFiringMapEntryScoring(Units.inchesToMeters(242), new FiringParameters(56.5, 37, 0.7, 35, 2));  
+      putFiringMapEntryScoring(Units.inchesToMeters(15*12+7), new FiringParameters(44, 37, 0.5, 35, 2));
+      putFiringMapEntryScoring(Units.inchesToMeters(11*12+4), new FiringParameters(36.5, 37, 0.5, 35, 2));
+      putFiringMapEntryScoring(Units.inchesToMeters(8*12+1), new FiringParameters(31 ,30, 0.2, 35, 2));
+      putFiringMapEntryScoring(Units.inchesToMeters(5*12+1), new FiringParameters(24, 25, 0.2, 35, 2));
+      putFiringMapEntryScoring(Units.inchesToMeters(3*12+1), new FiringParameters(19, 20, 0.1, 35, 2));
+    } 
 
     // can't maintain burst for full field passes due to battery voltage drop
     public static final boolean alwaysTargetAllianceZone = false;
