@@ -27,7 +27,7 @@ public class DemoConfig {
       true; // Allows for the coast mode button to zero the robot, where it is placed against the
   // field border at 0,0 (bottom left corner), intake facing positive X
 
-  public static boolean overrideShootingParams = true; // Does not apply to flywheel
+  public static boolean overrideShootingParams = false; // Does not apply to flywheel
   public static double tunnelRPS = 45 * 0.5;
   public static double spindexerRPS = 9 * 0.5;
   public static boolean useManualFlywheelLimit = false; // Likely cause robot to undershoot
