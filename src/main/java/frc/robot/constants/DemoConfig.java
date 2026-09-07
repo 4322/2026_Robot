@@ -19,7 +19,8 @@ public class DemoConfig {
 
   public static final boolean maxDriveSpeedOverride =
       true; // Set to true to override the normal speed (4.775 m/s)
-  public static final LinearVelocity maxDriveSpeed = MetersPerSecond.of(4.775);
+  public static final LinearVelocity maxDriveSpeed = MetersPerSecond.of(0.5);
+  public static final double rotationSpeedMultiplier = 1;
 
   public static final boolean useGeofence = true;
   public static final boolean manualZero =
@@ -67,7 +68,7 @@ public class DemoConfig {
 
     // Used for geofencing
     public static final double margin =
-        0.3; // Distance from border to start slowing down; TODO tune this
+        0.6; // Distance from border to start slowing down; TODO tune this
 
     public static final double minX = robotMaxSide / 2;
     public static final double maxX = fieldLength - robotMaxSide / 2;

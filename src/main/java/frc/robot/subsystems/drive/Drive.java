@@ -388,7 +388,7 @@ public class Drive extends SubsystemBase {
 
   /** Returns the maximum angular speed in radians per sec. */
   public double getMaxAngularSpeedRadPerSec() {
-    return getMaxLinearSpeedMetersPerSec() / DRIVE_BASE_RADIUS;
+    return getMaxLinearSpeedMetersPerSec() / DRIVE_BASE_RADIUS * DemoConfig.rotationSpeedMultiplier;
   }
 
   /** Returns an array of module translations. */

@@ -14,11 +14,11 @@ public class FiringManager {
     if (DemoConfig.shootToOppositeSide) {
       switch (zone) {
         case LEFT -> {
-          Logger.recordOutput("FiringManager/targetZone", "Left");
+          Logger.recordOutput("FiringManager/targetZone", "Right");
           return DemoConfig.DemoFields.rightTarget;
         }
         case RIGHT -> {
-          Logger.recordOutput("FiringManager/targetZone", "Right");
+          Logger.recordOutput("FiringManager/targetZone", "Left");
           return DemoConfig.DemoFields.leftTarget;
         }
         case UNKNOWN -> {
