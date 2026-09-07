@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.simulation.DriverStationSim;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.RobotContainer;
 import frc.robot.autonomous.AutonomousSelector.AutoName;
+import frc.robot.constants.DemoConfig;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -707,7 +708,11 @@ public class Simulator {
           new SimEvent(t += 5, "End", EventType.END_OF_SCENARIO));
       case DEMO -> List.of(
           new SimEvent(
-              t += 0.1, "Set pose", EventType.SET_POSE, new FieldPose2d(1, 1, Rotation2d.kZero)),
+              t += 0.1,
+              "Set pose",
+              EventType.SET_POSE,
+              new FieldPose2d(
+                  DemoConfig.DemoFields.minX, DemoConfig.DemoFields.minY, Rotation2d.kCCW_90deg)),
           new SimEvent(t += 0.1, "Deploy Intake", EventType.PRESS_LEFT_BUMPER),
           new SimEvent(t += 2, "Start shooting", EventType.HOLD_RIGHT_TRIGGER),
           new SimEvent(

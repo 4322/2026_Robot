@@ -420,6 +420,6 @@ public class RobotContainer {
 
   public void zeroPose() {
     drive.setPose(
-        new Pose2d(DemoConfig.robotLength / 2, DemoConfig.robotMaxWidth / 2, new Rotation2d()));
+        new Pose2d(DemoConfig.DemoFields.minX, DemoConfig.DemoFields.minY, Rotation2d.kCCW_90deg));
   }
 }
