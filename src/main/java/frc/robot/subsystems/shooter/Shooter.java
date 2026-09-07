@@ -114,7 +114,6 @@ public class Shooter extends SubsystemBase {
     config.tofMax = 100;
 
     scoreCalc = new ShotCalculator(config, true);
-    passCalc = new ShotCalculator(config, false);
 
     ShotLUT scoreLUT = new ShotLUT();
     for (ShotCalculatorParameters params : Constants.FiringManager.firingParametersListScoring) {
@@ -125,16 +124,6 @@ public class Shooter extends SubsystemBase {
           params.timeOfFlightSec());
     }
     scoreCalc.loadShotLUT(scoreLUT);
-
-    ShotLUT passLUT = new ShotLUT();
-    for (ShotCalculatorParameters params : Constants.FiringManager.firingParametersListPassing) {
-      passLUT.put(
-          params.distanceMeters(),
-          params.flywheelRPS() * 60.0,
-          params.hoodAngleDeg(),
-          params.timeOfFlightSec());
-    }
-    passCalc.loadShotLUT(passLUT);
   }
 
   public double getTargetTurretAngleDeg() {
@@ -357,21 +346,13 @@ public class Shooter extends SubsystemBase {
               );
 
       ShotCalculator.LaunchParameters shot;
-      if (isScoring) {
         if (!hasBeenScoring) {
           // Reset stale accel/tof values in calculator upon switching to scoring
           scoreCalc.resetWarmStart();
           hasBeenScoring = true;
         }
         shot = scoreCalc.calculate(inputs);
-      } else {
-        if (hasBeenScoring) {
-          // Reset stale accel/tof values in calculator upon switching to passing
-          passCalc.resetWarmStart();
-          hasBeenScoring = false;
-        }
-        shot = passCalc.calculate(inputs);
-      }
+      
 
       if (Constants.firingManagerMode == Constants.SubsystemMode.TUNING) {
         targetHoodAngleDeg = tunableHoodAngle.get();
