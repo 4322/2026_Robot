@@ -12,6 +12,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.LinearVelocity;
 import frc.robot.util.Region2d;
 import java.util.List;
+import org.littletonrobotics.junction.Logger;
 
 public class DemoConfig {
   // All units in meters
@@ -80,16 +81,16 @@ public class DemoConfig {
                 new AprilTag(
                     aprilTagAID,
                     new Pose3d(
-                        new Translation3d(aprilTagHorizontalOffset, 0, aprilTagVerticalOffset),
-                        new Rotation3d(Units.degreesToRadians(-90), 0, 0))),
+                        new Translation3d(0, aprilTagHorizontalOffset, aprilTagVerticalOffset),
+                        new Rotation3d(0, 0, 0))),
                 new AprilTag(
                     aprilTagBID,
                     new Pose3d(
                         new Translation3d(
-                            fieldWidth - aprilTagHorizontalOffset,
                             fieldLength,
+                            fieldWidth - aprilTagHorizontalOffset,
                             aprilTagVerticalOffset),
-                        new Rotation3d(Units.degreesToRadians(90), 0, 0)))),
+                        new Rotation3d(0, 0, Math.PI)))),
             fieldLength,
             fieldWidth);
 
@@ -127,6 +128,10 @@ public class DemoConfig {
       field.logPoints();
       allowedArea.logPoints();
       marginArea.logPoints();
+      Logger.recordOutput(
+          "DemoFields/aprilTagA", aprilTagFieldLayout.getTagPose(aprilTagAID).orElse(null));
+      Logger.recordOutput(
+          "DemoFields/aprilTagB", aprilTagFieldLayout.getTagPose(aprilTagBID).orElse(null));
     }
   }
 }
