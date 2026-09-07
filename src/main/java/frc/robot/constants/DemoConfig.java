@@ -49,7 +49,7 @@ public class DemoConfig {
 
   public static double aprilTagHorizontalOffset =
       Units.inchesToMeters(24); // Offset from the long side of the field
-  public static double aprilTagVerticalOffset = 0.43; // Offset from ground
+  public static double aprilTagVerticalOffset = Units.inchesToMeters(39.875); // Offset from ground
 
   // Stuff that shouldn't change in between demos
   public static double robotMaxLength = 1.002129;
