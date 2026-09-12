@@ -21,6 +21,7 @@ import frc.robot.commands.DriveCommands;
 import frc.robot.commands.IntakeCommands;
 import frc.robot.commands.ShooterCommands;
 import frc.robot.constants.Constants;
+import frc.robot.constants.Constants.SubsystemMode;
 import frc.robot.constants.DemoConfig;
 import frc.robot.constants.FieldConstants;
 import frc.robot.generated.TunerConstants;
@@ -378,21 +379,18 @@ public class RobotContainer {
     */
 
     controller.b().whileTrue(ShooterCommands.unjam(shooter));
-    controller.leftTrigger().whileTrue(ShooterCommands.trenchOverride(shooter));
 
     if (Constants.turretLocked) {
-      controller.rightTrigger().whileTrue(ShooterCommands.aimAndShoot(shooter, drive, intake));
+      controller.leftTrigger().whileTrue(ShooterCommands.aimAndShoot(shooter, drive, intake));
     } else {
-      controller.rightTrigger().whileTrue(ShooterCommands.autoShoot(shooter, drive, intake));
+      controller.leftTrigger().whileTrue(ShooterCommands.autoShoot(shooter, drive, intake));
       // controller.a().whileTrue(ShooterCommands.fixedShoot(shooter, drive, intake));
     }
 
     controller.leftBumper().onTrue(IntakeCommands.toggleIntake(intake, controller));
     controller.x().onTrue(IntakeCommands.eject(intake)).onFalse(IntakeCommands.toggleOff(intake));
     controller.y().onTrue(IntakeCommands.smoosh(intake)).onFalse(IntakeCommands.toggleOff(intake));
-    controller.rightBumper().onTrue(ShooterCommands.turretUnjamOverride(shooter, true));
-    controller.rightBumper().onFalse(ShooterCommands.turretUnjamOverride(shooter, false));
-    if (DemoConfig.manualZero) {
+    if (DemoConfig.manualZero && Constants.visionGlobalPose != SubsystemMode.NORMAL) {
       controller.povLeft().onTrue(new InstantCommand(() -> zeroPose()));
     }
   }
