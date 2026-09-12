@@ -50,14 +50,12 @@ public class DemoConfig {
   public static double shootingTargetOffsetWidth =
       Units.inchesToMeters(8 * 12); // Positive is toward back of field
 
-  public static double aprilTagHorizontalOffset =
-      Units.inchesToMeters(-12 / Math.sqrt(2)); // Offset from the long side of the field
-  public static double aprilTagOtherOffset =
-      Units.inchesToMeters(
-          12 / Math.sqrt(2)); // Offset from the short side of the field yes i know scuffed name
+  public static double aprilTagXOffset = Units.inchesToMeters(-12 / Math.sqrt(2));
+  public static double aprilTagYOffset = Units.inchesToMeters(12 / Math.sqrt(2));
   public static double aprilTag21VerticalOffset = Units.inchesToMeters(40.5); // Offset from ground
   public static double aprilTag22VerticalOffset = Units.inchesToMeters(38.75); // Offset from ground
-  public static double aprilTagRotation = Math.PI / 4; // Rotation of the AprilTag in radians
+  public static double aprilTag21Rotation = -Math.PI / 4; // Rotation of the AprilTag in radians
+  public static double aprilTag22Rotation = -3 / 4 * Math.PI; // Rotation of the AprilTag in radians
 
   // Stuff that shouldn't change in between demos
   public static double robotMaxLength = 1.002129;
@@ -90,18 +88,18 @@ public class DemoConfig {
                     aprilTagAID,
                     new Pose3d(
                         new Translation3d(
-                            aprilTagHorizontalOffset,
-                            fieldWidth + aprilTagOtherOffset,
+                            aprilTagXOffset,
+                            fieldWidth + aprilTagYOffset,
                             aprilTag21VerticalOffset),
-                        new Rotation3d(0, 0, aprilTagRotation))),
+                        new Rotation3d(0, 0, aprilTag21Rotation))),
                 new AprilTag(
                     aprilTagBID,
                     new Pose3d(
                         new Translation3d(
-                            fieldLength - aprilTagHorizontalOffset,
-                            fieldWidth + aprilTagOtherOffset,
+                            fieldLength - aprilTagXOffset,
+                            fieldWidth + aprilTagYOffset,
                             aprilTag22VerticalOffset),
-                        new Rotation3d(0, 0, aprilTagRotation + Math.PI)))),
+                        new Rotation3d(0, 0, aprilTag22Rotation)))),
             fieldLength,
             fieldWidth);
 
