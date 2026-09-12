@@ -45,14 +45,18 @@ public class DemoConfig {
       Units.feetToMeters(10); // Shorter side, should be side with an AprilTag
 
   public static boolean shootToOppositeSide = true;
-  public static double shootingTargetOffset =
+  public static double shootingTargetOffsetLength =
       Units.inchesToMeters(-24); // Positive is inside field, negative is outside field
+  public static double shootingTargetOffsetWidth =
+      Units.inchesToMeters(8 * 12); // Positive is toward back of field
 
   public static double aprilTagHorizontalOffset =
-      Units.inchesToMeters(-12); // Offset from the long side of the field
+      Units.inchesToMeters(-12 / Math.sqrt(2)); // Offset from the long side of the field
   public static double aprilTagOtherOffset =
-      Units.inchesToMeters(12); // Offset from the short side of the field yes i know scuffed name
-  public static double aprilTagVerticalOffset = Units.inchesToMeters(39.875); // Offset from ground
+      Units.inchesToMeters(
+          12 / Math.sqrt(2)); // Offset from the short side of the field yes i know scuffed name
+  public static double aprilTag21VerticalOffset = Units.inchesToMeters(40.5); // Offset from ground
+  public static double aprilTag22VerticalOffset = Units.inchesToMeters(38.75); // Offset from ground
   public static double aprilTagRotation = Math.PI / 4; // Rotation of the AprilTag in radians
 
   // Stuff that shouldn't change in between demos
@@ -86,23 +90,25 @@ public class DemoConfig {
                     aprilTagAID,
                     new Pose3d(
                         new Translation3d(
-                            -aprilTagOtherOffset, aprilTagHorizontalOffset, aprilTagVerticalOffset),
+                            aprilTagHorizontalOffset,
+                            fieldWidth + aprilTagOtherOffset,
+                            aprilTag21VerticalOffset),
                         new Rotation3d(0, 0, aprilTagRotation))),
                 new AprilTag(
                     aprilTagBID,
                     new Pose3d(
                         new Translation3d(
-                            fieldLength + aprilTagOtherOffset,
-                            fieldWidth - aprilTagHorizontalOffset,
-                            aprilTagVerticalOffset),
+                            fieldLength - aprilTagHorizontalOffset,
+                            fieldWidth + aprilTagOtherOffset,
+                            aprilTag22VerticalOffset),
                         new Rotation3d(0, 0, aprilTagRotation + Math.PI)))),
             fieldLength,
             fieldWidth);
 
     public static final Translation2d leftTarget =
-        new Translation2d(shootingTargetOffset, fieldWidth / 2);
+        new Translation2d(shootingTargetOffsetLength, shootingTargetOffsetWidth);
     public static final Translation2d rightTarget =
-        new Translation2d(fieldLength - shootingTargetOffset, fieldWidth / 2);
+        new Translation2d(fieldLength - shootingTargetOffsetLength, shootingTargetOffsetWidth);
     public static final Translation2d centerTarget =
         new Translation2d(fieldLength / 2, fieldWidth / 2);
 
