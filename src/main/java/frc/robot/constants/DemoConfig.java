@@ -55,7 +55,7 @@ public class DemoConfig {
   public static double aprilTag21VerticalOffset = Units.inchesToMeters(40.5); // Offset from ground
   public static double aprilTag22VerticalOffset = Units.inchesToMeters(38.75); // Offset from ground
   public static double aprilTag21Rotation = -Math.PI / 4; // Rotation of the AprilTag in radians
-  public static double aprilTag22Rotation = -3 / 4 * Math.PI; // Rotation of the AprilTag in radians
+  public static double aprilTag22Rotation = -Math.PI * 3 / 4; // Rotation of the AprilTag in radians
 
   // Stuff that shouldn't change in between demos
   public static double robotMaxLength = 1.002129;
