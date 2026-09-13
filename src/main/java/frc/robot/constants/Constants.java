@@ -273,12 +273,12 @@ public final class Constants {
     public static final double voltageDeploy = 0; // -1 to clear net, not good with extra top bar
     public static final double voltageIdle = 0;
     public static final double voltageSmoosh = 3;
-    public static final int leaderMotorId = 1;
-    public static final int followerMotorId = 5;
+    public static final int leaderMotorId = 5;
+    public static final int followerMotorId = 1;
     public static final double statorCurrentLimit = 100;
     public static final double supplyCurrentLimit = 30;
     public static final NeutralModeValue neutralMode = NeutralModeValue.Coast;
-    public static final InvertedValue leaderMotorInvert = InvertedValue.Clockwise_Positive;
+    public static final InvertedValue leaderMotorInvert = InvertedValue.CounterClockwise_Positive;
   }
 
   public class Deployer {
