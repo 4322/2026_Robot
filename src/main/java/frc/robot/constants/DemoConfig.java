@@ -75,7 +75,7 @@ public class DemoConfig {
     public static final double margin =
         0.6; // Distance from border to start slowing down; TODO tune this
 
-    public static final double minX = robotMaxSide / 2;
+    public static final double minX = robotMaxSide / 2 + Units.inchesToMeters(36);
     public static final double maxX = fieldLength - robotMaxSide / 2;
     public static final double minY = robotMaxSide / 2;
     public static final double maxY = fieldWidth - robotMaxSide / 2;
