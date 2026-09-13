@@ -13,13 +13,9 @@ public class FiringManager {
     Zone zone = AreaManager.getZoneOfPosition(robotPosition);
     if (DemoConfig.shootToOppositeSide) {
       switch (zone) {
-        case LEFT -> {
+        case LEFT, RIGHT -> {
           Logger.recordOutput("FiringManager/targetZone", "Right");
           return DemoConfig.DemoFields.rightTarget;
-        }
-        case RIGHT -> {
-          Logger.recordOutput("FiringManager/targetZone", "Left");
-          return DemoConfig.DemoFields.leftTarget;
         }
         case UNKNOWN -> {
           Logger.recordOutput("FiringManager/targetZone", "Unknown, targeting center of field");
