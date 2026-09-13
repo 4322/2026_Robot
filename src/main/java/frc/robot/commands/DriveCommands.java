@@ -122,7 +122,6 @@ public class DriveCommands {
           double linearVelocityScaling = drive.getMaxLinearSpeedMetersPerSec();
           double angularVelocityScaling = drive.getMaxAngularSpeedRadPerSec();
 
-          /* 
           if (isScoring.getAsBoolean()) {
             linearVelocityScaling *= Constants.Drive.maxLinearSpeedPercentShooting;
             angularVelocityScaling *= Constants.Drive.maxAngularSpeedPercentShooting;
@@ -130,7 +129,6 @@ public class DriveCommands {
             linearVelocityScaling *= Constants.Drive.maxLinearSpeedPercentPassing;
             angularVelocityScaling *= Constants.Drive.maxAngularSpeedPercentPassing;
           }
-          */
 
           ChassisSpeeds speeds =
               new ChassisSpeeds(
