@@ -123,7 +123,10 @@ public class DemoConfig {
             new Translation2d(fieldLength + tolerance, fieldWidth + tolerance),
             "rightZone");
     public static final Region2d allowedArea =
-        new Region2d(new Translation2d(minX + Units.inchesToMeters(36), minY), new Translation2d(maxX, maxY), "allowedArea");
+        new Region2d(
+            new Translation2d(minX + Units.inchesToMeters(36), minY),
+            new Translation2d(maxX, maxY),
+            "allowedArea");
     public static final Region2d marginArea =
         new Region2d(
             new Translation2d(minX + margin, minY + margin),
