@@ -268,13 +268,13 @@ public final class Constants {
   }
 
   public class Rollers {
-    public static final double voltageIntake = 8.0;
-    public static final double voltageEject = -6;
+    public static final double voltageIntake = 12.0;
+    public static final double voltageEject = -8;
     public static final double voltageDeploy = 0; // -1 to clear net, not good with extra top bar
     public static final double voltageIdle = 0;
     public static final double voltageSmoosh = 3;
     public static final int leaderMotorId = 5;
-    public static final int followerMotorId = 1;
+    public static final int followerMotorId = 20;
     public static final double statorCurrentLimit = 100;
     public static final double supplyCurrentLimit = 30;
     public static final NeutralModeValue neutralMode = NeutralModeValue.Coast;
