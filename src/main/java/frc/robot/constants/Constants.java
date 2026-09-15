@@ -104,8 +104,8 @@ public final class Constants {
     public static double turnSupplyCurrentLimit = 30;
 
     // Scales max speeds for X, Y, and omega respectively
-    public static double maxLinearSpeedPercentShooting = 0.179;
-    public static double maxAngularSpeedPercentShooting = 0.179;
+    public static double maxLinearSpeedPercentShooting = 0.2;
+    public static double maxAngularSpeedPercentShooting = 0.2;
 
     public static double maxLinearSpeedPercentPassing = 0.2626;
     public static double maxAngularSpeedPercentPassing = 0.2149;
